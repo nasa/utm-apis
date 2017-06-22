@@ -1,0 +1,3064 @@
+---
+swagger: "2.0"
+info:
+  description: "RestAPI and Message definitions from USS-nasa to UAS Operator Interface"
+  version: "v1"
+  title: "USS-nasa to UAS Operator Interface"
+host: "tmiserver.arc.nasa.gov"
+basePath: "/uss"
+tags:
+- name: "Surveillance Operations"
+  description: "Add and view surveillance areas"
+- name: "Positions Constraints UReps"
+  description: "Manage flying operations"
+- name: "Message Data Types"
+  description: "Intent, Inform, Alert and Free message schemas"
+- name: "Operations"
+  description: "Add and view operations"
+- name: "Geography Data Types"
+  description: "Geography representations"
+schemes:
+- "https"
+- "http"
+paths:
+  /airports:
+    get:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "getAirports"
+      operationId: "getAirportsUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: false
+        type: "string"
+      - name: "q"
+        in: "query"
+        description: "q"
+        required: false
+        type: "string"
+      - name: "sort"
+        in: "query"
+        description: "sort"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Airport"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /airports/{id}:
+    get:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "getSpecificAirport"
+      operationId: "getSpecificAirportUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "id"
+        required: true
+        type: "string"
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Airport"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /airspaces:
+    get:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "getAirspaces"
+      operationId: "getAirspacesUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: false
+        type: "string"
+      - name: "q"
+        in: "query"
+        description: "q"
+        required: false
+        type: "string"
+      - name: "sort"
+        in: "query"
+        description: "sort"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Airspace"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /airspacesclass/{c}:
+    get:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "getAirspaces"
+      operationId: "getAirspacesUsingGET_1"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "c"
+        in: "path"
+        description: "c"
+        required: true
+        type: "string"
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: false
+        type: "string"
+      - name: "q"
+        in: "query"
+        description: "q"
+        required: false
+        type: "string"
+      - name: "sort"
+        in: "query"
+        description: "sort"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Airspace"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /constraints:
+    get:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "getConstraints"
+      operationId: "getConstraintsUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "query"
+        description: "id"
+        required: false
+        type: "string"
+      - name: "name"
+        in: "query"
+        description: "name"
+        required: false
+        type: "string"
+      - name: "time"
+        in: "query"
+        description: "time"
+        required: false
+        type: "string"
+      - name: "type"
+        in: "query"
+        description: "type"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Constraint"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /manager_constraints:
+    get:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "getManagerConstraints"
+      operationId: "getManagerConstraintsUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: false
+        type: "string"
+      - name: "q"
+        in: "query"
+        description: "q"
+        required: false
+        type: "string"
+      - name: "sort"
+        in: "query"
+        description: "sort"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/ManagerConstraint"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+    post:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "addManagerConstraint"
+      operationId: "addManagerConstraintUsingPOST"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "managerConstraint"
+        description: "managerConstraint"
+        required: true
+        schema:
+          $ref: "#/definitions/ManagerConstraint"
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /manager_constraints/{id}:
+    get:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "getSpecificManagerConstraint"
+      operationId: "getSpecificManagerConstraintUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "id"
+        required: true
+        type: "string"
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/ManagerConstraint"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+    put:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "updateManagerConstraint"
+      operationId: "updateManagerConstraintUsingPUT"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "id"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "managerConstraint"
+        description: "managerConstraint"
+        required: true
+        schema:
+          $ref: "#/definitions/ManagerConstraint"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        201:
+          description: "Created"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /manager_overrides:
+    get:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "getManagerOverrides"
+      operationId: "getManagerOverridesUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: false
+        type: "string"
+      - name: "q"
+        in: "query"
+        description: "q"
+        required: false
+        type: "string"
+      - name: "sort"
+        in: "query"
+        description: "sort"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/ConstraintOverride"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+    post:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "addManagerOverride"
+      operationId: "addManagerOverrideUsingPOST"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "post_constraintOverride"
+        description: "post_constraintOverride"
+        required: true
+        schema:
+          $ref: "#/definitions/ConstraintOverride"
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /manager_overrides/{override_id}:
+    get:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "getSpecificManagerOverride"
+      operationId: "getSpecificManagerOverrideUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "override_id"
+        in: "path"
+        description: "override_id"
+        required: true
+        type: "string"
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/ConstraintOverride"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+    put:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "updateManagerOverride"
+      operationId: "updateManagerOverrideUsingPUT"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "put_constraintOverride"
+        description: "put_constraintOverride"
+        required: true
+        schema:
+          $ref: "#/definitions/ConstraintOverride"
+      - name: "override_id"
+        in: "path"
+        description: "override_id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        201:
+          description: "Created"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /messages:
+    get:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "getMessages"
+      operationId: "getMessagesUsingGET_1"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: false
+        type: "string"
+      - name: "q"
+        in: "query"
+        description: "q"
+        required: false
+        type: "string"
+      - name: "sort"
+        in: "query"
+        description: "sort"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Message"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+    post:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "addMessageToGufi"
+      operationId: "addMessageToGufiUsingPOST_1"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "msg"
+        description: "msg"
+        required: true
+        schema:
+          $ref: "#/definitions/Message"
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /messages/{gufi}:
+    get:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "getMessagesForGufi"
+      operationId: "getMessagesForGufiUsingGET_1"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "gufi"
+        in: "path"
+        description: "gufi"
+        required: true
+        type: "string"
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: false
+        type: "string"
+      - name: "q"
+        in: "query"
+        description: "q"
+        required: false
+        type: "string"
+      - name: "sort"
+        in: "query"
+        description: "sort"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Message"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /national_parks:
+    get:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "getNationalParks"
+      operationId: "getNationalParksUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: false
+        type: "string"
+      - name: "q"
+        in: "query"
+        description: "q"
+        required: false
+        type: "string"
+      - name: "sort"
+        in: "query"
+        description: "sort"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/NationalPark"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /national_parks/{id}:
+    get:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "getSpecificNationalPark"
+      operationId: "getSpecificNationalParkUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "id"
+        required: true
+        type: "string"
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/NationalPark"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /operations:
+    get:
+      tags:
+      - "Operations"
+      summary: "view flights"
+      operationId: "getOperationsUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: false
+        type: "string"
+      - name: "q"
+        in: "query"
+        description: "q"
+        required: false
+        type: "string"
+      - name: "sort"
+        in: "query"
+        description: "sort"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Operation"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+    post:
+      tags:
+      - "Operations"
+      summary: "add a flight"
+      operationId: "addOperationUsingPOST"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "model"
+        description: "model"
+        required: true
+        schema:
+          $ref: "#/definitions/Operation"
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /operations/{gufi}:
+    get:
+      tags:
+      - "Operations"
+      summary: "view specific flight"
+      description: "Your flight ID is the guGUFIfi"
+      operationId: "getOperationByGufiUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "gufi"
+        in: "path"
+        description: "gufi"
+        required: true
+        type: "string"
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Operation"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+    put:
+      tags:
+      - "Operations"
+      summary: "modify a flight"
+      operationId: "modifyOperationUsingPUT"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "modifiedOp"
+        description: "modifiedOp"
+        required: true
+        schema:
+          $ref: "#/definitions/Operation"
+      - name: "gufi"
+        in: "path"
+        description: "gufi"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        201:
+          description: "Created"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /positions:
+    get:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "getPositions"
+      operationId: "getPositionsUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: false
+        type: "string"
+      - name: "q"
+        in: "query"
+        description: "q"
+        required: false
+        type: "string"
+      - name: "sort"
+        in: "query"
+        description: "sort"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "returns positions.  The return list can be large so use LIMIT\
+            \ and OFFSET."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Position"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+    post:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "addPosition"
+      operationId: "addPositionUsingPOST"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "pos"
+        description: "pos"
+        required: true
+        schema:
+          $ref: "#/definitions/Position"
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /positions/{gufi}:
+    get:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "getPositionsForGufi"
+      operationId: "getPositionsForGufiUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "gufi"
+        in: "path"
+        description: "gufi"
+        required: true
+        type: "string"
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: false
+        type: "string"
+      - name: "q"
+        in: "query"
+        description: "q"
+        required: false
+        type: "string"
+      - name: "sort"
+        in: "query"
+        description: "sort"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "returns positions for GUFI"
+          schema:
+            $ref: "#/definitions/Position"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /schema/AlertMsgType:
+    get:
+      tags:
+      - "Message Data Types"
+      summary: "Alert Message"
+      description: "Alerts to clients and UTM Managers"
+      operationId: "alertMsgUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/AlertMsgType"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /schema/FreeMsgType:
+    get:
+      tags:
+      - "Message Data Types"
+      summary: "Free Message"
+      description: "free text"
+      operationId: "freeMsgUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/FreeMsgType"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /schema/GeographyFragment:
+    get:
+      tags:
+      - "Geography Data Types"
+      summary: "Geography fragment"
+      description: "A GeographyFragment is a portion (fragment) of the GeoJSON geography\
+        \ data type. Allowable values for this type are LineString, MultiPolygon,\
+        \ Point and Polygon. Since UTM supports most but not all GeoJSON data types,\
+        \ UTM defines a a portion (or fragment) of the GeoJSON specification. For\
+        \ adding or modifing an operation, only LineString and Polygon are supported.\
+        \ (For trajectory-based operations, LineString will be more appropriate.)\
+        \  MultiPolygon is not supported for Operation; rather it is used for Surveillance.\
+        \ For Position submission, the only accepted type is Point."
+      operationId: "geographyFragmentUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/GeographyFragment"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /schema/InformMsgType:
+    get:
+      tags:
+      - "Message Data Types"
+      summary: "Inform Message"
+      description: "This is UTM's reply to an Intent"
+      operationId: "informMsgUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/InformMsgType"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /schema/IntentMsgType:
+    get:
+      tags:
+      - "Message Data Types"
+      summary: "Intent Message"
+      description: "Your Intent generates a UTM Inform"
+      operationId: "intentMsgUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/IntentMsgType"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /schema/LineString:
+    get:
+      tags:
+      - "Geography Data Types"
+      summary: "LineString geojson"
+      description: "subtype of GeographyFragment"
+      operationId: "lineStringUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/LineString"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /schema/MultiPolygon:
+    get:
+      tags:
+      - "Geography Data Types"
+      summary: "MultiPolygon geojson"
+      description: "subtype of GeographyFragment"
+      operationId: "multiPolygonUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/MultiPolygon"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /schema/Point:
+    get:
+      tags:
+      - "Geography Data Types"
+      summary: "Point geojson"
+      description: "subtype of GeographyFragment"
+      operationId: "pointUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Point"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /schema/Polygon:
+    get:
+      tags:
+      - "Geography Data Types"
+      summary: "Polygon geojson"
+      description: "subtype of GeographyFragment"
+      operationId: "polygonUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Polygon"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /ureps:
+    get:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "getUreps"
+      operationId: "getUrepsUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: false
+        type: "string"
+      - name: "q"
+        in: "query"
+        description: "q"
+        required: false
+        type: "string"
+      - name: "sort"
+        in: "query"
+        description: "sort"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Urep"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+    post:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "addUrep"
+      operationId: "addUrepUsingPOST"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "urep"
+        description: "urep"
+        required: true
+        schema:
+          $ref: "#/definitions/Urep"
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /ureps/{id}:
+    get:
+      tags:
+      - "Positions, Constraints, UReps"
+      summary: "getUrepsForID"
+      operationId: "getUrepsForIDUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "id"
+        required: true
+        type: "string"
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Urep"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /surveillance_messages:
+    get:
+      tags:
+      - "Surveillance Operations"
+      summary: "getMessages"
+      operationId: "getMessagesUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: false
+        type: "string"
+      - name: "q"
+        in: "query"
+        description: "q"
+        required: false
+        type: "string"
+      - name: "sort"
+        in: "query"
+        description: "sort"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Message"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+    post:
+      tags:
+      - "Surveillance Operations"
+      summary: "addMessageToGufi"
+      operationId: "addMessageToGufiUsingPOST"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "msg"
+        description: "msg"
+        required: true
+        schema:
+          $ref: "#/definitions/Message"
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /surveillance_messages/{gufi}:
+    get:
+      tags:
+      - "Surveillance Operations"
+      summary: "getMessagesForGufi"
+      operationId: "getMessagesForGufiUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "gufi"
+        in: "path"
+        description: "gufi"
+        required: true
+        type: "string"
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: false
+        type: "string"
+      - name: "q"
+        in: "query"
+        description: "q"
+        required: false
+        type: "string"
+      - name: "sort"
+        in: "query"
+        description: "sort"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Message"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /surveillance_operations:
+    get:
+      tags:
+      - "Surveillance Operations"
+      summary: "view surveillance operations"
+      operationId: "getOperationsUsingGET_1"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: false
+        type: "string"
+      - name: "q"
+        in: "query"
+        description: "q"
+        required: false
+        type: "string"
+      - name: "sort"
+        in: "query"
+        description: "sort"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/SurveillanceOperation"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+    post:
+      tags:
+      - "Surveillance Operations"
+      summary: "add a surveillance operation"
+      operationId: "addOperationUsingPOST_1"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "model"
+        description: "model"
+        required: true
+        schema:
+          $ref: "#/definitions/SurveillanceOperation"
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /surveillance_operations/{surOpsId}:
+    get:
+      tags:
+      - "Surveillance Operations"
+      summary: "view specific surveillance operation"
+      operationId: "getOperationByGufiUsingGET_1"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "surOpsId"
+        in: "path"
+        description: "surOpsId"
+        required: true
+        type: "string"
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/SurveillanceOperation"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /warning_regions:
+    get:
+      tags:
+      - "Surveillance Operations"
+      summary: "view the most recent warning regions"
+      operationId: "getWarningRegionsUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: false
+        type: "string"
+      - name: "q"
+        in: "query"
+        description: "query for VALID or INVALID regions"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "number of results returned, defaults to 10"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/WarningRegionModel"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+    post:
+      tags:
+      - "Surveillance Operations"
+      summary: "add a surveillance operation"
+      operationId: "addWarningRegionsUsingPOST"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "model"
+        description: "model"
+        required: true
+        schema:
+          $ref: "#/definitions/WarningRegionModel"
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /warning_regions/{warningRegionId}:
+    get:
+      tags:
+      - "Surveillance Operations"
+      summary: "view specific warning region"
+      operationId: "getWarningRegionByIdUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "warningRegionId"
+        in: "path"
+        description: "warningRegionId"
+        required: true
+        type: "string"
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/WarningRegionModel"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+    put:
+      tags:
+      - "Surveillance Operations"
+      summary: "update a surveillance operation"
+      operationId: "updateWarningRegionsUsingPUT"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "warningRegionId"
+        in: "path"
+        description: "warningRegionId"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "model"
+        description: "model"
+        required: true
+        schema:
+          $ref: "#/definitions/WarningRegionModel"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        201:
+          description: "Created"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+definitions:
+  Violation:
+    type: "object"
+    required:
+    - "type"
+    properties:
+      constraining_id:
+        type: "string"
+        description: "Unique identifier for this constraint."
+      constraining_ids:
+        type: "array"
+        description: "(For backward compatibility only, see constraining_id"
+        items:
+          type: "string"
+      constraining_volume:
+        type: "integer"
+        format: "int32"
+        description: "The ordinal of the volume that conflicts with another operation,\
+          \ eg, the first volume of an existing flight acts as a constraint against\
+          \ proposed flights"
+      problemReport:
+        type: "string"
+        description: "A report that a problem occurred thus Violation could not be\
+          \ determined."
+      type:
+        type: "string"
+        description: "The constraint type. eg, This is a gufi for OperationViolation\
+          \ (constraint is an existing flight), or an ID of a national park"
+      violating_volume:
+        type: "integer"
+        format: "int32"
+        description: "Set for OperationViolations, VolumeViolations, RogueViolations.\
+          \ The ordinal of the volume that is violating this constraint, eg, the proposed\
+          \ flight's second volume violated this constraint"
+  Urep:
+    type: "object"
+    required:
+    - "altitude"
+    - "source"
+    - "submit_time"
+    - "time_measured"
+    - "user_id"
+    properties:
+      air_temperature:
+        type: "number"
+        format: "double"
+        description: "Air temperature in degrees Celcius."
+      aircraft_sighting:
+        type: "array"
+        description: "An aircraft is in the vicinity of the report."
+        items:
+          $ref: "#/definitions/PointOut"
+      altitude:
+        type: "number"
+        format: "double"
+        description: "The altitude as measured via a GPS device on the aircraft. Units\
+          \ ininternational feet using the WGS84 reference system."
+      gufi:
+        type: "string"
+        description: "The UUID of the reporting operation, if appropriate."
+      icing_intensity:
+        type: "string"
+        description: "A qualitative measure of icing intensity. Use 'NEG' when icing\
+          \ was expected, but not encountered."
+        enum:
+        - "TRACE"
+        - "TRACE_LGT"
+        - "LGT"
+        - "LGT_MOD"
+        - "MOD"
+        - "MOD_SEV"
+        - "SEV"
+        - "NEG"
+      icing_type:
+        type: "string"
+        description: "The type of icing encountered. Can only be submitted with icing_intensity."
+        enum:
+        - "RIME"
+        - "CLR"
+        - "MX"
+      location:
+        $ref: "#/definitions/Point"
+      proximity:
+        type: "string"
+        description: "Qualifier for any weather value provided. Use this field if\
+          \ the observed phenomenon is not at the provided location, but is nearby.\
+          \ Must be equal to VC."
+        enum:
+        - "VC"
+      remarks:
+        type: "string"
+        description: "Any free text that cannot be captured using the standard fields.\
+          \ General use not advised."
+      source:
+        type: "string"
+        description: "How the measured/observed activity was measured/observed. In\
+          \ the case of “OTHER” comments should be supplied in the “remarks” field."
+        enum:
+        - "VEHICLE"
+        - "OBSERVER"
+        - "GROUND_SENSOR"
+        - "AIRBORNE_SENSOR"
+        - "OTHER"
+      submit_time:
+        type: "string"
+        format: "date-time"
+        description: "UTM Client assigned time for when the UREP was sent to the UTM\
+          \ System."
+      time_measured:
+        type: "string"
+        format: "date-time"
+        description: "Client assigned time for when the data were initially measured."
+      time_received:
+        type: "string"
+        format: "date-time"
+        description: "UTM assigned time for when the UREP was received at the UTM\
+          \ System for processing."
+      turbulence_intensity:
+        type: "string"
+        description: "A qualitative measure of turbulence intensity. Use 'NEG' when\
+          \ turbulence was expected, but not encountered."
+        enum:
+        - "LGT"
+        - "MOD"
+        - "SEV"
+        - "EXTRM"
+        - "LGT_MOD"
+        - "MOD_SEV"
+        - "SEV_EXTRM"
+        - "NEG"
+      urep_id:
+        type: "string"
+        description: "UTM System assigned identifier for a UREP."
+      user_id:
+        type: "string"
+      visibility:
+        type: "number"
+        format: "double"
+        description: "Visibility in statute miles, rounded down if necessary. Maximum\
+          \ value 99 indicates unrestricted visibility. Only use partial SM less than\
+          \ 1 SM (0.5 SM, but not 20.5 SM)."
+      weather:
+        type: "string"
+        description: "Flight visibility and flight weather, follows PIREP/METAR coding."
+        enum:
+        - "DRSN"
+        - "BLSN"
+        - "DRDU"
+        - "DRSA"
+        - "DZ"
+        - "FZDZ"
+        - "DU"
+        - "BLDU"
+        - "DS"
+        - "FG"
+        - "FZFG"
+        - "FZRA"
+        - "FC"
+        - "GR"
+        - "SHGR"
+        - "HZ"
+        - "IC"
+        - "PL"
+        - "SHPL"
+        - "BR"
+        - "BCFG"
+        - "PRFG"
+        - "RA"
+        - "SHRA"
+        - "SA"
+        - "BLSA"
+        - "SS"
+        - "MIFG"
+        - "SHGS"
+        - "GS"
+        - "FU"
+        - "SG"
+        - "SN"
+        - "SHSN"
+        - "PY"
+        - "SQ"
+        - "TS"
+        - "UP"
+        - "VA"
+        - "PO"
+      weather_intensity:
+        type: "string"
+        description: "Qualifier for any weather value provided.  Without a weather_intensity\
+          \ value, MODERATE is assumed."
+        enum:
+        - "HEAVY"
+        - "MODERATE"
+        - "LIGHT"
+      wind_direction:
+        type: "number"
+        format: "double"
+        description: "Magnetic wind direction, 0 to 359 degrees. Must be submitted\
+          \ when wind_speed is provided in the UREP ."
+      wind_speed:
+        type: "integer"
+        format: "int32"
+        description: "Wind speed in knots. Must be submitted when wind_direction is\
+          \ provided in the UREP."
+  InformMsgType:
+    type: "object"
+    required:
+    - "gufi"
+    properties:
+      ack_time:
+        type: "string"
+        description: "The time client acknowledged this message."
+      disclaimer:
+        type: "string"
+      free_text:
+        type: "string"
+        description: "Not used by UTM System. May be formated using Message.Tag"
+      gufi:
+        type: "string"
+        description: "The assigned GUFI for the operation UUID referenced by the message."
+      inform_message:
+        type: "string"
+        enum:
+        - "UNKWN"
+        - "ACTIVATED"
+        - "CLOSED"
+        - "CANCELED"
+        - "ACCEPTED"
+        - "REJECTED"
+        - "NONCONFORMING"
+        - "EXPIRED"
+        - "OP_NOT_SUCCESSFUL"
+        - "NOT_ACTIVATED"
+        - "ROGUE"
+        - "ROGUECLOSED"
+        - "ABORTING"
+        - "ABORTCLOSED"
+        - "CREATE_SUCCESS"
+        - "CREATE_FAIL"
+        - "UPDATE_SUCCESS"
+        - "UPDATE_FAIL"
+        - "INVALIDATED"
+      message_id:
+        type: "string"
+        description: "The identifier"
+      origin:
+        type: "string"
+        description: "CLIENT: Message is from a UTM Client to the UTM System.UTM:\
+          \ Message was automatically generated by the UTM System. MANAGER: Message\
+          \ was generated by a UTM Manager (a human)."
+        enum:
+        - "CLIENT"
+        - "UTM"
+        - "MANAGER"
+      reason:
+        type: "string"
+      sent_time:
+        type: "string"
+        description: "Either the time the message was sent by the UTM System or the\
+          \ time it was received by the UTM System."
+      surveillance_operation_id:
+        type: "string"
+      user:
+        type: "string"
+      violations:
+        type: "array"
+        description: "Included with messages from the INFORM category with inform_message\
+          \ = REJECTED. The array is of pairs of types and constraining_id. The type\
+          \ refers to a constraint in the system (national parks, airports, a volume\
+          \ in an existing operation, wrong registration ID, etc.). The constraining_id\
+          \ is the UUID associated with each constraint; constraining_volume augments\
+          \ it  when applicable.  When applicable, violating_volume indicates which\
+          \ volume is in violation. This allows for querying UTM for more information\
+          \ about those particular constraints."
+        items:
+          $ref: "#/definitions/Violation"
+      warning_region_id:
+        type: "string"
+      warnings:
+        type: "array"
+        items:
+          $ref: "#/definitions/Warning"
+  Warning:
+    type: "object"
+    required:
+    - "type"
+    properties:
+      message:
+        type: "string"
+      type:
+        type: "string"
+        enum:
+        - "Obstacles"
+        - "Tfr"
+        - "Decision"
+      warning_ids:
+        type: "array"
+        items:
+          type: "string"
+  Message:
+    type: "object"
+    required:
+    - "gufi"
+    discriminator: "category"
+    properties:
+      ack_time:
+        type: "string"
+        description: "The time client acknowledged this message."
+      free_text:
+        type: "string"
+        description: "Not used by UTM System. May be formated using Message.Tag"
+      gufi:
+        type: "string"
+        description: "The assigned GUFI for the operation UUID referenced by the message."
+      message_id:
+        type: "string"
+        description: "The identifier"
+      origin:
+        type: "string"
+        description: "CLIENT: Message is from a UTM Client to the UTM System.UTM:\
+          \ Message was automatically generated by the UTM System. MANAGER: Message\
+          \ was generated by a UTM Manager (a human)."
+        enum:
+        - "CLIENT"
+        - "UTM"
+        - "MANAGER"
+      sent_time:
+        type: "string"
+        description: "Either the time the message was sent by the UTM System or the\
+          \ time it was received by the UTM System."
+      surveillance_operation_id:
+        type: "string"
+      user:
+        type: "string"
+      warning_region_id:
+        type: "string"
+      category:
+        type: "string"
+        description: "Category of Message. ALERT, FREE, INFORM, INTENT, RESPONSE"
+  ManagerConstraint:
+    type: "object"
+    required:
+    - "effective_time_begin"
+    - "effective_time_end"
+    - "geog"
+    - "max_altitude"
+    - "min_altitude"
+    - "reason"
+    properties:
+      effective_time_begin:
+        type: "string"
+        format: "date-time"
+        description: "The beginning time of the manager constraint."
+      effective_time_end:
+        type: "string"
+        format: "date-time"
+        description: "The ending time of the manager constraint."
+      geog:
+        type: "string"
+        description: "The geography of the manager constraint."
+      manager_constraint_id:
+        type: "string"
+      max_altitude:
+        type: "number"
+        format: "double"
+        description: "The maximum altitude."
+      min_altitude:
+        type: "number"
+        format: "double"
+        description: "The minimum altitude."
+      reason:
+        type: "string"
+        description: "The reason for the manager constraint."
+      remarks:
+        type: "string"
+        description: "Any additional remarks about the manager constraint."
+  Constraint:
+    type: "object"
+    properties:
+      max_altitude:
+        type: "number"
+        format: "double"
+        description: "The maximum altitude."
+      min_altitude:
+        type: "number"
+        format: "double"
+        description: "The minimum altitude."
+  FreeMsgType:
+    type: "object"
+    required:
+    - "gufi"
+    properties:
+      ack_time:
+        type: "string"
+        description: "The time client acknowledged this message."
+      free_text:
+        type: "string"
+        description: "Not used by UTM System. May be formated using Message.Tag"
+      gufi:
+        type: "string"
+        description: "The assigned GUFI for the operation UUID referenced by the message."
+      message_id:
+        type: "string"
+        description: "The identifier"
+      origin:
+        type: "string"
+        description: "CLIENT: Message is from a UTM Client to the UTM System.UTM:\
+          \ Message was automatically generated by the UTM System. MANAGER: Message\
+          \ was generated by a UTM Manager (a human)."
+        enum:
+        - "CLIENT"
+        - "UTM"
+        - "MANAGER"
+      sent_time:
+        type: "string"
+        description: "Either the time the message was sent by the UTM System or the\
+          \ time it was received by the UTM System."
+      surveillance_operation_id:
+        type: "string"
+      user:
+        type: "string"
+      warning_region_id:
+        type: "string"
+  Operation:
+    type: "object"
+    required:
+    - "operation_volumes"
+    - "primary_contact_email"
+    - "primary_contact_name"
+    - "primary_contact_phone"
+    - "registration"
+    - "unmanned"
+    - "user_id"
+    properties:
+      aircraft_comments:
+        type: "string"
+        description: "Informative text about the aircraft. Not used by the UTM System."
+      aircraft_type:
+        type: "string"
+        description: "read-only. Vehicle type propery derived from vehicle registration\
+          \ ID."
+      color_markings:
+        type: "string"
+      conformance_time_begin:
+        type: "string"
+        format: "date-time"
+        description: "The conformance begin time of the operation. Derived from the\
+          \ begin time of the first operation volume."
+      conformance_time_end:
+        type: "string"
+        format: "date-time"
+        description: "The conformance end time of the operation. Derived from the\
+          \ end time of the last operation volume."
+      created_by:
+        type: "string"
+        description: "The user that created the operation. It is possible that an\
+          \ operation is created on behalf of an operator by, say, a manager. Nominally,\
+          \ this field will be equal to user_id."
+      decision_time:
+        type: "string"
+        format: "date-time"
+        description: "A timestamp set by the UTM System any time the state of the\
+          \ operation is updated, for example when the flight goes from PROPOSING\
+          \ to ACCEPTED (see Section 4.1)"
+      effective_time_begin:
+        type: "string"
+        format: "date-time"
+        description: "The effective begin time of the operation. Same value as the\
+          \ begin time of the first operation volume."
+      effective_time_end:
+        type: "string"
+        format: "date-time"
+        description: "The effective end time of the operation. Same value as the end\
+          \ time of the last operation volume."
+      extra_contact_info:
+        type: "string"
+        description: "Any additional contact information that may be useful (hours\
+          \ of availability, fax number, communication limitations, etc.)."
+      flight_comments:
+        type: "string"
+        description: "Informative text about the operation. Not used by the UTM System."
+      flight_geography_description:
+        type: "string"
+        description: "Informative text about the operation. Not used by the UTM System."
+      flight_number:
+        type: "string"
+        description: "Optional. Currently unused by the UTM System, may be useful\
+          \ to the operator for identification purposes."
+      gufi:
+        type: "string"
+        description: "has a GUFI assigned upon submission. It is a JSON string that\
+          \ conforms to the UUID version 4 specification (see Section 3.1)"
+      operation_volumes:
+        type: "array"
+        description: "Editable"
+        items:
+          $ref: "#/definitions/OperationVolume"
+      primary_contact_email:
+        type: "string"
+        description: "Same as primary contact name"
+      primary_contact_name:
+        type: "string"
+        description: "These are required fields but are not currently checked for\
+          \ validity, but clients should endeavor to provide useful, appropriate information\
+          \ in these fields. Validity will be checked in the future. These values\
+          \ should represent the contact that should be used in case of an issue with\
+          \ the operation before, during, or after that operation."
+      primary_contact_phone:
+        type: "string"
+        description: "Same as primary contact name"
+      protected_time_begin:
+        type: "string"
+        format: "date-time"
+        description: "The protected begin time of the operation. This is derived from\
+          \ the begin time of the first operation volume."
+      protected_time_end:
+        type: "string"
+        format: "date-time"
+        description: "The protected end time of the operation. This is derived from\
+          \ the end time of the last operation volume."
+      registration_detail:
+        type: "string"
+        description: "See 'registration' field. This contains details such as the\
+          \ source of the registration ID."
+      registration:
+        type: "string"
+        description: "The registration ID of the vehicle flying this operation. Note\
+          \ the UTM System assumes a single vehicle per operation currently. This\
+          \ registration value is provided to operators upon manual registration of\
+          \ their vehicle with NASA."
+      secondary_contact_email:
+        type: "string"
+        description: "Same as secondary contact name"
+      secondary_contact_name:
+        type: "string"
+        description: "These are optional fields. They are not currently checked for\
+          \ validity, but clients should endeavor to provide useful, appropriate information\
+          \ in these fields. Validity will be checked in the future. These values\
+          \ should represent the back-up contact that should be used in case of an\
+          \ issue with the operation before, during, or after that operation."
+      secondary_contact_phone:
+        type: "string"
+        description: "Same as secondary contact name"
+      state:
+        type: "string"
+        description: "The current state of the operation. Not required for submission,\
+          \ will be assigned by the UTM System."
+        enum:
+        - "P"
+        - "A"
+        - "R"
+        - "C"
+        - "X"
+        - "I"
+        - "E"
+        - "G"
+        - "B"
+        - "U"
+        - "T"
+        - "F"
+        - "V"
+      submit_time:
+        type: "string"
+        format: "date-time"
+        description: "Time the operation submission was received by UTM System."
+      unmanned:
+        type: "boolean"
+        example: false
+        description: "Must be set to 'true' with all submissions."
+      user_id:
+        type: "string"
+        description: "This field is populated based on provided credentials in the\
+          \ HTTPS header."
+      controller_location:
+        $ref: "#/definitions/Point"
+      gcs_location:
+        $ref: "#/definitions/Point"
+      faa_rule:
+        type: "string"
+        description: "Indication whether this operation is under Part 101-E, Part\
+          \ 107, Part 107 waiver, or a Part TBD.  Part TBD is a potential future rule\
+          \ that may cover operations such as those under test by UTM."
+        enum:
+        - "PART_107"
+        - "PART_107W"
+        - "PART_101E"
+        - "PART_TBD"
+      waiver_certificate_number:
+        type: "string"
+        description: "If a waiver has been obtained for the Part 107 rules, then the\
+          \ operator would have a waiver certificate number. For any operation submissions\
+          \ with faa_rule=PART_107W, this field is required."
+      priority_op:
+        type: "boolean"
+        description: "if true this operation is managed as a priority operation"
+        default: false
+  NationalPark:
+    type: "object"
+    properties:
+      date_edit:
+        type: "string"
+        format: "date-time"
+      geog:
+        type: "string"
+      gid:
+        type: "integer"
+        format: "int32"
+      gis_loc_id:
+        type: "string"
+      gis_notes:
+        type: "string"
+      group_code:
+        type: "string"
+      lands_code:
+        type: "string"
+      meta_midf:
+        type: "string"
+      parks_id:
+        type: "string"
+      unit_code:
+        type: "string"
+      unit_name:
+        type: "string"
+      unit_type:
+        type: "string"
+  Polygon:
+    type: "object"
+    required:
+    - "coordinates"
+    properties:
+      coordinates:
+        type: "array"
+        description: "Geojson array of array of Points. Points are pairs of longitude-\
+          \ latitude values. If a third element is provided for altitude, it is silently\
+          \ ignored. For Polygon, the first and last long-lat pair must be equal;\
+          \ this closes the polygon according to the Geojson specification.  If the\
+          \ ‘type’ is specified as ‘Polygon’ and the first and last points are not\
+          \ equal, the data will not be accepted."
+        items:
+          type: "array"
+          items:
+            type: "array"
+            items:
+              type: "number"
+              format: "double"
+  PointOut:
+    type: "object"
+    required:
+    - "altitude"
+    - "bearing"
+    - "distance"
+    - "north_ref"
+    - "point"
+    - "state"
+    - "track"
+    - "vehicle_type"
+    properties:
+      altitude:
+        type: "number"
+        format: "double"
+        description: "The altitude of the target. Units in feet using the WGS84 reference\
+          \ system. May be estimated."
+      bearing:
+        type: "integer"
+        format: "int32"
+        description: "Degrees from north (as defined by north_ref) from reporter's\
+          \ position to target."
+      distance:
+        type: "number"
+        format: "double"
+        description: "Nautical miles (horizontal only) from reporter's position to\
+          \ target."
+      north_ref:
+        type: "string"
+        description: "The reference for 'north' in reporting values"
+        enum:
+        - "TRUE"
+        - "MAGNETIC"
+      point:
+        $ref: "#/definitions/Point"
+      remark:
+        type: "string"
+        description: "Any free text that cannot be captured using the standard fields."
+      state:
+        type: "string"
+        description: "The current state of the target."
+        enum:
+        - "CRUISE"
+        - "DESCENT"
+        - "CLIMB"
+        - "HOVER"
+        - "LOITER"
+        - "UNKNOWN"
+      track:
+        type: "number"
+        format: "double"
+        description: "The track in decimal degrees relative to Double north_ref."
+      vehicle_type:
+        type: "string"
+        description: "The type of vehicle being pointed out."
+        enum:
+        - "SMALL_UAS"
+        - "LARGE_UAS"
+        - "HELICOPTER"
+        - "SMALL_MANNED_FIXED_WING"
+        - "HANG_GLIDER"
+        - "BALLOON"
+        - "LARGE_MANNED_FIXED_WING"
+        - "OTHER"
+  AlertMsgType:
+    type: "object"
+    required:
+    - "gufi"
+    properties:
+      ack_time:
+        type: "string"
+        description: "The time client acknowledged this message."
+      alert_message:
+        type: "string"
+        enum:
+        - "UNKWN"
+        - "WEATHER"
+        - "SECURITY"
+        - "OPERATIONS"
+        - "SYSTEM"
+      alert_severity:
+        type: "string"
+        enum:
+        - "UNKWN"
+        - "INFORMATIONAL"
+        - "NOTICE"
+        - "WARNING"
+        - "CRITICAL"
+        - "EMERGENCY"
+      free_text:
+        type: "string"
+        description: "Not used by UTM System. May be formated using Message.Tag"
+      gufi:
+        type: "string"
+        description: "The assigned GUFI for the operation UUID referenced by the message."
+      message_id:
+        type: "string"
+        description: "The identifier"
+      origin:
+        type: "string"
+        description: "CLIENT: Message is from a UTM Client to the UTM System.UTM:\
+          \ Message was automatically generated by the UTM System. MANAGER: Message\
+          \ was generated by a UTM Manager (a human)."
+        enum:
+        - "CLIENT"
+        - "UTM"
+        - "MANAGER"
+      sent_time:
+        type: "string"
+        description: "Either the time the message was sent by the UTM System or the\
+          \ time it was received by the UTM System."
+      surveillance_operation_id:
+        type: "string"
+      user:
+        type: "string"
+      warning_region_id:
+        type: "string"
+      warnings:
+        type: "array"
+        items:
+          $ref: "#/definitions/Warning"
+  UTMRestResponse:
+    type: "object"
+    properties:
+      http_status_code:
+        type: "string"
+      msg:
+        type: "string"
+      uri:
+        type: "string"
+      url:
+        type: "string"
+      violationMap:
+        type: "object"
+        properties: {}
+  ConstraintOverride:
+    type: "object"
+    required:
+    - "constraint_id"
+    - "constraint_table_name"
+    properties:
+      actual_time_end:
+        type: "string"
+      constraint_id:
+        type: "string"
+        description: "The id of the constraint to be overridden."
+      constraint_table_name:
+        type: "string"
+        description: "The table name of the constraint to be overridden."
+      effective_time_begin:
+        type: "string"
+      manager_id_end:
+        type: "string"
+      manager_id_start:
+        type: "string"
+      override_id:
+        type: "string"
+      planned_time_end:
+        type: "string"
+      submit_time:
+        type: "string"
+  Position:
+    type: "object"
+    required:
+    - "altitude_gps_wgs84_ft"
+    - "altitude_num_gps_satellites"
+    - "gufi"
+    - "hdop_gps"
+    - "location"
+    - "time_measured"
+    - "time_sent"
+    - "track_ground_speed_kn"
+    - "track_true_north_deg"
+    - "vdop_gps"
+    properties:
+      air_speed_source:
+        type: "string"
+        description: " Required if air_speed_track_kn is submitted. No requirements\
+          \ yet on the values here, but suggestions include ESTIMATED or MEASURED."
+      air_speed_track_kn:
+        type: "number"
+        format: "double"
+        description: "Air speed in relation to the direction of travel of the aircraft.\
+          \ Value may be negative."
+      altitude_gps_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The altitude as measured via a GPS device on the aircraft. Units\
+          \ in feet using the WGS84 reference system.\n"
+      altitude_num_gps_satellites:
+        type: "integer"
+        format: "int32"
+        description: "Number of satellites used in calculating the altitude_gps_wgs84_ft."
+      enroute_positions_id:
+        type: "integer"
+        format: "int32"
+      gufi:
+        type: "string"
+        description: "Each operation has an GUFI assigned upon submission. Required\
+          \ upon POSTing a new position. It is a JSON string, but conforms to the\
+          \ UUID version 4 specification"
+      hdop_gps:
+        type: "number"
+        format: "double"
+        description: "The horizontal dilution of precision as provided by the onboard\
+          \ GPS."
+      location:
+        $ref: "#/definitions/Point"
+      time_measured:
+        type: "string"
+        format: "date-time"
+        description: "The time the position was measured. Likely the time provided\
+          \ with the GPS position reading."
+      time_received:
+        type: "string"
+        format: "date-time"
+        description: "Not required for submission, assigned by the UTM System. The\
+          \ time the position was received by the UTM System."
+      time_sent:
+        type: "string"
+        format: "date-time"
+        description: "The time the position was sent."
+      track_ground_speed_kn:
+        type: "number"
+        format: "double"
+        description: "Ground speed int the direction of travel. Value must be >= 0.0.\
+          \ In knots."
+      track_magnetic_north_deg:
+        type: "number"
+        format: "double"
+        description: "The direction of travel relative to magnetic north in degrees.\
+          \ Value must be >= 0.0 and < 360.0."
+      track_true_north_deg:
+        type: "number"
+        format: "double"
+        description: "The direction of travel relative to true north in degrees. Value\
+          \ must be >= 0.0 and < 360.0."
+      user_id:
+        type: "string"
+        description: "Not required for submission. This field is populated based on\
+          \ the provided credentials in the HTTPS header."
+      vdop_gps:
+        type: "number"
+        format: "double"
+        description: "The vertical dilultion of precision as provided by the onboard\
+          \ GPS."
+  GeographyFragment:
+    type: "object"
+    description: "allowableValues for type are Point, LineString, Polygon and MultiPolygon.\
+      \ Since UTM supports most but not all Geojson datatypes, UTM defines a a portion\
+      \ (or fragment) of the Geojson spec.For most cases, “Polygon” will be more appropriate\
+      \ for describing an operation. For trajectory-based operations, LineString will\
+      \ be more appropriate. Any value other than LineString or Polygon will cause\
+      \ rejection of a submitted plan. The only accepted value for a position is Point.\
+      \ Any value other than Point will cause rejection of a position submission."
+  OperationVolume:
+    type: "object"
+    required:
+    - "effective_time_begin"
+    - "effective_time_end"
+    - "flight_geography"
+    - "line_of_sight"
+    - "max_altitude_wgs84_ft"
+    - "min_altitude_wgs84_ft"
+    - "ordinal"
+    properties:
+      actual_time_end:
+        type: "string"
+        format: "date-time"
+        description: "Time that the operational volume was freed for use by other\
+          \ operations."
+      conformance_geography:
+        $ref: "#/definitions/Polygon"
+      conformance_time_begin:
+        type: "string"
+        format: "date-time"
+        description: "Assigned by UTM System. Conformance time buffer before the submitted\
+          \ begin time."
+      conformance_time_end:
+        type: "string"
+        format: "date-time"
+        description: "Assigned by UTM System. Conformance time buffer after the submitted\
+          \ end time."
+      effective_time_begin:
+        type: "string"
+        format: "date-time"
+        description: "Earliest time the operation will use the operation volume."
+      effective_time_end:
+        type: "string"
+        format: "date-time"
+        description: "Latest time the operation will done with the operation volume."
+      flight_geography:
+        $ref: "#/definitions/Polygon"
+      gufi:
+        type: "string"
+      id:
+        type: "string"
+      line_of_sight:
+        type: "boolean"
+        example: false
+        description: "Whether this volume is fully seen by the operatoer."
+      max_altitude_conform_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The maximum altitude assigned and used by the UTM System to\
+          \ check vertical conformance of an operation. Based on UTM Client-provided\
+          \ max altitude."
+      max_altitude_protected_wgs84_ft:
+        type: "number"
+        format: "double"
+      max_altitude_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The maximum altitude for this operation in this operation volume.\
+          \ In WGS84 reference system using feet as units."
+      min_altitude_conform_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The minimum altitude assigned and used by the UTM System to\
+          \ check vertical conformance of an operation. Based on UTM Client-provided\
+          \ min altitude."
+      min_altitude_protected_wgs84_ft:
+        type: "number"
+        format: "double"
+      min_altitude_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The minimum altitude for this operation in this operation volume.\
+          \ In WGS84 reference system using feet as units."
+      near_structure:
+        type: "boolean"
+        description: "Is this operation volume within 400' of a structure?"
+        default: false
+      ordinal:
+        type: "integer"
+        format: "int32"
+        description: "This integer represents the ordering of the operation volume\
+          \ within the set of operation volumes. Need not be consecutive integers."
+      protected_geography:
+        $ref: "#/definitions/Polygon"
+      protected_time_begin:
+        type: "string"
+        format: "date-time"
+        description: "Assigned by UTM System. Protected time buffer before the submitted\
+          \ begin time."
+      protected_time_end:
+        type: "string"
+        format: "date-time"
+        description: "Assigned by UTM System. Protected time buffer after the submitted\
+          \ end time."
+  Point:
+    type: "object"
+    required:
+    - "coordinates"
+    properties:
+      coordinates:
+        type: "array"
+        description: "Pairs of longitude-latitude values. If a third element is provided\
+          \ for altitude, it is silently ignored."
+        items:
+          type: "number"
+          format: "double"
+      type:
+        type: "string"
+  Airspace:
+    type: "object"
+    properties:
+      airspace:
+        type: "string"
+      airspace_id:
+        type: "string"
+      highalt:
+        type: "string"
+      lowalt:
+        type: "string"
+      lower_alt:
+        type: "number"
+        format: "double"
+      name:
+        type: "string"
+      the_geog:
+        type: "string"
+      upper_alt:
+        type: "number"
+        format: "double"
+  IntentMsgType:
+    type: "object"
+    required:
+    - "gufi"
+    - "intent_message"
+    properties:
+      ack_time:
+        type: "string"
+        description: "The time client acknowledged this message."
+      free_text:
+        type: "string"
+        description: "Not used by UTM System. May be formated using Message.Tag"
+      gufi:
+        type: "string"
+        description: "The assigned GUFI for the operation UUID referenced by the message."
+      intent_message:
+        type: "string"
+        enum:
+        - "UNKWN"
+        - "ALL_CLEAR"
+        - "CLOSE"
+        - "CANCEL"
+        - "ABORT"
+      message_id:
+        type: "string"
+        description: "The identifier"
+      origin:
+        type: "string"
+        description: "CLIENT: Message is from a UTM Client to the UTM System.UTM:\
+          \ Message was automatically generated by the UTM System. MANAGER: Message\
+          \ was generated by a UTM Manager (a human)."
+        enum:
+        - "CLIENT"
+        - "UTM"
+        - "MANAGER"
+      sent_time:
+        type: "string"
+        description: "Either the time the message was sent by the UTM System or the\
+          \ time it was received by the UTM System."
+      surveillance_operation_id:
+        type: "string"
+      user:
+        type: "string"
+      warning_region_id:
+        type: "string"
+  ResponseMsgType:
+    type: "object"
+    required:
+    - "gufi"
+    - "response_message"
+    properties:
+      ack_time:
+        type: "string"
+        description: "The time client acknowledged this message."
+      free_text:
+        type: "string"
+        description: "Not used by UTM System. May be formated using Message.Tag"
+      gufi:
+        type: "string"
+        description: "The assigned GUFI for the operation UUID referenced by the message."
+      response_message:
+        type: "string"
+        enum:
+        - "UNKWN"
+        - "RECEIVED"
+      message_id:
+        type: "string"
+        description: "The identifier"
+      origin:
+        type: "string"
+        description: "CLIENT: Message is from a UTM Client to the UTM System. UTM:\
+          \ Message was automatically generated by the UTM System. MANAGER: Message\
+          \ was generated by a UTM Manager (a human)."
+        enum:
+        - "CLIENT"
+        - "UTM"
+        - "MANAGER"
+      sent_time:
+        type: "string"
+        description: "Either the time the message was sent by the UTM System or the\
+          \ time it was received by the UTM System."
+      surveillance_operation_id:
+        type: "string"
+      user:
+        type: "string"
+      warning_region_id:
+        type: "string"
+  LineString:
+    type: "object"
+    required:
+    - "coordinates"
+    properties:
+      coordinates:
+        type: "array"
+        description: "Geojson array of Points. Points are pairs of longitude-latitude\
+          \ values. If a third element is provided for altitude, it is silently ignored."
+        items:
+          type: "array"
+          items:
+            type: "number"
+            format: "double"
+  MultiPolygon:
+    type: "object"
+    required:
+    - "coordinates"
+    properties:
+      coordinates:
+        type: "array"
+        description: "Multidimensionaly array of Points, according to Geojson specification."
+        items:
+          type: "array"
+          items:
+            type: "array"
+            items:
+              type: "array"
+              items:
+                type: "number"
+                format: "double"
+  Airport:
+    type: "object"
+    properties:
+      airport_id:
+        type: "string"
+      beacon:
+        type: "string"
+      cycle_date:
+        type: "string"
+      elev:
+        type: "number"
+        format: "float"
+      geom_2d:
+        type: "string"
+      geom_3d:
+        type: "string"
+      gid:
+        type: "integer"
+        format: "int32"
+      hydro:
+        type: "string"
+      icao:
+        type: "string"
+      loc_hdatum:
+        type: "string"
+      mag_var:
+        type: "string"
+      name:
+        type: "string"
+      terrain:
+        type: "string"
+      wgs_datum:
+        type: "string"
+      wgs_lat:
+        type: "number"
+        format: "double"
+      wgs_long:
+        type: "number"
+        format: "double"
+  SurveillanceOperation:
+    type: "object"
+    required:
+    - "coverage_geography"
+    - "effective_time_begin"
+    - "registration"
+    - "submit_time"
+    properties:
+      coverage_geography:
+        $ref: "#/definitions/GeographyFragment"
+      created_by:
+        type: "string"
+      decision_time:
+        type: "string"
+        format: "date-time"
+      effective_time_begin:
+        type: "string"
+        format: "date-time"
+        description: "Must specify begin time"
+      effective_time_end:
+        type: "string"
+        format: "date-time"
+      other_info:
+        type: "object"
+        properties: {}
+      registration:
+        type: "string"
+        description: "Must specify registration id"
+      state:
+        type: "string"
+        enum:
+        - "P"
+        - "A"
+        - "R"
+        - "C"
+        - "X"
+        - "I"
+        - "E"
+        - "G"
+        - "B"
+        - "U"
+        - "T"
+        - "F"
+        - "V"
+      submit_time:
+        type: "string"
+        format: "date-time"
+        description: "Must specify submit time"
+      submit_time_reference:
+        type: "string"
+      surveillance_geography_string:
+        type: "string"
+      surveillance_operation_id:
+        type: "string"
+      time_received:
+        type: "string"
+        format: "date-time"
+      user_id:
+        type: "string"
+  WarningRegionModel:
+    type: "object"
+    required:
+    - "confidence"
+    - "expiration_time"
+    - "geography"
+    - "submit_time"
+    - "surveillance_operation_id"
+    properties:
+      confidence:
+        type: "integer"
+        format: "int32"
+        description: "Must specify confidence level"
+      created_by:
+        type: "string"
+      expiration_time:
+        type: "string"
+        format: "date-time"
+        description: "Must specify expiration time"
+      geography:
+        $ref: "#/definitions/GeographyFragment"
+      other_info:
+        type: "object"
+        properties: {}
+      preserve_current:
+        type: "boolean"
+      state:
+        type: "string"
+      submit_time:
+        type: "string"
+        format: "date-time"
+        description: "Must specify submit time"
+      submit_time_reference:
+        type: "string"
+      surveillance_operation_id:
+        type: "string"
+        description: "Must specify surveillance operations id"
+      time_received:
+        type: "string"
+      user_id:
+        type: "string"
+      warning_region_id:
+        type: "string"
