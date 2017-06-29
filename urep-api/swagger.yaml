@@ -11,6 +11,7 @@ host: "tmiserver.arc.nasa.gov"
 basePath: "/urep"
 schemes:
 - "https"
+- "wss"
 security:
 - password:
   - "USS"
