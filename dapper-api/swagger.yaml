@@ -48,6 +48,7 @@ tags:
   description: "Get version"
 schemes:
 - "https"
+- "wss"
 paths:
   /dataExchanges/operations:
     put:
