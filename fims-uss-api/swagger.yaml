@@ -51,6 +51,7 @@ tags:
   description: "Get version"
 schemes:
 - "https"
+- "wss"
 paths:
   /operations:
     post:
