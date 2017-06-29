@@ -1,0 +1,32 @@
+
+<h2>Violation</h2>
+<ul class="parameter">
+  <li class="param-required-">constraining_id : String
+    <br/>Unique identifier for this constraint.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">constraining_ids : List
+    <br/>(For backward compatibility only, see constraining_id
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">constraining_volume : Integer
+    <br/>The ordinal of the volume that conflicts with another operation, eg, the first volume of an existing flight acts as a constraint against proposed flights
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">problemReport : String
+    <br/>A report that a problem occurred thus Violation could not be determined.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-true">type : String
+    <br/>The constraint type. eg, This is a gufi for OperationViolation (constraint is an existing flight), or an ID of a national park
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">violating_volume : Integer
+    <br/>Set for OperationViolations, VolumeViolations, RogueViolations. The ordinal of the volume that is violating this constraint, eg, the proposed flight&#39;s second volume violated this constraint
+  </li>
+</ul>

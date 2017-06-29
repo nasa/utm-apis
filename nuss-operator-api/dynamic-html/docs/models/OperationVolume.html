@@ -1,0 +1,107 @@
+
+<h2>OperationVolume</h2>
+<ul class="parameter">
+  <li class="param-required-">actual_time_end : Date
+    <br/>Time that the operational volume was freed for use by other operations.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">conformance_geography : Polygon
+    <br/>
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">conformance_time_begin : Date
+    <br/>Assigned by UTM System. Conformance time buffer before the submitted begin time.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">conformance_time_end : Date
+    <br/>Assigned by UTM System. Conformance time buffer after the submitted end time.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-true">effective_time_begin : Date
+    <br/>Earliest time the operation will use the operation volume.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-true">effective_time_end : Date
+    <br/>Latest time the operation will done with the operation volume.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-true">flight_geography : Polygon
+    <br/>
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">gufi : String
+    <br/>
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">id : String
+    <br/>
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-true">line_of_sight : Boolean
+    <br/>Whether this volume is fully seen by the operatoer.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">max_altitude_conform_wgs84_ft : Double
+    <br/>The maximum altitude assigned and used by the UTM System to check vertical conformance of an operation. Based on UTM Client-provided max altitude.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">max_altitude_protected_wgs84_ft : Double
+    <br/>
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-true">max_altitude_wgs84_ft : Double
+    <br/>The maximum altitude for this operation in this operation volume. In WGS84 reference system using feet as units.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">min_altitude_conform_wgs84_ft : Double
+    <br/>The minimum altitude assigned and used by the UTM System to check vertical conformance of an operation. Based on UTM Client-provided min altitude.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">min_altitude_protected_wgs84_ft : Double
+    <br/>
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-true">min_altitude_wgs84_ft : Double
+    <br/>The minimum altitude for this operation in this operation volume. In WGS84 reference system using feet as units.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">near_structure : Boolean
+    <br/>Is this operation volume within 400&#39; of a structure?
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-true">ordinal : Integer
+    <br/>This integer represents the ordering of the operation volume within the set of operation volumes. Need not be consecutive integers.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">protected_geography : Polygon
+    <br/>
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">protected_time_begin : Date
+    <br/>Assigned by UTM System. Protected time buffer before the submitted begin time.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">protected_time_end : Date
+    <br/>Assigned by UTM System. Protected time buffer after the submitted end time.
+  </li>
+</ul>
