@@ -5,7 +5,7 @@ info:
     \ (USS) to the Flight Information Management System (FIMS) within UTM.  There\
     \ is an additional API for asynchronous communications that is described in the\
     \ Subscription Points section."
-  version: "v1"
+  version: "v2"
   title: "UTM Research Platform, FIMS-USS Interface"
   termsOfService: "\nA. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT\
     \ ANY WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,\
