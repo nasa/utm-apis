@@ -5,7 +5,7 @@ info:
     \ (USS) to the Flight Information Management System (FIMS) within UTM.  There\
     \ is an additional API for asynchronous communications that is described in the\
     \ Subscription Points section."
-  version: "v2"
+  version: "v1"
   title: "UTM Research Platform, FIMS-USS Interface"
   termsOfService: "\nA. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT\
     \ ANY WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,\
@@ -39,7 +39,7 @@ host: "tmiserver.arc.nasa.gov"
 basePath: "/fims"
 tags:
 - name: "A. FIMS Endpoints"
-  description: "Primary RESTful endpoints for operators accessing FIMS"
+  description: "The primary RESTful endpoints for operators accessing FIMS"
   externalDocs:
     description: "NASA FIMS server generated from this API specification."
     url: "https://tmiserver.arc.nasa.gov/fims/api/"
@@ -48,10 +48,9 @@ tags:
 - name: "C. Data Types"
   description: "Psuedo endpoints used for the documentation of the data schema"
 - name: "D. Version"
-  description: "Get the API version"
+  description: "Get version"
 schemes:
 - "https"
-- "wss"
 paths:
   /operations:
     post:
