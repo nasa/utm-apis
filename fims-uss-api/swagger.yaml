@@ -39,7 +39,7 @@ host: "tmiserver.arc.nasa.gov"
 basePath: "/fims"
 tags:
 - name: "A. FIMS Endpoints"
-  description: "The primary RESTful endpoints for operators accessing FIMS"
+  description: "Primary RESTful endpoints for operators accessing FIMS"
   externalDocs:
     description: "NASA FIMS server generated from this API specification."
     url: "https://tmiserver.arc.nasa.gov/fims/api/"
