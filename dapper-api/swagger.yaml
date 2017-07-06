@@ -1,14 +1,9 @@
 ---
 swagger: "2.0"
 info:
-  description: "This API describes the RESTful interface to the USS discovery service\
-    \ within the UTM System.  This service allows for authenticated USS operators\
-    \ to submit information about their USS and for all stakeholders to query for\
-    \ a USS matching certain parameters. In addition, this document defines an asynchronous\
-    \ interface wherein each authenticated USS can be notifed of changes to information\
-    \ about other USSs."
+  description: "Data analyis provider for USS"
   version: "v2"
-  title: "UTM USS Service Discovery"
+  title: "NASA UTM Data Analysis Provider (dapper)"
   termsOfService: "\nA. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT\
     \ ANY WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,\
     \ BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL CONFORM TO SPECIFICATIONS,\
@@ -37,247 +32,427 @@ info:
   license:
     name: "NASA Open Source Agreement"
     url: "https://ti.arc.nasa.gov/opensource/nosa/"
-host: "ussdiscovery.arc.nasa.gov"
-basePath: "/api"
+host: "utmalpha.arc.nasa.gov"
+basePath: "/utm/dapper/"
 tags:
-- name: "A. Discovery Endpoints"
-  description: "The primary RESTful endpoints for sharing USS Instance data."
-- name: "B. Subscription Points"
-  description: "Non-REST endpoints for asynchronous communications with FIMS"
+- name: "A. DAA Endpoints"
+  description: "The primary RESTful endpoints for pushing data to be aggregated"
+  externalDocs:
+    description: "NASA dapper server generated from this API specification."
+    url: "https://tmiserver.arc.nasa.gov/dapper/api/"
+- name: "B. DAP Endpoints"
+  description: "Primary restful endpoints for accesssing aggregate data"
 - name: "C. Data Types"
   description: "Psuedo endpoints used for the documentation of the data schema"
+- name: "D. Version"
+  description: "Get version"
 schemes:
 - "https"
+- "wss"
 paths:
-  /uss:
-    get:
+  /dataExchanges/operations:
+    put:
       tags:
-      - "A. Discovery Endpoints"
-      summary: "Request information regarding USS instances"
-      description: "Allows for querying for USS instances."
-      operationId: "getUSSes"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "fields"
-        in: "query"
-        description: "The specific subset of fields to return. Comma separated list.\
-          \ Default will be all fields."
-        required: false
-        type: "string"
-      - name: "q"
-        in: "query"
-        description: "Query with specific criteria.  <br/><br/>\n<b>example usage:</b>\
-          \ .../api/v1/uss?q=uss_name eq NUSS, time_available_begin gte 2016-10-02T00:00:00Z,\
-          \ coverage_area contains POINT (-122.056455 37.414336) <br/><br/>\nA series\
-          \ of binary operators and operands.  <br/>\nThe lefthand side operands are\
-          \ the field names.  <br/>\nThe righthand side operands are constants of\
-          \ the corresponding type. <br/>\nThe allowed operators are dependent on\
-          \ the operand types.  <br/>\nFor geometric RHS, the input should be OGC\
-          \ well-known text (http://en.wikipedia.org/wiki/Well-known_text), limited\
-          \ to point, linestring, and polygon types.  <br/>\nWe also allow the non-standard\
-          \ bounding box as a geometric RHS. This is of the form BBOX(lower_left_long\
-          \ lower_left_lat, upper_right_lon upper_right_lat).  <br/>\nString-typed\
-          \ operands may use `eq`, `contains`, and `not`.  <br/>\nNumeric-typed and\
-          \ time operands may use `eq`, `lt`, `lte`, `gt`, `gte`, and `not`. <br/>\n\
-          Geometric-types operands may use `intersects`, `contains`, and `within`.\
-          \ <br/>\nIf multiple criteria are specified, they are considered as an *AND*\
-          \ operation. <br/>\n"
-        required: false
-        type: "string"
-      - name: "sort"
-        in: "query"
-        description: "A valid field name to use for sorting records. If multiple fields\
-          \ are provided, the sorting is based on the ordered priorty of that list."
-        required: false
-        type: "string"
-        default: "time_submitted"
-      - name: "sort_increasing"
-        in: "query"
-        description: "For optional use with the 'sort' parameter. If 'sort' is not\
-          \ provided, then 'sort_increasing' will be ignored. Boolean value.  If multiple\
-          \ fields are provided in the 'sort' paramenter, this boolean value will\
-          \ apply to all of them."
-        required: false
-        type: "boolean"
-        default: true
-      - name: "limit"
-        in: "query"
-        description: "The maximum number or records to return."
-        required: false
-        type: "integer"
-        default: 10
-        format: "int32"
-      - name: "offset"
-        in: "query"
-        description: "The index from which to begin the list of returned records."
-        required: false
-        type: "integer"
-        default: 0
-        format: "int32"
-      responses:
-        200:
-          description: "Successful data request. Response includes requested data."
-          schema:
-            $ref: "#/definitions/UssInstance"
-        400:
-          description: "Bad request. Typically validation error. Fix your request\
-            \ and retry."
-          schema:
-            $ref: "#/definitions/UssApiResponse"
-        429:
-          description: "Too many recent requests from you. Wait to make further queries."
-          schema:
-            $ref: "#/definitions/UssApiResponse"
-      security:
-      - OauthSecurity: []
-    post:
-      tags:
-      - "A. Discovery Endpoints"
-      summary: "Submit information regarding USS Instances"
-      description: "Allows for submission of USS Instances to the service discovery\
-        \ system."
-      operationId: "postUSS"
+      - "A. DAA Endpoints"
+      summary: "Submit an Operation to Dapper. This is a PUT so it will update or\
+        \ create the operation via the gufi."
+      description: "Allows for the submission of data to dapper. Operations should\
+        \ be submitted whenever their state changes. This will override the record\
+        \ in storage and allow for streaming of operation changes in real time."
+      operationId: "postOperationDataExchange"
       consumes:
       - "application/json"
       produces:
       - "application/json"
       parameters:
       - in: "body"
-        name: "uss_instance"
-        description: "USS Instance plan to add"
+        name: "operation_data_exchange"
+        description: "Data exchange to add"
         required: true
         schema:
-          $ref: "#/definitions/UssInstance"
+          $ref: "#/definitions/DataExchangeOperation"
       responses:
         201:
-          description: "USS Instance received."
+          description: "Data Exchange received."
           schema:
-            $ref: "#/definitions/UssApiResponse"
+            $ref: "#/definitions/DapperApiResponse"
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
           schema:
-            $ref: "#/definitions/UssApiResponse"
+            $ref: "#/definitions/DapperApiResponse"
         403:
           description: "Invalid ID supplied.  Fix authorization and retry."
           schema:
-            $ref: "#/definitions/UssApiResponse"
-        429:
-          description: "Too many recent requests from you. Wait to make further submissions."
-          schema:
-            $ref: "#/definitions/UssApiResponse"
+            $ref: "#/definitions/DapperApiResponse"
       security:
-      - OauthSecurity: []
-  /uss/{id}:
+      - Bearer: []
+  /dataExchanges/operations/{gufi}:
     get:
       tags:
-      - "A. Discovery Endpoints"
-      summary: "Request information regarding a single USS Instance"
-      description: "Allows for querying for USS Instances."
-      operationId: "getUSS"
-      consumes:
-      - "application/json"
+      - "B. DAP Endpoints"
+      summary: "Get an Operation Data Exchange from dapper by the gufi."
+      operationId: "getOperationDataExchange"
       produces:
       - "application/json"
       parameters:
-      - name: "id"
+      - name: "gufi"
         in: "path"
-        description: "id"
+        description: "gufi of Operation DE to retrieve"
         required: true
         type: "string"
-      - name: "fields"
-        in: "query"
-        description: "The specific subset of fields to return. Comma separated list.\
-          \ Default will be all fields."
-        required: false
-        type: "string"
+        format: "uuid"
       responses:
         200:
-          description: "Successful data request. Response includes requested data."
+          description: "Operation exists"
           schema:
-            $ref: "#/definitions/UssInstance"
-        400:
-          description: "Bad request. Typically validation error. Fix your request\
-            \ and retry."
+            $ref: "#/definitions/#definitions/DataExchangeOperation"
+        404:
+          description: "Operation not found"
           schema:
-            $ref: "#/definitions/UssApiResponse"
-        429:
-          description: "Too many recent requests from you. Wait to make further queries."
+            $ref: "#/definitions/#definitions/DapperApiResponse"
+        403:
+          description: "Invalid authentication"
           schema:
-            $ref: "#/definitions/UssApiResponse"
+            $ref: "#/definitions/#definitions/DapperApiResponse"
       security:
-      - OauthSecurity: []
-    put:
+      - Bearer: []
+  /dataExchanges/positions:
+    post:
       tags:
-      - "A. Discovery Endpoints"
-      summary: "Submit updates to an existing USS Instance"
-      description: "Allows for USS operators to update an previous USS Instance submission."
-      operationId: "putUSS"
+      - "A. DAA Endpoints"
+      summary: "Submit a Position to Dapper."
+      description: "Allows for the submission of data to dapper."
+      operationId: "postPositionDataExchange"
       consumes:
       - "application/json"
       produces:
       - "application/json"
       parameters:
-      - name: "id"
-        in: "path"
-        description: "id"
-        required: true
-        type: "string"
       - in: "body"
-        name: "uss_instance"
-        description: "USS Instance with the following properties:\n  1. Contains a\
-          \ valid uss_instance_id.\n  2. Instance has time_available_end value that\
-          \ is in the future.\n  3. No date-time fields that are in the past are modified.\n\
-          \  4. Other rules for a USS Instance POST are satisfied.\n"
+        name: "position_data_exchange"
+        description: "Data exchange to add"
         required: true
         schema:
-          $ref: "#/definitions/UssInstance"
+          $ref: "#/definitions/DataExchangePosition"
       responses:
-        200:
-          description: "Successful data request. Response includes requested data."
+        201:
+          description: "Data Exchange received."
           schema:
-            $ref: "#/definitions/UssInstance"
+            $ref: "#/definitions/DapperApiResponse"
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
           schema:
-            $ref: "#/definitions/UssApiResponse"
-        429:
-          description: "Too many recent requests from you. Wait to make further queries."
+            $ref: "#/definitions/DapperApiResponse"
+        403:
+          description: "Invalid ID supplied.  Fix authorization and retry."
           schema:
-            $ref: "#/definitions/UssApiResponse"
+            $ref: "#/definitions/DapperApiResponse"
       security:
-      - OauthSecurity: []
-  /topic/ussUpdates:
+      - Bearer: []
+  /dataExchanges/positions/{gufi}:
     get:
       tags:
-      - "B. Subscription Points"
-      summary: "Subscription point for receiving position reports"
-      description: "Stakeholders should subscribe to this topic to receive updates\
-        \ on USS Instances. Data will be produced on this topic whenever:\n\n  1.\
-        \ A new, valid USS Instance is submitted.\n  2. There is an update to a USS\
-        \ Instance.\n  \nNote that there will not be data produced on this topic when\
-        \ a USS Instance ends according to its originally submited time_available_end\
-        \ value.\n\nSee the schema information describing UssInstance included within\
-        \ this document to understand the data that will be received via this queue.\n\
-        \nNote that if you are viewing this in a SwaggerUI, the \"try it out\" feature\
-        \ will not work since this is not a RESTful endpoint.\n"
+      - "B. DAP Endpoints"
+      summary: "Get all Position Data Exchanges from dapper by the gufi."
+      operationId: "getPositionsDataExchange"
       produces:
       - "application/json"
-      parameters: []
+      parameters:
+      - name: "gufi"
+        in: "path"
+        description: "gufi of Positions DEs to retrieve"
+        required: true
+        type: "string"
+        format: "uuid"
       responses:
-        410:
-          description: "A RESTful call was made to this endpoint but this is not a\
-            \ REST endpoint. Do not use this endpoint for REST calls."
-  /schema/UssInstance:
+        200:
+          description: "Positions exist"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/#definitions/DataExchangePosition"
+        404:
+          description: "Positions not found"
+          schema:
+            $ref: "#/definitions/#definitions/DapperApiResponse"
+        403:
+          description: "Invalid authentication"
+          schema:
+            $ref: "#/definitions/#definitions/DapperApiResponse"
+      security:
+      - Bearer: []
+  /dataExchanges/messages/alerts:
+    post:
+      tags:
+      - "A. DAA Endpoints"
+      summary: "Submit an AlertMessage to Dapper."
+      description: "Allows for the submission of data to dapper."
+      operationId: "postAlertMessageDataExchange"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "alert_message_data_exchange"
+        description: "Data exchange to add"
+        required: true
+        schema:
+          $ref: "#/definitions/DataExchangeAlertMessage"
+      responses:
+        201:
+          description: "Data Exchange received."
+          schema:
+            $ref: "#/definitions/DapperApiResponse"
+        400:
+          description: "Bad request. Typically validation error. Fix your request\
+            \ and retry."
+          schema:
+            $ref: "#/definitions/DapperApiResponse"
+        403:
+          description: "Invalid ID supplied.  Fix authorization and retry."
+          schema:
+            $ref: "#/definitions/DapperApiResponse"
+      security:
+      - Bearer: []
+  /dataExchanges/messages/alerts/{gufi}:
+    get:
+      tags:
+      - "B. DAP Endpoints"
+      summary: "Get all Alert Message Data Exchanges from dapper by the gufi."
+      operationId: "getAlertMessagesDataExchange"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "gufi"
+        in: "path"
+        description: "gufi of Alert Message DEs to retrieve"
+        required: true
+        type: "string"
+        format: "uuid"
+      responses:
+        200:
+          description: "Alert Messages exist"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/#definitions/DataExchangeAlertMessage"
+        404:
+          description: "Alert Messages not found"
+          schema:
+            $ref: "#/definitions/#definitions/DapperApiResponse"
+        403:
+          description: "Invalid authentication"
+          schema:
+            $ref: "#/definitions/#definitions/DapperApiResponse"
+      security:
+      - Bearer: []
+  /dataExchanges/messages/informs:
+    post:
+      tags:
+      - "A. DAA Endpoints"
+      summary: "Submit an InformMessage to Dapper."
+      description: "Allows for the submission of data to dapper."
+      operationId: "postInformMessageDataExchange"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "inform_message_data_exchange"
+        description: "Data exchange to add"
+        required: true
+        schema:
+          $ref: "#/definitions/DataExchangeInformMessage"
+      responses:
+        201:
+          description: "Data Exchange received."
+          schema:
+            $ref: "#/definitions/DapperApiResponse"
+        400:
+          description: "Bad request. Typically validation error. Fix your request\
+            \ and retry."
+          schema:
+            $ref: "#/definitions/DapperApiResponse"
+        403:
+          description: "Invalid ID supplied.  Fix authorization and retry."
+          schema:
+            $ref: "#/definitions/DapperApiResponse"
+      security:
+      - Bearer: []
+  /dataExchanges/messages/informs/{gufi}:
+    get:
+      tags:
+      - "B. DAP Endpoints"
+      summary: "Get all Inform Message Data Exchanges from dapper by the gufi."
+      operationId: "getInformMessagesDataExchange"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "gufi"
+        in: "path"
+        description: "gufi of Inform Message DEs to retrieve"
+        required: true
+        type: "string"
+        format: "uuid"
+      responses:
+        200:
+          description: "Inform Messages exist"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/#definitions/DataExchangeInformMessage"
+        404:
+          description: "Inform Messages not found"
+          schema:
+            $ref: "#/definitions/#definitions/DapperApiResponse"
+        403:
+          description: "Invalid authentication"
+          schema:
+            $ref: "#/definitions/#definitions/DapperApiResponse"
+      security:
+      - Bearer: []
+  /dataExchanges/messages/intents:
+    post:
+      tags:
+      - "A. DAA Endpoints"
+      summary: "Submit an IntentMessage to Dapper."
+      description: "Allows for the submission of data to dapper."
+      operationId: "postIntentMessageDataExchange"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "intent_message_data_exchange"
+        description: "Data exchange to add"
+        required: true
+        schema:
+          $ref: "#/definitions/DataExchangeIntentMessage"
+      responses:
+        201:
+          description: "Data Exchange received."
+          schema:
+            $ref: "#/definitions/DapperApiResponse"
+        400:
+          description: "Bad request. Typically validation error. Fix your request\
+            \ and retry."
+          schema:
+            $ref: "#/definitions/DapperApiResponse"
+        403:
+          description: "Invalid ID supplied.  Fix authorization and retry."
+          schema:
+            $ref: "#/definitions/DapperApiResponse"
+      security:
+      - Bearer: []
+  /dataExchanges/messages/intents/{gufi}:
+    get:
+      tags:
+      - "B. DAP Endpoints"
+      summary: "Get all Intent Message Data Exchanges from dapper by the gufi."
+      operationId: "getIntentMessagesDataExchange"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "gufi"
+        in: "path"
+        description: "gufi of Intent Message DEs to retrieve"
+        required: true
+        type: "string"
+        format: "uuid"
+      responses:
+        200:
+          description: "Intent Messages exist"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/#definitions/DataExchangeIntentMessage"
+        404:
+          description: "Intent Messages not found"
+          schema:
+            $ref: "#/definitions/#definitions/DapperApiResponse"
+        403:
+          description: "Invalid authentication"
+          schema:
+            $ref: "#/definitions/#definitions/DapperApiResponse"
+      security:
+      - Bearer: []
+  /dataExchanges/messages/constraints:
+    post:
+      tags:
+      - "A. DAA Endpoints"
+      summary: "Submit a ConstraintMessage to Dapper."
+      description: "Allows for the submission of data to dapper."
+      operationId: "postConstraintMessageDataExchange"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "constraint_message_data_exchange"
+        description: "Data exchange to add"
+        required: true
+        schema:
+          $ref: "#/definitions/DataExchangeConstraintMessage"
+      responses:
+        201:
+          description: "Data Exchange received."
+          schema:
+            $ref: "#/definitions/DapperApiResponse"
+        400:
+          description: "Bad request. Typically validation error. Fix your request\
+            \ and retry."
+          schema:
+            $ref: "#/definitions/DapperApiResponse"
+        403:
+          description: "Invalid ID supplied.  Fix authorization and retry."
+          schema:
+            $ref: "#/definitions/DapperApiResponse"
+      security:
+      - Bearer: []
+  /dataExchanges/messages/constraints/{gufi}:
+    get:
+      tags:
+      - "B. DAP Endpoints"
+      summary: "Get all Constraint Message Data Exchanges from dapper by the gufi."
+      operationId: "getConstraintMessagesDataExchange"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "gufi"
+        in: "path"
+        description: "gufi of Constraint Message DEs to retrieve"
+        required: true
+        type: "string"
+        format: "uuid"
+      responses:
+        200:
+          description: "Constraint Messages exist"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/#definitions/DataExchangeConstraintMessage"
+        404:
+          description: "Constraint Messages not found"
+          schema:
+            $ref: "#/definitions/#definitions/DapperApiResponse"
+        403:
+          description: "Invalid authentication"
+          schema:
+            $ref: "#/definitions/#definitions/DapperApiResponse"
+      security:
+      - Bearer: []
+  /schema/Operation:
     get:
       tags:
       - "C. Data Types"
-      summary: "Instance schema"
-      description: "Illustrates a USS Instance in JSON. This endpoint is not intended\
+      summary: "Operation schema"
+      description: "Illustrates an operation in JSON. This endpoint is not intended\
         \ for use.\n\nNote that if you are viewing this in a SwaggerUI, the \"try\
         \ it out\" feature will not work since this is not a RESTful endpoint.\n"
       produces:
@@ -287,7 +462,64 @@ paths:
         200:
           description: "OK"
           schema:
-            $ref: "#/definitions/UssInstance"
+            $ref: "#/definitions/Operation"
+        410:
+          description: "A RESTful call was made to this endpoint but this is not a\
+            \ REST endpoint. Do not use this endpoint for REST calls."
+  /schema/Position:
+    get:
+      tags:
+      - "C. Data Types"
+      summary: "Position schema"
+      description: "Illustrates a Position in JSON. This endpoint is not intended\
+        \ for use.\n\nNote that if you are viewing this in a SwaggerUI, the \"try\
+        \ it out\" feature will not work since this is not a RESTful endpoint.\n"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Position"
+        410:
+          description: "A RESTful call was made to this endpoint but this is not a\
+            \ REST endpoint. Do not use this endpoint for REST calls."
+  /schema/Point:
+    get:
+      tags:
+      - "C. Data Types"
+      summary: "Point schema"
+      description: "Illustrates an Point in JSON. This endpoint is not intended for\
+        \ use.\n\nNote that if you are viewing this in a SwaggerUI, the \"try it out\"\
+        \ feature will not work since this is not a RESTful endpoint.\n"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Point"
+        410:
+          description: "A RESTful call was made to this endpoint but this is not a\
+            \ REST endpoint. Do not use this endpoint for REST calls."
+  /schema/LineString:
+    get:
+      tags:
+      - "C. Data Types"
+      summary: "LineString schema"
+      description: "Illustrates an LineString in JSON. This endpoint is not intended\
+        \ for use.\n\nNote that if you are viewing this in a SwaggerUI, the \"try\
+        \ it out\" feature will not work since this is not a RESTful endpoint.\n"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/LineString"
         410:
           description: "A RESTful call was made to this endpoint but this is not a\
             \ REST endpoint. Do not use this endpoint for REST calls."
@@ -296,9 +528,9 @@ paths:
       tags:
       - "C. Data Types"
       summary: "Polygon schema"
-      description: "Illustrates a Polygon in JSON. This endpoint is not intended for\
-        \ use.\n\nNote that if you are viewing this in a SwaggerUI, the \"try it out\"\
-        \ feature will not work since this is not a RESTful endpoint.\n"
+      description: "Illustrates an Polygon in JSON. This endpoint is not intended\
+        \ for use.\n\nNote that if you are viewing this in a SwaggerUI, the \"try\
+        \ it out\" feature will not work since this is not a RESTful endpoint.\n"
       produces:
       - "application/json"
       parameters: []
@@ -310,124 +542,100 @@ paths:
         410:
           description: "A RESTful call was made to this endpoint but this is not a\
             \ REST endpoint. Do not use this endpoint for REST calls."
+  /schema/InformMessage:
+    get:
+      tags:
+      - "C. Data Types"
+      summary: "Inform Message schema"
+      description: "Illustrates the Dapper Inform Message. This is Dapper' reply to\
+        \ an Intent. This endpoint is not intended for use.\n\nNote that if you are\
+        \ viewing this in a SwaggerUI, the \"try it out\" feature will not work since\
+        \ this is not a RESTful endpoint.\n"
+      operationId: "informMsgUsingGET"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/InformMessage"
+        410:
+          description: "A RESTful call was made to this endpoint but this is not a\
+            \ REST endpoint. Do not use this endpoint for REST calls."
+  /schema/IntentMessage:
+    get:
+      tags:
+      - "C. Data Types"
+      summary: "Intent Message schema"
+      description: "Illustrates the Dapper Intent Message. Your Intent generates a\
+        \ Dapper Inform. This endpoint is not intended for use.\n\nNote that if you\
+        \ are viewing this in a SwaggerUI, the \"try it out\" feature will not work\
+        \ since this is not a RESTful endpoint.\n"
+      operationId: "intentMsgUsingGET"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/IntentMessage"
+        410:
+          description: "A RESTful call was made to this endpoint but this is not a\
+            \ REST endpoint. Do not use this endpoint for REST calls."
+  /schema/AlertMessage:
+    get:
+      tags:
+      - "C. Data Types"
+      summary: "Alert Message schema"
+      description: "Illustrates the Dapper Alert Message. Dapper may send out Alert\
+        \ Messages from time to time. This endpoint is not intended for use.\n\nNote\
+        \ that if you are viewing this in a SwaggerUI, the \"try it out\" feature\
+        \ will not work since this is not a RESTful endpoint\n"
+      operationId: "alertMsgUsingGET"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/AlertMessage"
+        410:
+          description: "A RESTful call was made to this endpoint but this is not a\
+            \ REST endpoint. Do not use this endpoint for REST calls."
+  /schema/ConstraintMessage:
+    get:
+      tags:
+      - "C. Data Types"
+      summary: "Constraint Message schema"
+      description: "Illustrates the Dapper Constraint Message. Dapper will send out\
+        \ a Constraint Message when a new constraint is put in place. This endpoint\
+        \ is not intended for use.\n\nNote that if you are viewing this in a SwaggerUI,\
+        \ the \"try it out\" feature will not work since this is not a RESTful endpoint\n"
+      operationId: "constraintMsgUsingGET"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/ConstraintMessage"
+        410:
+          description: "A RESTful call was made to this endpoint but this is not a\
+            \ REST endpoint. Do not use this endpoint for REST calls."
 securityDefinitions:
-  OauthSecurity:
-    type: "oauth2"
-    tokenUrl: "https://tmiserver.arc.nasa.gov/fimsAuthServer/oauth/token"
-    flow: "application"
+  Bearer:
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
 definitions:
-  UssInstance:
-    type: "object"
-    required:
-    - "coverage_area"
-    - "time_available_begin"
-    - "time_available_end"
-    properties:
-      uss_instance_id:
-        type: "string"
-        format: "uuid"
-        description: "A unique identifier assigned by the discovery service upon successful\
-          \ submission."
-      uss_name:
-        type: "string"
-        description: "The name of the entity providing UAS Support Services. Populated\
-          \ by the service discovery system based on credential information provided\
-          \ by the USS."
-      time_submitted:
-        type: "string"
-        format: "date-time"
-        description: "The time at which the submission of this USS Instance was received\
-          \ at this discovery service.  Only modifiable by discovery service."
-      time_available_begin:
-        type: "string"
-        format: "date-time"
-        description: "The time at which the USS will begin providing services for\
-          \ active UAS operations for this USS Instance.  Note that the USS may provide\
-          \ planning services prior to the time_available_begin depending on the policies\
-          \ of the USS."
-      time_available_end:
-        type: "string"
-        format: "date-time"
-        description: "The time at which the USS will cease providing services for\
-          \ active UAS operations for this USS Instance.  This means that there will\
-          \ not be any UAS operations airborne after this time that would be supported\
-          \ by this USS Instance."
-      coverage_area:
-        $ref: "#/definitions/Polygon"
-      time_last_modified:
-        type: "string"
-        format: "date-time"
-        description: "The last time there was an update to the data regarding this\
-          \ USS Instance. Only modifiable by discovery service."
-      contact_email:
-        type: "string"
-        format: "email"
-        description: "An optional contact email address for the USS."
-      contact_phone:
-        type: "string"
-        format: "phone"
-        description: "An optional contact number for the USS."
-      uss_informational_url:
-        type: "string"
-        format: "url"
-        description: "An optional website URL for the USS for human use."
-      uss_openapi_url:
-        type: "string"
-        format: "url"
-        description: "An optional URL for the USS to supply an OpenAPI specification\
-          \ of its UAS Operator interface."
-      uss_registration_url:
-        type: "string"
-        format: "url"
-        description: "An optional URL for UAS operators to register with this USS\
-          \ for services."
-      notes:
-        type: "string"
-        description: "Any additional free text that would aid consumers of the service\
-          \ discovery API in understanding this USS Instance."
-    description: "A contiguous area within which a USS has committed to providing\
-      \ services for UAS operations.  The specific level of services provided may\
-      \ be contained within the data provided from here in combination with data provided\
-      \ directly from the USS.  In the future, the information provided by this object\
-      \ may include more specific information about the services provided by the USS\
-      \ or the types of UAS operations that are supported by this USS Instance."
-    example:
-      uss_instance_id: "00000000-0000-4444-8888-FEEDDEADBEEF"
-      uss_name: "NUSS"
-      time_submitted: "2016-08-03T00:15:40.931Z"
-      time_available_begin: "2016-10-04T09:15:40Z"
-      time_available_end: "2016-11-04T13:20:42Z"
-      time_last_modified: "2016-08-04T17:31:01.253Z"
-      coverage_area:
-        type: "Polygon"
-        coordinates:
-        - - - -122.06382530000001906955731101334095001220703125
-            - 37.409069700000003422246663831174373626708984375
-          - - -122.05094253232999790270696394145488739013671875
-            - 37.4193006276999966530638630501925945281982421875
-          - - -122.0327620697599968480062671005725860595703125
-            - 37.41929920175999768616748042404651641845703125
-          - - -122.06382530000001906955731101334095001220703125
-            - 37.409069700000003422246663831174373626708984375
-        - - - -122.0621765789999955131861497648060321807861328125
-            - 37.4096804114499974502905388362705707550048828125
-          - - -122.051870568889995638528489507734775543212890625
-            - 37.41786527235999670892852009274065494537353515625
-          - - -122.0373264763399987486991449259221553802490234375
-            - 37.41786440108000277859900961630046367645263671875
-          - - -122.0621765789999955131861497648060321807861328125
-            - 37.4096804114499974502905388362705707550048828125
-      notes: "NUSS will only provide services for fixed-wing aircraft within this\
-        \ USS Instance volume."
-      uss_informational_url: "https://utm.arc.nasa.gov"
-      uss_openapi_url: "https://nuss.arc.nasa.gov/api"
-      uss_registration_url: "https://nuss.arc.nasa.gov/signup"
-      contact_email: "joseph.rios@nasa.gov"
-      contact_number: "650-555-5555"
-  UssApiResponse:
+  DapperApiResponse:
     type: "object"
     properties:
-      code:
+      status:
         type: "integer"
         format: "int32"
       type:
@@ -435,27 +643,633 @@ definitions:
       message:
         type: "string"
     example:
-      code: 201
+      status: 201
       type: "CREATED"
-      message: "USS Instance details received."
-  Polygon:
+      message: "Data exchange received."
+  DataExchangeOperation:
     type: "object"
     required:
-    - "coordinates"
+    - "api_version"
+    - "destination"
+    - "gufi"
+    - "operation"
+    - "source"
     - "type"
+    properties:
+      gufi:
+        type: "string"
+        format: "uuid"
+        description: "This is the gufi for the operation that this particular data\
+          \ exchange is regarding. All loggable data exchanges should contain a gufi.\n"
+      operation:
+        $ref: "#/definitions/Operation"
+      api_version:
+        type: "string"
+        description: "A string representing which version of the USS API spec this\
+          \ data exchange was designed for. Used to help distinguish historical data.\n"
+      source:
+        type: "string"
+        description: "A string representing the unique entity url (or the user id\
+          \ in the case of the operator) of the source. This must be a way to uniquely\
+          \ identify the source of the data exchange. Ie. if a USS sends a message\
+          \ to the operator the source would be the url of the USS\n"
+      destination:
+        type: "string"
+        description: "A string representing the unique entity url (or user_id in the\
+          \ operators case) of the destination. This must be a way to uniquely identify\
+          \ the destination of the data exchange. Ie. if a USS sends a message to\
+          \ the operator the destination would be the url of the Operator\n"
+      type:
+        type: "string"
+        description: "The type of DataExchange. Should be operation\n"
+        default: "operation"
+  DataExchangePosition:
+    type: "object"
+    required:
+    - "api_version"
+    - "destination"
+    - "gufi"
+    - "position"
+    - "source"
+    - "type"
+    properties:
+      gufi:
+        type: "string"
+        format: "uuid"
+        description: "This is the gufi for the operation that this particular data\
+          \ exchange is regarding. All loggable data exchanges should contain a gufi.\n"
+      position:
+        $ref: "#/definitions/Position"
+      api_version:
+        type: "string"
+        description: "A string representing which version of the USS API spec this\
+          \ data exchange was designed for. Used to help distinguish historical data.\n"
+      source:
+        type: "string"
+        description: "A string representing the unique entity url (or the user id\
+          \ in the case of the operator) of the source. This must be a way to uniquely\
+          \ identify the source of the data exchange. Ie. if a USS sends a message\
+          \ to the operator the source would be the url of the USS\n"
+      destination:
+        type: "string"
+        description: "A string representing the unique entity url (or user_id in the\
+          \ operators case) of the destination. This must be a way to uniquely identify\
+          \ the destination of the data exchange. Ie. if a USS sends a message to\
+          \ the operator the destination would be the url of the Operator  \n"
+      type:
+        type: "string"
+        description: "The type of DataExchange. Should be position\n"
+        default: "position"
+  DataExchangeAlertMessage:
+    type: "object"
+    required:
+    - "alert_message"
+    - "api_version"
+    - "destination"
+    - "gufi"
+    - "source"
+    - "type"
+    properties:
+      gufi:
+        type: "string"
+        format: "uuid"
+        description: "This is the gufi for the operation that this particular data\
+          \ exchange is regarding. All loggable data exchanges should contain a gufi.\
+          \ \n"
+      alert_message:
+        $ref: "#/definitions/AlertMessage"
+      api_version:
+        type: "string"
+        description: "A string representing which version of the USS API spec this\
+          \ data exchange was designed for. Used to help distinguish historical data.\n"
+      source:
+        type: "string"
+        description: "A string representing the unique entity url (or the user id\
+          \ in the case of the operator) of the source. This must be a way to uniquely\
+          \ identify the source of the data exchange. Ie. if a USS sends a message\
+          \ to the operator the source would be the url of the USS\n"
+      destination:
+        type: "string"
+        description: "A string representing the unique entity url (or user_id in the\
+          \ operators case) of the destination. This must be a way to uniquely identify\
+          \ the destination of the data exchange. Ie. if a USS sends a message to\
+          \ the operator the destination would be the url of the Operator\n"
+      type:
+        type: "string"
+        description: "The type of DataExchange. Should be alert_message\n"
+        default: "alert_message"
+  DataExchangeInformMessage:
+    type: "object"
+    required:
+    - "api_version"
+    - "destination"
+    - "gufi"
+    - "inform_message"
+    - "source"
+    - "type"
+    properties:
+      gufi:
+        type: "string"
+        format: "uuid"
+        description: "This is the gufi for the operation that this particular data\
+          \ exchange is regarding. All loggable data exchanges should contain a gufi.\
+          \ \n"
+      inform_message:
+        $ref: "#/definitions/InformMessage"
+      api_version:
+        type: "string"
+        description: "A string representing which version of the USS API spec this\
+          \ data exchange was designed for. Used to help distinguish historical data.\n"
+      source:
+        type: "string"
+        description: "A string representing the unique entity url (or the user id\
+          \ in the case of the operator) of the source. This must be a way to uniquely\
+          \ identify the source of the data exchange. Ie. if a USS sends a message\
+          \ to the operator the source would be the url of the USS\n"
+      destination:
+        type: "string"
+        description: "A string representing the unique entity url (or user_id in the\
+          \ operators case) of the destination. This must be a way to uniquely identify\
+          \ the destination of the data exchange. Ie. if a USS sends a message to\
+          \ the operator the destination would be the url of the Operator\n"
+      type:
+        type: "string"
+        description: "The type of DataExchange. Should be inform_message\n"
+        default: "inform_message"
+  DataExchangeIntentMessage:
+    type: "object"
+    required:
+    - "api_version"
+    - "destination"
+    - "gufi"
+    - "intent_message"
+    - "source"
+    - "type"
+    properties:
+      gufi:
+        type: "string"
+        format: "uuid"
+        description: "This is the gufi for the operation that this particular data\
+          \ exchange is regarding. All loggable data exchanges should contain a gufi.\n"
+      intent_message:
+        $ref: "#/definitions/IntentMessage"
+      api_version:
+        type: "string"
+        description: "A string representing which version of the USS API spec this\
+          \ data exchange was designed for. Used to help distinguish historical data.\n"
+      source:
+        type: "string"
+        description: "A string representing the unique entity url (or the user id\
+          \ in the case of the operator) of the source. This must be a way to uniquely\
+          \ identify the source of the data exchange. Ie. if a USS sends a message\
+          \ to the operator the source would be the url of the USS\n"
+      destination:
+        type: "string"
+        description: "A string representing the unique entity url (or user_id in the\
+          \ operators case) of the destination. This must be a way to uniquely identify\
+          \ the destination of the data exchange. Ie. if a USS sends a message to\
+          \ the operator the destination would be the url of the Operator\n"
+      type:
+        type: "string"
+        description: "The type of DataExchange. Should be intent_message\n"
+        default: "intent_message"
+  DataExchangeConstraintMessage:
+    type: "object"
+    required:
+    - "api_version"
+    - "constraint_message"
+    - "destination"
+    - "gufi"
+    - "source"
+    - "type"
+    properties:
+      gufi:
+        type: "string"
+        format: "uuid"
+        description: "This is the gufi for the operation that this particular data\
+          \ exchange is regarding. All loggable data exchanges should contain a gufi.\n"
+      constraint_message:
+        $ref: "#/definitions/ConstraintMessage"
+      api_version:
+        type: "string"
+        description: "A string representing which version of the USS API spec this\
+          \ data exchange was designed for. Used to help distinguish historical data.\n"
+      source:
+        type: "string"
+        description: "A string representing the unique entity url (or the user id\
+          \ in the case of the operator) of the source. This must be a way to uniquely\
+          \ identify the source of the data exchange. Ie. if a USS sends a message\
+          \ to the operator the source would be the url of the USS\n"
+      destination:
+        type: "string"
+        description: "A string representing the unique entity url (or user_id in the\
+          \ operators case) of the destination. This must be a way to uniquely identify\
+          \ the destination of the data exchange. Ie. if a USS sends a message to\
+          \ the operator the destination would be the url of the Operator\n"
+      type:
+        type: "string"
+        description: "The type of DataExchange. Should be constraint_message\n"
+        default: "constraint_message"
+  Operation:
+    type: "object"
+    required:
+    - "controller_location"
+    - "gufi"
+    - "operation_volumes"
+    - "primary_contact_name"
+    - "primary_contact_phone"
+    - "registration"
+    properties:
+      gufi:
+        type: "string"
+        format: "uuid"
+        description: "Created and assigned by each USS (not FIMS). Validated as UUID\
+          \ version 4 specification."
+      submit_time:
+        type: "string"
+        format: "date-time"
+        description: "Time the operation submission was received by USS."
+      decision_time:
+        type: "string"
+        format: "date-time"
+        description: "A timestamp set by the USS any time the state of the operation\
+          \ is updated, for example when the flight goes from PROPOSING to ACCEPTED"
+      aircraft_comments:
+        type: "string"
+        description: "Informative text about the aircraft. Not used by the UTM System.\
+          \  Only for human stakeholders."
+      flight_comments:
+        type: "string"
+        description: "Informative text about the operation.  Not used by the UTM System.\
+          \  Only for human stakeholders."
+      flight_geography_description:
+        type: "string"
+        description: "Informative text about the operational geography.  Not used\
+          \ by the UTM System.  Only for human stakeholders."
+      registration:
+        type: "string"
+        description: "The registration ID of the vehicle flying this operation. This\
+          \ registration value is provided to operators by a vehicle registrar. Validated\
+          \ as a non-null string. Note UTM System assumes a single vehicle per operation."
+      registration_detail:
+        type: "string"
+        description: "See 'registrarion' field. This contains details such as the\
+          \ source of the registration ID."
+      flight_number:
+        type: "string"
+        description: "Optional. May be useful to the operator for identification purposes."
+      user_id:
+        type: "string"
+        description: "This field is populated based on the provided credentials."
+      created_by:
+        type: "string"
+        description: "The user that created the operation."
+      primary_contact_name:
+        type: "string"
+        description: "Not currently checked for validity, but clients should endeavor\
+          \ to provide useful, appropriate information in these fields. These values\
+          \ should represent the contact that should be used in case of an issue with\
+          \ the operation before, during, or after that operation."
+      primary_contact_phone:
+        type: "string"
+      primary_contact_email:
+        type: "string"
+      extra_contact_info:
+        type: "string"
+        description: "Any additional contact information that may be useful (hours\
+          \ of availability, fax number, communication limitations, etc.)."
+      state:
+        type: "string"
+        description: "The current state of the operation."
+      controller_location:
+        $ref: "#/definitions/Point"
+      gcs_location:
+        $ref: "#/definitions/Point"
+      faa_rule:
+        type: "string"
+        description: "Indication whether this operation is under Part 101-E, Part\
+          \ 107, Part 107 waiver, or a Part TBD.  Part TBD is a potential future rule\
+          \ that may cover operations such as those under test by UTM."
+        enum:
+        - "PART_107"
+        - "PART_107W"
+        - "PART_107X"
+        - "PART_101E"
+        - "PART_TBD"
+      waiver_certificate_number:
+        type: "string"
+        description: "If a waiver has been obtained for the Part 107 rules, then the\
+          \ operator would have a waiver certificate number. For any operation submissions\
+          \ with faa_rule=PART_107W, this field is required."
+      priority_op:
+        type: "boolean"
+        description: "If true this operation is managed as a priority operation."
+        default: false
+      operation_volumes:
+        type: "array"
+        description: "Editable. The actual geographical information for the operation."
+        items:
+          $ref: "#/definitions/OperationVolume"
+    example:
+      gufi: "00000000-0000-4444-8888-000000000000"
+      submit_time: "2016-10-04T09:15:40.727Z"
+      decision_time: "2016-10-04T09:15:40.727Z"
+      aircraft_comments: "Comments about the aircraft"
+      flight_comments: "Comments about the flight"
+      flight_geography_description: "A description of the geography"
+      registration: "00000000-0000-4444-8888-000000000000"
+      registration_detail: "src=federaldroneregistration.com,owner=acme"
+      flight_number: "Flight number"
+      user_id: "fimsUser"
+      created_by: "fimsUser"
+      primary_contact_name: "Jane Pilot"
+      primary_contact_phone: "XXX-XXX-XXXX"
+      primary_contact_email: "pilotjane@janepilot.com"
+      extra_contact_info: "Fax: XXX-XXX-XXXX"
+      state: "A"
+      controller_location:
+        type: "Point"
+        coordinates:
+        - -122.0485890000000068766894401051104068756103515625
+        - 37.41486900000000304089553537778556346893310546875
+      gcs_location:
+        type: "Point"
+        coordinates:
+        - -122.0485890000000068766894401051104068756103515625
+        - 37.41486900000000304089553537778556346893310546875
+      operation_volumes:
+      - ordinal: 1
+        near_structure: false
+        effective_time_begin: "2017-10-04T09:15:40.727Z"
+        effective_time_end: "2017-10-04T09:25:40.727Z"
+        actual_time_end: "2017-10-04T09:25:40.727Z"
+        conformance_time_begin: "2017-10-04T09:14:40.727Z"
+        conformance_time_end: "2017-10-04T09:26:40.727Z"
+        min_altitude_wgs84_ft: 0
+        max_altitude_wgs84_ft: 300
+        conform_min_altitude_wgs84_ft: 0
+        conform_max_altitude_wgs84_ft: 400
+        flight_geography:
+          type: "Polygon"
+          coordinates:
+          - - - -122.0621765789999955131861497648060321807861328125
+              - 37.4096804114499974502905388362705707550048828125
+            - - -122.051870568889995638528489507734775543212890625
+              - 37.41786527235999670892852009274065494537353515625
+            - - -122.0373264763399987486991449259221553802490234375
+              - 37.41786440108000277859900961630046367645263671875
+            - - -122.0621765789999955131861497648060321807861328125
+              - 37.4096804114499974502905388362705707550048828125
+        conformance_geography:
+          type: "Polygon"
+          coordinates:
+          - - - -122.06382530000001906955731101334095001220703125
+              - 37.409069700000003422246663831174373626708984375
+            - - -122.05094253232999790270696394145488739013671875
+              - 37.4193006276999966530638630501925945281982421875
+            - - -122.0327620697599968480062671005725860595703125
+              - 37.41929920175999768616748042404651641845703125
+            - - -122.06382530000001906955731101334095001220703125
+              - 37.409069700000003422246663831174373626708984375
+        beyond_visual_line_of_sight: false
+  OperationVolume:
+    type: "object"
+    required:
+    - "beyond_visual_line_of_sight"
+    - "effective_time_begin"
+    - "effective_time_end"
+    - "flight_geography"
+    - "max_altitude_wgs84_ft"
+    - "min_altitude_wgs84_ft"
+    - "ordinal"
+    properties:
+      ordinal:
+        type: "integer"
+        description: "This integer represents the ordering of the operation volume\
+          \ within the set of operation volumes. Need not be consecutive integers."
+      near_structure:
+        type: "boolean"
+        description: "Is this operation volume within 400' of a structure?"
+        default: false
+      effective_time_begin:
+        type: "string"
+        format: "date-time"
+        description: "Earliest time the operation will use the operation volume."
+      effective_time_end:
+        type: "string"
+        format: "date-time"
+        description: "Latest time the operation will done with the operation volume."
+      actual_time_end:
+        type: "string"
+        format: "date-time"
+        description: "Time that the operational volume was freed for use by other\
+          \ operations."
+      conformance_time_begin:
+        type: "string"
+        format: "date-time"
+        description: "Assigned by UTM System.  Time buffer before the submitted begin\
+          \ time."
+      conformance_time_end:
+        type: "string"
+        format: "date-time"
+        description: "Assigned by UTM System.  Time buffer after the submitted end\
+          \ time."
+      min_altitude_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The minimum altitude for this operation in this operation volume.\
+          \ In WGS84 reference system using feet as units."
+      max_altitude_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The maximum altitude for this operation in this operation volume.\
+          \ In WGS84 reference system using feet as units."
+      conform_min_altitude_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The minimum altitude assigned and used by the UTM System to\
+          \ check vertical conformance of an operation. Based on UTM Client-provided\
+          \ min altitude."
+      conform_max_altitude_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The maximum altitude assigned and used by the UTM System to\
+          \ check vertical conformance of an operation. Based on UTM Client-provided\
+          \ max altitude."
+      flight_geography:
+        $ref: "#/definitions/Geometry"
+      conformance_geography:
+        $ref: "#/definitions/Geometry"
+      beyond_visual_line_of_sight:
+        type: "boolean"
+        description: "Describes whether the operation volume is beyond the visual\
+          \ line of sight of the operator."
+  Position:
+    type: "object"
+    required:
+    - "altitude_gps_wgs84_ft"
+    - "altitude_num_gps_satellites"
+    - "gufi"
+    - "hdop_gps"
+    - "location"
+    - "time_measured"
+    - "time_sent"
+    - "track_ground_speed_kn"
+    - "track_true_north_deg"
+    - "vdop_gps"
+    properties:
+      air_speed_source:
+        type: "string"
+        description: "Required if air_speed_track_kn is submitted. No requirements\
+          \ yet on the values here, but suggestions include ESTIMATED or MEASURED."
+      air_speed_track_kn:
+        type: "number"
+        format: "double"
+        description: "Air speed in relation to the direction of travel of the aircraft.\
+          \ Value may be negative."
+      altitude_gps_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The altitude as measured via a GPS device on the aircraft. Units\
+          \ in feet using the WGS84 reference system."
+      altitude_num_gps_satellites:
+        type: "integer"
+        format: "int32"
+        description: "Number of satellites used in calculating the altitude_gps_wgs84_ft."
+      enroute_positions_id:
+        type: "string"
+        format: "uuid"
+        description: "Each position will be assigned a UUIDv4 by the FIMS"
+      gufi:
+        type: "string"
+        format: "uuid"
+        description: "Each operation has an GUFI assigned upon submission. Required\
+          \ upon POSTing a new position. It is a JSON string, but conforms to the\
+          \ UUID version 4 specification"
+      hdop_gps:
+        type: "number"
+        format: "double"
+        description: "The horizontal dilution of precision as provided by the onboard\
+          \ GPS."
+      location:
+        $ref: "#/definitions/Point"
+      time_measured:
+        type: "string"
+        format: "date-time"
+        description: "The time the position was measured. Likely the time provided\
+          \ with the GPS position reading."
+      time_received:
+        type: "string"
+        format: "date-time"
+        description: "Not required for submission, assigned by the UTM System. The\
+          \ time the position was received by the UTM System."
+      time_sent:
+        type: "string"
+        format: "date-time"
+        description: "The time the position was sent."
+      track_ground_speed_kn:
+        type: "number"
+        format: "double"
+        description: "Ground speed int the direction of travel. Value must be >= 0.0.\
+          \ In knots."
+      track_magnetic_north_deg:
+        type: "number"
+        format: "double"
+        description: "The direction of travel relative to magnetic north in degrees.\
+          \ Value must be >= 0.0 and < 360.0."
+      track_true_north_deg:
+        type: "number"
+        format: "double"
+        description: "The direction of travel relative to true north in degrees. Value\
+          \ must be >= 0.0 and < 360.0."
+      user_id:
+        type: "string"
+        description: "Not required for submission. This field is populated based on\
+          \ the provided credentials in the HTTPS header."
+      vdop_gps:
+        type: "number"
+        format: "double"
+        description: "The vertical dilultion of precision as provided by the onboard\
+          \ GPS."
+    example:
+      altitude_gps_wgs84_ft: 1111.111000000000103682396002113819122314453125
+      altitude_num_gps_satellites: 22
+      air_speed_source: "MEASURED"
+      gufi: "00000000-0000-4444-8888-000000000000"
+      hdop_gps: 77.7000000000000028421709430404007434844970703125
+      time_measured: "2016-10-04T09:15:40.727Z"
+      time_sent: "2016-10-04T09:15:40.727Z"
+      time_received: "2016-10-04T09:15:42.727Z"
+      track_ground_speed_kn: 33.3299999999999982946974341757595539093017578125
+      track_true_north_deg: 235.027287562663985909239272587001323699951171875
+      track_magnetic_north_deg: 237.1234567891229971792199648916721343994140625
+      vdop_gps: 88.7999999999999971578290569595992565155029296875
+      location:
+        type: "Point"
+        coordinates:
+        - -122.0563593506813191424953402020037174224853515625
+        - 37.4143649028406883871866739355027675628662109375
+  Geometry:
+    type: "object"
+    required:
+    - "type"
+    discriminator: "type"
     properties:
       type:
         type: "string"
+    description: "A geometry object in two dimensional space."
+  Point:
+    allOf:
+    - $ref: "#/definitions/Geometry"
+    - type: "object"
+      properties:
+        coordinates:
+          type: "array"
+          description: "Pair of longitude-latitude values. If a third element is provided\
+            \ for altitude, it is silently ignored."
+          items:
+            type: "number"
+            format: "double"
+    example:
+      type: "Point"
       coordinates:
-        type: "array"
-        items:
+      - -122.0485890000000068766894401051104068756103515625
+      - 37.41486900000000304089553537778556346893310546875
+  LineString:
+    allOf:
+    - $ref: "#/definitions/Geometry"
+    - type: "object"
+      properties:
+        coordinates:
           type: "array"
           items:
             type: "array"
             items:
               type: "number"
               format: "double"
-    description: "A geometry object in two dimensional space."
+    example:
+      type: "LineString"
+      coordinates:
+      - - -122.06382530000001906955731101334095001220703125
+        - 37.409069700000003422246663831174373626708984375
+      - - -122.05094253232999790270696394145488739013671875
+        - 37.4193006276999966530638630501925945281982421875
+      - - -122.0327620697599968480062671005725860595703125
+        - 37.41929920175999768616748042404651641845703125
+  Polygon:
+    allOf:
+    - $ref: "#/definitions/Geometry"
+    - type: "object"
+      properties:
+        coordinates:
+          type: "array"
+          items:
+            type: "array"
+            items:
+              type: "array"
+              items:
+                type: "number"
+                format: "double"
     example:
       type: "Polygon"
       coordinates:
@@ -475,6 +1289,225 @@ definitions:
           - 37.41786440108000277859900961630046367645263671875
         - - -122.0621765789999955131861497648060321807861328125
           - 37.4096804114499974502905388362705707550048828125
+  Message:
+    type: "object"
+    required:
+    - "category"
+    - "gufi"
+    discriminator: "category"
+    properties:
+      message_id:
+        type: "string"
+        format: "uuid"
+        description: "A UUID assigned to this message by the FIMS"
+      origin:
+        type: "string"
+        description: "The user or process that generated this message"
+        enum:
+        - "FIMS"
+        - "CLIENT"
+        - "MANAGER"
+      user:
+        type: "string"
+        description: "Populated by the UTM System.  The target user for a message\
+          \ from the UTM System."
+      gufi:
+        type: "string"
+        format: "uuid"
+        description: "The assigned GUFI for the operation referenced by the message."
+      category:
+        type: "string"
+        enum:
+        - "AlertMessage"
+        - "IntentMessage"
+        - "InformMessage"
+        - "ConstraintMessage"
+      free_text:
+        type: "string"
+        description: "Any remarks or messaging that does not fit any other fields"
+      sent_time:
+        type: "string"
+        format: "date-time"
+        description: "Either the time the message was sent by the UTM System or the\
+          \ time it was received by the UTM System."
+      ack_time:
+        type: "string"
+        format: "date-time"
+        description: "A timestamp confirming delivery to the application layer of\
+          \ the message receiver"
+    example:
+      gufi: "00000000-0000-4444-8888-000000000000"
+      category: "IntentMessage"
+      origin: "CLIENT"
+      free_text: "An intent message from a client (for example)"
+      sent_time: "2016-10-04T09:15:42.727Z"
+      intent_message: "CLOSE"
+  AlertMessage:
+    allOf:
+    - $ref: "#/definitions/Message"
+    - type: "object"
+      properties:
+        alert_message:
+          type: "string"
+          enum:
+          - "WEATHER"
+          - "SECURITY"
+          - "OPERATIONS"
+          - "SYSTEM"
+          - "GENERAL"
+        alert_severity:
+          type: "string"
+          enum:
+          - "WARNING"
+          - "CRITICAL"
+          - "EMERGENCY"
+        alert_text:
+          type: "string"
+          enum:
+          - "UNPLANNED_LANDING"
+          - "UNCONTROLLED_LANDING"
+          - "UA_LEAVING_DEFINED_VOLUME"
+          - "OTHER_SEE_FREE_TEXT"
+        subtype:
+          type: "string"
+          enum:
+          - "UA_NOT_UNDER_OPERATOR_POSITIVE_CONTROL"
+          - "LOST_NAVIGATION"
+          - "LOST_COMMAND_AND_CONTROL"
+          - "HIJACK"
+        warnings:
+          type: "array"
+          description: "unused"
+          items:
+            $ref: "#/definitions/Warning"
+    example:
+      gufi: "00000000-0000-4444-8888-000000000000"
+      category: "AlertMessage"
+      origin: "FIMS"
+      sent_time: "2016-10-04T09:15:42.727Z"
+      alert_message: "OPERATIONS"
+      alert_severity: "WARNING"
+      alert_text: "UA_LEAVING_DEFINED_VOLUME"
+      free_text: " reason=RogueNearby, reasonDetail=nearby operation 86250f05-d89c-40cf-b932-aa8d10a426a2\
+        \ in state U is lateral distance 711.45 feet and vertical danger zone envelope\
+        \ 600 feet; This alert message valid for the next 30 seconds (far lateral/far\
+        \ altitude), vehicleType=FixedWing vehicleModelName=Silent Falcon, longLat=-119.87933795058\
+        \ 39.69702548394, alt_gps_wgs84_ft=5187.3645438621, track_ground_speed_kn=0.77703200548507,\
+        \ track_magnetic_north_deg=null"
+  IntentMessage:
+    allOf:
+    - $ref: "#/definitions/Message"
+    - type: "object"
+      properties:
+        intent_message:
+          type: "string"
+          enum:
+          - "ACK_NO_OPERATION"
+          - "CANCEL"
+          - "CLOSE"
+          - "OTHER_SEE_FREE_TEXT"
+    example:
+      gufi: "00000000-0000-4444-8888-000000000000"
+      category: "IntentMessage"
+      origin: "CLIENT"
+      sent_time: "2016-10-04T09:15:42.727Z"
+      intent_message: "CANCEL"
+  InformMessage:
+    allOf:
+    - $ref: "#/definitions/Message"
+    - type: "object"
+      properties:
+        inform_message:
+          type: "string"
+          description: "NASA expects this list to evolve in the future."
+          enum:
+          - "PLAN_SUBMITTED_TOO_EARLY"
+          - "ACCEPTED"
+          - "AUTHORIZED"
+          - "DENIED"
+          - "NOTIFICATION_NOT_REQUIRED"
+          - "AUTHORIZATION_NOT_REQUIRED"
+          - "TERMINATED"
+          - "CONSTRAINT_CHANGE"
+          - "POSITION_REPORT_REQUEST_SINGLE"
+          - "POSITION_REPORT_REQUEST_PERIODIC"
+          - "POSITION_REPORT_REQUEST_CANCEL"
+          - "BACK_TO_CONFORMANCE"
+          - "USS_SYSTEM_MESSAGE"
+          - "OTHER_SEE_FREE_TEXT"
+        violations:
+          type: "array"
+          description: "Included with messages from the INFORM category with inform_message\
+            \ = DENIED."
+          items:
+            $ref: "#/definitions/Violation"
+        warnings:
+          type: "array"
+          items:
+            $ref: "#/definitions/Warning"
+    example:
+      gufi: "00000000-0000-4444-8888-000000000000"
+      category: "InformMessage"
+      origin: "FIMS"
+      free_text: "Plan DENIED. See violations field of this message for constraining\
+        \ violation(s) and the violating volume(s)."
+      sent_time: "2016-10-04T09:15:42.727Z"
+      inform_message: "DENIED"
+      violations: "[ {\"type\":\"Operations\",\"violating_volume\":1,\"constraining_volume\"\
+        :1,\"constraining_id\":\"90710543-6b18-44c9-a1a6-a3ecd60d14\"} ]"
+  ConstraintMessage:
+    allOf:
+    - $ref: "#/definitions/Message"
+    - type: "object"
+      properties:
+        constraint_geography:
+          $ref: "#/definitions/Geometry"
+        begin_time:
+          type: "string"
+          format: "date-time"
+          description: "The time that the constraint begins. Null or no value implies\
+            \ infinity begin time."
+        end_time:
+          type: "string"
+          format: "date-time"
+          description: "The time that the constraint ends. Null or no value implies\
+            \ infinity end time."
+    example:
+      gufi: "*"
+      category: "ConstraintMessage"
+      origin: "FIMS"
+      free_text: "Constraint added."
+      sent_time: "2016-11-29T01:16:41.727Z"
+      constraint_geography:
+        type: "Polygon"
+        coordinates:
+        - - - -122.0621765789999955131861497648060321807861328125
+            - 37.4096804114499974502905388362705707550048828125
+          - - -122.051870568889995638528489507734775543212890625
+            - 37.41786527235999670892852009274065494537353515625
+          - - -122.0373264763399987486991449259221553802490234375
+            - 37.41786440108000277859900961630046367645263671875
+          - - -122.0621765789999955131861497648060321807861328125
+            - 37.4096804114499974502905388362705707550048828125
+      begin_time: "2016-11-29T01:16:41.727Z"
+      end_time: "2016-11-30T01:16:41.727Z"
+  Violation:
+    type: "object"
+    properties:
+      type:
+        type: "string"
+      constraining_id:
+        type: "string"
+        format: "uuid"
+      constraining_volume:
+        type: "integer"
+      violating_volume:
+        type: "integer"
+  Warning:
+    type: "object"
+    properties:
+      warning_id:
+        type: "string"
 responses:
   WRONG_PROTOCOL:
     description: "A RESTful call was made to this endpoint but this is not a REST\
