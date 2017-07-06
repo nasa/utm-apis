@@ -322,6 +322,7 @@ definitions:
     - "coverage_area"
     - "time_available_begin"
     - "time_available_end"
+    - "uss_instance_discovery_callback_url"
     properties:
       uss_instance_id:
         type: "string"
