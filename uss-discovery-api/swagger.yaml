@@ -7,7 +7,7 @@ info:
     \ a USS matching certain parameters. In addition, this document defines an asynchronous\
     \ interface wherein each authenticated USS can be notifed of changes to information\
     \ about other USSs."
-  version: "1.0.0"
+  version: "v2"
   title: "UTM USS Service Discovery"
   termsOfService: "\nA. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT\
     \ ANY WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,\
@@ -37,11 +37,11 @@ info:
   license:
     name: "NASA Open Source Agreement"
     url: "https://ti.arc.nasa.gov/opensource/nosa/"
-host: "virtserver.swaggerhub.com"
-basePath: "/utm/ussdiscovery/1.0.0"
+host: "ussdiscovery.arc.nasa.gov"
+basePath: "/api"
 tags:
 - name: "A. Discovery Endpoints"
-  description: "The primary RESTful endpoints for sharing USS Operation data."
+  description: "The primary RESTful endpoints for sharing USS Instance data."
 - name: "B. Subscription Points"
   description: "Non-REST endpoints for asynchronous communications with FIMS"
 - name: "C. Data Types"
@@ -53,9 +53,9 @@ paths:
     get:
       tags:
       - "A. Discovery Endpoints"
-      summary: "Request information regarding USS operations"
-      description: "Allows for querying for USS operations."
-      operationId: "getUSS"
+      summary: "Request information regarding USS instances"
+      description: "Allows for querying for USS instances."
+      operationId: "getUSSes"
       consumes:
       - "application/json"
       produces:
@@ -70,23 +70,21 @@ paths:
       - name: "q"
         in: "query"
         description: "Query with specific criteria.  <br/><br/>\n<b>example usage:</b>\
-          \ <br/> .../api/1.0.0/uss?q=uss_name eq NUSS, time_available_begin gte 2016-10-02T00:00:00Z,\
-          \ coverage_area contains POINT (-122.056455 37.414336), tags contains weather\
-          \ <br/><br/>\nA series of binary operators and operands.  <br/><br/>\nThe\
-          \ lefthand side (LHS) operands are the field names.  <br/><br/>\nThe righthand\
-          \ side (RHS) operands are constants of the corresponding type. <br/><br/>\n\
-          The allowed operators are dependent on the operand types.  <br/><br/>\n\
-          For geometric RHS, the input should be OGC well-known text (http://en.wikipedia.org/wiki/Well-known_text),\
-          \ limited to point, linestring, and polygon types.  <br/><br/>\nWe also\
-          \ allow the non-standard bounding box as a geometric RHS. This is of the\
-          \ form BBOX(lower_left_long lower_left_lat upper_right_lon upper_right_lat).\
-          \  <br/><br/>\nString-typed operands may use `eq`, `contains`, and `not`.\
-          \  <br/><br/>\nNumeric-typed and time operands may use `eq`, `lt`, `lte`,\
-          \ `gt`, `gte`, and `not`. <br/><br/>\nGeometric-types operands may use `intersects`,\
-          \ `contains`, and `within`. <br/><br/>\nString array-typed LHS must use\
-          \ `contains` or `excludes` with a string RHS. (e.g. tags contains weather).\n\
-          If multiple criteria are specified, they are considered as an *AND* operation.\
-          \ <br/>\n"
+          \ .../api/v1/uss?q=uss_name eq NUSS, time_available_begin gte 2016-10-02T00:00:00Z,\
+          \ coverage_area contains POINT (-122.056455 37.414336) <br/><br/>\nA series\
+          \ of binary operators and operands.  <br/>\nThe lefthand side operands are\
+          \ the field names.  <br/>\nThe righthand side operands are constants of\
+          \ the corresponding type. <br/>\nThe allowed operators are dependent on\
+          \ the operand types.  <br/>\nFor geometric RHS, the input should be OGC\
+          \ well-known text (http://en.wikipedia.org/wiki/Well-known_text), limited\
+          \ to point, linestring, and polygon types.  <br/>\nWe also allow the non-standard\
+          \ bounding box as a geometric RHS. This is of the form BBOX(lower_left_long\
+          \ lower_left_lat, upper_right_lon upper_right_lat).  <br/>\nString-typed\
+          \ operands may use `eq`, `contains`, and `not`.  <br/>\nNumeric-typed and\
+          \ time operands may use `eq`, `lt`, `lte`, `gt`, `gte`, and `not`. <br/>\n\
+          Geometric-types operands may use `intersects`, `contains`, and `within`.\
+          \ <br/>\nIf multiple criteria are specified, they are considered as an *AND*\
+          \ operation. <br/>\n"
         required: false
         type: "string"
       - name: "sort"
@@ -123,7 +121,7 @@ paths:
         200:
           description: "Successful data request. Response includes requested data."
           schema:
-            $ref: "#/definitions/UssOperation"
+            $ref: "#/definitions/UssInstance"
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
@@ -138,8 +136,8 @@ paths:
     post:
       tags:
       - "A. Discovery Endpoints"
-      summary: "Submit information regarding USS Operations"
-      description: "Allows for submission of USS opreations to the service discovery\
+      summary: "Submit information regarding USS Instances"
+      description: "Allows for submission of USS Instances to the service discovery\
         \ system."
       operationId: "postUSS"
       consumes:
@@ -148,14 +146,14 @@ paths:
       - "application/json"
       parameters:
       - in: "body"
-        name: "uss_operation"
-        description: "Operational plan to add"
+        name: "uss_instance"
+        description: "USS Instance plan to add"
         required: true
         schema:
-          $ref: "#/definitions/UssOperation"
+          $ref: "#/definitions/UssInstance"
       responses:
         201:
-          description: "USS Operation plan received."
+          description: "USS Instance received."
           schema:
             $ref: "#/definitions/UssApiResponse"
         400:
@@ -173,31 +171,75 @@ paths:
             $ref: "#/definitions/UssApiResponse"
       security:
       - OauthSecurity: []
+  /uss/{id}:
+    get:
+      tags:
+      - "A. Discovery Endpoints"
+      summary: "Request information regarding a single USS Instance"
+      description: "Allows for querying for USS Instances."
+      operationId: "getUSS"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "id"
+        required: true
+        type: "string"
+      - name: "fields"
+        in: "query"
+        description: "The specific subset of fields to return. Comma separated list.\
+          \ Default will be all fields."
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "Successful data request. Response includes requested data."
+          schema:
+            $ref: "#/definitions/UssInstance"
+        400:
+          description: "Bad request. Typically validation error. Fix your request\
+            \ and retry."
+          schema:
+            $ref: "#/definitions/UssApiResponse"
+        429:
+          description: "Too many recent requests from you. Wait to make further queries."
+          schema:
+            $ref: "#/definitions/UssApiResponse"
+      security:
+      - OauthSecurity: []
     put:
       tags:
       - "A. Discovery Endpoints"
-      summary: "Submit updates to an existing USS Operation"
-      description: "Allows for USS operators to update an previous USS Operation submission."
+      summary: "Submit updates to an existing USS Instance"
+      description: "Allows for USS operators to update an previous USS Instance submission."
       operationId: "putUSS"
       consumes:
       - "application/json"
       produces:
       - "application/json"
       parameters:
+      - name: "id"
+        in: "path"
+        description: "id"
+        required: true
+        type: "string"
       - in: "body"
-        name: "uss_operation"
-        description: "Operational plan with the following properties:\n  1. Contains\
-          \ a valid uss_operation_id.\n  2. Operation has time_available_end value\
-          \ that is in the future.\n  3. No date-time fields that are in the past\
-          \ are modified.\n  4. Other rules for a USS Operation POST are satisfied.\n"
+        name: "uss_instance"
+        description: "USS Instance with the following properties:\n  1. Contains a\
+          \ valid uss_instance_id.\n  2. Instance has time_available_end value that\
+          \ is in the future.\n  3. No date-time fields that are in the past are modified.\n\
+          \  4. Other rules for a USS Instance POST are satisfied.\n"
         required: true
         schema:
-          $ref: "#/definitions/UssOperation"
+          $ref: "#/definitions/UssInstance"
       responses:
         200:
           description: "Successful data request. Response includes requested data."
           schema:
-            $ref: "#/definitions/UssOperation"
+            $ref: "#/definitions/UssInstance"
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
@@ -215,11 +257,11 @@ paths:
       - "B. Subscription Points"
       summary: "Subscription point for receiving position reports"
       description: "Stakeholders should subscribe to this topic to receive updates\
-        \ on USS Operations. Data will be produced on this topic whenever:\n\n  1.\
-        \ A new, valid USS Operation is submitted.\n  2. There is an update to a USS\
-        \ Operation.\n  \nNote that there will not be data produced on this topci\
-        \ when a USS Operation ends according to its originally submited time_available_end\
-        \ value.\n\nSee the schema information describing UssOperation included within\
+        \ on USS Instances. Data will be produced on this topic whenever:\n\n  1.\
+        \ A new, valid USS Instance is submitted.\n  2. There is an update to a USS\
+        \ Instance.\n  \nNote that there will not be data produced on this topic when\
+        \ a USS Instance ends according to its originally submited time_available_end\
+        \ value.\n\nSee the schema information describing UssInstance included within\
         \ this document to understand the data that will be received via this queue.\n\
         \nNote that if you are viewing this in a SwaggerUI, the \"try it out\" feature\
         \ will not work since this is not a RESTful endpoint.\n"
@@ -230,12 +272,12 @@ paths:
         410:
           description: "A RESTful call was made to this endpoint but this is not a\
             \ REST endpoint. Do not use this endpoint for REST calls."
-  /schema/UssOperation:
+  /schema/UssInstance:
     get:
       tags:
       - "C. Data Types"
-      summary: "Operation schema"
-      description: "Illustrates an USS Operation in JSON. This endpoint is not intended\
+      summary: "Instance schema"
+      description: "Illustrates a USS Instance in JSON. This endpoint is not intended\
         \ for use.\n\nNote that if you are viewing this in a SwaggerUI, the \"try\
         \ it out\" feature will not work since this is not a RESTful endpoint.\n"
       produces:
@@ -245,7 +287,7 @@ paths:
         200:
           description: "OK"
           schema:
-            $ref: "#/definitions/UssOperation"
+            $ref: "#/definitions/UssInstance"
         410:
           description: "A RESTful call was made to this endpoint but this is not a\
             \ REST endpoint. Do not use this endpoint for REST calls."
@@ -254,9 +296,9 @@ paths:
       tags:
       - "C. Data Types"
       summary: "Polygon schema"
-      description: "Illustrates an Polygon in JSON. This endpoint is not intended\
-        \ for use.\n\nNote that if you are viewing this in a SwaggerUI, the \"try\
-        \ it out\" feature will not work since this is not a RESTful endpoint.\n"
+      description: "Illustrates a Polygon in JSON. This endpoint is not intended for\
+        \ use.\n\nNote that if you are viewing this in a SwaggerUI, the \"try it out\"\
+        \ feature will not work since this is not a RESTful endpoint.\n"
       produces:
       - "application/json"
       parameters: []
@@ -274,99 +316,83 @@ securityDefinitions:
     tokenUrl: "https://tmiserver.arc.nasa.gov/fimsAuthServer/oauth/token"
     flow: "application"
 definitions:
-  UssOperation:
+  UssInstance:
     type: "object"
     required:
-    - "time_submitted"
-    - "uss_name"
+    - "coverage_area"
+    - "time_available_begin"
+    - "time_available_end"
     properties:
-      uss_operation_id:
+      uss_instance_id:
         type: "string"
         format: "uuid"
         description: "A unique identifier assigned by the discovery service upon successful\
           \ submission."
-        minLength: 36
-        maxLength: 36
       uss_name:
         type: "string"
         description: "The name of the entity providing UAS Support Services. Populated\
           \ by the service discovery system based on credential information provided\
           \ by the USS."
-        maxLength: 100
       time_submitted:
         type: "string"
         format: "date-time"
-        description: "The time at which the submission of this USS Operation was received\
+        description: "The time at which the submission of this USS Instance was received\
           \ at this discovery service.  Only modifiable by discovery service."
       time_available_begin:
         type: "string"
         format: "date-time"
         description: "The time at which the USS will begin providing services for\
-          \ active UAS operations for this USS Operation.  Note that the USS may provide\
+          \ active UAS operations for this USS Instance.  Note that the USS may provide\
           \ planning services prior to the time_available_begin depending on the policies\
           \ of the USS."
       time_available_end:
         type: "string"
         format: "date-time"
         description: "The time at which the USS will cease providing services for\
-          \ active UAS operations for this USS Operation.  This means that there will\
+          \ active UAS operations for this USS Instance.  This means that there will\
           \ not be any UAS operations airborne after this time that would be supported\
-          \ by this USS Operation."
+          \ by this USS Instance."
       coverage_area:
         $ref: "#/definitions/Polygon"
       time_last_modified:
         type: "string"
         format: "date-time"
         description: "The last time there was an update to the data regarding this\
-          \ USS Operation. Only modifiable by discovery service."
+          \ USS Instance. Only modifiable by discovery service."
       contact_email:
         type: "string"
         format: "email"
         description: "An optional contact email address for the USS."
-        maxLength: 100
       contact_phone:
         type: "string"
         format: "phone"
         description: "An optional contact number for the USS."
-        maxLength: 100
       uss_informational_url:
         type: "string"
         format: "url"
         description: "An optional website URL for the USS for human use."
-        maxLength: 1000
       uss_openapi_url:
         type: "string"
         format: "url"
         description: "An optional URL for the USS to supply an OpenAPI specification\
           \ of its UAS Operator interface."
-        maxLength: 1000
       uss_registration_url:
         type: "string"
         format: "url"
         description: "An optional URL for UAS operators to register with this USS\
           \ for services."
-        maxLength: 1000
-      tags:
-        type: "array"
-        description: "A set of strings defined by the USS that may aid discovery of\
-          \ a USS with specific qualities by stakeholders. The array must be fewer\
-          \ than 30 elements in length."
-        items:
-          type: "string"
-          maxLength: 20
       notes:
         type: "string"
         description: "Any additional free text that would aid consumers of the service\
-          \ discovery API in understanding this USS Operation."
-        maxLength: 1000
+          \ discovery API in understanding this USS Instance."
     description: "A contiguous area within which a USS has committed to providing\
       \ services for UAS operations.  The specific level of services provided may\
       \ be contained within the data provided from here in combination with data provided\
       \ directly from the USS.  In the future, the information provided by this object\
       \ may include more specific information about the services provided by the USS\
-      \ or the types of UAS operations that are supported by this USS Operation."
+      \ or the types of UAS operations that are supported by this USS Instance."
     example:
-      uss_operation_id: "00000000-0000-4444-8888-FEEDDEADBEEF"
+      uss_instance_id: "00000000-0000-4444-8888-FEEDDEADBEEF"
       uss_name: "NUSS"
       time_submitted: "2016-08-03T00:15:40.931Z"
       time_available_begin: "2016-10-04T09:15:40Z"
@@ -392,7 +418,7 @@ definitions:
           - - -122.0621765789999955131861497648060321807861328125
             - 37.4096804114499974502905388362705707550048828125
       notes: "NUSS will only provide services for fixed-wing aircraft within this\
-        \ USS Operation volume."
+        \ USS Instance volume."
       uss_informational_url: "https://utm.arc.nasa.gov"
       uss_openapi_url: "https://nuss.arc.nasa.gov/api"
       uss_registration_url: "https://nuss.arc.nasa.gov/signup"
@@ -411,34 +437,25 @@ definitions:
     example:
       code: 201
       type: "CREATED"
-      message: "USS Operation details received."
-  Geometry:
+      message: "USS Instance details received."
+  Polygon:
     type: "object"
     required:
+    - "coordinates"
     - "type"
-    discriminator: "type"
     properties:
       type:
         type: "string"
-    description: "A geometry object in two dimensional space. For Geometry property\
-      \ of a Position, Geometry type must be Point. For a Geometry property of an\
-      \ OperationVolume or Constraint, Geometry type must be LineString or Polygon.\
-      \ For location properties such as Operation's gcs_location and controller_location,\
-      \ Geometry type must be Point."
-  Polygon:
-    allOf:
-    - $ref: "#/definitions/Geometry"
-    - type: "object"
-      properties:
-        coordinates:
+      coordinates:
+        type: "array"
+        items:
           type: "array"
           items:
             type: "array"
             items:
-              type: "array"
-              items:
-                type: "number"
-                format: "double"
+              type: "number"
+              format: "double"
+    description: "A geometry object in two dimensional space."
     example:
       type: "Polygon"
       coordinates:
