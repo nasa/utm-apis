@@ -48,7 +48,7 @@ tags:
 - name: "C. Data Types"
   description: "Psuedo endpoints used for the documentation of the data schema"
 - name: "D. Version"
-  description: "Get version"
+  description: "Get API version"
 schemes:
 - "https"
 - "wss"
