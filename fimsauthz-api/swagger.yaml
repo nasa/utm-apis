@@ -126,7 +126,7 @@ paths:
 securityDefinitions:
   application:
     type: "oauth2"
-    tokenUrl: "http://example.com/oauth/token"
+    tokenUrl: "http://thisserver.com/oauth/token"
     flow: "application"
     scopes:
       Baseline_USS: "A Baseline USS that can perform the set of essential USS requests"
