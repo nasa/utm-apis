@@ -131,7 +131,7 @@ paths:
       parameters:
       - name: "token"
         in: "formData"
-        description: "The token that the client wants to get revoked."
+        description: "The Java Web Token that the client wants revoked."
         required: true
         type: "string"
         format: "jwt"
