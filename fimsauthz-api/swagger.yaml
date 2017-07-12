@@ -74,6 +74,11 @@ paths:
       produces:
       - "application/json"
       parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/TokenKeyResponse"
   /introspect:
     get:
       tags:
@@ -114,7 +119,7 @@ paths:
         200:
           description: "OK"
           schema:
-            $ref: "#/definitions/Version"
+            $ref: "#/definitions/IntrospectionResponse"
   /revoke:
     post:
       tags:
@@ -172,8 +177,23 @@ securityDefinitions:
       PublicSafety_USS: "A USS with the capability to manaage public safety operations"
       Operations_FIMS: "For FIMS to perform baseline FIMS requests"
 definitions:
+  TokenKeyResponse:
+    type: "object"
+    properties:
+      alg:
+        type: "string"
+        description: "A designator for the algorithm used to sign the key.  Values\
+          \ defined by a Java specfication from Oracle (http://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html)."
+      value:
+        type: "string"
+        description: "A key signed by the algorithm noted in 'alg' property.  The\
+          \ key is preceded by '-----BEGIN PUBLIC KEY-----\\n' without the single\
+          \ quotes and appended with '\\n-----END PUBLIC KEY-----' without the single\
+          \ quotes."
   IntrospectionResponse:
     type: "object"
+    required:
+    - "active"
     properties:
       active:
         type: "boolean"
