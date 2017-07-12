@@ -38,7 +38,8 @@ paths:
       - "Restful Endpoints"
       summary: "Obtain an access token."
       description: "This endpoint is required as per RFC 6749.  A POST to this endpoint\
-        \ acts as a request for an access token.\n"
+        \ acts as a request for an access token. This endpoint is protected using\
+        \ HTTP Basic authentication of the client secret. \n"
       operationId: "obtainAccessToken"
       consumes:
       - "application/x-www-form-urlencoded"
