@@ -68,8 +68,8 @@ paths:
     get:
       tags:
       - "Restful Endpoints"
-      summary: "Get API Info"
-      operationId: "getApiInfo"
+      summary: "Check a token"
+      operationId: "tokenIntrospection"
       parameters: []
       responses:
         200:
@@ -80,8 +80,8 @@ paths:
     post:
       tags:
       - "Restful Endpoints"
-      summary: "Post a revokation request"
-      operationId: "postRevokationRequest"
+      summary: "Post a revocation request"
+      operationId: "postRevocationRequest"
       consumes:
       - "application/x-www-form-urlencoded"
       parameters:
