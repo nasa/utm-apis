@@ -39,7 +39,7 @@ paths:
       summary: "Obtain an access token."
       description: "This endpoint is required as per RFC 6749.  A POST to this endpoint\
         \ acts as a request for an access token. This endpoint is protected using\
-        \ HTTP Basic authentication of the client secret. \n"
+        \ TLS client authentication. \n"
       operationId: "obtainAccessToken"
       consumes:
       - "application/x-www-form-urlencoded"
@@ -206,6 +206,42 @@ definitions:
           \ and is within its given time window of validity (e.g., after its issuance\
           \ time and before its expiration time).  See Section 4 for information on\
           \ implementation of such checks."
+  JavaWebTokenClaims:
+    type: "object"
+    properties:
+      iss:
+        type: "string"
+        format: "URL"
+        description: "The \"iss\" (issuer) claim identifies the principal that issued\
+          \ the JWT. The URL of the FIMS Authorization Server."
+      sub:
+        type: "string"
+        description: "The \"sub\" (subject) claim identifies the principal that is\
+          \ the subject of the JWT."
+      exp:
+        type: "integer"
+        format: "unix-time"
+        description: "The \"exp\" (expiration time) claim identifies the expiration\
+          \ time on or after which the JWT MUST NOT be accepted for processing.  The\
+          \ processing of the \"exp\" claim requires that the current date/time MUST\
+          \ be before the expiration date/time listed in the \"exp\" claim."
+      nbf:
+        type: "integer"
+        format: "unix-time"
+        description: "The \"nbf\" (not before) claim identifies the time before which\
+          \ the JWT MUST NOT be accepted for processing.  The processing of the \"\
+          nbf\" claim requires that the current date/time MUST be after or equal to\
+          \ the not-before date/time listed in the \"nbf\" claim."
+      iat:
+        type: "integer"
+        format: "unix-time"
+        description: "The \"iat\" (issued at) claim identifies the time at which the\
+          \ JWT was issued.  This claim can be used to determine the age of the JWT."
+      jti:
+        type: "string"
+        format: "uuid"
+        description: "The \"jti\" (JWT ID) claim provides a unique identifier for\
+          \ the JWT. For this server, this is satisfied by the use of a UUID."
   Metadata:
     type: "object"
     required:
@@ -315,6 +351,8 @@ definitions:
           \  (These values are and will remain distinct, due to Section 7.2.)"
         items:
           type: "string"
+      jwt_claims:
+        $ref: "#/definitions/JavaWebTokenClaims"
   Version:
     type: "object"
     properties:
