@@ -124,7 +124,7 @@ paths:
     post:
       tags:
       - "Restful Endpoints"
-      summary: "Post a revocation request"
+      summary: "Post a token revocation request"
       operationId: "postRevocationRequest"
       consumes:
       - "application/x-www-form-urlencoded"
