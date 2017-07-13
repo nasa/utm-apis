@@ -85,6 +85,9 @@ paths:
           description: "Invalid ID supplied.  Fix authorization and retry."
           schema:
             $ref: "#/definitions/FIMSApiResponse"
+      security:
+      - application:
+        - "write"
   /operations/{gufi}:
     put:
       tags:
