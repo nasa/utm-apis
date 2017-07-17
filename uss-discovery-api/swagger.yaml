@@ -132,7 +132,7 @@ paths:
           schema:
             $ref: "#/definitions/UssApiResponse"
       security:
-      - OauthSecurity: []
+      - password: []
     post:
       tags:
       - "A. Discovery Endpoints"
@@ -170,7 +170,7 @@ paths:
           schema:
             $ref: "#/definitions/UssApiResponse"
       security:
-      - OauthSecurity: []
+      - password: []
   /uss/{id}:
     get:
       tags:
@@ -209,7 +209,7 @@ paths:
           schema:
             $ref: "#/definitions/UssApiResponse"
       security:
-      - OauthSecurity: []
+      - password: []
     put:
       tags:
       - "A. Discovery Endpoints"
@@ -250,7 +250,7 @@ paths:
           schema:
             $ref: "#/definitions/UssApiResponse"
       security:
-      - OauthSecurity: []
+      - password: []
   /topic/ussUpdates:
     get:
       tags:
