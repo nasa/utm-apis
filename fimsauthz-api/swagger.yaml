@@ -367,4 +367,4 @@ definitions:
         description: "URL for API Documentation"
 externalDocs:
   description: "SwaggerHub Documentation"
-  url: "https://app.swaggerhub.com/apis/utm/fims_authz/1.0.0"
+  url: "https://app.swaggerhub.com/apis/utm/fims_authz/"
