@@ -4,6 +4,7 @@ in the National Airspace System (NAS).  UREPs are data that are provided to the 
 Since the UTM System is highly automated, the submission and retrieval of UREPs is built to rely on automated processes. 
 
 This is a swagger JSON built by the [swagger-codegen](https://github.com/swagger-api/swagger-codegen) project.
+![alt text][logo]
 
-[logo]: urep-architecture.jpg "Logo Title Text 2"
+[logo]: https://github.com/nasa/utm-apis/blob/master/urep-api/urep-architecture.jpg "urep architecture"
 
