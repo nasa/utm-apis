@@ -1,8 +1,8 @@
 ---
 swagger: "2.0"
 info:
-  description: "A USS with the Public Safety role implements this API which allows\
-    \ public safety responders to get vehicle ID data."
+  description: "A USS with the Public Safety role implements this API in addition\
+    \ to the base USS API."
   version: "v1"
   title: "Public Safety USS"
   termsOfService: "\nA. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT\
@@ -41,11 +41,25 @@ security:
 - password:
   - "USS"
 paths:
-  /vehicleID:
+  /vehicle-id:
     get:
+      tags:
+      - "Restful Endpoints"
       summary: "Get UAS information"
       description: "A device provides input data (uvin/WGS-84). API returns UAS and\
         \ USS information."
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+  /tfr:
+    post:
+      tags:
+      - "Restful Endpoints"
+      summary: "Submit a new TFR"
+      description: "A USS may submit new TFRs on behalf of public safety organizations.\
+        \ This endpoint allows a public safetry organization to submit the data related\
+        \ to a new TFR."
       parameters: []
       responses:
         200:
