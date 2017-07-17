@@ -1,4 +1,4 @@
 # Swagger JSON
 This is a swagger JSON built by the [swagger-codegen](https://github.com/swagger-api/swagger-codegen) project.
 
-SwaggerHub's YAML GIT sync config lists this file as ignored.
+how to keep changes

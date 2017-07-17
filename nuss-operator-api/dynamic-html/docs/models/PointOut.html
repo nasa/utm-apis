@@ -1,0 +1,75 @@
+
+<h2>PointOut</h2>
+<ul class="parameter">
+  <li class="param-required-true">altitude : Double
+    <br/>The altitude of the target. Units in feet using the WGS84 reference system. May be estimated.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-true">bearing : Integer
+    <br/>Degrees from north (as defined by north_ref) from reporter&#39;s position to target.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-true">distance : Double
+    <br/>Nautical miles (horizontal only) from reporter&#39;s position to target.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-true">north_ref : String
+    <br/>The reference for &#39;north&#39; in reporting values
+      <dl class="param-enum">
+        <dt>Enum:
+            <dd>TRUE</dd>
+            <dd>MAGNETIC</dd>
+        </dt>
+      </dl>
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-true">point : Point
+    <br/>
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">remark : String
+    <br/>Any free text that cannot be captured using the standard fields.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-true">state : String
+    <br/>The current state of the target.
+      <dl class="param-enum">
+        <dt>Enum:
+            <dd>CRUISE</dd>
+            <dd>DESCENT</dd>
+            <dd>CLIMB</dd>
+            <dd>HOVER</dd>
+            <dd>LOITER</dd>
+            <dd>UNKNOWN</dd>
+        </dt>
+      </dl>
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-true">track : Double
+    <br/>The track in decimal degrees relative to Double north_ref.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-true">vehicle_type : String
+    <br/>The type of vehicle being pointed out.
+      <dl class="param-enum">
+        <dt>Enum:
+            <dd>SMALL_UAS</dd>
+            <dd>LARGE_UAS</dd>
+            <dd>HELICOPTER</dd>
+            <dd>SMALL_MANNED_FIXED_WING</dd>
+            <dd>HANG_GLIDER</dd>
+            <dd>BALLOON</dd>
+            <dd>LARGE_MANNED_FIXED_WING</dd>
+            <dd>OTHER</dd>
+        </dt>
+      </dl>
+  </li>
+</ul>

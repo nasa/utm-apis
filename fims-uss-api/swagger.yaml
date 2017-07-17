@@ -5,7 +5,7 @@ info:
     \ (USS) to the Flight Information Management System (FIMS) within UTM.  There\
     \ is an additional API for asynchronous communications that is described in the\
     \ Subscription Points section."
-  version: "v1"
+  version: "v2"
   title: "UTM Research Platform, FIMS-USS Interface"
   termsOfService: "\nA. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT\
     \ ANY WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,\
@@ -39,7 +39,7 @@ host: "tmiserver.arc.nasa.gov"
 basePath: "/fims"
 tags:
 - name: "A. FIMS Endpoints"
-  description: "The primary RESTful endpoints for operators accessing FIMS"
+  description: "Primary RESTful endpoints for operators accessing FIMS"
   externalDocs:
     description: "NASA FIMS server generated from this API specification."
     url: "https://tmiserver.arc.nasa.gov/fims/api/"
@@ -48,9 +48,10 @@ tags:
 - name: "C. Data Types"
   description: "Psuedo endpoints used for the documentation of the data schema"
 - name: "D. Version"
-  description: "Get version"
+  description: "Get the API version"
 schemes:
 - "https"
+- "wss"
 paths:
   /operations:
     post:
@@ -85,7 +86,8 @@ paths:
           schema:
             $ref: "#/definitions/FIMSApiResponse"
       security:
-      - OauthSecurity: []
+      - application:
+        - "write"
   /operations/{gufi}:
     put:
       tags:
@@ -128,8 +130,6 @@ paths:
           description: "Operations not found."
           schema:
             $ref: "#/definitions/FIMSApiResponse"
-      security:
-      - OauthSecurity: []
   /positions:
     post:
       tags:
@@ -154,8 +154,6 @@ paths:
           description: "Invalid message. Please fix and retry."
           schema:
             $ref: "#/definitions/FIMSApiResponse"
-      security:
-      - OauthSecurity: []
   /messages:
     post:
       tags:
@@ -188,8 +186,6 @@ paths:
           description: "Unauthorized user."
           schema:
             $ref: "#/definitions/FIMSApiResponse"
-      security:
-      - OauthSecurity: []
   /user/{operator}/decision:
     get:
       tags:
@@ -467,10 +463,13 @@ paths:
           description: "A RESTful call was made to this endpoint but this is not a\
             \ REST endpoint. Do not use this endpoint for REST calls."
 securityDefinitions:
-  OauthSecurity:
+  application:
     type: "oauth2"
-    tokenUrl: "https://tmiserver.arc.nasa.gov/fimsAuthServer/oauth/token"
+    tokenUrl: "http://fims_authz.utm.nasa.gov/oauth/token"
     flow: "application"
+    scopes:
+      write: "allows modifying resources"
+      read: "allows reading resources"
 definitions:
   FIMSApiResponse:
     type: "object"
@@ -486,411 +485,6 @@ definitions:
       code: 201
       type: "CREATED"
       message: "Operation Plan request received."
-  Operation:
-    type: "object"
-    required:
-    - "controller_location"
-    - "gufi"
-    - "operation_volumes"
-    - "primary_contact_name"
-    - "primary_contact_phone"
-    - "registration"
-    properties:
-      gufi:
-        type: "string"
-        format: "uuid"
-        description: "Created and assigned by each USS (not FIMS). Validated as UUID\
-          \ version 4 specification."
-        minLength: 36
-        maxLength: 36
-      submit_time:
-        type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-        description: "Time the operation submission was received by USS."
-        maxLength: 100
-      decision_time:
-        type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-        description: "A timestamp set by the USS any time the state of the operation\
-          \ is updated, for example when the flight goes from PROPOSING to ACCEPTED"
-        maxLength: 100
-      aircraft_comments:
-        type: "string"
-        description: "Informative text about the aircraft. Not used by the UTM System.\
-          \  Only for human stakeholders."
-        maxLength: 1000
-        default: "NOT PROVIDED"
-      flight_comments:
-        type: "string"
-        description: "Informative text about the operation.  Not used by the UTM System.\
-          \  Only for human stakeholders."
-        maxLength: 1000
-        default: "NOT PROVIDED"
-      flight_geography_description:
-        type: "string"
-        description: "Informative text about the operational geography.  Not used\
-          \ by the UTM System.  Only for human stakeholders."
-        maxLength: 1000
-        default: "NOT PROVIDED"
-      registration:
-        type: "string"
-        description: "The registration ID of the vehicle flying this operation. This\
-          \ registration value is provided to operators by a vehicle registrar. Validated\
-          \ as a non-null string. Note UTM System assumes a single vehicle per operation."
-        maxLength: 1000
-      registration_source:
-        type: "string"
-        description: "See 'registration' field. This contains the source of the registration\
-          \ ID."
-        maxLength: 1000
-        default: "NOT PROVIDED"
-      flight_number:
-        type: "string"
-        description: "Optional. May be useful to the operator for identification purposes."
-        maxLength: 100
-      user_id:
-        type: "string"
-        description: "This field is populated based on the provided credentials."
-      created_by:
-        type: "string"
-        description: "The user that created the operation."
-        maxLength: 100
-      primary_contact_name:
-        type: "string"
-        description: "Not currently checked for validity, but clients should endeavor\
-          \ to provide useful, appropriate information in these fields. These values\
-          \ should represent the contact that should be used in case of an issue with\
-          \ the operation before, during, or after that operation."
-        maxLength: 100
-      primary_contact_phone:
-        type: "string"
-        format: "phone"
-        maxLength: 100
-      primary_contact_email:
-        type: "string"
-        format: "email"
-        maxLength: 100
-      extra_contact_info:
-        type: "string"
-        description: "Any additional contact information that may be useful (hours\
-          \ of availability, fax number, communication limitations, etc.)."
-        maxLength: 1000
-        default: "NOT PROVIDED"
-      state:
-        type: "string"
-        description: "The current state of the operation."
-        maxLength: 100
-      controller_location:
-        $ref: "#/definitions/Point"
-      gcs_location:
-        $ref: "#/definitions/Point"
-      faa_rule:
-        type: "string"
-        description: "PART_107: The operation follows FAA rule 107. If USS notifies\
-          \ FIMS about this class of operations,\nFIMS will reply that authorization\
-          \ is not required. (For TCL2nc FIMS will always accept the operation.)\n\
-          \nPART_107X:  In general, operations are 107X if they are doing something\
-          \ outside the 107 rule that would require\na waiver under 107.\nUSS asks\
-          \ for authorization for this class of operations. (For TCL2nc FIMS will\
-          \ always accept the operation.)\nIn the future, FIMS replies with inform\
-          \ message of its decision, either authorized or not.\n\nPART_101E: This\
-          \ class of operations could be hobbyists being friendly with other users\
-          \ by announcing their intent.\n(For TCL2nc, FIMS will reply with inform\
-          \ message \"authorization not required\" and accept the operation. For TCL2nc\
-          \ FIMS does not check\nwhether the operation is in a preauthorized area.)\
-          \ In the future, a better response for 101E is\n\"Notification received\"\
-          \ if within 5 statute miles of an airport, and \"Notification not required\"\
-          \ if not within 5 miles.\n\nPart_TBD: Placeholder for future rule such as\
-          \ those under test by UTM.\n\nPART107W: Not used for TCL2nc.\n"
-        enum:
-        - "PART_107"
-        - "PART_107W"
-        - "PART_107X"
-        - "PART_101E"
-        - "PART_TBD"
-        default: "PART_107"
-      waiver_certificate_number:
-        type: "string"
-        description: "If a waiver has been obtained for the Part 107 rules, then the\
-          \ operator would have a waiver certificate number. For any operation submissions\
-          \ with faa_rule=PART_107W, this field is required. (For TCL2nc not used,\
-          \ and likely to be removed in future."
-        maxLength: 100
-        default: "NOT PROVIDED"
-      priority_op:
-        type: "boolean"
-        description: "If true this operation is managed as a priority operation."
-        default: false
-      operation_volumes:
-        type: "array"
-        description: "The actual geographical information for the operation.  Maximum\
-          \ array length of 12 currently allowed."
-        items:
-          $ref: "#/definitions/OperationVolume"
-    example:
-      gufi: "00000000-0000-4444-8888-000000000000"
-      submit_time: "2016-10-04T09:15:40.727Z"
-      decision_time: "2016-10-04T09:15:40.727Z"
-      aircraft_comments: "Comments about the aircraft"
-      flight_comments: "Comments about the flight"
-      flight_geography_description: "A description of the geography"
-      registration: "00000000-0000-4444-8888-000000000000"
-      registration_detail: "src=federaldroneregistration.com,owner=acme"
-      flight_number: "Flight number"
-      user_id: "fimsUser"
-      created_by: "fimsUser"
-      primary_contact_name: "Jane Pilot"
-      primary_contact_phone: "XXX-XXX-XXXX"
-      primary_contact_email: "pilotjane@janepilot.com"
-      extra_contact_info: "Fax: XXX-XXX-XXXX"
-      state: "A"
-      controller_location:
-        type: "Point"
-        coordinates:
-        - -122.0485890000000068766894401051104068756103515625
-        - 37.41486900000000304089553537778556346893310546875
-      gcs_location:
-        type: "Point"
-        coordinates:
-        - -122.0485890000000068766894401051104068756103515625
-        - 37.41486900000000304089553537778556346893310546875
-      operation_volumes:
-      - ordinal: 1
-        near_structure: false
-        effective_time_begin: "2017-10-04T09:15:40.727Z"
-        effective_time_end: "2017-10-04T09:25:40.727Z"
-        actual_time_end: "2017-10-04T09:25:40.727Z"
-        conformance_time_begin: "2017-10-04T09:14:40.727Z"
-        conformance_time_end: "2017-10-04T09:26:40.727Z"
-        min_altitude_wgs84_ft: 0
-        max_altitude_wgs84_ft: 300
-        conform_min_altitude_wgs84_ft: 0
-        conform_max_altitude_wgs84_ft: 400
-        flight_geography:
-          type: "Polygon"
-          coordinates:
-          - - - -122.0621765789999955131861497648060321807861328125
-              - 37.4096804114499974502905388362705707550048828125
-            - - -122.051870568889995638528489507734775543212890625
-              - 37.41786527235999670892852009274065494537353515625
-            - - -122.0373264763399987486991449259221553802490234375
-              - 37.41786440108000277859900961630046367645263671875
-            - - -122.0621765789999955131861497648060321807861328125
-              - 37.4096804114499974502905388362705707550048828125
-        conformance_geography:
-          type: "Polygon"
-          coordinates:
-          - - - -122.06382530000001906955731101334095001220703125
-              - 37.409069700000003422246663831174373626708984375
-            - - -122.05094253232999790270696394145488739013671875
-              - 37.4193006276999966530638630501925945281982421875
-            - - -122.0327620697599968480062671005725860595703125
-              - 37.41929920175999768616748042404651641845703125
-            - - -122.06382530000001906955731101334095001220703125
-              - 37.409069700000003422246663831174373626708984375
-        beyond_visual_line_of_sight: false
-  OperationVolume:
-    type: "object"
-    required:
-    - "beyond_visual_line_of_sight"
-    - "effective_time_begin"
-    - "effective_time_end"
-    - "flight_geography"
-    - "max_altitude_wgs84_ft"
-    - "min_altitude_wgs84_ft"
-    - "ordinal"
-    properties:
-      ordinal:
-        type: "integer"
-        description: "This integer represents the ordering of the operation volume\
-          \ within the set of operation volumes. Need not be consecutive integers."
-      near_structure:
-        type: "boolean"
-        description: "Is this operation volume within 400' of a structure?"
-        default: false
-      effective_time_begin:
-        type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-        description: "Earliest time the operation will use the operation volume."
-      effective_time_end:
-        type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-        description: "Latest time the operation will done with the operation volume.\
-          \ It must be greater than effective_time_begin."
-      actual_time_end:
-        type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-        description: "Time that the operational volume was freed for use by other\
-          \ operations."
-      conformance_time_begin:
-        type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-        description: "LIKELY TO BE DEPRECATED. Assigned by FIMS.  Time buffer before\
-          \ the submitted begin time."
-        maxLength: 100
-      conformance_time_end:
-        type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-        description: "LIKELY TO BE DEPRECATED. Assigned by FIMS.  Time buffer after\
-          \ the submitted end time."
-        maxLength: 100
-      min_altitude_wgs84_ft:
-        type: "number"
-        format: "double"
-        description: "The minimum altitude for this operation in this operation volume.\
-          \ In WGS84 reference system using feet as units."
-      max_altitude_wgs84_ft:
-        type: "number"
-        format: "double"
-        description: "The maximum altitude for this operation in this operation volume.\
-          \ In WGS84 reference system using feet as units."
-      conform_min_altitude_wgs84_ft:
-        type: "number"
-        format: "double"
-        description: "LIKELY TO BE DEPRECATED. The minimum altitude assigned and used\
-          \ by the UTM System to check vertical conformance of an operation. Based\
-          \ on operator-provided min altitude."
-      conform_max_altitude_wgs84_ft:
-        type: "number"
-        format: "double"
-        description: "LIKELY TO BE DEPRECATED. The maximum altitude assigned and used\
-          \ by the UTM System to check vertical conformance of an operation. Based\
-          \ on operator-provided max altitude."
-      flight_geography:
-        $ref: "#/definitions/Geometry"
-      conformance_geography:
-        $ref: "#/definitions/Geometry"
-      beyond_visual_line_of_sight:
-        type: "boolean"
-        description: "Describes whether the operation volume is beyond the visual\
-          \ line of sight of the operator."
-  Position:
-    type: "object"
-    required:
-    - "altitude_gps_wgs84_ft"
-    - "altitude_num_gps_satellites"
-    - "gufi"
-    - "hdop_gps"
-    - "location"
-    - "time_measured"
-    - "time_sent"
-    - "track_ground_speed_kn"
-    - "track_true_north_deg"
-    - "vdop_gps"
-    properties:
-      air_speed_source:
-        type: "string"
-        description: "Required if air_speed_track_kn is submitted. No requirements\
-          \ yet on the values here, but suggestions include ESTIMATED or MEASURED."
-        maxLength: 100
-      air_speed_track_kn:
-        type: "number"
-        format: "double"
-        description: "Air speed in relation to the direction of travel of the aircraft.\
-          \ Value may be negative."
-      altitude_gps_wgs84_ft:
-        type: "number"
-        format: "double"
-        description: "The altitude as measured via a GPS device on the aircraft. Units\
-          \ in feet using the WGS84 reference system."
-      altitude_num_gps_satellites:
-        type: "integer"
-        format: "int32"
-        description: "Number of satellites used in calculating the altitude_gps_wgs84_ft."
-        minimum: 0
-        exclusiveMinimum: false
-      enroute_positions_id:
-        type: "string"
-        format: "uuid"
-        description: "Each position will be assigned a UUIDv4 by the FIMS"
-        minLength: 36
-        maxLength: 36
-      gufi:
-        type: "string"
-        format: "uuid"
-        description: "Each operation has an GUFI assigned upon submission. Required\
-          \ upon POSTing a new position. It is a JSON string, but conforms to the\
-          \ UUID version 4 specification"
-        minLength: 36
-        maxLength: 36
-      hdop_gps:
-        type: "number"
-        format: "double"
-        description: "The horizontal dilution of precision as provided by the onboard\
-          \ GPS."
-        minimum: 0.0
-      location:
-        $ref: "#/definitions/Point"
-      time_measured:
-        type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-        description: "The time the position was measured. Likely the time provided\
-          \ with the GPS position reading.  Time must be before time received at FIMS\
-          \ based on FIMS system time."
-      time_received:
-        type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-        description: "Not required for submission, assigned by FIMS. The time the\
-          \ position was received by FIMS based on FIMS system time."
-      time_sent:
-        type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-        description: "The time the position was sent by the USS to FIMS as measured\
-          \ by USS system time.  Time must be before time received at FIMS based on\
-          \ FIMS system time."
-      track_ground_speed_kn:
-        type: "number"
-        format: "double"
-        description: "Ground speed int the direction of travel. Value must be >= 0.0.\
-          \ In knots."
-        minimum: 0.0
-        exclusiveMinimum: false
-      track_magnetic_north_deg:
-        type: "number"
-        format: "double"
-        description: "The direction of travel relative to magnetic north in degrees.\
-          \ Value must be >= 0.0 and < 360.0."
-        minimum: 0.0
-        maximum: 360.0
-        exclusiveMinimum: false
-        exclusiveMaximum: true
-      track_true_north_deg:
-        type: "number"
-        format: "double"
-        description: "The direction of travel relative to true north in degrees. Value\
-          \ must be >= 0.0 and < 360.0."
-        minimum: 0.0
-        maximum: 360.0
-        exclusiveMinimum: false
-        exclusiveMaximum: true
-      user_id:
-        type: "string"
-        description: "Not required for submission. This field is populated based on\
-          \ the provided credentials in the HTTPS header."
-      vdop_gps:
-        type: "number"
-        format: "double"
-        description: "The vertical dilultion of precision as provided by the onboard\
-          \ GPS."
-        minimum: 0.0
-    example:
-      altitude_gps_wgs84_ft: 1111.111000000000103682396002113819122314453125
-      altitude_num_gps_satellites: 22
-      air_speed_source: "MEASURED"
-      gufi: "00000000-0000-4444-8888-000000000000"
-      hdop_gps: 77.7000000000000028421709430404007434844970703125
-      time_measured: "2016-10-04T09:15:40.727Z"
-      time_sent: "2016-10-04T09:15:40.727Z"
-      time_received: "2016-10-04T09:15:42.727Z"
-      track_ground_speed_kn: 33.3299999999999982946974341757595539093017578125
-      track_true_north_deg: 235.027287562663985909239272587001323699951171875
-      track_magnetic_north_deg: 237.1234567891229971792199648916721343994140625
-      vdop_gps: 88.7999999999999971578290569595992565155029296875
-      location:
-        type: "Point"
-        coordinates:
-        - -122.0563593506813191424953402020037174224853515625
-        - 37.4143649028406883871866739355027675628662109375
   Geometry:
     type: "object"
     required:
@@ -942,39 +536,6 @@ definitions:
         - 37.4193006276999966530638630501925945281982421875
       - - -122.0327620697599968480062671005725860595703125
         - 37.41929920175999768616748042404651641845703125
-  Polygon:
-    allOf:
-    - $ref: "#/definitions/Geometry"
-    - type: "object"
-      properties:
-        coordinates:
-          type: "array"
-          items:
-            type: "array"
-            items:
-              type: "array"
-              items:
-                type: "number"
-                format: "double"
-    example:
-      type: "Polygon"
-      coordinates:
-      - - - -122.06382530000001906955731101334095001220703125
-          - 37.409069700000003422246663831174373626708984375
-        - - -122.05094253232999790270696394145488739013671875
-          - 37.4193006276999966530638630501925945281982421875
-        - - -122.0327620697599968480062671005725860595703125
-          - 37.41929920175999768616748042404651641845703125
-        - - -122.06382530000001906955731101334095001220703125
-          - 37.409069700000003422246663831174373626708984375
-      - - - -122.0621765789999955131861497648060321807861328125
-          - 37.4096804114499974502905388362705707550048828125
-        - - -122.051870568889995638528489507734775543212890625
-          - 37.41786527235999670892852009274065494537353515625
-        - - -122.0373264763399987486991449259221553802490234375
-          - 37.41786440108000277859900961630046367645263671875
-        - - -122.0621765789999955131861497648060321807861328125
-          - 37.4096804114499974502905388362705707550048828125
   Message:
     type: "object"
     required:
@@ -1242,6 +803,425 @@ definitions:
       warning_id:
         type: "string"
     description: "Needs description."
+  Operation:
+    type: "object"
+    required:
+    - "controller_location"
+    - "gufi"
+    - "operation_volumes"
+    - "primary_contact_name"
+    - "primary_contact_phone"
+    - "registration"
+    properties:
+      gufi:
+        type: "string"
+        format: "uuid"
+        description: "Created and assigned by each USS (not FIMS). Validated as UUID\
+          \ version 4 specification."
+        minLength: 36
+        maxLength: 36
+      submit_time:
+        type: "string"
+        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        description: "Time the operation submission was received by USS."
+        maxLength: 100
+      decision_time:
+        type: "string"
+        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        description: "A timestamp set by the USS any time the state of the operation\
+          \ is updated, for example when the flight goes from PROPOSING to ACCEPTED"
+        maxLength: 100
+      aircraft_comments:
+        type: "string"
+        description: "Informative text about the aircraft. Not used by the UTM System.\
+          \  Only for human stakeholders."
+        maxLength: 1000
+        default: "NOT PROVIDED"
+      flight_comments:
+        type: "string"
+        description: "Informative text about the operation.  Not used by the UTM System.\
+          \  Only for human stakeholders."
+        maxLength: 1000
+        default: "NOT PROVIDED"
+      flight_geography_description:
+        type: "string"
+        description: "Informative text about the operational geography.  Not used\
+          \ by the UTM System.  Only for human stakeholders."
+        maxLength: 1000
+        default: "NOT PROVIDED"
+      registration:
+        type: "string"
+        description: "The registration ID of the vehicle flying this operation. This\
+          \ registration value is provided to operators by a vehicle registrar. Validated\
+          \ as a non-null string. Note UTM System assumes a single vehicle per operation."
+        maxLength: 1000
+      registration_source:
+        type: "string"
+        description: "See 'registration' field. This contains the source of the registration\
+          \ ID."
+        maxLength: 1000
+        default: "NOT PROVIDED"
+      flight_number:
+        type: "string"
+        description: "Optional. May be useful to the operator for identification purposes."
+        maxLength: 100
+      user_id:
+        type: "string"
+        description: "This field is populated based on the provided credentials."
+      created_by:
+        type: "string"
+        description: "The user that created the operation."
+        maxLength: 100
+      primary_contact_name:
+        type: "string"
+        description: "Not currently checked for validity, but clients should endeavor\
+          \ to provide useful, appropriate information in these fields. These values\
+          \ should represent the contact that should be used in case of an issue with\
+          \ the operation before, during, or after that operation."
+        maxLength: 100
+      primary_contact_phone:
+        type: "string"
+        format: "phone"
+        maxLength: 100
+      primary_contact_email:
+        type: "string"
+        format: "email"
+        maxLength: 100
+      extra_contact_info:
+        type: "string"
+        description: "Any additional contact information that may be useful (hours\
+          \ of availability, fax number, communication limitations, etc.)."
+        maxLength: 1000
+        default: "NOT PROVIDED"
+      state:
+        type: "string"
+        description: "The current state of the operation."
+        maxLength: 100
+      controller_location:
+        $ref: "#/definitions/Point"
+      gcs_location:
+        $ref: "#/definitions/Point"
+      faa_rule:
+        type: "string"
+        description: "PART_107: The operation follows FAA rule 107. If USS notifies\
+          \ FIMS about this class of operations,\nFIMS will reply that authorization\
+          \ is not required. (For TCL2nc FIMS will always accept the operation.)\n\
+          \nPART_107X:  In general, operations are 107X if they are doing something\
+          \ outside the 107 rule that would require\na waiver under 107.\nUSS asks\
+          \ for authorization for this class of operations. (For TCL2nc FIMS will\
+          \ always accept the operation.)\nIn the future, FIMS replies with inform\
+          \ message of its decision, either authorized or not.\n\nPART_101E: This\
+          \ class of operations could be hobbyists being friendly with other users\
+          \ by announcing their intent.\n(For TCL2nc, FIMS will reply with inform\
+          \ message \"authorization not required\" and accept the operation. For TCL2nc\
+          \ FIMS does not check\nwhether the operation is in a preauthorized area.)\
+          \ In the future, a better response for 101E is\n\"Notification received\"\
+          \ if within 5 statute miles of an airport, and \"Notification not required\"\
+          \ if not within 5 miles.\n\nPart_TBD: Placeholder for future rule such as\
+          \ those under test by UTM.\n\nPART107W: Not used for TCL2nc.\n"
+        enum:
+        - "PART_107"
+        - "PART_107W"
+        - "PART_107X"
+        - "PART_101E"
+        - "PART_TBD"
+        default: "PART_107"
+      waiver_certificate_number:
+        type: "string"
+        description: "If a waiver has been obtained for the Part 107 rules, then the\
+          \ operator would have a waiver certificate number. For any operation submissions\
+          \ with faa_rule=PART_107W, this field is required. (For TCL2nc not used,\
+          \ and likely to be removed in future."
+        maxLength: 100
+        default: "NOT PROVIDED"
+      priority_op:
+        type: "boolean"
+        description: "If true this operation is managed as a priority operation."
+        default: false
+      operation_volumes:
+        type: "array"
+        description: "The actual geographical information for the operation.  Maximum\
+          \ array length of 12 currently allowed."
+        items:
+          $ref: "#/definitions/OperationVolume"
+    example:
+      gufi: "00000000-0000-4444-8888-000000000000"
+      submit_time: "2016-10-04T09:15:40.727Z"
+      decision_time: "2016-10-04T09:15:40.727Z"
+      aircraft_comments: "Comments about the aircraft"
+      flight_comments: "Comments about the flight"
+      flight_geography_description: "A description of the geography"
+      registration: "00000000-0000-4444-8888-000000000000"
+      registration_detail: "src=federaldroneregistration.com,owner=acme"
+      flight_number: "Flight number"
+      user_id: "fimsUser"
+      created_by: "fimsUser"
+      primary_contact_name: "Jane Pilot"
+      primary_contact_phone: "XXX-XXX-XXXX"
+      primary_contact_email: "pilotjane@janepilot.com"
+      extra_contact_info: "Fax: XXX-XXX-XXXX"
+      state: "A"
+      controller_location:
+        type: "Point"
+        coordinates:
+        - -122.048589
+        - 37.414869
+      gcs_location:
+        type: "Point"
+        coordinates:
+        - -122.048589
+        - 37.414869
+      operation_volumes:
+      - ordinal: 1
+        near_structure: false
+        effective_time_begin: "2017-10-04T09:15:40.727Z"
+        effective_time_end: "2017-10-04T09:25:40.727Z"
+        actual_time_end: "2017-10-04T09:25:40.727Z"
+        conformance_time_begin: "2017-10-04T09:14:40.727Z"
+        conformance_time_end: "2017-10-04T09:26:40.727Z"
+        min_altitude_wgs84_ft: 0.0
+        max_altitude_wgs84_ft: 300.0
+        conform_min_altitude_wgs84_ft: 0.0
+        conform_max_altitude_wgs84_ft: 400.0
+        flight_geography:
+          type: "Polygon"
+          coordinates:
+          - - - -122.062176579
+              - 37.40968041145
+            - - -122.05187056889
+              - 37.41786527236
+            - - -122.03732647634
+              - 37.41786440108
+            - - -122.062176579
+              - 37.40968041145
+        conformance_geography:
+          type: "Polygon"
+          coordinates:
+          - - - -122.06382530000002
+              - 37.4090697
+            - - -122.05094253233
+              - 37.4193006277
+            - - -122.03276206976
+              - 37.41929920176
+            - - -122.06382530000002
+              - 37.4090697
+        beyond_visual_line_of_sight: false
+  OperationVolume:
+    type: "object"
+    required:
+    - "beyond_visual_line_of_sight"
+    - "effective_time_begin"
+    - "effective_time_end"
+    - "flight_geography"
+    - "max_altitude_wgs84_ft"
+    - "min_altitude_wgs84_ft"
+    - "ordinal"
+    properties:
+      ordinal:
+        type: "integer"
+        description: "This integer represents the ordering of the operation volume\
+          \ within the set of operation volumes. Need not be consecutive integers."
+      near_structure:
+        type: "boolean"
+        description: "Is this operation volume within 400' of a structure?"
+        default: false
+      effective_time_begin:
+        type: "string"
+        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        description: "Earliest time the operation will use the operation volume."
+      effective_time_end:
+        type: "string"
+        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        description: "Latest time the operation will done with the operation volume.\
+          \ It must be greater than effective_time_begin."
+      actual_time_end:
+        type: "string"
+        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        description: "Time that the operational volume was freed for use by other\
+          \ operations."
+      conformance_time_begin:
+        type: "string"
+        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        description: "LIKELY TO BE DEPRECATED. Assigned by FIMS.  Time buffer before\
+          \ the submitted begin time."
+        maxLength: 100
+      conformance_time_end:
+        type: "string"
+        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        description: "LIKELY TO BE DEPRECATED. Assigned by FIMS.  Time buffer after\
+          \ the submitted end time."
+        maxLength: 100
+      min_altitude_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The minimum altitude for this operation in this operation volume.\
+          \ In WGS84 reference system using feet as units."
+      max_altitude_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The maximum altitude for this operation in this operation volume.\
+          \ In WGS84 reference system using feet as units."
+      conform_min_altitude_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "LIKELY TO BE DEPRECATED. The minimum altitude assigned and used\
+          \ by the UTM System to check vertical conformance of an operation. Based\
+          \ on operator-provided min altitude."
+      conform_max_altitude_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "LIKELY TO BE DEPRECATED. The maximum altitude assigned and used\
+          \ by the UTM System to check vertical conformance of an operation. Based\
+          \ on operator-provided max altitude."
+      flight_geography:
+        $ref: "#/definitions/Geometry"
+      conformance_geography:
+        $ref: "#/definitions/Geometry"
+      beyond_visual_line_of_sight:
+        type: "boolean"
+        description: "Describes whether the operation volume is beyond the visual\
+          \ line of sight of the operator."
+  Position:
+    type: "object"
+    required:
+    - "altitude_gps_wgs84_ft"
+    - "altitude_num_gps_satellites"
+    - "gufi"
+    - "hdop_gps"
+    - "location"
+    - "time_measured"
+    - "time_sent"
+    - "track_ground_speed_kn"
+    - "track_true_north_deg"
+    - "vdop_gps"
+    properties:
+      air_speed_source:
+        type: "string"
+        description: "Required if air_speed_track_kn is submitted. No requirements\
+          \ yet on the values here, but suggestions include ESTIMATED or MEASURED."
+        maxLength: 100
+      air_speed_track_kn:
+        type: "number"
+        format: "double"
+        description: "Air speed in relation to the direction of travel of the aircraft.\
+          \ Value may be negative."
+      altitude_gps_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The altitude as measured via a GPS device on the aircraft. Units\
+          \ in feet using the WGS84 reference system."
+      altitude_num_gps_satellites:
+        type: "integer"
+        format: "int32"
+        description: "Number of satellites used in calculating the altitude_gps_wgs84_ft."
+        minimum: 0
+        exclusiveMinimum: false
+      enroute_positions_id:
+        type: "string"
+        format: "uuid"
+        description: "Each position will be assigned a UUIDv4 by the FIMS"
+        minLength: 36
+        maxLength: 36
+      gufi:
+        type: "string"
+        format: "uuid"
+        description: "Each operation has an GUFI assigned upon submission. Required\
+          \ upon POSTing a new position. It is a JSON string, but conforms to the\
+          \ UUID version 4 specification"
+        minLength: 36
+        maxLength: 36
+      hdop_gps:
+        type: "number"
+        format: "double"
+        description: "The horizontal dilution of precision as provided by the onboard\
+          \ GPS."
+        minimum: 0.0
+      location:
+        $ref: "#/definitions/Point"
+      time_measured:
+        type: "string"
+        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        description: "The time the position was measured. Likely the time provided\
+          \ with the GPS position reading.  Time must be before time received at FIMS\
+          \ based on FIMS system time."
+      time_received:
+        type: "string"
+        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        description: "Not required for submission, assigned by FIMS. The time the\
+          \ position was received by FIMS based on FIMS system time."
+      time_sent:
+        type: "string"
+        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        description: "The time the position was sent by the USS to FIMS as measured\
+          \ by USS system time.  Time must be before time received at FIMS based on\
+          \ FIMS system time."
+      track_ground_speed_kn:
+        type: "number"
+        format: "double"
+        description: "Ground speed int the direction of travel. Value must be >= 0.0.\
+          \ In knots."
+        minimum: 0.0
+        exclusiveMinimum: false
+      track_magnetic_north_deg:
+        type: "number"
+        format: "double"
+        description: "The direction of travel relative to magnetic north in degrees.\
+          \ Value must be >= 0.0 and < 360.0."
+        minimum: 0.0
+        maximum: 360.0
+        exclusiveMinimum: false
+        exclusiveMaximum: true
+      track_true_north_deg:
+        type: "number"
+        format: "double"
+        description: "The direction of travel relative to true north in degrees. Value\
+          \ must be >= 0.0 and < 360.0."
+        minimum: 0.0
+        maximum: 360.0
+        exclusiveMinimum: false
+        exclusiveMaximum: true
+      user_id:
+        type: "string"
+        description: "Not required for submission. This field is populated based on\
+          \ the provided credentials in the HTTPS header."
+      vdop_gps:
+        type: "number"
+        format: "double"
+        description: "The vertical dilultion of precision as provided by the onboard\
+          \ GPS."
+        minimum: 0.0
+    example:
+      altitude_gps_wgs84_ft: 1111.111
+      altitude_num_gps_satellites: 22
+      air_speed_source: "MEASURED"
+      gufi: "00000000-0000-4444-8888-000000000000"
+      hdop_gps: 77.7
+      time_measured: "2016-10-04T09:15:40.727Z"
+      time_sent: "2016-10-04T09:15:40.727Z"
+      time_received: "2016-10-04T09:15:42.727Z"
+      track_ground_speed_kn: 33.33
+      track_true_north_deg: 235.027287562664
+      track_magnetic_north_deg: 237.123456789123
+      vdop_gps: 88.8
+      location:
+        type: "Point"
+        coordinates:
+        - -122.05635935068132
+        - 37.41436490284069
+  Polygon:
+    allOf:
+    - $ref: "#/definitions/Geometry"
+    - type: "object"
+      properties:
+        coordinates:
+          type: "array"
+          items:
+            type: "array"
+            items:
+              type: "array"
+              items:
+                type: "number"
+                format: "double"
 responses:
   WRONG_PROTOCOL:
     description: "A RESTful call was made to this endpoint but this is not a REST\

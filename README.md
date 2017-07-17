@@ -6,4 +6,6 @@ Each directory contains files related to a single API.  Within each directory th
 
 ## Some References
 
-add some links to stuff.
+- [UTM Home Page](https://utm.arc.nasa.gov/)
+- [UTM Publications](https://utm.arc.nasa.gov/documents.shtml)
+- [UTM Swaggerhub](https://app.swaggerhub.com/organizations/utm)

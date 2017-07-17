@@ -2,7 +2,7 @@
 swagger: "2.0"
 info:
   description: "Data analyis provider for USS"
-  version: "1.0.0"
+  version: "v2"
   title: "NASA UTM Data Analysis Provider (dapper)"
   termsOfService: "\nA. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT\
     \ ANY WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,\
@@ -32,8 +32,8 @@ info:
   license:
     name: "NASA Open Source Agreement"
     url: "https://ti.arc.nasa.gov/opensource/nosa/"
-host: "virtserver.swaggerhub.com"
-basePath: "/utm/dapper/1.0.0"
+host: "utmalpha.arc.nasa.gov"
+basePath: "/utm/dapper/"
 tags:
 - name: "A. DAA Endpoints"
   description: "The primary RESTful endpoints for pushing data to be aggregated"
@@ -48,6 +48,7 @@ tags:
   description: "Get version"
 schemes:
 - "https"
+- "wss"
 paths:
   /dataExchanges/operations:
     put:

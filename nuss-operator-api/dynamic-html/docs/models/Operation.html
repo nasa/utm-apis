@@ -1,0 +1,197 @@
+
+<h2>Operation</h2>
+<ul class="parameter">
+  <li class="param-required-">aircraft_comments : String
+    <br/>Informative text about the aircraft. Not used by the UTM System.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">aircraft_type : String
+    <br/>read-only. Vehicle type propery derived from vehicle registration ID.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">color_markings : String
+    <br/>
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">conformance_time_begin : Date
+    <br/>The conformance begin time of the operation. Derived from the begin time of the first operation volume.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">conformance_time_end : Date
+    <br/>The conformance end time of the operation. Derived from the end time of the last operation volume.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">created_by : String
+    <br/>The user that created the operation. It is possible that an operation is created on behalf of an operator by, say, a manager. Nominally, this field will be equal to user_id.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">decision_time : Date
+    <br/>A timestamp set by the UTM System any time the state of the operation is updated, for example when the flight goes from PROPOSING to ACCEPTED (see Section 4.1)
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">effective_time_begin : Date
+    <br/>The effective begin time of the operation. Same value as the begin time of the first operation volume.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">effective_time_end : Date
+    <br/>The effective end time of the operation. Same value as the end time of the last operation volume.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">extra_contact_info : String
+    <br/>Any additional contact information that may be useful (hours of availability, fax number, communication limitations, etc.).
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">flight_comments : String
+    <br/>Informative text about the operation. Not used by the UTM System.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">flight_geography_description : String
+    <br/>Informative text about the operation. Not used by the UTM System.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">flight_number : String
+    <br/>Optional. Currently unused by the UTM System, may be useful to the operator for identification purposes.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">gufi : String
+    <br/>has a GUFI assigned upon submission. It is a JSON string that conforms to the UUID version 4 specification (see Section 3.1)
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-true">operation_volumes : List
+    <br/>Editable
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-true">primary_contact_email : String
+    <br/>Same as primary contact name
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-true">primary_contact_name : String
+    <br/>These are required fields but are not currently checked for validity, but clients should endeavor to provide useful, appropriate information in these fields. Validity will be checked in the future. These values should represent the contact that should be used in case of an issue with the operation before, during, or after that operation.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-true">primary_contact_phone : String
+    <br/>Same as primary contact name
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">protected_time_begin : Date
+    <br/>The protected begin time of the operation. This is derived from the begin time of the first operation volume.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">protected_time_end : Date
+    <br/>The protected end time of the operation. This is derived from the end time of the last operation volume.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">registration_detail : String
+    <br/>See &#39;registration&#39; field. This contains details such as the source of the registration ID.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-true">registration : String
+    <br/>The registration ID of the vehicle flying this operation. Note the UTM System assumes a single vehicle per operation currently. This registration value is provided to operators upon manual registration of their vehicle with NASA.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">secondary_contact_email : String
+    <br/>Same as secondary contact name
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">secondary_contact_name : String
+    <br/>These are optional fields. They are not currently checked for validity, but clients should endeavor to provide useful, appropriate information in these fields. Validity will be checked in the future. These values should represent the back-up contact that should be used in case of an issue with the operation before, during, or after that operation.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">secondary_contact_phone : String
+    <br/>Same as secondary contact name
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">state : String
+    <br/>The current state of the operation. Not required for submission, will be assigned by the UTM System.
+      <dl class="param-enum">
+        <dt>Enum:
+            <dd>P</dd>
+            <dd>A</dd>
+            <dd>R</dd>
+            <dd>C</dd>
+            <dd>X</dd>
+            <dd>I</dd>
+            <dd>E</dd>
+            <dd>G</dd>
+            <dd>B</dd>
+            <dd>U</dd>
+            <dd>T</dd>
+            <dd>F</dd>
+            <dd>V</dd>
+        </dt>
+      </dl>
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">submit_time : Date
+    <br/>Time the operation submission was received by UTM System.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-true">unmanned : Boolean
+    <br/>Must be set to &#39;true&#39; with all submissions.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-true">user_id : String
+    <br/>This field is populated based on provided credentials in the HTTPS header.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">controller_location : Point
+    <br/>
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">gcs_location : Point
+    <br/>
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">faa_rule : String
+    <br/>Indication whether this operation is under Part 101-E, Part 107, Part 107 waiver, or a Part TBD.  Part TBD is a potential future rule that may cover operations such as those under test by UTM.
+      <dl class="param-enum">
+        <dt>Enum:
+            <dd>PART_107</dd>
+            <dd>PART_107W</dd>
+            <dd>PART_101E</dd>
+            <dd>PART_TBD</dd>
+        </dt>
+      </dl>
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">waiver_certificate_number : String
+    <br/>If a waiver has been obtained for the Part 107 rules, then the operator would have a waiver certificate number. For any operation submissions with faa_rule&#x3D;PART_107W, this field is required.
+  </li>
+</ul>
+<ul class="parameter">
+  <li class="param-required-">priority_op : Boolean
+    <br/>if true this operation is managed as a priority operation
+  </li>
+</ul>

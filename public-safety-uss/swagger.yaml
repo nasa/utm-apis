@@ -1,0 +1,74 @@
+---
+swagger: "2.0"
+info:
+  description: "A USS with the Public Safety role implements this API in addition\
+    \ to the base USS API."
+  version: "v1"
+  title: "Public Safety USS"
+  termsOfService: "\nA. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT\
+    \ ANY WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,\
+    \ BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL CONFORM TO SPECIFICATIONS,\
+    \ ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,\
+    \ OR FREEDOM FROM INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE\
+    \ ERROR FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM TO\
+    \ THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER, CONSTITUTE AN\
+    \ ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT OF ANY RESULTS, RESULTING\
+    \ DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY OTHER APPLICATIONS RESULTING FROM\
+    \ USE OF THE SUBJECT SOFTWARE. FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES\
+    \ AND LIABILITIES REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,\
+    \ AND DISTRIBUTES IT \"AS IS.\"\n\nB. Waiver and Indemnity: RECIPIENT AGREES TO\
+    \ WAIVE ANY AND ALL CLAIMS AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS\
+    \ AND SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT''S USE OF THE\
+    \ SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES\
+    \ ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING\
+    \ FROM, RECIPIENT''S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY AND\
+    \ HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS,\
+    \ AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT''S\
+    \ SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL TERMINATION\
+    \ OF THIS AGREEMENT.\n"
+  contact:
+    name: "NASA Ames Research Center, Aviation Systems Division"
+    url: "https://utm.arc.nasa.gov/"
+    email: "joseph.rios@nasa.gov"
+  license:
+    name: "NASA Open Source Agreement"
+    url: "https://ti.arc.nasa.gov/opensource/nosa/"
+host: "publicsafety.arc.nasa.gov"
+basePath: "/api"
+schemes:
+- "https"
+security:
+- password:
+  - "USS"
+paths:
+  /vehicle-id:
+    get:
+      tags:
+      - "Restful Endpoints"
+      summary: "Get UAS information"
+      description: "A device provides input data (uvin/WGS-84). API returns UAS and\
+        \ USS information."
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+  /tfr:
+    post:
+      tags:
+      - "Restful Endpoints"
+      summary: "Submit a new TFR"
+      description: "A USS may submit new TFRs on behalf of public safety organizations.\
+        \ This endpoint allows a public safetry organization to submit the data related\
+        \ to a new TFR."
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+securityDefinitions:
+  password:
+    type: "oauth2"
+    tokenUrl: "https://utmalpha.arc.nasa.gov/fimsAuthServer/oauth/token"
+    flow: "password"
+    scopes:
+      USS: "A USS can read and write UREPs"
+definitions: {}
