@@ -311,10 +311,12 @@ paths:
           description: "A RESTful call was made to this endpoint but this is not a\
             \ REST endpoint. Do not use this endpoint for REST calls."
 securityDefinitions:
-  OauthSecurity:
+  password:
     type: "oauth2"
-    tokenUrl: "https://tmiserver.arc.nasa.gov/fimsAuthServer/oauth/token"
-    flow: "application"
+    tokenUrl: "https://<host>/fimsAuthServer/oauth/token"
+    flow: "password"
+    scopes:
+      USS: "A USS can read and write"
 definitions:
   UssInstance:
     type: "object"
