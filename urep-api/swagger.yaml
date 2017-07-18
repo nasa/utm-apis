@@ -7,7 +7,7 @@ info:
     \ operational awareness within the UTM ecosystem."
   version: "v1"
   title: "UAS Report (UREP) Service"
-host: "tmiserver.arc.nasa.gov"
+host: "utmalpha.arc.nasa.gov"
 basePath: "/urep"
 schemes:
 - "https"
