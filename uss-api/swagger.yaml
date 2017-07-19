@@ -119,6 +119,22 @@ paths:
       responses:
         201:
           description: "Message data received."
+  /uss_health:
+    get:
+      tags:
+      - "A. Required REST endpoints"
+      summary: "Allow stakeholders to obtain health status of this USS Instance"
+      description: "A GET on this endpoint provides the requestor with a summary of\
+        \ the USS health."
+      operationId: "getUSSHealth"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "USS Instance health data"
+        429:
+          description: "Too many recent requests from you. Wait to make further queries."
   /operations:
     get:
       tags:
@@ -247,6 +263,11 @@ paths:
         429:
           description: "Too many recent requests from you. Wait to make further queries."
 definitions:
+  UssHealth:
+    type: "object"
+    properties:
+      placeholder:
+        type: "string"
   AlertMessage:
     type: "object"
     properties:
@@ -297,7 +318,7 @@ definitions:
         type: "string"
         format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
         description: "A timestamp set by the USS any time the state of the operation\
-          \ is updated, for example when the flight goes from PROPOSING to ACCEPTED"
+          \ is updated, for example when the flight goes from ACCEPTED to ACTIVATED"
         maxLength: 100
       aircraft_comments:
         type: "string"
@@ -331,7 +352,8 @@ definitions:
         default: "NOT PROVIDED"
       flight_number:
         type: "string"
-        description: "Optional. May be useful to the operator for identification purposes."
+        description: "Optional. May be useful to the operator or USS for identification\
+          \ purposes."
         maxLength: 100
       user_id:
         type: "string"
@@ -364,7 +386,14 @@ definitions:
       state:
         type: "string"
         description: "The current state of the operation."
-        maxLength: 100
+        minLength: 5
+        maxLength: 13
+        enum:
+        - "ACCEPTED"
+        - "ACTIVATED"
+        - "CLOSED"
+        - "NONCONFORMING"
+        - "ROGUE"
       controller_location:
         $ref: "#/definitions/Point"
       gcs_location:
@@ -375,21 +404,17 @@ definitions:
           \ FIMS about this class of operations,\nFIMS will reply that authorization\
           \ is not required. (For TCL2nc FIMS will always accept the operation.)\n\
           \nPART_107X:  In general, operations are 107X if they are doing something\
-          \ outside the 107 rule that would require\na waiver under 107.\nUSS asks\
-          \ for authorization for this class of operations. (For TCL2nc FIMS will\
-          \ always accept the operation.)\nIn the future, FIMS replies with inform\
-          \ message of its decision, either authorized or not.\n\nPART_101E: This\
-          \ class of operations could be hobbyists being friendly with other users\
-          \ by announcing their intent.\n(For TCL2nc, FIMS will reply with inform\
+          \ outside the 107 rule that would require\na waiver under 107.\n\nPART_101E:\
+          \ This class of operations could be hobbyists being friendly with other\
+          \ users by announcing their intent.\n(For TCL2nc, FIMS will reply with inform\
           \ message \"authorization not required\" and accept the operation. For TCL2nc\
           \ FIMS does not check\nwhether the operation is in a preauthorized area.)\
           \ In the future, a better response for 101E is\n\"Notification received\"\
           \ if within 5 statute miles of an airport, and \"Notification not required\"\
           \ if not within 5 miles.\n\nPart_TBD: Placeholder for future rule such as\
-          \ those under test by UTM.\n\nPART107W: Not used for TCL2nc.\n"
+          \ those under test by UTM.\n"
         enum:
         - "PART_107"
-        - "PART_107W"
         - "PART_107X"
         - "PART_101E"
         - "PART_TBD"
@@ -398,13 +423,14 @@ definitions:
         type: "string"
         description: "If a waiver has been obtained for the Part 107 rules, then the\
           \ operator would have a waiver certificate number. For any operation submissions\
-          \ with faa_rule=PART_107W, this field is required. (For TCL2nc not used,\
-          \ and likely to be removed in future."
+          \ with faa_rule=PART_107W, this field is required. (likely to be removed\
+          \ in future)"
         maxLength: 100
         default: "NOT PROVIDED"
       priority_op:
         type: "boolean"
-        description: "If true this operation is managed as a priority operation."
+        description: "If true this operation is managed as a priority operation. Only\
+          \ FIMS or a USS with the public safety role may set this field to true."
         default: false
       operation_volumes:
         type: "array"
