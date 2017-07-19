@@ -125,7 +125,7 @@ paths:
       - "A. Required REST endpoints"
       summary: "Allow stakeholders to obtain health status of this USS Instance"
       description: "A GET on this endpoint provides the requestor with a summary of\
-        \ the USS health."
+        \ the USS health. This may be open to other USSs or perhaps only FIMS. TBD."
       operationId: "getUSSHealth"
       produces:
       - "application/json"
