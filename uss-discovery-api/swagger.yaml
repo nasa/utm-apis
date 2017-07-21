@@ -329,8 +329,7 @@ definitions:
       uss_instance_id:
         type: "string"
         format: "uuid"
-        description: "A unique identifier assigned by the discovery service upon successful\
-          \ submission."
+        description: "A unique USS Instance identifier, minted by the USS."
       uss_name:
         type: "string"
         description: "The name of the entity providing UAS Support Services. Populated\
