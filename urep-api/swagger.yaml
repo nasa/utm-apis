@@ -9,6 +9,11 @@ info:
   title: "UAS Report (UREP) Service"
 host: "utmalpha.arc.nasa.gov"
 basePath: "/urep"
+tags:
+- name: "A. SDSP Endpoints"
+  description: "NEED SOME TEXT HERE."
+- name: "B. Subscription Points"
+  description: "Non-REST endpoints for asynchronous communications with UREP."
 schemes:
 - "https"
 paths:
@@ -222,6 +227,18 @@ paths:
           description: "OK"
           schema:
             $ref: "#/definitions/Version"
+  /urepstream:
+    get:
+      tags:
+      - "B. Subscription Points"
+      summary: "Subscription point for receiving UREP updates"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        410:
+          description: "A RESTful call was made to this endpoint but this is not a\
+            \ REST endpoint. Do not use this endpoint for REST calls."
 securityDefinitions:
   password:
     type: "oauth2"
@@ -532,6 +549,10 @@ definitions:
     properties:
       message:
         type: "string"
+responses:
+  WRONG_PROTOCOL:
+    description: "A RESTful call was made to this endpoint but this is not a REST\
+      \ endpoint. Do not use this endpoint for REST calls."
 externalDocs:
   description: "SwaggerHub Documentation"
   url: "https://app.swaggerhub.com/apis/utm/urep/v1"
