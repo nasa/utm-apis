@@ -65,6 +65,8 @@ paths:
       responses:
         200:
           description: "OK"
+          schema:
+            $ref: "#/definitions/TokenResponse"
   /token_key:
     get:
       tags:
@@ -177,6 +179,44 @@ securityDefinitions:
       PublicSafety_USS: "A USS with the capability to manaage public safety operations"
       Operations_FIMS: "For FIMS to perform baseline FIMS requests"
 definitions:
+  TokenResponse:
+    type: "object"
+    properties:
+      access_token:
+        $ref: "#/definitions/JwsCompactSerialization"
+      token_type:
+        type: "string"
+        enum:
+        - "bearer"
+      jti:
+        type: "string"
+        format: "uuid"
+  JwsCompactSerialization:
+    type: "object"
+    properties:
+      jose_header:
+        $ref: "#/definitions/JoseHeader"
+      jws_payload:
+        $ref: "#/definitions/JwtClaimsSet"
+      jws_signature:
+        type: "string"
+        description: "See RFC 7515 for details."
+    description: "The token provided by the FIMS Authorization Server is a JWS representing\
+      \ a JWT.  The token is actually a JWS Compact Serialization string as described\
+      \ in RFC 7515.  For clarity of documentation, we represent the pre-serialized\
+      \ components here as a JSON schema.  This may be problematic when using automated\
+      \ tools to validate the schema using this file as input."
+  JoseHeader:
+    type: "object"
+    properties:
+      alg:
+        type: "string"
+      typ:
+        type: "string"
+        description: "The FIMS Authorization Server only support 'JWT' (JSON Web Token)\
+          \ as the algorithm type."
+        enum:
+        - "JWT"
   TokenKeyResponse:
     type: "object"
     properties:
@@ -206,7 +246,7 @@ definitions:
           \ and is within its given time window of validity (e.g., after its issuance\
           \ time and before its expiration time).  See Section 4 for information on\
           \ implementation of such checks."
-  JavaWebTokenClaims:
+  JwtClaimsSet:
     type: "object"
     properties:
       iss:
@@ -242,6 +282,13 @@ definitions:
         format: "uuid"
         description: "The \"jti\" (JWT ID) claim provides a unique identifier for\
           \ the JWT. For this server, this is satisfied by the use of a UUID."
+      scope:
+        type: "string"
+        enum:
+        - "USS_BASIC"
+        - "USS_PUBLICSAFETY"
+        - "FIMS_BASIC"
+        - "FIMS_USSDISCOVERY"
   Metadata:
     type: "object"
     required:
@@ -352,7 +399,7 @@ definitions:
         items:
           type: "string"
       jwt_claims:
-        $ref: "#/definitions/JavaWebTokenClaims"
+        $ref: "#/definitions/JwtClaimsSet"
   Version:
     type: "object"
     properties:
