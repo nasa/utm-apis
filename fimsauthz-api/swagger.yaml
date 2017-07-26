@@ -283,12 +283,9 @@ definitions:
         description: "The \"jti\" (JWT ID) claim provides a unique identifier for\
           \ the JWT. For this server, this is satisfied by the use of a UUID."
       scope:
-        type: "string"
-        enum:
-        - "USS_BASIC"
-        - "USS_PUBLICSAFETY"
-        - "FIMS_BASIC"
-        - "FIMS_USSDISCOVERY"
+        type: "array"
+        items:
+          $ref: "#/definitions/scopes"
   Metadata:
     type: "object"
     required:
@@ -412,6 +409,13 @@ definitions:
       documentation:
         type: "string"
         description: "URL for API Documentation"
+  scopes:
+    type: "string"
+    enum:
+    - "USS_BASIC"
+    - "USS_PUBLICSAFETY"
+    - "FIMS_BASIC"
+    - "FIMS_USSDISCOVERY"
 externalDocs:
   description: "SwaggerHub Documentation"
   url: "https://app.swaggerhub.com/apis/utm/fims_authz/"
