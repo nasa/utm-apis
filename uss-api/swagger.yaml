@@ -35,7 +35,7 @@ info:
     name: "NASA Open Source Agreement"
     url: "https://ti.arc.nasa.gov/opensource/nosa/"
 host: "uss.defined.url"
-basePath: "/api"
+basePath: "/uss"
 schemes:
 - "https"
 - "wss"
@@ -206,6 +206,7 @@ paths:
           type: "string"
         collectionFormat: "csv"
         maxItems: 20
+        minItems: 1
         uniqueItems: true
       - name: "sort"
         in: "query"
@@ -229,6 +230,8 @@ paths:
         required: false
         type: "integer"
         default: 10
+        maximum: 100
+        minimum: 1
         format: "int32"
       - name: "offset"
         in: "query"
