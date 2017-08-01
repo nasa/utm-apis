@@ -119,7 +119,7 @@ paths:
       responses:
         201:
           description: "Message data received."
-  /uss_health:
+  /health:
     get:
       tags:
       - "A. Required REST endpoints"
@@ -133,8 +133,25 @@ paths:
       responses:
         200:
           description: "USS Instance health data"
+          schema:
+            $ref: "#/definitions/UssHealth"
         429:
           description: "Too many recent requests from you. Wait to make further queries."
+  /api:
+    get:
+      tags:
+      - "A. Required REST endpoints"
+      summary: "API version and other data."
+      description: "Provides versioning information for the software and API"
+      operationId: "getVersion"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Version data"
+          schema:
+            $ref: "#/definitions/UssHealth"
   /operations:
     get:
       tags:
@@ -311,15 +328,21 @@ definitions:
         maxLength: 36
       submit_time:
         type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-        description: "Time the operation submission was received by USS."
-        maxLength: 100
+        format: "date-time"
+        example: "2015-08-20T14:11:56.118Z"
+        description: "Time the operation submission was received by USS.  Uses the\
+          \ ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds\
+          \ may have up to millisecond accuracy (three positions after decimal). \
+          \ The 'Z' implies UTC times and is the only timezone accepted."
       decision_time:
         type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        format: "date-time"
+        example: "2015-08-20T14:11:56.118Z"
         description: "A timestamp set by the USS any time the state of the operation\
-          \ is updated, for example when the flight goes from ACCEPTED to ACTIVATED"
-        maxLength: 100
+          \ is updated, for example when the flight goes from ACCEPTED to ACTIVATED.\
+          \  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.\
+          \  Seconds may have up to millisecond accuracy (three positions after decimal).\
+          \  The 'Z' implies UTC times and is the only timezone accepted."
       aircraft_comments:
         type: "string"
         description: "Informative text about the aircraft. Not used by the UTM System.\
@@ -533,29 +556,38 @@ definitions:
         default: false
       effective_time_begin:
         type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-        description: "Earliest time the operation will use the operation volume."
+        format: "date-time"
+        example: "2015-08-20T14:11:56.118Z"
+        description: "Earliest time the operation will use the operation volume. \
+          \ Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.\
+          \  Seconds may have up to millisecond accuracy (three positions after decimal).\
+          \  The 'Z' implies UTC times and is the only timezone accepted."
       effective_time_end:
         type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        format: "date-time"
+        example: "2015-08-20T15:11:56.118Z"
         description: "Latest time the operation will done with the operation volume.\
-          \ It must be greater than effective_time_begin."
+          \ It must be greater than effective_time_begin.  Uses the ISO 8601 format\
+          \ conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up\
+          \ to millisecond accuracy (three positions after decimal).  The 'Z' implies\
+          \ UTC times and is the only timezone accepted."
       actual_time_end:
         type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        format: "date-time"
+        example: "2015-08-20T14:31:56.118Z"
         description: "Time that the operational volume was freed for use by other\
-          \ operations."
+          \ operations.  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.\
+          \  Seconds may have up to millisecond accuracy (three positions after decimal).\
+          \  The 'Z' implies UTC times and is the only timezone accepted."
       conformance_time_begin:
         type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-        description: "LIKELY TO BE DEPRECATED. Assigned by FIMS.  Time buffer before\
-          \ the submitted begin time."
+        description: "TO BE DEPRECATED. Assigned by FIMS.  Time buffer before the\
+          \ submitted begin time."
         maxLength: 100
       conformance_time_end:
         type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-        description: "LIKELY TO BE DEPRECATED. Assigned by FIMS.  Time buffer after\
-          \ the submitted end time."
+        description: "TO BE DEPRECATED. Assigned by FIMS.  Time buffer after the submitted\
+          \ end time."
         maxLength: 100
       min_altitude_wgs84_ft:
         type: "number"
