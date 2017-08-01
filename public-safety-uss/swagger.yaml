@@ -34,7 +34,7 @@ info:
     name: "NASA Open Source Agreement"
     url: "https://ti.arc.nasa.gov/opensource/nosa/"
 host: "publicsafety.arc.nasa.gov"
-basePath: "/api"
+basePath: "/pubsafe"
 schemes:
 - "https"
 security:
