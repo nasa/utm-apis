@@ -152,6 +152,34 @@ paths:
           description: "Version data"
           schema:
             $ref: "#/definitions/UssHealth"
+  /negotiations:
+    post:
+      tags:
+      - "A. Required REST endpoints"
+      summary: "Allow other USSs to submit a negotiation request"
+      description: "A POST to the negotiations endpoint is interpretted as a request\
+        \ for alteration in an existing operation managed by the receiving USS.  The\
+        \ requesting USS supplies a GUFI that references the operation that may be\
+        \ altered if the request is granted by the receiving USS."
+      operationId: "postNegotiation"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "operation"
+        description: "The operation data"
+        required: true
+        schema:
+          $ref: "#/definitions/Operation"
+      responses:
+        200:
+          description: "Negotiation request received, decision provided"
+          schema:
+            $ref: "#/definitions/NegotiationResponse"
+        400:
+          description: "Problem with submitted data"
   /operations:
     get:
       tags:
@@ -280,6 +308,11 @@ paths:
         429:
           description: "Too many recent requests from you. Wait to make further queries."
 definitions:
+  NegotiationResponse:
+    type: "object"
+    properties:
+      placeholder:
+        type: "string"
   UssHealth:
     type: "object"
     properties:
