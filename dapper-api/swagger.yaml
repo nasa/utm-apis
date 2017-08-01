@@ -33,7 +33,7 @@ info:
     name: "NASA Open Source Agreement"
     url: "https://ti.arc.nasa.gov/opensource/nosa/"
 host: "utmalpha.arc.nasa.gov"
-basePath: "/utm/dapper/"
+basePath: "/dapper"
 tags:
 - name: "A. DAA Endpoints"
   description: "The primary RESTful endpoints for pushing data to be aggregated"
