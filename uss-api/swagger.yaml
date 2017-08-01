@@ -311,8 +311,20 @@ definitions:
   NegotiationResponse:
     type: "object"
     properties:
-      placeholder:
+      requested_gufi:
         type: "string"
+        format: "uuid"
+      response:
+        type: "string"
+        enum:
+        - "GRANTED"
+        - "REFUSED"
+      reason_for_refusal:
+        type: "string"
+        enum:
+        - "A"
+        - "B"
+        - "C"
   UssHealth:
     type: "object"
     properties:
