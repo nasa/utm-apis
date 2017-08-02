@@ -38,7 +38,7 @@ info:
     name: "NASA Open Source Agreement"
     url: "https://ti.arc.nasa.gov/opensource/nosa/"
 host: "ussdiscovery.arc.nasa.gov"
-basePath: "/api"
+basePath: "/ussdisc"
 tags:
 - name: "A. Discovery Endpoints"
   description: "The primary RESTful endpoints for sharing USS Instance data."
@@ -270,8 +270,8 @@ paths:
       parameters: []
       responses:
         410:
-          description: "A RESTful call was made to this endpoint but this is not a\
-            \ REST endpoint. Do not use this endpoint for REST calls."
+          description: "A RESTful call was made to this endpoint but is not a REST\
+            \ endpoint. Do not use this endpoint for REST calls."
   /schema/UssInstance:
     get:
       tags:
@@ -289,8 +289,8 @@ paths:
           schema:
             $ref: "#/definitions/UssInstance"
         410:
-          description: "A RESTful call was made to this endpoint but this is not a\
-            \ REST endpoint. Do not use this endpoint for REST calls."
+          description: "A RESTful call was made to this endpoint but is not a REST\
+            \ endpoint. Do not use this endpoint for REST calls."
   /schema/Polygon:
     get:
       tags:
@@ -308,8 +308,8 @@ paths:
           schema:
             $ref: "#/definitions/Polygon"
         410:
-          description: "A RESTful call was made to this endpoint but this is not a\
-            \ REST endpoint. Do not use this endpoint for REST calls."
+          description: "A RESTful call was made to this endpoint but is not a REST\
+            \ endpoint. Do not use this endpoint for REST calls."
 securityDefinitions:
   password:
     type: "oauth2"
@@ -488,6 +488,6 @@ definitions:
           - 37.4096804114499974502905388362705707550048828125
 responses:
   WRONG_PROTOCOL:
-    description: "A RESTful call was made to this endpoint but this is not a REST\
-      \ endpoint. Do not use this endpoint for REST calls."
+    description: "A RESTful call was made to this endpoint but is not a REST endpoint.\
+      \ Do not use this endpoint for REST calls."
 x-azure-api-id: "sh-1469571953760"
