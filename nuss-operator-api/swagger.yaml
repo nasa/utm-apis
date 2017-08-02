@@ -2,7 +2,7 @@
 swagger: "2.0"
 info:
   description: "RestAPI and Message definitions from USS-nasa to UAS Operator Interface"
-  version: "v1"
+  version: "v2"
   title: "USS-nasa to UAS Operator Interface"
 host: "tmiserver.arc.nasa.gov"
 basePath: "/uss"
@@ -17,9 +17,10 @@ tags:
   description: "Add and view operations"
 - name: "Geography Data Types"
   description: "Geography representations"
+- name: "Subscription Points"
+  description: "Subscribe to notifications and position reports"
 schemes:
 - "https"
-- "http"
 paths:
   /airports:
     get:
@@ -1387,6 +1388,31 @@ paths:
           description: "Forbidden"
         404:
           description: "Not Found"
+  /user/<username>/utmMsg/v1:
+    get:
+      tags:
+      - "Subscription Points"
+      summary: "Receive decisions from a queue"
+      description: "Provides InformMessage data related to the specified operator's\
+        \ operations. For example, after an operator POSTs an operation to the /operations\
+        \ RESTful endpoint, that operator will receive the appropriate InformMessage.\
+        \  The connection URL is wss://{host}/uss/NotificationProvider/utm\n"
+      parameters: []
+      responses:
+        410:
+          description: "WRONG_PROTOCOL - A RESTful call was made to this endpoint\
+            \ but this is not a REST endpoint."
+  /uss/stream/positions:
+    get:
+      tags:
+      - "Subscription Points"
+      summary: "Receive position updates"
+      description: "The connection URL is wss://{host}/uss/stream/position\n"
+      parameters: []
+      responses:
+        410:
+          description: "WRONG_PROTOCOL - A RESTful call was made to this endpoint\
+            \ but this is not a REST endpoint."
   /surveillance_messages:
     get:
       tags:
