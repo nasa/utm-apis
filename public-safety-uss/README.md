@@ -1,4 +1,2 @@
-### Public Saftey - a USS Role
-![alt text][logo]
-
-[logo]: vehid.png "Logo Title Text 2"
+# Swagger JSON
+This is a swagger JSON built by the [swagger-codegen](https://github.com/swagger-api/swagger-codegen) project.
