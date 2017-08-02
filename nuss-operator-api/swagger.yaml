@@ -21,6 +21,7 @@ tags:
   description: "Subscribe to notifications and position reports"
 schemes:
 - "https"
+- "wss"
 paths:
   /airports:
     get:
