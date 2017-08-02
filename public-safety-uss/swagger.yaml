@@ -37,6 +37,7 @@ host: "publicsafety.arc.nasa.gov"
 basePath: "/pubsafe"
 schemes:
 - "https"
+- "wss"
 security:
 - password:
   - "USS"
