@@ -593,7 +593,10 @@ definitions:
         type: string
       resource:
         type: string
-      
+    example:
+      http_status_code: 201
+      message: "Resource created."
+      resource: "/resource/683c0e9e-49dc-44ce-82de-a5723b1f6965"  
       
 # responses:
   # GeneralError:
