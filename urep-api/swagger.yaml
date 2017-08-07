@@ -124,15 +124,15 @@ paths:
         401:
           description: "Unauthorized"
           schema:
-            $ref: "#/definitions/UrepRestResponse"
+            $ref: "#/definitions/UTMRestResponse"
         403:
           description: "Forbidden"
           schema:
-            $ref: "#/definitions/UrepRestResponse"
+            $ref: "#/definitions/UTMRestResponse"
         404:
           description: "Not Found"
           schema:
-            $ref: "#/definitions/UrepRestResponse"
+            $ref: "#/definitions/UTMRestResponse"
     post:
       tags:
       - "Restful Endpoints"
@@ -154,19 +154,19 @@ paths:
         201:
           description: "Created"
           schema:
-            $ref: "#/definitions/UrepRestResponse"
+            $ref: "#/definitions/UTMRestResponse"
         401:
           description: "Unauthorized"
           schema:
-            $ref: "#/definitions/UrepRestResponse"
+            $ref: "#/definitions/UTMRestResponse"
         403:
           description: "Forbidden"
           schema:
-            $ref: "#/definitions/UrepRestResponse"
+            $ref: "#/definitions/UTMRestResponse"
         404:
           description: "Not Found"
           schema:
-            $ref: "#/definitions/UrepRestResponse"
+            $ref: "#/definitions/UTMRestResponse"
       security:
       - password:
         - "USS"
@@ -206,15 +206,15 @@ paths:
         401:
           description: "Unauthorized"
           schema:
-            $ref: "#/definitions/UrepRestResponse"
+            $ref: "#/definitions/UTMRestResponse"
         403:
           description: "Forbidden"
           schema:
-            $ref: "#/definitions/UrepRestResponse"
+            $ref: "#/definitions/UTMRestResponse"
         404:
           description: "Not Found"
           schema:
-            $ref: "#/definitions/UrepRestResponse"
+            $ref: "#/definitions/UTMRestResponse"
   /api:
     get:
       tags:
@@ -544,11 +544,19 @@ definitions:
       documentation:
         type: "string"
         description: "URL for API Documentation"
-  UrepRestResponse:
+  UTMRestResponse:
     type: "object"
     properties:
+      status:
+        type: "integer"
       message:
         type: "string"
+      resource:
+        type: "string"
+    example:
+      http_status_code: 201
+      message: "Resource created."
+      resource: "/resource/683c0e9e-49dc-44ce-82de-a5723b1f6965"
 responses:
   WRONG_PROTOCOL:
     description: "A RESTful call was made to this endpoint but this is not a REST\
