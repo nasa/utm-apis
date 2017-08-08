@@ -126,11 +126,11 @@ paths:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
           schema:
-            $ref: "#/definitions/UssApiResponse"
+            $ref: "#/definitions/UTMRestResponse"
         429:
           description: "Too many recent requests from you. Wait to make further queries."
           schema:
-            $ref: "#/definitions/UssApiResponse"
+            $ref: "#/definitions/UTMRestResponse"
       security:
       - password: []
     post:
@@ -155,20 +155,20 @@ paths:
         201:
           description: "USS Instance received."
           schema:
-            $ref: "#/definitions/UssApiResponse"
+            $ref: "#/definitions/UTMRestResponse"
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
           schema:
-            $ref: "#/definitions/UssApiResponse"
+            $ref: "#/definitions/UTMRestResponse"
         403:
           description: "Invalid ID supplied.  Fix authorization and retry."
           schema:
-            $ref: "#/definitions/UssApiResponse"
+            $ref: "#/definitions/UTMRestResponse"
         429:
           description: "Too many recent requests from you. Wait to make further submissions."
           schema:
-            $ref: "#/definitions/UssApiResponse"
+            $ref: "#/definitions/UTMRestResponse"
       security:
       - password: []
   /uss/{id}:
@@ -203,11 +203,11 @@ paths:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
           schema:
-            $ref: "#/definitions/UssApiResponse"
+            $ref: "#/definitions/UTMRestResponse"
         429:
           description: "Too many recent requests from you. Wait to make further queries."
           schema:
-            $ref: "#/definitions/UssApiResponse"
+            $ref: "#/definitions/UTMRestResponse"
       security:
       - password: []
     put:
@@ -244,11 +244,11 @@ paths:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
           schema:
-            $ref: "#/definitions/UssApiResponse"
+            $ref: "#/definitions/UTMRestResponse"
         429:
           description: "Too many recent requests from you. Wait to make further queries."
           schema:
-            $ref: "#/definitions/UssApiResponse"
+            $ref: "#/definitions/UTMRestResponse"
       security:
       - password: []
   /topic/ussUpdates:
@@ -435,20 +435,6 @@ definitions:
       uss_registration_url: "https://nuss.arc.nasa.gov/signup"
       contact_email: "joseph.rios@nasa.gov"
       contact_number: "650-555-5555"
-  UssApiResponse:
-    type: "object"
-    properties:
-      code:
-        type: "integer"
-        format: "int32"
-      type:
-        type: "string"
-      message:
-        type: "string"
-    example:
-      code: 201
-      type: "CREATED"
-      message: "USS Instance details received."
   Polygon:
     type: "object"
     required:
@@ -486,6 +472,19 @@ definitions:
           - 37.41786440108000277859900961630046367645263671875
         - - -122.0621765789999955131861497648060321807861328125
           - 37.4096804114499974502905388362705707550048828125
+  UTMRestResponse:
+    type: "object"
+    properties:
+      http_status_code:
+        type: "integer"
+      message:
+        type: "string"
+      resource:
+        type: "string"
+    example:
+      http_status_code: 201
+      message: "Resource created."
+      resource: "/resource/683c0e9e-49dc-44ce-82de-a5723b1f6965"
 responses:
   WRONG_PROTOCOL:
     description: "A RESTful call was made to this endpoint but is not a REST endpoint.\
