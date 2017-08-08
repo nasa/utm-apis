@@ -587,7 +587,7 @@ definitions:
   UTMRestResponse:
     type: object
     properties: 
-      status: 
+      http_status_code: 
         type: integer
       message:
         type: string
