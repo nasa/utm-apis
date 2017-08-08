@@ -75,16 +75,16 @@ paths:
         201:
           description: "Operation Plan request received."
           schema:
-            $ref: "#/definitions/FIMSApiResponse"
+            $ref: "#/definitions/UTMRestResponse"
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
           schema:
-            $ref: "#/definitions/FIMSApiResponse"
+            $ref: "#/definitions/UTMRestResponse"
         403:
           description: "Invalid ID supplied.  Fix authorization and retry."
           schema:
-            $ref: "#/definitions/FIMSApiResponse"
+            $ref: "#/definitions/UTMRestResponse"
       security:
       - application:
         - "write"
@@ -116,20 +116,20 @@ paths:
         200:
           description: "Operation updated."
           schema:
-            $ref: "#/definitions/FIMSApiResponse"
+            $ref: "#/definitions/UTMRestResponse"
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
           schema:
-            $ref: "#/definitions/FIMSApiResponse"
+            $ref: "#/definitions/UTMRestResponse"
         403:
           description: "Unauthorized user."
           schema:
-            $ref: "#/definitions/FIMSApiResponse"
+            $ref: "#/definitions/UTMRestResponse"
         404:
           description: "Operations not found."
           schema:
-            $ref: "#/definitions/FIMSApiResponse"
+            $ref: "#/definitions/UTMRestResponse"
   /positions:
     post:
       tags:
@@ -149,11 +149,11 @@ paths:
         201:
           description: "Position posted successfully."
           schema:
-            $ref: "#/definitions/FIMSApiResponse"
+            $ref: "#/definitions/UTMRestResponse"
         400:
           description: "Invalid message. Please fix and retry."
           schema:
-            $ref: "#/definitions/FIMSApiResponse"
+            $ref: "#/definitions/UTMRestResponse"
   /messages:
     post:
       tags:
@@ -177,15 +177,15 @@ paths:
         201:
           description: "Message received successfully."
           schema:
-            $ref: "#/definitions/FIMSApiResponse"
+            $ref: "#/definitions/UTMRestResponse"
         400:
           description: "Invalid message. Please fix and retry."
           schema:
-            $ref: "#/definitions/FIMSApiResponse"
+            $ref: "#/definitions/UTMRestResponse"
         403:
           description: "Unauthorized user."
           schema:
-            $ref: "#/definitions/FIMSApiResponse"
+            $ref: "#/definitions/UTMRestResponse"
   /user/{operator}/decision:
     get:
       tags:
@@ -471,20 +471,6 @@ securityDefinitions:
       write: "allows modifying resources"
       read: "allows reading resources"
 definitions:
-  FIMSApiResponse:
-    type: "object"
-    properties:
-      code:
-        type: "integer"
-        format: "int32"
-      type:
-        type: "string"
-      message:
-        type: "string"
-    example:
-      code: 201
-      type: "CREATED"
-      message: "Operation Plan request received."
   Geometry:
     type: "object"
     required:
@@ -822,15 +808,21 @@ definitions:
         maxLength: 36
       submit_time:
         type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-        description: "Time the operation submission was received by USS."
-        maxLength: 100
+        format: "date-time"
+        example: "2015-08-20T14:11:56.118Z"
+        description: "Time the operation submission was received by USS.  Uses the\
+          \ ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds\
+          \ may have up to millisecond accuracy (three positions after decimal). \
+          \ The 'Z' implies UTC times and is the only timezone accepted."
       decision_time:
         type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        format: "date-time"
+        example: "2015-08-20T14:11:56.118Z"
         description: "A timestamp set by the USS any time the state of the operation\
-          \ is updated, for example when the flight goes from PROPOSING to ACCEPTED"
-        maxLength: 100
+          \ is updated, for example when the flight goes from ACCEPTED to ACTIVATED.\
+          \  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.\
+          \  Seconds may have up to millisecond accuracy (three positions after decimal).\
+          \  The 'Z' implies UTC times and is the only timezone accepted."
       aircraft_comments:
         type: "string"
         description: "Informative text about the aircraft. Not used by the UTM System.\
@@ -863,7 +855,8 @@ definitions:
         default: "NOT PROVIDED"
       flight_number:
         type: "string"
-        description: "Optional. May be useful to the operator for identification purposes."
+        description: "Optional. May be useful to the operator or USS for identification\
+          \ purposes."
         maxLength: 100
       user_id:
         type: "string"
@@ -896,7 +889,14 @@ definitions:
       state:
         type: "string"
         description: "The current state of the operation."
-        maxLength: 100
+        minLength: 5
+        maxLength: 13
+        enum:
+        - "ACCEPTED"
+        - "ACTIVATED"
+        - "CLOSED"
+        - "NONCONFORMING"
+        - "ROGUE"
       controller_location:
         $ref: "#/definitions/Point"
       gcs_location:
@@ -907,21 +907,17 @@ definitions:
           \ FIMS about this class of operations,\nFIMS will reply that authorization\
           \ is not required. (For TCL2nc FIMS will always accept the operation.)\n\
           \nPART_107X:  In general, operations are 107X if they are doing something\
-          \ outside the 107 rule that would require\na waiver under 107.\nUSS asks\
-          \ for authorization for this class of operations. (For TCL2nc FIMS will\
-          \ always accept the operation.)\nIn the future, FIMS replies with inform\
-          \ message of its decision, either authorized or not.\n\nPART_101E: This\
-          \ class of operations could be hobbyists being friendly with other users\
-          \ by announcing their intent.\n(For TCL2nc, FIMS will reply with inform\
+          \ outside the 107 rule that would require\na waiver under 107.\n\nPART_101E:\
+          \ This class of operations could be hobbyists being friendly with other\
+          \ users by announcing their intent.\n(For TCL2nc, FIMS will reply with inform\
           \ message \"authorization not required\" and accept the operation. For TCL2nc\
           \ FIMS does not check\nwhether the operation is in a preauthorized area.)\
           \ In the future, a better response for 101E is\n\"Notification received\"\
           \ if within 5 statute miles of an airport, and \"Notification not required\"\
           \ if not within 5 miles.\n\nPart_TBD: Placeholder for future rule such as\
-          \ those under test by UTM.\n\nPART107W: Not used for TCL2nc.\n"
+          \ those under test by UTM.\n"
         enum:
         - "PART_107"
-        - "PART_107W"
         - "PART_107X"
         - "PART_101E"
         - "PART_TBD"
@@ -930,13 +926,14 @@ definitions:
         type: "string"
         description: "If a waiver has been obtained for the Part 107 rules, then the\
           \ operator would have a waiver certificate number. For any operation submissions\
-          \ with faa_rule=PART_107W, this field is required. (For TCL2nc not used,\
-          \ and likely to be removed in future."
+          \ with faa_rule=PART_107W, this field is required. (likely to be removed\
+          \ in future)"
         maxLength: 100
         default: "NOT PROVIDED"
       priority_op:
         type: "boolean"
-        description: "If true this operation is managed as a priority operation."
+        description: "If true this operation is managed as a priority operation. Only\
+          \ FIMS or a USS with the public safety role may set this field to true."
         default: false
       operation_volumes:
         type: "array"
@@ -1027,29 +1024,38 @@ definitions:
         default: false
       effective_time_begin:
         type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-        description: "Earliest time the operation will use the operation volume."
+        format: "date-time"
+        example: "2015-08-20T14:11:56.118Z"
+        description: "Earliest time the operation will use the operation volume. \
+          \ Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.\
+          \  Seconds may have up to millisecond accuracy (three positions after decimal).\
+          \  The 'Z' implies UTC times and is the only timezone accepted."
       effective_time_end:
         type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        format: "date-time"
+        example: "2015-08-20T15:11:56.118Z"
         description: "Latest time the operation will done with the operation volume.\
-          \ It must be greater than effective_time_begin."
+          \ It must be greater than effective_time_begin.  Uses the ISO 8601 format\
+          \ conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up\
+          \ to millisecond accuracy (three positions after decimal).  The 'Z' implies\
+          \ UTC times and is the only timezone accepted."
       actual_time_end:
         type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        format: "date-time"
+        example: "2015-08-20T14:31:56.118Z"
         description: "Time that the operational volume was freed for use by other\
-          \ operations."
+          \ operations.  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.\
+          \  Seconds may have up to millisecond accuracy (three positions after decimal).\
+          \  The 'Z' implies UTC times and is the only timezone accepted."
       conformance_time_begin:
         type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-        description: "LIKELY TO BE DEPRECATED. Assigned by FIMS.  Time buffer before\
-          \ the submitted begin time."
+        description: "TO BE DEPRECATED. Assigned by FIMS.  Time buffer before the\
+          \ submitted begin time."
         maxLength: 100
       conformance_time_end:
         type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-        description: "LIKELY TO BE DEPRECATED. Assigned by FIMS.  Time buffer after\
-          \ the submitted end time."
+        description: "TO BE DEPRECATED. Assigned by FIMS.  Time buffer after the submitted\
+          \ end time."
         maxLength: 100
       min_altitude_wgs84_ft:
         type: "number"
@@ -1081,6 +1087,19 @@ definitions:
         type: "boolean"
         description: "Describes whether the operation volume is beyond the visual\
           \ line of sight of the operator."
+  UTMRestResponse:
+    type: "object"
+    properties:
+      http_status_code:
+        type: "integer"
+      message:
+        type: "string"
+      resource:
+        type: "string"
+    example:
+      http_status_code: 201
+      message: "Resource created."
+      resource: "/resource/683c0e9e-49dc-44ce-82de-a5723b1f6965"
   Position:
     type: "object"
     required:
@@ -1140,21 +1159,32 @@ definitions:
         $ref: "#/definitions/Point"
       time_measured:
         type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        format: "date-time"
+        example: "2015-08-20T14:11:56.118Z"
         description: "The time the position was measured. Likely the time provided\
           \ with the GPS position reading.  Time must be before time received at FIMS\
-          \ based on FIMS system time."
+          \ based on FIMS system time.  Uses the ISO 8601 format conforming to pattern:\
+          \ YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy\
+          \ (three positions after decimal).  The 'Z' implies UTC times and is the\
+          \ only timezone accepted."
       time_received:
         type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        format: "date-time"
+        example: "2015-08-20T14:11:57.345Z"
         description: "Not required for submission, assigned by FIMS. The time the\
-          \ position was received by FIMS based on FIMS system time."
+          \ position was received by FIMS based on FIMS system time.  Uses the ISO\
+          \ 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds\
+          \ may have up to millisecond accuracy (three positions after decimal). \
+          \ The 'Z' implies UTC times and is the only timezone accepted."
       time_sent:
         type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        format: "date-time"
+        example: "2015-08-20T14:11:57.968Z"
         description: "The time the position was sent by the USS to FIMS as measured\
           \ by USS system time.  Time must be before time received at FIMS based on\
-          \ FIMS system time."
+          \ FIMS system time.  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.\
+          \  Seconds may have up to millisecond accuracy (three positions after decimal).\
+          \  The 'Z' implies UTC times and is the only timezone accepted."
       track_ground_speed_kn:
         type: "number"
         format: "double"
