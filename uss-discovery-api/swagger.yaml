@@ -255,16 +255,16 @@ paths:
     get:
       tags:
       - "B. Subscription Points"
-      summary: "Subscription point for receiving position reports"
+      summary: "Subscription point for receiving USS Instance updates"
       description: "Stakeholders should subscribe to this topic to receive updates\
         \ on USS Instances. Data will be produced on this topic whenever:\n\n  1.\
         \ A new, valid USS Instance is submitted.\n  2. There is an update to a USS\
-        \ Instance.\n  \nNote that there will not be data produced on this topic when\
-        \ a USS Instance ends according to its originally submited time_available_end\
-        \ value.\n\nSee the schema information describing UssInstance included within\
-        \ this document to understand the data that will be received via this queue.\n\
-        \nNote that if you are viewing this in a SwaggerUI, the \"try it out\" feature\
-        \ will not work since this is not a RESTful endpoint.\n"
+        \ Instance.\n  \nData will not be produced on this topic when a USS Instance\
+        \ ends according to its originally submited time_available_end value.\n\n\
+        See the schema information describing UssInstance included within this document\
+        \ to understand the data that will be received via this queue.\n\nNote that\
+        \ if you are viewing this in a SwaggerUI, the \"try it out\" feature will\
+        \ not work since this is not a RESTful endpoint.\n"
       produces:
       - "application/json"
       parameters: []
