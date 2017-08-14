@@ -56,27 +56,22 @@ paths:
         in: "query"
         description: "UVIN (v4 UUID)"
         required: false
-        type: "uuid"
       - name: "lat"
         in: "query"
         description: "WGS-84 latitude"
         required: true
-        type: "string"
       - name: "lon"
         in: "query"
         description: "WGS-84 longitude"
         required: true
-        type: "string"
       - name: "alt"
         in: "query"
         description: "WGS-84 altitude"
         required: true
-        type: "string"
       - name: "time"
         in: "query"
         description: "WGS-84 time (UTC)"
         required: true
-        type: "string"
       responses:
         200:
           description: "OK"
