@@ -112,6 +112,7 @@ definitions:
         type: "string"
       uss_id:
         type: "string"
+        description: "instance id"
       operator_name:
         type: "string"
       operator_id:
