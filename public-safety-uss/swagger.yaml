@@ -73,7 +73,7 @@ paths:
         type: "string"
       responses:
         200:
-          description: "Successfully returned a list of artists"
+          description: "Successfully returned a list of one or more uvins"
           schema:
             type: "array"
             items:
@@ -104,15 +104,25 @@ securityDefinitions:
 definitions:
   inline_response_200:
     required:
-    - "username"
+    - "operator_name"
     properties:
-      artist_name:
+      uvin:
         type: "string"
-      artist_genre:
+      uss_name:
         type: "string"
-      albums_recorded:
-        type: "integer"
-      username:
+      uss_id:
+        type: "string"
+      operator_name:
+        type: "string"
+      operator_id:
+        type: "string"
+      operator_tel:
+        type: "string"
+      operator_email:
+        type: "string"
+      vehicle_model:
+        type: "string"
+      vehicle_manufacturer:
         type: "string"
   inline_response_400:
     properties:
