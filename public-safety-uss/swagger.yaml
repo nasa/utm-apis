@@ -42,39 +42,31 @@ security:
 - password:
   - "USS"
 paths:
-  /vehicle:
+  /vehicles:
     get:
-      tags:
-      - "Restful Endpoints"
-      summary: "Get UAS information"
-      description: "A device provides input data (uvin/WGS-84). API returns UAS and\
-        \ USS information."
-      produces:
-      - "application/json"
+      description: "Returns information on vehicle"
       parameters:
-      - name: "id"
+      - name: "uvin"
         in: "query"
-        description: "UVIN (v4 UUID)"
+        description: "Limits the number of items on a page"
         required: false
-      - name: "lat"
+        type: "string"
+      - name: "offset"
         in: "query"
-        description: "WGS-84 latitude"
-        required: true
-      - name: "lon"
-        in: "query"
-        description: "WGS-84 longitude"
-        required: true
-      - name: "alt"
-        in: "query"
-        description: "WGS-84 altitude"
-        required: true
-      - name: "time"
-        in: "query"
-        description: "WGS-84 time (UTC)"
-        required: true
+        description: "Specifies the page number of the artists to be displayed"
+        required: false
+        type: "integer"
       responses:
         200:
-          description: "OK"
+          description: "Successfully returned a list of artists"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/inline_response_200"
+        400:
+          description: "Invalid request"
+          schema:
+            $ref: "#/definitions/inline_response_400"
   /tfr:
     post:
       tags:
@@ -94,4 +86,20 @@ securityDefinitions:
     flow: "password"
     scopes:
       USS: "A USS can read and write UREPs"
-definitions: {}
+definitions:
+  inline_response_200:
+    required:
+    - "username"
+    properties:
+      artist_name:
+        type: "string"
+      artist_genre:
+        type: "string"
+      albums_recorded:
+        type: "integer"
+      username:
+        type: "string"
+  inline_response_400:
+    properties:
+      message:
+        type: "string"
