@@ -48,14 +48,29 @@ paths:
       parameters:
       - name: "uvin"
         in: "query"
-        description: "Limits the number of items on a page"
+        description: "specifies the vehicle id"
         required: false
         type: "string"
-      - name: "offset"
+      - name: "lat"
         in: "query"
-        description: "Specifies the page number of the artists to be displayed"
+        description: "WGS-84 latitude"
         required: false
-        type: "integer"
+        type: "string"
+      - name: "lon"
+        in: "query"
+        description: "WGS-84 longitude"
+        required: false
+        type: "string"
+      - name: "alt"
+        in: "query"
+        description: "WGS-84 altitude"
+        required: false
+        type: "string"
+      - name: "time"
+        in: "query"
+        description: "UTC time"
+        required: false
+        type: "string"
       responses:
         200:
           description: "Successfully returned a list of artists"
