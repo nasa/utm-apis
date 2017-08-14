@@ -42,14 +42,31 @@ security:
 - password:
   - "USS"
 paths:
-  /vehicle-id:
+  /vehicle:
     get:
       tags:
       - "Restful Endpoints"
       summary: "Get UAS information"
       description: "A device provides input data (uvin/WGS-84). API returns UAS and\
         \ USS information."
-      parameters: []
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "query"
+        description: "UVIN (v4 UUID)"
+        required: false
+        type: "uuid"
+      - name: "lat"
+        in: "query"
+        description: "WGS-84 latitude"
+        required: false
+        type: "string"
+      - name: "lon"
+        in: "query"
+        description: "WGS-84 longitude"
+        required: false
+        type: "string"
       responses:
         200:
           description: "OK"
