@@ -67,6 +67,11 @@ paths:
         description: "WGS-84 longitude"
         required: true
         type: "string"
+      - name: "alt"
+        in: "query"
+        description: "WGS-84 altitude"
+        required: true
+        type: "string"
       - name: "time"
         in: "query"
         description: "WGS-84 time (UTC)"
