@@ -60,12 +60,17 @@ paths:
       - name: "lat"
         in: "query"
         description: "WGS-84 latitude"
-        required: false
+        required: true
         type: "string"
       - name: "lon"
         in: "query"
         description: "WGS-84 longitude"
-        required: false
+        required: true
+        type: "string"
+      - name: "time"
+        in: "query"
+        description: "WGS-84 time (UTC)"
+        required: true
         type: "string"
       responses:
         200:
