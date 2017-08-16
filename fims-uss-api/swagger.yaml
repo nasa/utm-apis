@@ -1256,4 +1256,7 @@ responses:
   WRONG_PROTOCOL:
     description: "A RESTful call was made to this endpoint but this is not a REST\
       \ endpoint. Do not use this endpoint for REST calls."
+  COOTIE:
+    description: "A RESTful call was made to this endpoint but this is not a REST\
+      \ endpoint. Do not use this endpoint for REST calls."
 x-azure-api-id: "sh-1469571953760"
