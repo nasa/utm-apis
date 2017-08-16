@@ -48,6 +48,7 @@ tags:
   description: "Psuedo endpoints used for the documentation of data schema"
 schemes:
 - "https"
+- "wss"
 paths:
   /uss:
     get:
