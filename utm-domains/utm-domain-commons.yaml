@@ -15,16 +15,7 @@ definitions:
     - FIMS_BASIC
     - FIMS_USSDISCOVERY
   
-  # Labels taken from RFC 5424
-  severity:
-    type: string
-    enum:
-    - EMERGENCY
-    - ALERT
-    - CRITICAL
-    - WARNING
-    - NOTICE
-    - INFORMATIONAL
+
   
   Operation:
     type: object
