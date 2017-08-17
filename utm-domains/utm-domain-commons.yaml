@@ -447,11 +447,6 @@ definitions:
         coordinates:
         - -122.05635935068132
         - 37.41436490284069
-
-  NegotiationMessage:
-    type: object
-    description: >-
-      A negotiation message.  Primarly for use in USS-USS communications.
   
   AlertMessage:
     type: object
@@ -500,10 +495,14 @@ definitions:
         - OPERATION_NON_CONFORMING
         - OPERATION_ROGUE
         - OPERATION_CONFORMING
+        - OPERATION_CLOSED
         - OTHER_SEE_FREE_TEXT 
       last_known_position:
         # Last known position of the operation.  The Position model has time incorporated, together with other relevant data.
         $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Position'
+      meta_data:
+        type: string
+        description: Reserved field.
       free_text:
         description: >-
           Any additional information. Note that this is for human consumption. All time critical elements should be captured in the other data fields for easier consumption by other automated systems.
@@ -511,49 +510,106 @@ definitions:
         maxLength: 1000
         
   ConstraintMessage:
-      properties:
-        constraint_geography:
-          # description: "A description of the geography of the constraint."
-          $ref: "'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Geometry'"
-        begin_time:
-          description: "The time that the constraint begins. Null or no value implies -infinity begin time."
-          type: string
-          format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-          maxLength: 100
-        end_time:
-          description: "The time that the constraint ends. Null or no value implies on-going constraint."
-          type: string
-          format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-          maxLength: 100
-        min_altitude:
-          description: "The minimum altitude of the constraint. Must be less than max_altitude."
-          type: number
-          format: double
-        max_altitude:
-          description: "The maximum altitude of the constraint. Must be greater than min_altitude."
-          type: number
-          format: double
-        reason:
-          description: "The reason for the constraint."
-          type: string
-          maxLength: 1000      
-  
-  InformMessage:
-    type: object
-    description: >-
-      An inform message.
     properties:
-      a:
+      message_id:
+        description: A UUID assigned to this message by the originator
         type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+      origin:
+        description: The user or process that generated this message
+        type: string
+        enum:
+        - FIMS
+        - USS
+      originator_id:
+        description: A name identifying the originator of this message.
+        type: string
+        maxLength: 100
+      type:
+        type: string
+        enum:
+        - WEATHER
+        - ATC
+        - SECURITY
+        - SAFETY
+        - MUNICIPALITY
+        - OTHER
+      constraint_geography:
+        # description: "A description of the geography of the constraint."
+        $ref: "https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Geometry"
+      begin_time:
+        description: "The time that the constraint begins. Null or no value implies -infinity begin time."
+        type: string
+        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        maxLength: 100
+      end_time:
+        description: "The time that the constraint ends. Null or no value implies on-going constraint."
+        type: string
+        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        maxLength: 100
+      min_altitude:
+        description: "The minimum altitude of the constraint. Must be less than max_altitude."
+        type: number
+        format: double
+      max_altitude:
+        description: "The maximum altitude of the constraint. Must be greater than min_altitude."
+        type: number
+        format: double
+      metadata:
+        description: Reserved field.
+        type: string
+      reason:
+        description: "The reason for the constraint. Meant for human consumption."
+        type: string
+        maxLength: 1000      
+  
+  NegotiationMessage:
+    properties:
+      message_id:
+        description: A UUID assigned to this message by the originator
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+      origin:
+        description: The user or process that generated this message
+        type: string
+        enum:
+        - FIMS
+        - USS
+      originator_id:
+        description: A name identifying the originator of this message.
+        type: string
+        maxLength: 100
+      type:
+        type: string
+        enum:
+        - INTERSECTING_OPERATION_NOTIFICATION
+        - INTERSECTING_OPERATION_ACK
+        - OTHER
+      gufi_of_originator:
+        description: >-
+          The GUFI of the relevant operation of the originating USS. Note that the origin and receiver roles are strictly dependent on which USS is generating this message.
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+      gufi_of_receiver:
+        description: The GUFI of the relevant operation of the receiving USS.
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+      reference_message_id:
+        description: >-
+          The UUID of a previous message to which this message refers. This field must not be empty when sending a message of type 'INTERSECTING_OPERATION_ACK'.  It must be empty when sending a message of type 'INTERSECTING_OPERATION_NOTIFICATION'.
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
         
-  IntentMessage:
-    type: object
-    description: >-
-      An intent message.
-    properties:
-      a:
-        type: string
-  
   UssInstanceMessage:
     type: object
     description: >-
