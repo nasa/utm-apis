@@ -9,3 +9,5 @@ Each directory contains files related to a single API.  Within each directory th
 - [UTM Home Page](https://utm.arc.nasa.gov/)
 - [UTM Publications](https://utm.arc.nasa.gov/documents.shtml)
 - [UTM Swaggerhub](https://app.swaggerhub.com/organizations/utm)
+
+![alt text](https://raw.githubusercontent.com/nasa/utm-apis/master/images/UTMarcChart_20170719.png "Logo Title")
