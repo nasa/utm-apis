@@ -421,25 +421,3 @@ definitions:
       notes: >-
         We provide free streaming wind and precipitation data via an elegant
         API.
-  Geometry:
-    description: SimplePoint or Polygon geojson Geometry
-    $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Geometry'
-    example:
-      type: Polygon
-      coordinates:
-        - - - -122.06382530000002
-            - 37.4090697
-          - - -122.05094253233
-            - 37.4193006277
-          - - -122.03276206976
-            - 37.41929920176
-          - - -122.06382530000002
-            - 37.4090697
-        - - - -122.062176579
-            - 37.40968041145
-          - - -122.05187056889
-            - 37.41786527236
-          - - -122.03732647634
-            - 37.41786440108
-          - - -122.062176579
-            - 37.40968041143
