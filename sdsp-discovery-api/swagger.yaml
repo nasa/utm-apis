@@ -301,7 +301,7 @@ definitions:
           description: ISO 8601 wikipedia page
           url: 'https://en.wikipedia.org/wiki/ISO_8601'
       coverage_area: 
-        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Geometry'
+        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Point'
       time_last_modified:
         description: |-
           The last time there was an update to the data regarding this SDSP.
