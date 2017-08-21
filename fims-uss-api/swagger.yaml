@@ -154,11 +154,11 @@ paths:
           description: "Invalid message. Please fix and retry."
           schema:
             $ref: "#/definitions/UTMRestResponse"
-  /messages:
+  /alertMessages:
     post:
       tags:
       - "A. FIMS Endpoints"
-      summary: "Submit a message to FIMS"
+      summary: "Submit alert  to FIMS"
       description: "Allows posting of a message to FIMS. Typically an intent message\
         \ related to a particular operation."
       operationId: "postMessage"
@@ -172,20 +172,16 @@ paths:
         description: "Message object being sent"
         required: true
         schema:
-          $ref: "#/definitions/Message"
+          $ref: "#/definitions/AlertMessage"
       responses:
         201:
-          description: "Message received successfully."
+          description: "Returns message ID if received successfully."
           schema:
             $ref: "#/definitions/UTMRestResponse"
         400:
           description: "Invalid message. Please fix and retry."
-          schema:
-            $ref: "#/definitions/UTMRestResponse"
         403:
           description: "Unauthorized user."
-          schema:
-            $ref: "#/definitions/UTMRestResponse"
   /topic/positions:
     get:
       tags:
@@ -253,23 +249,10 @@ paths:
       - "application/json"
       parameters: []
       responses:
-        410:
-          description: "A RESTful call was made to this endpoint but this is not a\
-            \ REST endpoint. Do not use this endpoint for REST calls."
-  /topic/messages:
-    get:
-      tags:
-      - "B. Subscription Points"
-      summary: "Subscription point for messages"
-      description: "Stakeholders should subscribe to this topic to get Inform and\
-        \ Intent messages. This is useful for USS to USS communications\n\nNote that\
-        \ if you are viewing this in a SwaggerUI, the \"try it out\" feature will\
-        \ not work since this is not a RESTful endpoint.\n"
-      operationId: "topicMessagesUsingGET"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/AlertMessage"
         410:
           description: "A RESTful call was made to this endpoint but this is not a\
             \ REST endpoint. Do not use this endpoint for REST calls."
@@ -387,7 +370,7 @@ paths:
         200:
           description: "OK"
           schema:
-            $ref: "#/definitions/ConstraintMessage"
+            $ref: "#/definitions/null"
         410:
           description: "A RESTful call was made to this endpoint but this is not a\
             \ REST endpoint. Do not use this endpoint for REST calls."
@@ -872,26 +855,6 @@ definitions:
         coordinates:
         - -122.05635935068132
         - 37.41436490284069
-  LineString:
-    allOf:
-    - $ref: "#/definitions/Geometry"
-    - properties:
-        coordinates:
-          type: "array"
-          items:
-            $ref: "#/definitions/Point2D"
-    description: "GeoJSon LineString. Points all 2D."
-  Polygon:
-    allOf:
-    - $ref: "#/definitions/Geometry"
-    - properties:
-        coordinates:
-          type: "array"
-          items:
-            type: "array"
-            items:
-              $ref: "#/definitions/Point2D"
-    description: "GeoJSon Polygon. Points all 2D."
   AlertMessage:
     type: "object"
     properties:
@@ -961,63 +924,26 @@ definitions:
     - "WARNING"
     - "NOTICE"
     - "INFORMATIONAL"
-  ConstraintMessage:
-    properties:
-      message_id:
-        type: "string"
-        format: "uuid"
-        description: "A UUID assigned to this message by the originator"
-        minLength: 36
-        maxLength: 36
-      origin:
-        type: "string"
-        description: "The user or process that generated this message"
-        enum:
-        - "FIMS"
-        - "USS"
-      originator_id:
-        type: "string"
-        description: "A name identifying the originator of this message."
-        maxLength: 100
-      type:
-        type: "string"
-        enum:
-        - "WEATHER"
-        - "ATC"
-        - "SECURITY"
-        - "SAFETY"
-        - "MUNICIPALITY"
-        - "OTHER"
-      constraint_geography:
-        $ref: "#/definitions/Geometry"
-      begin_time:
-        type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-        description: "The time that the constraint begins. Null or no value implies\
-          \ -infinity begin time."
-        maxLength: 100
-      end_time:
-        type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-        description: "The time that the constraint ends. Null or no value implies\
-          \ on-going constraint."
-        maxLength: 100
-      min_altitude:
-        type: "number"
-        format: "double"
-        description: "The minimum altitude of the constraint. Must be less than max_altitude."
-      max_altitude:
-        type: "number"
-        format: "double"
-        description: "The maximum altitude of the constraint. Must be greater than\
-          \ min_altitude."
-      metadata:
-        type: "string"
-        description: "Reserved field."
-      reason:
-        type: "string"
-        description: "The reason for the constraint. Meant for human consumption."
-        maxLength: 1000
+  LineString:
+    allOf:
+    - $ref: "#/definitions/Geometry"
+    - properties:
+        coordinates:
+          type: "array"
+          items:
+            $ref: "#/definitions/Point2D"
+    description: "GeoJSon LineString. Points all 2D."
+  Polygon:
+    allOf:
+    - $ref: "#/definitions/Geometry"
+    - properties:
+        coordinates:
+          type: "array"
+          items:
+            type: "array"
+            items:
+              $ref: "#/definitions/Point2D"
+    description: "GeoJSon Polygon. Points all 2D."
 responses:
   WRONG_PROTOCOL:
     description: "A RESTful call was made to this endpoint but this is not a REST\
