@@ -76,7 +76,12 @@ definitions:
       - properties:
           coordinates:
             $ref: '#/definitions/Point2D'
-    
+    example:
+      type: Point
+      # Moffet Federal Airfield
+      # http://bl.ocks.org/d/3410a0f498572d74972719c39382ceff
+      coordinates: [-122.048589,37.414869]
+      
   LineString:
     type: object
     description: GeoJSon LineString. Points all 2D.
@@ -89,7 +94,18 @@ definitions:
             type: array
             items:
               $ref: '#/definitions/Point2D'
-
+    example:
+      type: LineString
+      coordinates: [
+        # http://bl.ocks.org/d/655a22e1d3c1a85f4304a2133409d76d
+        # 1st point NASA Ames Research Center
+        # 2nd point 1mi bearing 45˚
+        # 3rd point 1mi bearing 90˚
+        [-122.06382530000002,37.4090697],
+        [-122.05094253233,37.4193006277],
+        [-122.03276206976,37.41929920176]
+      ]
+      
   Polygon:
     type: object
     description: GeoJSon Polygon. Points all 2D.
@@ -110,46 +126,18 @@ definitions:
 #    description: GeoJSon geometry
 #    externalDocs:
 #      url: https://tools.ietf.org/html/rfc7946#section-3.1.3
-#    allOf:
-#      - $ref: "#/definitions/Geometry"
-#      - properties:
-#          coordinates:
-#            type: array
-#            items:
-#              $ref: '#/definitions/Point2D'
             
 #  MultiLineString:
 #    type: object
 #    description: GeoJSon geometry
 #    externalDocs:
 #      url: https://tools.ietf.org/html/rfc7946#section-3.1.5
-#    allOf:
-#      - $ref: "#/definitions/Geometry"   
-#      - properties:
-#          coordinates:
-#            type: array
-#            items:
-#              type: array
-#              items:
-#                $ref: '#/definitions/Point2D'
 #      
-      
 #  MultiPolygon:
 #    type: object
 #    description: GeoJSon geometry
-###    externalDocs:
+#    externalDocs:
 #      url: https://tools.ietf.org/html/rfc7946#section-3.1.7
-#    allOf:
-#      - $ref: "#/definitions/Geometry"
-#      - properties:
-#          coordinates:
-#            type: array
-#            items:
-#              type: array
-#              items:
-#                type: array
-#                items:
-#                  $ref: '#/definitions/Point2D'
       
 ##  GeometryCollection:
 #    type: object
@@ -159,12 +147,3 @@ definitions:
 #     - geometries
 #    externalDocs:
 #      url: https://tools.ietf.org/html/rfc7946#section-3.1.8
-#    properties:
-#      type:
-#        type: string
-#        enum:
-#        - GeometryCollection
-#     geometries:
-#          type: array
-#          items:
-#            $ref: '#/definitions/Geometry'
