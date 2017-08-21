@@ -508,6 +508,25 @@ definitions:
           Any additional information. Note that this is for human consumption. All time critical elements should be captured in the other data fields for easier consumption by other automated systems.
         type: string
         maxLength: 1000
+        example:
+      gufi: "00000000-0000-4444-8888-000000000000"
+      category: "AlertMessage"
+      origin: "FIMS"
+      sent_time: "2016-10-04T09:15:42.727Z"
+      alert_message: "OPERATIONS"
+      alert_severity: "WARNING"
+      alert_text: "UA_LEAVING_DEFINED_VOLUME"
+      free_text: "
+        reason=RogueNearby,
+        reasonDetail=nearby operation 86250f05-d89c-40cf-b932-aa8d10a426a2 in state U is lateral distance 711.45 feet and vertical danger zone envelope 600 feet;
+        This alert message valid for the next 30 seconds (far lateral/far altitude),
+        vehicleType=FixedWing
+        vehicleModelName=Silent Falcon,
+        longLat=-119.87933795058 39.69702548394,
+        alt_gps_wgs84_ft=5187.3645438621,
+        track_ground_speed_kn=0.77703200548507,
+        track_magnet
+        ic_north_deg=null"
         
   ConstraintMessage:
     properties:
@@ -564,7 +583,28 @@ definitions:
         description: "The reason for the constraint. Meant for human consumption."
         type: string
         maxLength: 1000      
-  
+    example:
+      gufi: "*"
+      category: "ConstraintMessage"
+      origin: "FIMS"
+      free_text: "Constraint added."
+      sent_time: "2016-11-29T01:16:41.727Z"
+      constraint_geography:
+        type: Polygon
+        coordinates: [
+          [
+            [-122.062176579,37.40968041145],
+            [-122.05187056889,37.41786527236],
+            [-122.03732647634,37.41786440108],
+            [-122.062176579,37.40968041145],
+          ]
+        ]
+      begin_time: "2016-11-29T01:16:41.727Z"
+      end_time: "2016-11-30T01:16:41.727Z"
+      min_altitude: 0.0
+      max_altitude: 400.0
+      reason: "A UA leaving defined volume"
+      
   NegotiationMessage:
     properties:
       message_id:
