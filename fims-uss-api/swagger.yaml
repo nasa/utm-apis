@@ -186,35 +186,6 @@ paths:
           description: "Unauthorized user."
           schema:
             $ref: "#/definitions/UTMRestResponse"
-  /user/{operator}/decision:
-    get:
-      tags:
-      - "B. Subscription Points"
-      summary: "Subscription point for receiving decisions from FIMS"
-      description: "Each operator has a designated queue for decisions. This queue\
-        \ will provide InformMessage data related to the specified operator's operations.\n\
-        For example, after an operator POSTs an operation to the /operations RESTful\
-        \ endpoint, that operator will receive the appropriate InformMessage\n(ACCEPTED,\
-        \ DENIED, etc.) via this queue. Decision is configured with queuing semantics\
-        \ which provide a destruct-upon-read queue.  Thus if one STOMP connection\
-        \ is being read concurrently over 2 connections both authenticated with the\
-        \ same user ID, the last reader will not get a message.\n\n\nSee the schema\
-        \ information describing InformMessages included within this document to understand\
-        \ the data that will be received via this queue.\n\nNote that if you are viewing\
-        \ this in a SwaggerUI, the \"try it out\" feature will not work since this\
-        \ is not a RESTful endpoint.\n"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "operator"
-        in: "path"
-        description: "the user id"
-        required: true
-        type: "string"
-      responses:
-        410:
-          description: "A RESTful call was made to this endpoint but this is not a\
-            \ REST endpoint. Do not use this endpoint for REST calls."
   /topic/positions:
     get:
       tags:
@@ -378,48 +349,6 @@ paths:
         410:
           description: "A RESTful call was made to this endpoint but this is not a\
             \ REST endpoint. Do not use this endpoint for REST calls."
-  /schema/InformMessage:
-    get:
-      tags:
-      - "C. Data Types"
-      summary: "Inform Message schema"
-      description: "Illustrates the FIMS Inform Message. This is FIMS' reply to an\
-        \ Intent. This endpoint is not intended for use.\n\nNote that if you are viewing\
-        \ this in a SwaggerUI, the \"try it out\" feature will not work since this\
-        \ is not a RESTful endpoint.\n"
-      operationId: "informMsgUsingGET"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/InformMessage"
-        410:
-          description: "A RESTful call was made to this endpoint but this is not a\
-            \ REST endpoint. Do not use this endpoint for REST calls."
-  /schema/IntentMessage:
-    get:
-      tags:
-      - "C. Data Types"
-      summary: "Intent Message schema"
-      description: "Illustrates the FIMS Intent Message. Your Intent generates a FIMS\
-        \ Inform. This endpoint is not intended for use.\n\nNote that if you are viewing\
-        \ this in a SwaggerUI, the \"try it out\" feature will not work since this\
-        \ is not a RESTful endpoint.\n"
-      operationId: "intentMsgUsingGET"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/IntentMessage"
-        410:
-          description: "A RESTful call was made to this endpoint but this is not a\
-            \ REST endpoint. Do not use this endpoint for REST calls."
   /schema/AlertMessage:
     get:
       tags:
@@ -471,324 +400,6 @@ securityDefinitions:
       write: "allows modifying resources"
       read: "allows reading resources"
 definitions:
-  Geometry:
-    type: "object"
-    required:
-    - "type"
-    discriminator: "type"
-    properties:
-      type:
-        type: "string"
-    description: "A geometry object in two dimensional space. For Geometry property\
-      \ of a Position, Geometry type must be Point. For a Geometry property of an\
-      \ OperationVolume or Constraint, Geometry type must be LineString or Polygon.\
-      \ For location properties such as Operation's gcs_location and controller_location,\
-      \ Geometry type must be Point."
-  Point:
-    allOf:
-    - $ref: "#/definitions/Geometry"
-    - type: "object"
-      properties:
-        coordinates:
-          type: "array"
-          description: "Pair of longitude-latitude values. If a third element is provided\
-            \ for altitude, it is silently ignored."
-          items:
-            type: "number"
-            format: "double"
-    example:
-      type: "Point"
-      coordinates:
-      - -122.0485890000000068766894401051104068756103515625
-      - 37.41486900000000304089553537778556346893310546875
-  LineString:
-    allOf:
-    - $ref: "#/definitions/Geometry"
-    - type: "object"
-      properties:
-        coordinates:
-          type: "array"
-          items:
-            type: "array"
-            items:
-              type: "number"
-              format: "double"
-    example:
-      type: "LineString"
-      coordinates:
-      - - -122.06382530000001906955731101334095001220703125
-        - 37.409069700000003422246663831174373626708984375
-      - - -122.05094253232999790270696394145488739013671875
-        - 37.4193006276999966530638630501925945281982421875
-      - - -122.0327620697599968480062671005725860595703125
-        - 37.41929920175999768616748042404651641845703125
-  Message:
-    type: "object"
-    required:
-    - "category"
-    - "gufi"
-    discriminator: "category"
-    properties:
-      message_id:
-        type: "string"
-        format: "uuid"
-        description: "A UUID assigned to this message by the FIMS"
-        minLength: 36
-        maxLength: 36
-      origin:
-        type: "string"
-        description: "The user or process that generated this message"
-        enum:
-        - "FIMS"
-        - "CLIENT"
-        - "MANAGER"
-      user:
-        type: "string"
-        description: "Populated by the UTM System.  The target user for a message\
-          \ from the UTM System."
-        maxLength: 100
-      gufi:
-        type: "string"
-        format: "uuid"
-        description: "The assigned GUFI for the operation referenced by the message."
-        minLength: 36
-        maxLength: 36
-      category:
-        type: "string"
-        enum:
-        - "AlertMessage"
-        - "IntentMessage"
-        - "InformMessage"
-        - "ConstraintMessage"
-      free_text:
-        type: "string"
-        description: "Any remarks or messaging that does not fit any other fields"
-        maxLength: 1000
-      sent_time:
-        type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-        description: "Either the time the message was sent by the UTM System or the\
-          \ time it was received by the UTM System."
-        maxLength: 100
-      ack_time:
-        type: "string"
-        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-        description: "A timestamp confirming delivery to the application layer of\
-          \ the message receiver"
-        maxLength: 100
-    example:
-      gufi: "00000000-0000-4444-8888-000000000000"
-      category: "IntentMessage"
-      origin: "CLIENT"
-      free_text: "An intent message from a client (for example)"
-      sent_time: "2016-10-04T09:15:42.727Z"
-      intent_message: "CLOSE"
-  AlertMessage:
-    allOf:
-    - $ref: "#/definitions/Message"
-    - type: "object"
-      properties:
-        alert_message:
-          type: "string"
-          enum:
-          - "WEATHER"
-          - "SECURITY"
-          - "OPERATIONS"
-          - "SYSTEM"
-          - "GENERAL"
-        alert_severity:
-          type: "string"
-          enum:
-          - "WARNING"
-          - "CRITICAL"
-          - "EMERGENCY"
-        alert_text:
-          type: "string"
-          enum:
-          - "UNPLANNED_LANDING"
-          - "UNCONTROLLED_LANDING"
-          - "UA_LEAVING_DEFINED_VOLUME"
-          - "OTHER_SEE_FREE_TEXT"
-        subtype:
-          type: "string"
-          enum:
-          - "UA_NOT_UNDER_OPERATOR_POSITIVE_CONTROL"
-          - "LOST_NAVIGATION"
-          - "LOST_COMMAND_AND_CONTROL"
-          - "HIJACK"
-        warnings:
-          type: "array"
-          description: "unused"
-          items:
-            $ref: "#/definitions/Warning"
-    example:
-      gufi: "00000000-0000-4444-8888-000000000000"
-      category: "AlertMessage"
-      origin: "FIMS"
-      sent_time: "2016-10-04T09:15:42.727Z"
-      alert_message: "OPERATIONS"
-      alert_severity: "WARNING"
-      alert_text: "UA_LEAVING_DEFINED_VOLUME"
-      free_text: " reason=RogueNearby, reasonDetail=nearby operation 86250f05-d89c-40cf-b932-aa8d10a426a2\
-        \ in state U is lateral distance 711.45 feet and vertical danger zone envelope\
-        \ 600 feet; This alert message valid for the next 30 seconds (far lateral/far\
-        \ altitude), vehicleType=FixedWing vehicleModelName=Silent Falcon, longLat=-119.87933795058\
-        \ 39.69702548394, alt_gps_wgs84_ft=5187.3645438621, track_ground_speed_kn=0.77703200548507,\
-        \ track_magnetic_north_deg=null"
-  IntentMessage:
-    allOf:
-    - $ref: "#/definitions/Message"
-    - type: "object"
-      properties:
-        intent_message:
-          type: "string"
-          enum:
-          - "ACK_NO_OPERATION"
-          - "CANCEL"
-          - "CLOSE"
-          - "OTHER_SEE_FREE_TEXT"
-    example:
-      gufi: "00000000-0000-4444-8888-000000000000"
-      category: "IntentMessage"
-      origin: "CLIENT"
-      sent_time: "2016-10-04T09:15:42.727Z"
-      intent_message: "CANCEL"
-  InformMessage:
-    allOf:
-    - $ref: "#/definitions/Message"
-    - type: "object"
-      properties:
-        inform_message:
-          type: "string"
-          description: "PLAN_SUBMITTED_TOO_EARLY: Flight notification is too far in\
-            \ advance of operation, FIMS publishes to decision queue.\nACCEPTED/AUTHORIZED/DENIED/CANCELLED/CLOSED:\
-            \ operation is accepted/authorized/denied. FIMS publishes to decision\
-            \ queue.\n\nNOTIFICATION_NOT_REQUIRED/AUTHORIZATION_NOT_REQUIRED: notification/authorization\
-            \ to FIMS is not required for this operation. FIMS publishes to decision\
-            \ queue.\n\nTERMINATED: Changes in status during the proposed flight start\
-            \ time, as filed in the operation plan (acceptance/authorization -> termination).\
-            \ FIMS publishes to decision queue.\n\nCONSTRAINT_CHANGE: FIMS notifies\
-            \ operators of airspace constraint change. FIMS publishes to constraint\
-            \ change queue.\n\nPOSITION_REPORT_REQUEST_SINGLE/PERIODIC/CANCEL: FIMS\
-            \ requests position reports. FIMS publishes to decision queue.\n\nBACK_TO_CONFORMANCE:\
-            \ USS notifies FIMS that operation is back in conformance after anomaly.\
-            \ USS posts to FIMS.\n\nUSS_SYSTEM_MESSAGE: USS informs FIMS of its server\
-            \ time. USS posts to FIMS.\nOTHER_SEE_FREE_TEXT: no particular use at\
-            \ this time\n"
-          enum:
-          - "PLAN_SUBMITTED_TOO_EARLY"
-          - "ACCEPTED"
-          - "AUTHORIZED"
-          - "DENIED"
-          - "CANCELLED"
-          - "CLOSED"
-          - "NOTIFICATION_NOT_REQUIRED"
-          - "AUTHORIZATION_NOT_REQUIRED"
-          - "TERMINATED"
-          - "CONSTRAINT_CHANGE"
-          - "POSITION_REPORT_REQUEST_SINGLE"
-          - "POSITION_REPORT_REQUEST_PERIODIC"
-          - "POSITION_REPORT_REQUEST_CANCEL"
-          - "BACK_TO_CONFORMANCE"
-          - "USS_SYSTEM_MESSAGE"
-          - "OTHER_SEE_FREE_TEXT"
-        violations:
-          type: "array"
-          description: "Included with messages from the INFORM category with inform_message\
-            \ = DENIED."
-          items:
-            $ref: "#/definitions/Violation"
-        warnings:
-          type: "array"
-          items:
-            $ref: "#/definitions/Warning"
-    example:
-      gufi: "00000000-0000-4444-8888-000000000000"
-      category: "InformMessage"
-      origin: "FIMS"
-      free_text: "Plan DENIED. See violations field of this message for constraining\
-        \ violation(s) and the violating volume(s)."
-      sent_time: "2016-10-04T09:15:42.727Z"
-      inform_message: "DENIED"
-      violations: "[ {\"type\":\"Operations\",\"violating_volume\":1,\"constraining_volume\"\
-        :1,\"constraining_id\":\"90710543-6b18-44c9-a1a6-a3ecd60d14\"} ]"
-  ConstraintMessage:
-    allOf:
-    - $ref: "#/definitions/Message"
-    - type: "object"
-      properties:
-        constraint_geography:
-          $ref: "#/definitions/Geometry"
-        begin_time:
-          type: "string"
-          format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-          description: "The time that the constraint begins. Null or no value implies\
-            \ -infinity begin time."
-          maxLength: 100
-        end_time:
-          type: "string"
-          format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
-          description: "The time that the constraint ends. Null or no value implies\
-            \ on-going constraint."
-          maxLength: 100
-        min_altitude:
-          type: "number"
-          format: "double"
-          description: "The minimum altitude of the constraint. Must be less than\
-            \ max_altitude."
-        max_altitude:
-          type: "number"
-          format: "double"
-          description: "The maximum altitude of the constraint. Must be greater than\
-            \ min_altitude."
-        reason:
-          type: "string"
-          description: "The reason for the constraint."
-          maxLength: 1000
-    example:
-      gufi: "*"
-      category: "ConstraintMessage"
-      origin: "FIMS"
-      free_text: "Constraint added."
-      sent_time: "2016-11-29T01:16:41.727Z"
-      constraint_geography:
-        type: "Polygon"
-        coordinates:
-        - - - -122.0621765789999955131861497648060321807861328125
-            - 37.4096804114499974502905388362705707550048828125
-          - - -122.051870568889995638528489507734775543212890625
-            - 37.41786527235999670892852009274065494537353515625
-          - - -122.0373264763399987486991449259221553802490234375
-            - 37.41786440108000277859900961630046367645263671875
-          - - -122.0621765789999955131861497648060321807861328125
-            - 37.4096804114499974502905388362705707550048828125
-      begin_time: "2016-11-29T01:16:41.727Z"
-      end_time: "2016-11-30T01:16:41.727Z"
-      min_altitude: 0
-      max_altitude: 400
-      reason: "A UA leaving defined volume"
-  Violation:
-    type: "object"
-    properties:
-      type:
-        type: "string"
-      constraining_id:
-        type: "string"
-        format: "uuid"
-        minLength: 36
-        maxLength: 36
-      constraining_volume:
-        type: "integer"
-      violating_volume:
-        type: "integer"
-    description: "Specific violations of constraints necessitating rejection of the\
-      \ operation plan."
-  Warning:
-    type: "object"
-    properties:
-      warning_id:
-        type: "string"
-    description: "Needs description."
   Operation:
     type: "object"
     required:
@@ -1003,6 +614,13 @@ definitions:
             - - -122.06382530000002
               - 37.4090697
         beyond_visual_line_of_sight: false
+  Point:
+    allOf:
+    - $ref: "#/definitions/Geometry"
+    - properties:
+        coordinates:
+          $ref: "#/definitions/Point2D"
+    description: "GeoJSon Point, limited to 2D."
   OperationVolume:
     type: "object"
     required:
@@ -1087,6 +705,22 @@ definitions:
         type: "boolean"
         description: "Describes whether the operation volume is beyond the visual\
           \ line of sight of the operator."
+  Geometry:
+    type: "object"
+    required:
+    - "type"
+    discriminator: "type"
+    properties:
+      type:
+        type: "string"
+        description: "the geometry type"
+        enum:
+        - "Point"
+        - "LineString"
+        - "Polygon"
+    externalDocs:
+      url: "https://tools.ietf.org/html/rfc7946#section-3.1"
+    description: "GeoJSon geometry"
   UTMRestResponse:
     type: "object"
     properties:
@@ -1238,20 +872,152 @@ definitions:
         coordinates:
         - -122.05635935068132
         - 37.41436490284069
+  LineString:
+    allOf:
+    - $ref: "#/definitions/Geometry"
+    - properties:
+        coordinates:
+          type: "array"
+          items:
+            $ref: "#/definitions/Point2D"
+    description: "GeoJSon LineString. Points all 2D."
   Polygon:
     allOf:
     - $ref: "#/definitions/Geometry"
-    - type: "object"
-      properties:
+    - properties:
         coordinates:
           type: "array"
           items:
             type: "array"
             items:
-              type: "array"
-              items:
-                type: "number"
-                format: "double"
+              $ref: "#/definitions/Point2D"
+    description: "GeoJSon Polygon. Points all 2D."
+  AlertMessage:
+    type: "object"
+    properties:
+      message_id:
+        type: "string"
+        format: "uuid"
+        description: "A UUID assigned to this message by the originator"
+        minLength: 36
+        maxLength: 36
+      origin:
+        type: "string"
+        description: "The user or process that generated this message"
+        enum:
+        - "FIMS"
+        - "USS"
+      originator_id:
+        type: "string"
+        description: "A name identifying the originator of this message."
+        maxLength: 100
+      gufi:
+        type: "string"
+        format: "uuid"
+        description: "The GUFI for the operation referenced in this message."
+        minLength: 36
+        maxLength: 36
+      sent_time:
+        type: "string"
+        format: "date-time"
+        example: "2015-08-20T14:11:57.345Z"
+        description: "Time the message was generated by the origin.  Uses the ISO\
+          \ 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds\
+          \ may have up to millisecond accuracy (three positions after decimal). \
+          \ The 'Z' implies UTC times and is the only timezone accepted.\""
+      severity:
+        $ref: "#/definitions/severity"
+      text:
+        type: "string"
+        description: "The type of alert message. An enum to constrain messages and\
+          \ allow better interoperability."
+        enum:
+        - "UNPLANNED_LANDING"
+        - "UNCONTROLLED_LANDING"
+        - "OPERATION_NON_CONFORMING"
+        - "OPERATION_ROGUE"
+        - "OPERATION_CONFORMING"
+        - "OPERATION_CLOSED"
+        - "OTHER_SEE_FREE_TEXT"
+      last_known_position:
+        $ref: "#/definitions/Position"
+      meta_data:
+        type: "string"
+        description: "Reserved field."
+      free_text:
+        type: "string"
+        description: "Any additional information. Note that this is for human consumption.\
+          \ All time critical elements should be captured in the other data fields\
+          \ for easier consumption by other automated systems."
+        maxLength: 1000
+    description: "An alert message. Used to make other stakeholders aware about an\
+      \ issue with a specific operation."
+  severity:
+    type: "string"
+    enum:
+    - "EMERGENCY"
+    - "ALERT"
+    - "CRITICAL"
+    - "WARNING"
+    - "NOTICE"
+    - "INFORMATIONAL"
+  ConstraintMessage:
+    properties:
+      message_id:
+        type: "string"
+        format: "uuid"
+        description: "A UUID assigned to this message by the originator"
+        minLength: 36
+        maxLength: 36
+      origin:
+        type: "string"
+        description: "The user or process that generated this message"
+        enum:
+        - "FIMS"
+        - "USS"
+      originator_id:
+        type: "string"
+        description: "A name identifying the originator of this message."
+        maxLength: 100
+      type:
+        type: "string"
+        enum:
+        - "WEATHER"
+        - "ATC"
+        - "SECURITY"
+        - "SAFETY"
+        - "MUNICIPALITY"
+        - "OTHER"
+      constraint_geography:
+        $ref: "#/definitions/Geometry"
+      begin_time:
+        type: "string"
+        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        description: "The time that the constraint begins. Null or no value implies\
+          \ -infinity begin time."
+        maxLength: 100
+      end_time:
+        type: "string"
+        format: "date-time ending in Z.Eg 2016-04-12T12:35:25Z or 2016-04-12T12:35:25.123Z"
+        description: "The time that the constraint ends. Null or no value implies\
+          \ on-going constraint."
+        maxLength: 100
+      min_altitude:
+        type: "number"
+        format: "double"
+        description: "The minimum altitude of the constraint. Must be less than max_altitude."
+      max_altitude:
+        type: "number"
+        format: "double"
+        description: "The maximum altitude of the constraint. Must be greater than\
+          \ min_altitude."
+      metadata:
+        type: "string"
+        description: "Reserved field."
+      reason:
+        type: "string"
+        description: "The reason for the constraint. Meant for human consumption."
+        maxLength: 1000
 responses:
   WRONG_PROTOCOL:
     description: "A RESTful call was made to this endpoint but this is not a REST\
