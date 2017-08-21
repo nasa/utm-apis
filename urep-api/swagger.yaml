@@ -517,37 +517,10 @@ definitions:
         - "BALLOON"
         - "LARGE_MANNED_FIXED_WING"
         - "OTHER"
-  Point:
-    type: "object"
-    required:
-    - "coordinates"
-    properties:
-      coordinates:
-        type: "array"
-        description: "Pairs of longitude-latitude values. If a third element is provided\
-          \ for altitude, it is silently ignored."
-        items:
-          type: "number"
-          format: "double"
-          description: "Must be exactly two numbers representing long and lat, respectively."
-      type:
-        type: "string"
-  Version:
-    type: "object"
-    properties:
-      version:
-        type: "string"
-        description: "Version number for the API"
-      title:
-        type: "string"
-        description: "Title of the API"
-      documentation:
-        type: "string"
-        description: "URL for API Documentation"
   UTMRestResponse:
     type: "object"
     properties:
-      status:
+      http_status_code:
         type: "integer"
       message:
         type: "string"
@@ -557,6 +530,44 @@ definitions:
       http_status_code: 201
       message: "Resource created."
       resource: "/resource/683c0e9e-49dc-44ce-82de-a5723b1f6965"
+  Version:
+    type: "object"
+    properties:
+      title:
+        type: "string"
+        description: "Title of the API"
+      version:
+        type: "string"
+        description: "Version number for the API"
+      build_time:
+        type: "string"
+        description: "Time of the latest build"
+      api_documentation:
+        type: "string"
+        description: "URL for API Documentation"
+  Point:
+    allOf:
+    - $ref: "#/definitions/Geometry"
+    - properties:
+        coordinates:
+          $ref: "#/definitions/Point2D"
+    description: "GeoJSon Point, limited to 2D."
+  Geometry:
+    type: "object"
+    required:
+    - "type"
+    discriminator: "type"
+    properties:
+      type:
+        type: "string"
+        description: "the geometry type"
+        enum:
+        - "Point"
+        - "LineString"
+        - "Polygon"
+    externalDocs:
+      url: "https://tools.ietf.org/html/rfc7946#section-3.1"
+    description: "GeoJSon geometry"
 responses:
   WRONG_PROTOCOL:
     description: "A RESTful call was made to this endpoint but this is not a REST\
