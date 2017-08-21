@@ -436,43 +436,6 @@ definitions:
       uss_registration_url: "https://nuss.arc.nasa.gov/signup"
       contact_email: "joseph.rios@nasa.gov"
       contact_number: "650-555-5555"
-  Polygon:
-    type: "object"
-    required:
-    - "coordinates"
-    - "type"
-    properties:
-      type:
-        type: "string"
-      coordinates:
-        type: "array"
-        items:
-          type: "array"
-          items:
-            type: "array"
-            items:
-              type: "number"
-              format: "double"
-    description: "A geometry object in two dimensional space."
-    example:
-      type: "Polygon"
-      coordinates:
-      - - - -122.06382530000001906955731101334095001220703125
-          - 37.409069700000003422246663831174373626708984375
-        - - -122.05094253232999790270696394145488739013671875
-          - 37.4193006276999966530638630501925945281982421875
-        - - -122.0327620697599968480062671005725860595703125
-          - 37.41929920175999768616748042404651641845703125
-        - - -122.06382530000001906955731101334095001220703125
-          - 37.409069700000003422246663831174373626708984375
-      - - - -122.0621765789999955131861497648060321807861328125
-          - 37.4096804114499974502905388362705707550048828125
-        - - -122.051870568889995638528489507734775543212890625
-          - 37.41786527235999670892852009274065494537353515625
-        - - -122.0373264763399987486991449259221553802490234375
-          - 37.41786440108000277859900961630046367645263671875
-        - - -122.0621765789999955131861497648060321807861328125
-          - 37.4096804114499974502905388362705707550048828125
   UTMRestResponse:
     type: "object"
     properties:
@@ -486,6 +449,33 @@ definitions:
       http_status_code: 201
       message: "Resource created."
       resource: "/resource/683c0e9e-49dc-44ce-82de-a5723b1f6965"
+  Polygon:
+    allOf:
+    - $ref: "#/definitions/Geometry"
+    - properties:
+        coordinates:
+          type: "array"
+          items:
+            type: "array"
+            items:
+              $ref: "#/definitions/Point2D"
+    description: "GeoJSon Polygon. Points all 2D."
+  Geometry:
+    type: "object"
+    required:
+    - "type"
+    discriminator: "type"
+    properties:
+      type:
+        type: "string"
+        description: "the geometry type"
+        enum:
+        - "Point"
+        - "LineString"
+        - "Polygon"
+    externalDocs:
+      url: "https://tools.ietf.org/html/rfc7946#section-3.1"
+    description: "GeoJSon geometry"
 responses:
   WRONG_PROTOCOL:
     description: "A RESTful call was made to this endpoint but is not a REST endpoint.\
