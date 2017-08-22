@@ -89,7 +89,7 @@ definitions:
     
   LineString:
     type: object
-    description: GeoJSon LineString. Points all 2D.
+    description: GeoJSon LineString. Positions all 2D.
     externalDocs:
       url: https://tools.ietf.org/html/rfc7946#section-3.1.4
     allOf:
@@ -102,7 +102,7 @@ definitions:
 
   Polygon:
     type: object
-    description: GeoJSon Polygon. Points all 2D.
+    description: GeoJSon Polygon. Positions all 2D.
     externalDocs:
       url: https://tools.ietf.org/html/rfc7946#section-3.1.6
     allOf:
