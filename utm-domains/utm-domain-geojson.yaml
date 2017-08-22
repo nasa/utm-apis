@@ -35,7 +35,7 @@
 #issmith1 trying github push , switch to yaml 
 #retrying github push to nasa repo.
 #issmith1 test whether collaborator can push to Git via API Key
-#issmith1 Point2D not generating
+#jlrios: "Point2d" rendering
 
 definitions:
         
@@ -60,6 +60,22 @@ definitions:
         description: the geometry type
   
 
+  
+  Position:
+    description: |
+      Array of doubles of longitude-latitude values. Note that longitude is first.
+    type: object
+    required: 
+      - coordinates
+    properties:
+      coordinates:
+        type: array
+        maxItems: 2
+        minItems: 2
+        items:
+          type: number
+          format: double
+          
   Point:
     type: object
     description: GeoJSon Point, limited to 2D.
@@ -69,19 +85,8 @@ definitions:
       - $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Geometry'
       - properties:
           coordinates:
-            type: array
-            maxItems: 2
-            minItems: 2
-            items:
-              type: number
-              format: double
-    example:
-      type: Point
-      # Moffet Federal Airfield
-      # http://bl.ocks.org/d/3410a0f498572d74972719c39382ceff
-      coordinates: [-122.048589,37.414869]
-  
-  
+            $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Position'
+    
   LineString:
     type: object
     description: GeoJSon LineString. Points all 2D.
@@ -93,19 +98,8 @@ definitions:
           coordinates:
             type: array
             items:
-              $ref: '#/definitions/Point'
-    example:
-      type: LineString
-      coordinates: [
-        # http://bl.ocks.org/d/655a22e1d3c1a85f4304a2133409d76d
-        # 1st point NASA Ames Research Center
-        # 2nd point 1mi bearing 45˚
-        # 3rd point 1mi bearing 90˚
-        [-122.06382530000002,37.4090697],
-        [-122.05094253233,37.4193006277],
-        [-122.03276206976,37.41929920176]
-      ]
-      
+              $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Position'
+
   Polygon:
     type: object
     description: GeoJSon Polygon. Points all 2D.
@@ -119,31 +113,4 @@ definitions:
             items:
               type: array
               items:
-                $ref: '#/definitions/Point'
-      
-#  MultiPoint:
-#    type: object
-#    description: GeoJSon geometry
-#    externalDocs:
-#      url: https://tools.ietf.org/html/rfc7946#section-3.1.3
-            
-#  MultiLineString:
-#    type: object
-#    description: GeoJSon geometry
-#    externalDocs:
-#      url: https://tools.ietf.org/html/rfc7946#section-3.1.5
-#      
-#  MultiPolygon:
-#    type: object
-#    description: GeoJSon geometry
-#    externalDocs:
-#      url: https://tools.ietf.org/html/rfc7946#section-3.1.7
-      
-##  GeometryCollection:
-#    type: object
-#    description: GeoJSon geometry collection
-#    required:
-#     - type
-#     - geometries
-#    externalDocs:
-#      url: https://tools.ietf.org/html/rfc7946#section-3.1.8
+                $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Position'
