@@ -386,7 +386,7 @@ paths:
         200:
           description: "OK"
           schema:
-            $ref: "#/definitions/null"
+            $ref: "#/definitions/UTMRestResponse"
         410:
           description: "A RESTful call was made to this endpoint but this is not a\
             \ REST endpoint. Do not use this endpoint for REST calls."
@@ -633,7 +633,12 @@ definitions:
     - $ref: "#/definitions/Geometry"
     - properties:
         coordinates:
-          $ref: "#/definitions/Point2D"
+          type: "array"
+          items:
+            type: "number"
+            format: "double"
+          maxItems: 2
+          minItems: 2
     description: "GeoJSon Point, limited to 2D."
   OperationVolume:
     type: "object"
@@ -936,7 +941,7 @@ definitions:
         coordinates:
           type: "array"
           items:
-            $ref: "#/definitions/Point2D"
+            $ref: "#/definitions/Point"
     description: "GeoJSon LineString. Points all 2D."
   Polygon:
     allOf:
@@ -947,7 +952,7 @@ definitions:
           items:
             type: "array"
             items:
-              $ref: "#/definitions/Point2D"
+              $ref: "#/definitions/Point"
     description: "GeoJSon Polygon. Points all 2D."
 responses:
   WRONG_PROTOCOL:
