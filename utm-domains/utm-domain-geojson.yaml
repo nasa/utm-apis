@@ -36,26 +36,9 @@
 #retrying github push to nasa repo.
 #issmith1 test whether collaborator can push to Git via API Key
 #jlrios: "Point2d" rendering, renamed as "Position" to align with GeoJSON spec.
+#jlrios: flattened by removing Geometry to improve codegen, simplify schema
 
 definitions:
-        
-  Geometry:
-    type: object
-    description: GeoJSon geometry
-    discriminator: type
-    required:
-      - type
-    externalDocs:
-      url: https://tools.ietf.org/html/rfc7946#section-3.1
-    properties:
-      type:
-        type: string
-        enum:
-        - Point
-        - LineString
-        - Polygon
-        description: |
-          The geometry type, UTM currently only supports the enum'ed types. And even then, support may vary based on the API and endpoint.
   
   Position:
     description: |
@@ -77,36 +60,48 @@ definitions:
     description: GeoJSon Point, limited to 2D.
     externalDocs:
       url: https://tools.ietf.org/html/rfc7946#section-3.1.2
-    allOf:
-      - $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Geometry'
-      - properties:
-          coordinates:
-            $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Position'
+    properties:
+      type:
+        description: |
+          The type of Geometry. In this case, must be 'Point' per GeoJSON spec.
+        type: string
+        enum: 
+        - Point
+      coordinates:
+        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Position'
     
   LineString:
     type: object
     description: GeoJSon LineString. Positions all 2D.
     externalDocs:
       url: https://tools.ietf.org/html/rfc7946#section-3.1.4
-    allOf:
-      - $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Geometry'
-      - properties:
-          coordinates:
-            type: array
-            items:
-              $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Position'
+    properties:
+      type:
+        description: |
+          The type of Geometry. In this case, must be 'LineString' per GeoJSON spec.
+        type: string
+        enum: 
+        - LineString
+      coordinates:
+        type: array
+        items:
+          $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Position'
 
   Polygon:
     type: object
     description: GeoJSon Polygon. Positions all 2D.
     externalDocs:
       url: https://tools.ietf.org/html/rfc7946#section-3.1.6
-    allOf:
-      - $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Geometry'
-      - properties:
-          coordinates:
-            type: array
-            items:
-              type: array
-              items:
-                $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Position'
+    properties:
+      type:
+        description: |
+          The type of Geometry. In this case, must be 'Polygon' per GeoJSON spec.
+        type: string
+        enum: 
+        - Polygon
+      coordinates:
+        type: array
+        items:
+          type: array
+          items:
+            $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Position'
