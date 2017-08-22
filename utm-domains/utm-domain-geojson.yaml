@@ -35,7 +35,7 @@
 #issmith1 trying github push , switch to yaml 
 #retrying github push to nasa repo.
 #issmith1 test whether collaborator can push to Git via API Key
-#jlrios: "Point2d" rendering
+#jlrios: "Point2d" rendering, renamed as "Position" to align with GeoJSON spec.
 
 definitions:
         
@@ -54,12 +54,8 @@ definitions:
         - Point
         - LineString
         - Polygon
-#        - MultiPoint
-#        - MultiLineString
-#        - MultiPolygon
-        description: the geometry type
-  
-
+        description: |
+          The geometry type, UTM currently only supports the enum'ed types. And even then, support may vary based on the API and endpoint.
   
   Position:
     description: |
