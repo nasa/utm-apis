@@ -58,14 +58,7 @@ definitions:
 #        - MultiPolygon
         description: the geometry type
   
-  Point2D:
-    type: array
-    maxItems: 2
-    minItems: 2
-    items:
-      type: number
-  
-  
+
   Point:
     type: object
     description: GeoJSon Point, limited to 2D.
@@ -81,7 +74,22 @@ definitions:
       # Moffet Federal Airfield
       # http://bl.ocks.org/d/3410a0f498572d74972719c39382ceff
       coordinates: [-122.048589,37.414869]
-      
+  
+  Point2D:
+    description: |
+      Geojson array of doubles of longitude-latitude values. Note that longitude is first.
+    type: object
+    required: 
+      - coordinates
+    properties:
+      coordinates:
+        type: array
+        maxItems: 2
+        minItems: 2
+        items:
+          type: number
+          format: double
+  
   LineString:
     type: object
     description: GeoJSon LineString. Points all 2D.
