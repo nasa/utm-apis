@@ -68,25 +68,18 @@ definitions:
       - $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Geometry'
       - properties:
           coordinates:
-            $ref: '#/definitions/Point2D'
+            type: array
+            maxItems: 2
+            minItems: 2
+            items:
+              type: number
+              format: double
     example:
       type: Point
       # Moffet Federal Airfield
       # http://bl.ocks.org/d/3410a0f498572d74972719c39382ceff
       coordinates: [-122.048589,37.414869]
   
-  Point2D:
-    description: |
-      Geojson array of doubles of longitude-latitude values. Note that longitude is first.
-    type: object
-    required: 
-      - coordinates
-    properties:
-      coordinates:
-        type: array
-        items:
-          type: number
-          format: double
   
   LineString:
     type: object
@@ -99,7 +92,7 @@ definitions:
           coordinates:
             type: array
             items:
-              $ref: '#/definitions/Point2D'
+              $ref: '#/definitions/Point'
     example:
       type: LineString
       coordinates: [
@@ -125,7 +118,7 @@ definitions:
             items:
               type: array
               items:
-                $ref: '#/definitions/Point2D'
+                $ref: '#/definitions/Point'
       
 #  MultiPoint:
 #    type: object
