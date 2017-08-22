@@ -1,175 +1,179 @@
 ---
 swagger: "2.0"
 info:
-  description: "This API describes the RESTful interface from a UAS Service Supplier\
-    \ (USS) to the Flight Information Management System (FIMS) within UTM.  There\
-    \ is an additional API for asynchronous communications that is described in the\
-    \ Subscription Points section."
+  description: "This API describes the RESTful interface from a UAS Service Supplier (USS) to the Flight Information Management System (FIMS) within UTM.  There is an additional API for asynchronous communications that is described in the Subscription Points section."
   version: "v2"
   title: "UTM Research Platform, FIMS-USS Interface"
-  termsOfService: "\nA. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT\
-    \ ANY WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,\
-    \ BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL CONFORM TO SPECIFICATIONS,\
-    \ ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,\
-    \ OR FREEDOM FROM INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE\
-    \ ERROR FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM TO\
-    \ THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER, CONSTITUTE AN\
-    \ ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT OF ANY RESULTS, RESULTING\
-    \ DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY OTHER APPLICATIONS RESULTING FROM\
-    \ USE OF THE SUBJECT SOFTWARE. FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES\
-    \ AND LIABILITIES REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,\
-    \ AND DISTRIBUTES IT \"AS IS.\"\n\nB. Waiver and Indemnity: RECIPIENT AGREES TO\
-    \ WAIVE ANY AND ALL CLAIMS AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS\
-    \ AND SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT''S USE OF THE\
-    \ SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES\
-    \ ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING\
-    \ FROM, RECIPIENT''S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY AND\
-    \ HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS,\
-    \ AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT''S\
-    \ SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL TERMINATION\
-    \ OF THIS AGREEMENT.\n"
   contact:
-    name: "NASA Ames Research Center, Aviation Systems Division"
-    url: "https://utm.arc.nasa.gov/"
-    email: "joseph.rios@nasa.gov"
+    name: NASA Ames Research Center, Aviation Systems Division
+    url: https://utm.arc.nasa.gov/
+    email: joseph.rios@nasa.gov
   license:
-    name: "NASA Open Source Agreement"
-    url: "https://ti.arc.nasa.gov/opensource/nosa/"
+    name: NASA Open Source Agreement
+    url: https://ti.arc.nasa.gov/opensource/nosa/
+  termsOfService: |
+
+    A. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER, CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE. FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE, AND DISTRIBUTES IT "AS IS."
+
+    B. Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT''S USE OF THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT''S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT''S SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL TERMINATION OF THIS AGREEMENT.
+
 host: "tmiserver.arc.nasa.gov"
 basePath: "/fims"
-tags:
-- name: "A. FIMS Endpoints"
-  description: "Primary RESTful endpoints for operators accessing FIMS"
-  externalDocs:
-    description: "NASA FIMS server generated from this API specification."
-    url: "https://tmiserver.arc.nasa.gov/fims/api/"
-- name: "B. Subscription Points"
-  description: "Non-REST endpoints for asynchronous communications with FIMS"
-- name: "C. Data Types"
-  description: "Psuedo endpoints used for the documentation of the data schema"
-- name: "D. Version"
-  description: "Get the API version"
 schemes:
-- "https"
-- "wss"
+- https
+- wss
+tags: # Have to add 'A' 'B' etc since ordering isn't respected in SwaggerUI.
+- name: A. FIMS Endpoints
+  description: Primary RESTful endpoints for operators accessing FIMS
+  externalDocs:
+    url: "https://tmiserver.arc.nasa.gov/fims/api/"
+    description: NASA FIMS server generated from this API specification.
+- name: B. Subscription Points
+  description: Non-REST endpoints for asynchronous communications with FIMS
+- name: C. Data Types
+  description: Psuedo endpoints used for the documentation of the data schema
+- name: D. Version
+  description: Get the API version
+
+securityDefinitions:
+  application:
+    type: oauth2
+    # Should be updated to the Token URL of your OAuth provider.
+    tokenUrl: http://fims_authz.utm.nasa.gov/oauth/token
+    flow: application
+    scopes:
+      write: allows modifying resources
+      read: allows reading resources
+      
+responses:
+  WRONG_PROTOCOL:
+    description: A RESTful call was made to this endpoint but this is not a REST endpoint. Do not use this endpoint for REST calls.
+
 paths:
   /api:
     get:
+      summary: API version and other data. Can be used to test whether server is up.
+      operationId: getVersion
       tags:
-      - "A. FIMS endpoints"
-      summary: "API version and other data. Can be used to test whether server is\
-        \ up."
-      description: "Provides versioning information for the software and API"
-      operationId: "getVersion"
+      - A. FIMS endpoints
+      description: >-
+        Provides versioning information for the software and API
       produces:
-      - "application/json"
-      parameters: []
+        - application/json
       responses:
-        200:
-          description: "Version data"
+        '200':
+          description: Version data
           schema:
-            $ref: "#/definitions/Version"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Version'
+            
+            
   /operations:
     post:
       tags:
-      - "A. FIMS Endpoints"
-      summary: "Submit an operation to FIMS"
-      description: "Allows for submission of an operation plan to FIMS."
-      operationId: "postOperation"
+        - A. FIMS Endpoints
+      summary: Submit an operation to FIMS
+      security:
+      - application:
+        - write
+      operationId: postOperation
+      description: Allows for submission of an operation plan to FIMS.
+
       consumes:
-      - "application/json"
+        - application/json
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - in: "body"
-        name: "operation"
-        description: "Operational plan to add\n"
-        required: true
-        schema:
-          $ref: "#/definitions/Operation"
+        - in: body
+          name: operation
+          description: |  #moving everything down a like to test
+              Operational plan to add
+          required: true
+          schema:
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Operation'
       responses:
         201:
-          description: "Operation Plan request received."
+          description: Operation Plan request received.
           schema:
-            $ref: "#/definitions/UTMRestResponse"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         400:
-          description: "Bad request. Typically validation error. Fix your request\
-            \ and retry."
+          description: "Bad request. Typically validation error. Fix your request and retry."
           schema:
-            $ref: "#/definitions/UTMRestResponse"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         403:
           description: "Invalid ID supplied.  Fix authorization and retry."
           schema:
-            $ref: "#/definitions/UTMRestResponse"
-      security:
-      - application:
-        - "write"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+
   /operations/{gufi}:
     put:
       tags:
-      - "A. FIMS Endpoints"
-      summary: "Modify an operation"
-      description: "Allows for modifying of an operation plan in FIMS."
-      operationId: "updateOperation"
+        - A. FIMS Endpoints
+      summary: Modify an operation
+#      security:
+#        - OauthSecurity: [ ]
+      description: Allows for modifying of an operation plan in FIMS.
+      operationId: updateOperation
       consumes:
-      - "application/json"
+        - application/json
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - name: "gufi"
-        in: "path"
+      - in: path
+        name: gufi
         description: "GUFI of the operation to update"
         required: true
-        type: "string"
-        format: "uuid"
-      - in: "body"
-        name: "operation"
-        description: "Operation updates"
+        type: string
+        format: uuid
+      - in: body
+        name: operation
+        description: Operation updates
         required: true
         schema:
-          $ref: "#/definitions/Operation"
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Operation'
       responses:
         200:
           description: "Operation updated."
           schema:
-            $ref: "#/definitions/UTMRestResponse"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         400:
-          description: "Bad request. Typically validation error. Fix your request\
-            \ and retry."
+          description: "Bad request. Typically validation error. Fix your request and retry."
           schema:
-            $ref: "#/definitions/UTMRestResponse"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         403:
           description: "Unauthorized user."
           schema:
-            $ref: "#/definitions/UTMRestResponse"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         404:
           description: "Operations not found."
           schema:
-            $ref: "#/definitions/UTMRestResponse"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+
   /positions:
     post:
       tags:
-      - "A. FIMS Endpoints"
-      summary: "Submit position report"
-      description: "Allows for submission of position data related to a particular\
-        \ operation."
-      operationId: "postPosition"
-      parameters:
-      - in: "body"
-        name: "position"
-        description: "Position to submit"
-        required: true
-        schema:
-          $ref: "#/definitions/Position"
+        - A. FIMS Endpoints
+      summary: Submit position report
+#      security:
+#         - OauthSecurity: [ ]
+      description: Allows for submission of position data related to a particular operation.
+      operationId: postPosition
       responses:
         201:
           description: "Position posted successfully."
           schema:
-            $ref: "#/definitions/UTMRestResponse"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         400:
           description: "Invalid message. Please fix and retry."
           schema:
-            $ref: "#/definitions/UTMRestResponse"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+      parameters:
+      - in: body
+        name: position
+        description: Position to submit
+        required: true
+        schema:
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Position'
+  
   /alertMessages:
     post:
       tags:
@@ -188,774 +192,207 @@ paths:
         description: "Message object being sent"
         required: true
         schema:
-          $ref: "#/definitions/AlertMessage"
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/AlertMessage'
       responses:
         201:
           description: "Returns message ID if received successfully."
           schema:
-            $ref: "#/definitions/UTMRestResponse"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         400:
           description: "Invalid message. Please fix and retry."
+
         403:
           description: "Unauthorized user."
+
+
   /topic/positions:
     get:
       tags:
-      - "B. Subscription Points"
-      summary: "Subscription point for receiving position reports"
-      description: "Stakeholders should subscribe to this topic to receive position\
-        \ reports provided to the FIMS by various operators. This is essentially an\
-        \ echo of the Postion data POSTed to the /positions endpoint.\n\nSee the schema\
-        \ information describing Postions included within this document to understand\
-        \ the data that will be received via this queue.\n\nNote that if you are viewing\
-        \ this in a SwaggerUI, the \"try it out\" feature will not work since this\
-        \ is not a RESTful endpoint.\n"
-      produces:
-      - "application/json"
-      parameters: []
+        - B. Subscription Points
+      summary: Subscription point for receiving position reports
+      description: |
+        Stakeholders should subscribe to this topic to receive position reports provided to the FIMS by various operators. This is essentially an echo of the Postion data POSTed to the /positions endpoint.
+
+        See the schema information describing Postions included within this document to understand the data that will be received via this queue.
+
+        Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint.
       responses:
         410:
-          description: "A RESTful call was made to this endpoint but this is not a\
-            \ REST endpoint. Do not use this endpoint for REST calls."
+          $ref: "#/responses/WRONG_PROTOCOL"
+      produces:
+        - application/json
+
   /topic/operations:
     get:
       tags:
-      - "B. Subscription Points"
-      summary: "Subscription point for receiving announcements about operations"
-      description: "Stakeholders should subscribe to this topic to receive announcements\
-        \ about operations that have been accepted/authorized. Information about denied\
-        \ operations will not be provided here.\n\nSee the schema information describing\
-        \ Operations included within this document to understand the data that will\
-        \ be received via this queue.\n\nNote that if you are viewing this in a SwaggerUI,\
-        \ the \"try it out\" feature will not work since this is not a RESTful endpoint.\n"
-      produces:
-      - "application/json"
-      parameters: []
+        - B. Subscription Points
+      summary: Subscription point for receiving announcements about operations
+      description: |
+        Stakeholders should subscribe to this topic to receive announcements about operations that have been accepted/authorized. Information about denied operations will not be provided here.
+
+        See the schema information describing Operations included within this document to understand the data that will be received via this queue.
+
+        Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint.
       responses:
         410:
-          description: "A RESTful call was made to this endpoint but this is not a\
-            \ REST endpoint. Do not use this endpoint for REST calls."
+          $ref: "#/responses/WRONG_PROTOCOL"
+      produces:
+        - application/json
+
   /topic/constraintChange:
-    get:
-      tags:
-      - "B. Subscription Points"
-      summary: "Subscription point for airspace constraint changes"
-      description: "Stakeholders should subscribe to this topic to get alert messages\
-        \ regarding airspace constraint changes.\n\nNote that if you are viewing this\
-        \ in a SwaggerUI, the \"try it out\" feature will not work since this is not\
-        \ a RESTful endpoint.\n"
-      operationId: "topicConstraintChangeUsingGET"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        410:
-          description: "A RESTful call was made to this endpoint but this is not a\
-            \ REST endpoint. Do not use this endpoint for REST calls."
+      get:
+        tags:
+          - B. Subscription Points
+        summary: Subscription point for airspace constraint changes
+        description: |
+          Stakeholders should subscribe to this topic to get alert messages regarding airspace constraint changes.
+
+          Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint.
+        operationId: topicConstraintChangeUsingGET
+        produces:
+          - application/json
+        responses:
+          410:
+            $ref: "#/responses/WRONG_PROTOCOL"
+
+
   /topic/emergency:
-    get:
-      tags:
-      - "B. Subscription Points"
-      summary: "Subscription point for emergency alerts"
-      description: "Stakeholders should subscribe to this topic to get alert messages\
-        \ regarding emergencies.\n\nNote that if you are viewing this in a SwaggerUI,\
-        \ the \"try it out\" feature will not work since this is not a RESTful endpoint.\n"
-      operationId: "topicEmergencyUsingGET"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/AlertMessage"
-        410:
-          description: "A RESTful call was made to this endpoint but this is not a\
-            \ REST endpoint. Do not use this endpoint for REST calls."
+      get:
+        tags:
+          - B. Subscription Points
+        summary: Subscription point for emergency alerts
+        description: |
+          Stakeholders should subscribe to this topic to get alert messages regarding emergencies.
+
+          Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint.
+        operationId: topicEmergencyUsingGET
+        produces:
+          - application/json
+        responses:
+          200:
+            description: OK
+            schema:
+              $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/AlertMessage'
+          410:
+            $ref: "#/responses/WRONG_PROTOCOL"
+
   /schema/Operation:
     get:
       tags:
-      - "C. Data Types"
-      summary: "Operation schema"
-      description: "Illustrates an operation in JSON. This endpoint is not intended\
-        \ for use.\n\nNote that if you are viewing this in a SwaggerUI, the \"try\
-        \ it out\" feature will not work since this is not a RESTful endpoint.\n"
+        - C. Data Types
+      summary: Operation schema
+      description: |
+        Illustrates an operation in JSON. This endpoint is not intended for use.
+
+        Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint.
       produces:
-      - "application/json"
-      parameters: []
+        - application/json
       responses:
         200:
-          description: "OK"
+          description: OK
           schema:
-            $ref: "#/definitions/Operation"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Operation'
         410:
-          description: "A RESTful call was made to this endpoint but this is not a\
-            \ REST endpoint. Do not use this endpoint for REST calls."
+          $ref: "#/responses/WRONG_PROTOCOL"
+
   /schema/Point:
     get:
       tags:
-      - "C. Data Types"
-      summary: "Point schema"
-      description: "Illustrates an Point in JSON. This endpoint is not intended for\
-        \ use.\n\nNote that if you are viewing this in a SwaggerUI, the \"try it out\"\
-        \ feature will not work since this is not a RESTful endpoint.\n"
+       - C. Data Types
+      summary: Point schema
+      description: |
+        Illustrates an Point in JSON. This endpoint is not intended for use.
+
+        Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint.
       produces:
-      - "application/json"
-      parameters: []
+        - application/json
       responses:
         200:
-          description: "OK"
+          description: OK
           schema:
-            $ref: "#/definitions/Point"
+            $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Point'
         410:
-          description: "A RESTful call was made to this endpoint but this is not a\
-            \ REST endpoint. Do not use this endpoint for REST calls."
+          $ref: "#/responses/WRONG_PROTOCOL"
+
+
   /schema/LineString:
     get:
       tags:
-      - "C. Data Types"
-      summary: "LineString schema"
-      description: "Illustrates an LineString in JSON. This endpoint is not intended\
-        \ for use.\n\nNote that if you are viewing this in a SwaggerUI, the \"try\
-        \ it out\" feature will not work since this is not a RESTful endpoint.\n"
+        - C. Data Types
+      summary: LineString schema
+      description: |
+        Illustrates an LineString in JSON. This endpoint is not intended for use.
+
+        Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint.
       produces:
-      - "application/json"
-      parameters: []
+        - application/json
       responses:
         200:
-          description: "OK"
+          description: OK
           schema:
-            $ref: "#/definitions/LineString"
+            $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/LineString'
         410:
-          description: "A RESTful call was made to this endpoint but this is not a\
-            \ REST endpoint. Do not use this endpoint for REST calls."
+          $ref: "#/responses/WRONG_PROTOCOL"
+
   /schema/Polygon:
     get:
       tags:
-      - "C. Data Types"
-      summary: "Polygon schema"
-      description: "Illustrates an Polygon in JSON. This endpoint is not intended\
-        \ for use.\n\nNote that if you are viewing this in a SwaggerUI, the \"try\
-        \ it out\" feature will not work since this is not a RESTful endpoint.\n"
+        - C. Data Types
+      summary: Polygon schema
+      description: |
+        Illustrates an Polygon in JSON. This endpoint is not intended for use.
+
+        Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint.
       produces:
-      - "application/json"
-      parameters: []
+        - application/json
       responses:
         200:
-          description: "OK"
+          description: OK
           schema:
-            $ref: "#/definitions/Polygon"
+            $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Polygon'
         410:
-          description: "A RESTful call was made to this endpoint but this is not a\
-            \ REST endpoint. Do not use this endpoint for REST calls."
+          $ref: "#/responses/WRONG_PROTOCOL"
+
   /schema/AlertMessage:
     get:
       tags:
-      - "C. Data Types"
-      summary: "Alert Message schema"
-      description: "Illustrates the FIMS Alert Message. FIMS may send out Alert Messages\
-        \ from time to time. This endpoint is not intended for use.\n\nNote that if\
-        \ you are viewing this in a SwaggerUI, the \"try it out\" feature will not\
-        \ work since this is not a RESTful endpoint\n"
-      operationId: "alertMsgUsingGET"
+        - C. Data Types
+      summary: Alert Message schema
+      description: |
+        Illustrates the FIMS Alert Message. FIMS may send out Alert Messages from time to time. This endpoint is not intended for use.
+
+        Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint
+      operationId: alertMsgUsingGET
       produces:
-      - "application/json"
-      parameters: []
+        - application/json
       responses:
         200:
-          description: "OK"
+          description: OK
           schema:
-            $ref: "#/definitions/AlertMessage"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/AlertMessage'
         410:
-          description: "A RESTful call was made to this endpoint but this is not a\
-            \ REST endpoint. Do not use this endpoint for REST calls."
+          $ref: "#/responses/WRONG_PROTOCOL"
+
   /schema/ConstraintMessage:
     get:
       tags:
-      - "C. Data Types"
-      summary: "Constraint Message schema"
-      description: "Illustrates the FIMS Constraint Message. FIMS will send out a\
-        \ Constraint Message when a new constraint is put in place. This endpoint\
-        \ is not intended for use.\n\nNote that if you are viewing this in a SwaggerUI,\
-        \ the \"try it out\" feature will not work since this is not a RESTful endpoint\n"
-      operationId: "constraintMsgUsingGET"
+        - C. Data Types
+      summary: Constraint Message schema
+      description: |
+        Illustrates the FIMS Constraint Message. FIMS will send out a Constraint Message when a new constraint is put in place. This endpoint is not intended for use.
+
+        Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint
+      operationId: constraintMsgUsingGET
       produces:
-      - "application/json"
-      parameters: []
+        - application/json
       responses:
         200:
-          description: "OK"
+          description: OK
           schema:
-            $ref: "#/definitions/UTMRestResponse"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         410:
-          description: "A RESTful call was made to this endpoint but this is not a\
-            \ REST endpoint. Do not use this endpoint for REST calls."
-securityDefinitions:
-  application:
-    type: "oauth2"
-    tokenUrl: "http://fims_authz.utm.nasa.gov/oauth/token"
-    flow: "application"
-    scopes:
-      write: "allows modifying resources"
-      read: "allows reading resources"
-definitions:
-  Version:
-    type: "object"
-    properties:
-      title:
-        type: "string"
-        description: "Title of the API"
-      version:
-        type: "string"
-        description: "Version number for the API"
-      build_time:
-        type: "string"
-        description: "Time of the latest build"
-      api_documentation:
-        type: "string"
-        description: "URL for API Documentation"
-  Operation:
-    type: "object"
-    required:
-    - "controller_location"
-    - "gufi"
-    - "operation_volumes"
-    - "primary_contact_name"
-    - "primary_contact_phone"
-    - "registration"
-    properties:
-      gufi:
-        type: "string"
-        format: "uuid"
-        description: "Created and assigned by each USS (not FIMS). Validated as UUID\
-          \ version 4 specification."
-        minLength: 36
-        maxLength: 36
-      submit_time:
-        type: "string"
-        format: "date-time"
-        example: "2015-08-20T14:11:56.118Z"
-        description: "Time the operation submission was received by USS.  Uses the\
-          \ ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds\
-          \ may have up to millisecond accuracy (three positions after decimal). \
-          \ The 'Z' implies UTC times and is the only timezone accepted."
-      decision_time:
-        type: "string"
-        format: "date-time"
-        example: "2015-08-20T14:11:56.118Z"
-        description: "A timestamp set by the USS any time the state of the operation\
-          \ is updated, for example when the flight goes from ACCEPTED to ACTIVATED.\
-          \  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.\
-          \  Seconds may have up to millisecond accuracy (three positions after decimal).\
-          \  The 'Z' implies UTC times and is the only timezone accepted."
-      aircraft_comments:
-        type: "string"
-        description: "Informative text about the aircraft. Not used by the UTM System.\
-          \  Only for human stakeholders."
-        maxLength: 1000
-        default: "NOT PROVIDED"
-      flight_comments:
-        type: "string"
-        description: "Informative text about the operation.  Not used by the UTM System.\
-          \  Only for human stakeholders."
-        maxLength: 1000
-        default: "NOT PROVIDED"
-      flight_geography_description:
-        type: "string"
-        description: "Informative text about the operational geography.  Not used\
-          \ by the UTM System.  Only for human stakeholders."
-        maxLength: 1000
-        default: "NOT PROVIDED"
-      registration:
-        type: "string"
-        description: "The registration ID of the vehicle flying this operation. This\
-          \ registration value is provided to operators by a vehicle registrar. Validated\
-          \ as a non-null string. Note UTM System assumes a single vehicle per operation."
-        maxLength: 1000
-      registration_source:
-        type: "string"
-        description: "See 'registration' field. This contains the source of the registration\
-          \ ID."
-        maxLength: 1000
-        default: "NOT PROVIDED"
-      flight_number:
-        type: "string"
-        description: "Optional. May be useful to the operator or USS for identification\
-          \ purposes."
-        maxLength: 100
-      user_id:
-        type: "string"
-        description: "This field is populated based on the provided credentials."
-      created_by:
-        type: "string"
-        description: "The user that created the operation."
-        maxLength: 100
-      primary_contact_name:
-        type: "string"
-        description: "Not currently checked for validity, but clients should endeavor\
-          \ to provide useful, appropriate information in these fields. These values\
-          \ should represent the contact that should be used in case of an issue with\
-          \ the operation before, during, or after that operation."
-        maxLength: 100
-      primary_contact_phone:
-        type: "string"
-        format: "phone"
-        maxLength: 100
-      primary_contact_email:
-        type: "string"
-        format: "email"
-        maxLength: 100
-      extra_contact_info:
-        type: "string"
-        description: "Any additional contact information that may be useful (hours\
-          \ of availability, fax number, communication limitations, etc.)."
-        maxLength: 1000
-        default: "NOT PROVIDED"
-      state:
-        type: "string"
-        description: "The current state of the operation."
-        minLength: 5
-        maxLength: 13
-        enum:
-        - "ACCEPTED"
-        - "ACTIVATED"
-        - "CLOSED"
-        - "NONCONFORMING"
-        - "ROGUE"
-      controller_location:
-        $ref: "#/definitions/Point"
-      gcs_location:
-        $ref: "#/definitions/Point"
-      faa_rule:
-        type: "string"
-        description: "PART_107: The operation follows FAA rule 107. If USS notifies\
-          \ FIMS about this class of operations,\nFIMS will reply that authorization\
-          \ is not required. (For TCL2nc FIMS will always accept the operation.)\n\
-          \nPART_107X:  In general, operations are 107X if they are doing something\
-          \ outside the 107 rule that would require\na waiver under 107.\n\nPART_101E:\
-          \ This class of operations could be hobbyists being friendly with other\
-          \ users by announcing their intent.\n(For TCL2nc, FIMS will reply with inform\
-          \ message \"authorization not required\" and accept the operation. For TCL2nc\
-          \ FIMS does not check\nwhether the operation is in a preauthorized area.)\
-          \ In the future, a better response for 101E is\n\"Notification received\"\
-          \ if within 5 statute miles of an airport, and \"Notification not required\"\
-          \ if not within 5 miles.\n\nPart_TBD: Placeholder for future rule such as\
-          \ those under test by UTM.\n"
-        enum:
-        - "PART_107"
-        - "PART_107X"
-        - "PART_101E"
-        - "PART_TBD"
-        default: "PART_107"
-      waiver_certificate_number:
-        type: "string"
-        description: "If a waiver has been obtained for the Part 107 rules, then the\
-          \ operator would have a waiver certificate number. For any operation submissions\
-          \ with faa_rule=PART_107W, this field is required. (likely to be removed\
-          \ in future)"
-        maxLength: 100
-        default: "NOT PROVIDED"
-      priority_op:
-        type: "boolean"
-        description: "If true this operation is managed as a priority operation. Only\
-          \ FIMS or a USS with the public safety role may set this field to true."
-        default: false
-      operation_volumes:
-        type: "array"
-        description: "The actual geographical information for the operation.  Maximum\
-          \ array length of 12 currently allowed."
-        items:
-          $ref: "#/definitions/OperationVolume"
-    example:
-      gufi: "00000000-0000-4444-8888-000000000000"
-      submit_time: "2016-10-04T09:15:40.727Z"
-      decision_time: "2016-10-04T09:15:40.727Z"
-      aircraft_comments: "Comments about the aircraft"
-      flight_comments: "Comments about the flight"
-      flight_geography_description: "A description of the geography"
-      registration: "00000000-0000-4444-8888-000000000000"
-      registration_detail: "src=federaldroneregistration.com,owner=acme"
-      flight_number: "Flight number"
-      user_id: "fimsUser"
-      created_by: "fimsUser"
-      primary_contact_name: "Jane Pilot"
-      primary_contact_phone: "XXX-XXX-XXXX"
-      primary_contact_email: "pilotjane@janepilot.com"
-      extra_contact_info: "Fax: XXX-XXX-XXXX"
-      state: "A"
-      controller_location:
-        type: "Point"
-        coordinates:
-        - -122.048589
-        - 37.414869
-      gcs_location:
-        type: "Point"
-        coordinates:
-        - -122.048589
-        - 37.414869
-      operation_volumes:
-      - ordinal: 1
-        near_structure: false
-        effective_time_begin: "2017-10-04T09:15:40.727Z"
-        effective_time_end: "2017-10-04T09:25:40.727Z"
-        actual_time_end: "2017-10-04T09:25:40.727Z"
-        conformance_time_begin: "2017-10-04T09:14:40.727Z"
-        conformance_time_end: "2017-10-04T09:26:40.727Z"
-        min_altitude_wgs84_ft: 0.0
-        max_altitude_wgs84_ft: 300.0
-        conform_min_altitude_wgs84_ft: 0.0
-        conform_max_altitude_wgs84_ft: 400.0
-        flight_geography:
-          type: "Polygon"
-          coordinates:
-          - - - -122.062176579
-              - 37.40968041145
-            - - -122.05187056889
-              - 37.41786527236
-            - - -122.03732647634
-              - 37.41786440108
-            - - -122.062176579
-              - 37.40968041145
-        conformance_geography:
-          type: "Polygon"
-          coordinates:
-          - - - -122.06382530000002
-              - 37.4090697
-            - - -122.05094253233
-              - 37.4193006277
-            - - -122.03276206976
-              - 37.41929920176
-            - - -122.06382530000002
-              - 37.4090697
-        beyond_visual_line_of_sight: false
-  Point:
-    allOf:
-    - $ref: "#/definitions/Geometry"
-    - properties:
-        coordinates:
-          type: "array"
-          items:
-            type: "number"
-            format: "double"
-          maxItems: 2
-          minItems: 2
-    description: "GeoJSon Point, limited to 2D."
-  OperationVolume:
-    type: "object"
-    required:
-    - "beyond_visual_line_of_sight"
-    - "effective_time_begin"
-    - "effective_time_end"
-    - "flight_geography"
-    - "max_altitude_wgs84_ft"
-    - "min_altitude_wgs84_ft"
-    - "ordinal"
-    properties:
-      ordinal:
-        type: "integer"
-        description: "This integer represents the ordering of the operation volume\
-          \ within the set of operation volumes. Need not be consecutive integers."
-      near_structure:
-        type: "boolean"
-        description: "Is this operation volume within 400' of a structure?"
-        default: false
-      effective_time_begin:
-        type: "string"
-        format: "date-time"
-        example: "2015-08-20T14:11:56.118Z"
-        description: "Earliest time the operation will use the operation volume. \
-          \ Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.\
-          \  Seconds may have up to millisecond accuracy (three positions after decimal).\
-          \  The 'Z' implies UTC times and is the only timezone accepted."
-      effective_time_end:
-        type: "string"
-        format: "date-time"
-        example: "2015-08-20T15:11:56.118Z"
-        description: "Latest time the operation will done with the operation volume.\
-          \ It must be greater than effective_time_begin.  Uses the ISO 8601 format\
-          \ conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up\
-          \ to millisecond accuracy (three positions after decimal).  The 'Z' implies\
-          \ UTC times and is the only timezone accepted."
-      actual_time_end:
-        type: "string"
-        format: "date-time"
-        example: "2015-08-20T14:31:56.118Z"
-        description: "Time that the operational volume was freed for use by other\
-          \ operations.  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.\
-          \  Seconds may have up to millisecond accuracy (three positions after decimal).\
-          \  The 'Z' implies UTC times and is the only timezone accepted."
-      conformance_time_begin:
-        type: "string"
-        description: "TO BE DEPRECATED. Assigned by FIMS.  Time buffer before the\
-          \ submitted begin time."
-        maxLength: 100
-      conformance_time_end:
-        type: "string"
-        description: "TO BE DEPRECATED. Assigned by FIMS.  Time buffer after the submitted\
-          \ end time."
-        maxLength: 100
-      min_altitude_wgs84_ft:
-        type: "number"
-        format: "double"
-        description: "The minimum altitude for this operation in this operation volume.\
-          \ In WGS84 reference system using feet as units."
-      max_altitude_wgs84_ft:
-        type: "number"
-        format: "double"
-        description: "The maximum altitude for this operation in this operation volume.\
-          \ In WGS84 reference system using feet as units."
-      conform_min_altitude_wgs84_ft:
-        type: "number"
-        format: "double"
-        description: "LIKELY TO BE DEPRECATED. The minimum altitude assigned and used\
-          \ by the UTM System to check vertical conformance of an operation. Based\
-          \ on operator-provided min altitude."
-      conform_max_altitude_wgs84_ft:
-        type: "number"
-        format: "double"
-        description: "LIKELY TO BE DEPRECATED. The maximum altitude assigned and used\
-          \ by the UTM System to check vertical conformance of an operation. Based\
-          \ on operator-provided max altitude."
-      flight_geography:
-        $ref: "#/definitions/Geometry"
-      conformance_geography:
-        $ref: "#/definitions/Geometry"
-      beyond_visual_line_of_sight:
-        type: "boolean"
-        description: "Describes whether the operation volume is beyond the visual\
-          \ line of sight of the operator."
-  Geometry:
-    type: "object"
-    required:
-    - "type"
-    discriminator: "type"
-    properties:
-      type:
-        type: "string"
-        description: "the geometry type"
-        enum:
-        - "Point"
-        - "LineString"
-        - "Polygon"
-    externalDocs:
-      url: "https://tools.ietf.org/html/rfc7946#section-3.1"
-    description: "GeoJSon geometry"
-  UTMRestResponse:
-    type: "object"
-    properties:
-      http_status_code:
-        type: "integer"
-      message:
-        type: "string"
-      resource:
-        type: "string"
-    example:
-      http_status_code: 201
-      message: "Resource created."
-      resource: "/resource/683c0e9e-49dc-44ce-82de-a5723b1f6965"
-  Position:
-    type: "object"
-    required:
-    - "altitude_gps_wgs84_ft"
-    - "altitude_num_gps_satellites"
-    - "gufi"
-    - "hdop_gps"
-    - "location"
-    - "time_measured"
-    - "time_sent"
-    - "track_ground_speed_kn"
-    - "track_true_north_deg"
-    - "vdop_gps"
-    properties:
-      air_speed_source:
-        type: "string"
-        description: "Required if air_speed_track_kn is submitted. No requirements\
-          \ yet on the values here, but suggestions include ESTIMATED or MEASURED."
-        maxLength: 100
-      air_speed_track_kn:
-        type: "number"
-        format: "double"
-        description: "Air speed in relation to the direction of travel of the aircraft.\
-          \ Value may be negative."
-      altitude_gps_wgs84_ft:
-        type: "number"
-        format: "double"
-        description: "The altitude as measured via a GPS device on the aircraft. Units\
-          \ in feet using the WGS84 reference system."
-      altitude_num_gps_satellites:
-        type: "integer"
-        format: "int32"
-        description: "Number of satellites used in calculating the altitude_gps_wgs84_ft."
-        minimum: 0
-        exclusiveMinimum: false
-      enroute_positions_id:
-        type: "string"
-        format: "uuid"
-        description: "Each position will be assigned a UUIDv4 by the FIMS"
-        minLength: 36
-        maxLength: 36
-      gufi:
-        type: "string"
-        format: "uuid"
-        description: "Each operation has an GUFI assigned upon submission. Required\
-          \ upon POSTing a new position. It is a JSON string, but conforms to the\
-          \ UUID version 4 specification"
-        minLength: 36
-        maxLength: 36
-      hdop_gps:
-        type: "number"
-        format: "double"
-        description: "The horizontal dilution of precision as provided by the onboard\
-          \ GPS."
-        minimum: 0.0
-      location:
-        $ref: "#/definitions/Point"
-      time_measured:
-        type: "string"
-        format: "date-time"
-        example: "2015-08-20T14:11:56.118Z"
-        description: "The time the position was measured. Likely the time provided\
-          \ with the GPS position reading.  Time must be before time received at FIMS\
-          \ based on FIMS system time.  Uses the ISO 8601 format conforming to pattern:\
-          \ YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy\
-          \ (three positions after decimal).  The 'Z' implies UTC times and is the\
-          \ only timezone accepted."
-      time_received:
-        type: "string"
-        format: "date-time"
-        example: "2015-08-20T14:11:57.345Z"
-        description: "Not required for submission, assigned by FIMS. The time the\
-          \ position was received by FIMS based on FIMS system time.  Uses the ISO\
-          \ 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds\
-          \ may have up to millisecond accuracy (three positions after decimal). \
-          \ The 'Z' implies UTC times and is the only timezone accepted."
-      time_sent:
-        type: "string"
-        format: "date-time"
-        example: "2015-08-20T14:11:57.968Z"
-        description: "The time the position was sent by the USS to FIMS as measured\
-          \ by USS system time.  Time must be before time received at FIMS based on\
-          \ FIMS system time.  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.\
-          \  Seconds may have up to millisecond accuracy (three positions after decimal).\
-          \  The 'Z' implies UTC times and is the only timezone accepted."
-      track_ground_speed_kn:
-        type: "number"
-        format: "double"
-        description: "Ground speed int the direction of travel. Value must be >= 0.0.\
-          \ In knots."
-        minimum: 0.0
-        exclusiveMinimum: false
-      track_magnetic_north_deg:
-        type: "number"
-        format: "double"
-        description: "The direction of travel relative to magnetic north in degrees.\
-          \ Value must be >= 0.0 and < 360.0."
-        minimum: 0.0
-        maximum: 360.0
-        exclusiveMinimum: false
-        exclusiveMaximum: true
-      track_true_north_deg:
-        type: "number"
-        format: "double"
-        description: "The direction of travel relative to true north in degrees. Value\
-          \ must be >= 0.0 and < 360.0."
-        minimum: 0.0
-        maximum: 360.0
-        exclusiveMinimum: false
-        exclusiveMaximum: true
-      user_id:
-        type: "string"
-        description: "Not required for submission. This field is populated based on\
-          \ the provided credentials in the HTTPS header."
-      vdop_gps:
-        type: "number"
-        format: "double"
-        description: "The vertical dilultion of precision as provided by the onboard\
-          \ GPS."
-        minimum: 0.0
-    example:
-      altitude_gps_wgs84_ft: 1111.111
-      altitude_num_gps_satellites: 22
-      air_speed_source: "MEASURED"
-      gufi: "00000000-0000-4444-8888-000000000000"
-      hdop_gps: 77.7
-      time_measured: "2016-10-04T09:15:40.727Z"
-      time_sent: "2016-10-04T09:15:40.727Z"
-      time_received: "2016-10-04T09:15:42.727Z"
-      track_ground_speed_kn: 33.33
-      track_true_north_deg: 235.027287562664
-      track_magnetic_north_deg: 237.123456789123
-      vdop_gps: 88.8
-      location:
-        type: "Point"
-        coordinates:
-        - -122.05635935068132
-        - 37.41436490284069
-  AlertMessage:
-    type: "object"
-    properties:
-      message_id:
-        type: "string"
-        format: "uuid"
-        description: "A UUID assigned to this message by the originator"
-        minLength: 36
-        maxLength: 36
-      originator_id:
-        type: "string"
-        description: "A name identifying the originator of this message."
-        maxLength: 100
-      severity:
-        $ref: "#/definitions/severity"
-      text:
-        type: "string"
-        description: "The type of alert message. An enum to constrain messages and\
-          \ allow better interoperability."
-        enum:
-        - "UNPLANNED_LANDING"
-        - "UNCONTROLLED_LANDING"
-        - "OPERATION_NON_CONFORMING"
-        - "OPERATION_ROGUE"
-        - "OPERATION_CONFORMING"
-        - "OPERATION_CLOSED"
-        - "OTHER_SEE_FREE_TEXT"
-      last_known_position:
-        $ref: "#/definitions/Position"
-      meta_data:
-        type: "string"
-        description: "Reserved field."
-    description: "An alert message. Used to make other stakeholders aware about an\
-      \ issue with a specific operation."
-  severity:
-    type: "string"
-    enum:
-    - "EMERGENCY"
-    - "ALERT"
-    - "CRITICAL"
-    - "WARNING"
-    - "NOTICE"
-    - "INFORMATIONAL"
-  LineString:
-    allOf:
-    - $ref: "#/definitions/Geometry"
-    - properties:
-        coordinates:
-          type: "array"
-          items:
-            $ref: "#/definitions/Point"
-    description: "GeoJSon LineString. Points all 2D."
-  Polygon:
-    allOf:
-    - $ref: "#/definitions/Geometry"
-    - properties:
-        coordinates:
-          type: "array"
-          items:
-            type: "array"
-            items:
-              $ref: "#/definitions/Point"
-    description: "GeoJSon Polygon. Points all 2D."
-responses:
-  WRONG_PROTOCOL:
-    description: "A RESTful call was made to this endpoint but this is not a REST\
-      \ endpoint. Do not use this endpoint for REST calls."
+          $ref: "#/responses/WRONG_PROTOCOL"
+
+
+
 x-azure-api-id: "sh-1469571953760"
