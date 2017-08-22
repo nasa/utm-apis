@@ -339,7 +339,7 @@ definitions:
       auth_description:
         description: >-
           If authentiation or authorization are required, this field could be 
-          used by teh SDSP to briefly describe what is required for access.
+          used by the SDSP to briefly describe what is required for access.
         type: string
         maxLength: 200
       sdsp_informational_url:
