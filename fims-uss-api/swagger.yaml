@@ -57,7 +57,7 @@ paths:
       tags:
       - A. FIMS endpoints
       description: >-
-        Provides versioning information for the software and API
+        Provides versioning information for the software and API. Can be used to determine if service is up.
       produces:
         - application/json
       responses:
