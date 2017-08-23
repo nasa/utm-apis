@@ -340,23 +340,34 @@ definitions:
         maximum: 1000 # for sanity checking input   
       contingency_cause:
         
-        description: >-
-          A cause that necessitates a contingency response. In planning an operation, this array of values represents the various causes that may necessitate the provided contingency_repsonse.
-          
-          1. LOST_C2
-            The operation has lost command or control links to the vehicle.
-          2. LOST_NAV
-            The vehicle no longer has sufficient navigation sources.
-          3. LOST_SAA
-            The vehicle's sense and avoid solution is no longer reliable.
-          4. LOW_FUEL
-            The vehicle does not have enough power to complete its mission. Still enough fuel to safely land or potentially return to base.
-          5. NO_FUEL
-            The vehicle is either completely without fuel or has only enough fuel to land immediately.
-          6. MECHANICAL_PROBLEM
-          
+        
         type: array
         items:
+          description: >-
+            A cause that necessitates a contingency response. In planning an operation, this array of values represents the various causes that may necessitate the provided contingency_repsonse.
+          
+            1. LOST_C2
+              The operation has lost command or control links to the vehicle.
+            2. LOST_NAV
+              The vehicle no longer has sufficient navigation sources.
+            3. LOST_SAA
+              The vehicle's sense and avoid solution is no longer reliable.
+            4. LOW_FUEL
+              The vehicle does not have enough power to complete its mission. Still enough fuel to safely land or potentially return to base.
+            5. NO_FUEL
+              The vehicle is either completely without fuel or has only enough fuel to land immediately.
+            6. MECHANICAL_PROBLEM 
+              The vehicle is experiencing a mechanical problem necessitating initiation of a contingency response.
+            7. ENVIRONMENTAL
+              There are conditions in the environment necessitating initiation of a contingency response. Generally this will be weather realted phenonmena.
+            8. SECURITY
+              There is a security incident interrupting this operation.
+            9. TRAFFIC
+              The density or type of air traffic near the vehicle necessitated a contingency response.
+            10. OTHER
+              Some cause not captured in any other category.
+            11. ANY
+              This category should only be used wihtin an operation plan when a particular contingency response is appropriate for any contingency cause.
           type: string
           enum:
           - LOST_C2
