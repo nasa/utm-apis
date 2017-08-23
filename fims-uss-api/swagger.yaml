@@ -51,20 +51,7 @@ responses:
 
 paths:
   /api:
-    get:
-      summary: API version and other data. Can be used to test whether server is up.
-      operationId: getVersion
-      tags:
-      - A. FIMS endpoints
-      description: >-
-        Provides versioning information for the software and API. Can be used to determine if service is up.
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Version data
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Version'
+    $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/pathitems/getVersion'
             
             
   /operations:
