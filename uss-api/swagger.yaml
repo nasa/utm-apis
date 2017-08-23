@@ -40,6 +40,23 @@ schemes:
 - "https"
 - "wss"
 paths:
+  /api:
+    get:
+      tags:
+      - "A. Required REST endpoints"
+      summary: "API version and other data. Can be used to test whether server is\
+        \ up."
+      description: "Provides versioning information for the software and API. Can\
+        \ be used to determine if service is up."
+      operationId: "getVersion"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Version data"
+          schema:
+            $ref: "#/definitions/Version"
   /alert_messages:
     post:
       tags:
@@ -81,22 +98,6 @@ paths:
       responses:
         201:
           description: "Message data received."
-  /api:
-    get:
-      tags:
-      - "A. Required REST endpoints"
-      summary: "API version and other data. Can be used to test whether server is\
-        \ up."
-      description: "Provides versioning information for the software and API"
-      operationId: "getVersion"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "Version data"
-          schema:
-            $ref: "#/definitions/Version"
   /negotiations:
     post:
       tags:
@@ -273,6 +274,21 @@ definitions:
         - "A"
         - "B"
         - "C"
+  Version:
+    type: "object"
+    properties:
+      title:
+        type: "string"
+        description: "Title of the API"
+      version:
+        type: "string"
+        description: "Version number for the API"
+      build_time:
+        type: "string"
+        description: "Time of the latest build"
+      api_documentation:
+        type: "string"
+        description: "URL for API Documentation"
   AlertMessage:
     type: "object"
     properties:
@@ -308,7 +324,7 @@ definitions:
           \ The 'Z' implies UTC times and is the only timezone accepted.\""
       severity:
         $ref: "#/definitions/severity"
-      text:
+      alert_type:
         type: "string"
         description: "The type of alert message. An enum to constrain messages and\
           \ allow better interoperability."
@@ -319,10 +335,13 @@ definitions:
         - "OPERATION_ROGUE"
         - "OPERATION_CONFORMING"
         - "OPERATION_CLOSED"
+        - "CONTINGENCY_INITIATED"
         - "OTHER_SEE_FREE_TEXT"
       last_known_position:
         $ref: "#/definitions/Position"
-      meta_data:
+      contingency:
+        $ref: "#/definitions/Contingency"
+      metadata:
         type: "string"
         description: "Reserved field."
       free_text:
@@ -333,6 +352,20 @@ definitions:
         maxLength: 1000
     description: "An alert message. Used to make other stakeholders aware about an\
       \ issue with a specific operation."
+    example:
+      gufi: "00000000-0000-4444-8888-000000000000"
+      category: "AlertMessage"
+      origin: "FIMS"
+      sent_time: "2016-10-04T09:15:42.727Z"
+      alert_message: "OPERATIONS"
+      alert_severity: "WARNING"
+      alert_text: "UA_LEAVING_DEFINED_VOLUME"
+      free_text: " reason=RogueNearby, reasonDetail=nearby operation 86250f05-d89c-40cf-b932-aa8d10a426a2\
+        \ in state U is lateral distance 711.45 feet and vertical danger zone envelope\
+        \ 600 feet; This alert message valid for the next 30 seconds (far lateral/far\
+        \ altitude), vehicleType=FixedWing vehicleModelName=Silent Falcon, longLat=-119.87933795058\
+        \ 39.69702548394, alt_gps_wgs84_ft=5187.3645438621, track_ground_speed_kn=0.77703200548507,\
+        \ track_magnet ic_north_deg=null"
   severity:
     type: "string"
     enum:
@@ -481,33 +514,93 @@ definitions:
         - -122.05635935068132
         - 37.41436490284069
   Point:
-    allOf:
-    - $ref: "#/definitions/Geometry"
-    - properties:
-        coordinates:
-          $ref: "#/definitions/Point2D"
+    type: "object"
+    properties:
+      type:
+        type: "string"
+        description: "The type of Geometry. In this case, must be 'Point' per GeoJSON\
+          \ spec.\n"
+        enum:
+        - "Point"
+      coordinates:
+        $ref: "#/definitions/Position"
+    externalDocs:
+      url: "https://tools.ietf.org/html/rfc7946#section-3.1.2"
     description: "GeoJSon Point, limited to 2D."
+  Contingency:
+    type: "object"
+    properties:
+      contingency_id:
+        type: "number"
+        format: "integer"
+        description: "A positive integer unique amongst the set of Contingencies for\
+          \ this operation. The integers may be ordered by some scheme, but this is\
+          \ not required."
+        minimum: 1
+        maximum: 1000
+      contingency_type:
+        type: "string"
+        enum:
+        - "LANDING"
+        - "LOITERING"
+        - "RETURN_TO_BASE"
+      contingency_point:
+        $ref: "#/definitions/Point"
+      loiter_altitude_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The altitude for this contingency. Relevant and required for\
+          \ the LOITERING contingency_type, ignored for all other types. In WGS84\
+          \ reference system using feet as units."
+      loiter_radius_ft:
+        type: "number"
+        format: "double"
+        description: "The radius of airspace used in loitering for this contingency.\
+          \ Relevant and required for the LOITERING contingency_type, ignored for\
+          \ all other types. Using feet as units."
+      relative_preference:
+        type: "number"
+        format: "double"
+        description: "Optional numerical value that can be used in ranking the preference\
+          \ of this Contingency versus any other within the set of Contingency for\
+          \ this operation. This may be thought of as a ranking of the potential landing\
+          \ sites with all other factors being held equal, though dynamic conditions\
+          \ will likely play a role in adjusting this ranking in real time by the\
+          \ USS or Operator.  For example, one Contingency may be significantly further\
+          \ from the operation at a given time and, thus, would be less preferred\
+          \ than it might be otherwise. Further interpretation of this field is left\
+          \ to the operator and USS. "
+        minimum: 0.0
+      contingency_location_description:
+        type: "string"
+        description: "Optional description of the contingency location."
+        maxLength: 1000
+      valid_time_begin:
+        type: "string"
+        format: "date-time"
+        example: "2015-08-20T14:31:56.118Z"
+        description: "Optional. Time that this location is expected to be first available.\
+          \ For example, if an operation begins at 1100, but this location is not\
+          \ available until 1105 at the earliest, then this field could indicate that\
+          \ fact. Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.\
+          \  Seconds may have up to millisecond accuracy (three positions after decimal).\
+          \  The 'Z' implies UTC times and is the only timezone accepted."
+      valid_time_end:
+        type: "string"
+        format: "date-time"
+        example: "2015-08-20T14:31:56.118Z"
+        description: "Optional. Time that this location is expected to become unavailable.\
+          \ For example, if an operation begins at 1100, but this location becomes\
+          \ closed for some reason at 1105, then this field could indicate that fact.\
+          \ Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.\
+          \  Seconds may have up to millisecond accuracy (three positions after decimal).\
+          \  The 'Z' implies UTC times and is the only timezone accepted."
   UssInstanceMessage:
     type: "object"
     properties:
       a:
         type: "string"
     description: "A message."
-  Version:
-    type: "object"
-    properties:
-      title:
-        type: "string"
-        description: "Title of the API"
-      version:
-        type: "string"
-        description: "Version number for the API"
-      build_time:
-        type: "string"
-        description: "Time of the latest build"
-      api_documentation:
-        type: "string"
-        description: "URL for API Documentation"
   Operation:
     type: "object"
     required:
@@ -521,16 +614,16 @@ definitions:
       gufi:
         type: "string"
         format: "uuid"
-        description: "Created and assigned by each USS (not FIMS). Validated as UUID\
-          \ version 4 specification."
+        description: "Created and assigned by originating USS. Validated as UUID version\
+          \ 4 specification."
         minLength: 36
         maxLength: 36
       submit_time:
         type: "string"
         format: "date-time"
         example: "2015-08-20T14:11:56.118Z"
-        description: "Time the operation submission was received by USS.  Uses the\
-          \ ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds\
+        description: "Time the operation submission was received by USS. Uses the\
+          \ ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ. Seconds\
           \ may have up to millisecond accuracy (three positions after decimal). \
           \ The 'Z' implies UTC times and is the only timezone accepted."
       decision_time:
@@ -545,37 +638,39 @@ definitions:
       aircraft_comments:
         type: "string"
         description: "Informative text about the aircraft. Not used by the UTM System.\
-          \  Only for human stakeholders."
+          \ Only for human stakeholders."
         maxLength: 1000
         default: "NOT PROVIDED"
       flight_comments:
         type: "string"
-        description: "Informative text about the operation.  Not used by the UTM System.\
-          \  Only for human stakeholders."
+        description: "Informative text about the operation. Not used by the UTM System.\
+          \ Only for human stakeholders."
         maxLength: 1000
         default: "NOT PROVIDED"
-      flight_geography_description:
+      geography_description:
         type: "string"
-        description: "Informative text about the operational geography.  Not used\
-          \ by the UTM System.  Only for human stakeholders."
+        description: "Informative text about the operational geography. Not used by\
+          \ the UTM System. Only for human stakeholders."
         maxLength: 1000
         default: "NOT PROVIDED"
       registration:
-        type: "string"
+        type: "array"
         description: "The registration ID of the vehicle flying this operation. This\
           \ registration value is provided to operators by a vehicle registrar. Validated\
-          \ as a non-null string. Note UTM System assumes a single vehicle per operation."
-        maxLength: 1000
-      registration_source:
+          \ as a non-null string. Array due to possiblity of multi-vehicle operation."
+        items:
+          type: "string"
+          maxLength: 1000
+        minItems: 1
+      performance_authorization:
         type: "string"
-        description: "See 'registration' field. This contains the source of the registration\
-          \ ID."
-        maxLength: 1000
-        default: "NOT PROVIDED"
+        format: "uuid"
+        description: "TBD"
+        minLength: 36
+        maxLength: 36
       flight_number:
         type: "string"
-        description: "Optional. May be useful to the operator or USS for identification\
-          \ purposes."
+        description: "Optional. For use by USS for identification purposes."
         maxLength: 100
       user_id:
         type: "string"
@@ -607,7 +702,8 @@ definitions:
         default: "NOT PROVIDED"
       state:
         type: "string"
-        description: "The current state of the operation."
+        description: "The current state of the operation.  Must be maintained by the\
+          \ USS.\n"
         minLength: 5
         maxLength: 13
         enum:
@@ -620,6 +716,13 @@ definitions:
         $ref: "#/definitions/Point"
       gcs_location:
         $ref: "#/definitions/Point"
+      contingency_locations:
+        type: "array"
+        description: "An array of ContingencyLocations wherein this operation may\
+          \ land if needed/required during operation. Aids in planning and communication\
+          \ during the execution of a contingency."
+        items:
+          $ref: "#/definitions/Contingency"
       faa_rule:
         type: "string"
         description: "PART_107: The operation follows FAA rule 107. If USS notifies\
@@ -633,22 +736,13 @@ definitions:
           \ FIMS does not check\nwhether the operation is in a preauthorized area.)\
           \ In the future, a better response for 101E is\n\"Notification received\"\
           \ if within 5 statute miles of an airport, and \"Notification not required\"\
-          \ if not within 5 miles.\n\nPart_TBD: Placeholder for future rule such as\
-          \ those under test by UTM.\n"
+          \ if not within 5 miles.\n\nOTHER: Placeholder for other types of operations.\n"
         enum:
         - "PART_107"
         - "PART_107X"
         - "PART_101E"
-        - "PART_TBD"
+        - "OTHER"
         default: "PART_107"
-      waiver_certificate_number:
-        type: "string"
-        description: "If a waiver has been obtained for the Part 107 rules, then the\
-          \ operator would have a waiver certificate number. For any operation submissions\
-          \ with faa_rule=PART_107W, this field is required. (likely to be removed\
-          \ in future)"
-        maxLength: 100
-        default: "NOT PROVIDED"
       priority_op:
         type: "boolean"
         description: "If true this operation is managed as a priority operation. Only\
@@ -660,6 +754,9 @@ definitions:
           \ array length of 12 currently allowed."
         items:
           $ref: "#/definitions/OperationVolume"
+      metadata:
+        type: "string"
+        description: "Reserved field."
     example:
       gufi: "00000000-0000-4444-8888-000000000000"
       submit_time: "2016-10-04T09:15:40.727Z"
@@ -668,7 +765,6 @@ definitions:
       flight_comments: "Comments about the flight"
       flight_geography_description: "A description of the geography"
       registration: "00000000-0000-4444-8888-000000000000"
-      registration_detail: "src=federaldroneregistration.com,owner=acme"
       flight_number: "Flight number"
       user_id: "fimsUser"
       created_by: "fimsUser"
@@ -728,9 +824,9 @@ definitions:
     - "beyond_visual_line_of_sight"
     - "effective_time_begin"
     - "effective_time_end"
-    - "flight_geography"
     - "max_altitude_wgs84_ft"
     - "min_altitude_wgs84_ft"
+    - "operation_geography"
     - "ordinal"
     properties:
       ordinal:
@@ -763,19 +859,10 @@ definitions:
         format: "date-time"
         example: "2015-08-20T14:31:56.118Z"
         description: "Time that the operational volume was freed for use by other\
-          \ operations.  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.\
-          \  Seconds may have up to millisecond accuracy (three positions after decimal).\
-          \  The 'Z' implies UTC times and is the only timezone accepted."
-      conformance_time_begin:
-        type: "string"
-        description: "TO BE DEPRECATED. Assigned by FIMS.  Time buffer before the\
-          \ submitted begin time."
-        maxLength: 100
-      conformance_time_end:
-        type: "string"
-        description: "TO BE DEPRECATED. Assigned by FIMS.  Time buffer after the submitted\
-          \ end time."
-        maxLength: 100
+          \ operations.  Should be populated and stored by the USS. Uses the ISO 8601\
+          \ format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have\
+          \ up to millisecond accuracy (three positions after decimal).  The 'Z' implies\
+          \ UTC times and is the only timezone accepted."
       min_altitude_wgs84_ft:
         type: "number"
         format: "double"
@@ -786,39 +873,27 @@ definitions:
         format: "double"
         description: "The maximum altitude for this operation in this operation volume.\
           \ In WGS84 reference system using feet as units."
-      conform_min_altitude_wgs84_ft:
-        type: "number"
-        format: "double"
-        description: "LIKELY TO BE DEPRECATED. The minimum altitude assigned and used\
-          \ by the UTM System to check vertical conformance of an operation. Based\
-          \ on operator-provided min altitude."
-      conform_max_altitude_wgs84_ft:
-        type: "number"
-        format: "double"
-        description: "LIKELY TO BE DEPRECATED. The maximum altitude assigned and used\
-          \ by the UTM System to check vertical conformance of an operation. Based\
-          \ on operator-provided max altitude."
-      flight_geography:
-        $ref: "#/definitions/Geometry"
-      conformance_geography:
-        $ref: "#/definitions/Geometry"
+      operation_geography:
+        $ref: "#/definitions/Polygon"
       beyond_visual_line_of_sight:
         type: "boolean"
         description: "Describes whether the operation volume is beyond the visual\
-          \ line of sight of the operator."
-  Geometry:
+          \ line of sight of the RPIC."
+  Polygon:
     type: "object"
-    required:
-    - "type"
-    discriminator: "type"
     properties:
       type:
         type: "string"
-        description: "the geometry type"
+        description: "The type of Geometry. In this case, must be 'Polygon' per GeoJSON\
+          \ spec.\n"
         enum:
-        - "Point"
-        - "LineString"
         - "Polygon"
+      coordinates:
+        type: "array"
+        items:
+          type: "array"
+          items:
+            $ref: "#/definitions/Position"
     externalDocs:
-      url: "https://tools.ietf.org/html/rfc7946#section-3.1"
-    description: "GeoJSon geometry"
+      url: "https://tools.ietf.org/html/rfc7946#section-3.1.6"
+    description: "GeoJSon Polygon. Positions all 2D."
