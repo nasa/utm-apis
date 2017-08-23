@@ -6,7 +6,6 @@
 ## joseph.rios@nasa.gov
 
 definitions:
-
   scope:
     description: The set of scopes used in UTM OAuth 2.0 implementationa
     type: string
@@ -829,3 +828,13 @@ parameters:
       type: integer
       default: 0
       format: int32
+      
+pathitems:
+  getVersion:
+    get:
+      summary: API version and other data. Can be used to test whether server is up.
+      responses:
+        200:
+          description: "Successfully got the address"
+          schema:
+            $ref: '#/definitions/Version'
