@@ -10,17 +10,29 @@ info:
 host: "utmalpha.arc.nasa.gov"
 basePath: "/urep"
 tags:
-- name: "A. SDSP Endpoints"
-  description: "NEED SOME TEXT HERE."
+- name: "A. Required Endpoints"
+  description: "An implementer of this SDSP implements these."
 - name: "B. Subscription Points"
   description: "Non-REST endpoints for asynchronous communications with UREP."
 schemes:
 - "https"
 paths:
+  /api:
+    get:
+      tags:
+      - "A. Required Endpoints"
+      summary: "API version and other data. Can be used to test whether server is\
+        \ up."
+      parameters: []
+      responses:
+        200:
+          description: "Successfully got the address"
+          schema:
+            $ref: "#/definitions/Version"
   /ureps:
     get:
       tags:
-      - "Restful Endpoints"
+      - "A. Required Endpoints"
       summary: "Get UREPs"
       operationId: "getUrepsUsingGET"
       consumes:
@@ -135,7 +147,7 @@ paths:
             $ref: "#/definitions/UTMRestResponse"
     post:
       tags:
-      - "Restful Endpoints"
+      - "A. Required Endpoints"
       summary: "Add UREP"
       operationId: "addUrepUsingPOST"
       consumes:
@@ -173,7 +185,7 @@ paths:
   /ureps/{id}:
     get:
       tags:
-      - "Restful Endpoints"
+      - "A. Required Endpoints"
       summary: "Get UREPs by ID"
       operationId: "getUrepsForIDUsingGET"
       consumes:
@@ -215,18 +227,6 @@ paths:
           description: "Not Found"
           schema:
             $ref: "#/definitions/UTMRestResponse"
-  /api:
-    get:
-      tags:
-      - "Restful Endpoints"
-      summary: "Get API Info"
-      operationId: "getApiInfo"
-      parameters: []
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/Version"
   /urepstream:
     get:
       tags:
@@ -517,19 +517,6 @@ definitions:
         - "BALLOON"
         - "LARGE_MANNED_FIXED_WING"
         - "OTHER"
-  UTMRestResponse:
-    type: "object"
-    properties:
-      http_status_code:
-        type: "integer"
-      message:
-        type: "string"
-      resource:
-        type: "string"
-    example:
-      http_status_code: 201
-      message: "Resource created."
-      resource: "/resource/683c0e9e-49dc-44ce-82de-a5723b1f6965"
   Version:
     type: "object"
     properties:
@@ -545,29 +532,47 @@ definitions:
       api_documentation:
         type: "string"
         description: "URL for API Documentation"
-  Point:
-    allOf:
-    - $ref: "#/definitions/Geometry"
-    - properties:
-        coordinates:
-          $ref: "#/definitions/Point2D"
-    description: "GeoJSon Point, limited to 2D."
-  Geometry:
+  UTMRestResponse:
     type: "object"
-    required:
-    - "type"
-    discriminator: "type"
+    properties:
+      http_status_code:
+        type: "integer"
+      message:
+        type: "string"
+      resource:
+        type: "string"
+    example:
+      http_status_code: 201
+      message: "Resource created."
+      resource: "/resource/683c0e9e-49dc-44ce-82de-a5723b1f6965"
+  Point:
+    type: "object"
     properties:
       type:
         type: "string"
-        description: "the geometry type"
+        description: "The type of Geometry. In this case, must be 'Point' per GeoJSON\
+          \ spec.\n"
         enum:
         - "Point"
-        - "LineString"
-        - "Polygon"
+      coordinates:
+        $ref: "#/definitions/Position"
     externalDocs:
-      url: "https://tools.ietf.org/html/rfc7946#section-3.1"
-    description: "GeoJSon geometry"
+      url: "https://tools.ietf.org/html/rfc7946#section-3.1.2"
+    description: "GeoJSon Point, limited to 2D."
+  Position:
+    type: "object"
+    required:
+    - "coordinates"
+    properties:
+      coordinates:
+        type: "array"
+        items:
+          type: "number"
+          format: "double"
+        maxItems: 2
+        minItems: 2
+    description: "Array of doubles of longitude-latitude values. Note that longitude\
+      \ is first.\n"
 responses:
   WRONG_PROTOCOL:
     description: "A RESTful call was made to this endpoint but this is not a REST\
