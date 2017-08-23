@@ -137,12 +137,12 @@ definitions:
       gcs_location:
         # description: "If not submitted, the UTM System will assume the GCS is co-located with the UAS Controller.  Assumed to be a static location. May assist USS in determining LOS"
         $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Point'
-      contingency_locations:
+      contingency_plans:
         description: >-
-          An array of ContingencyLocations wherein this operation may land if needed/required during operation. Aids in planning and communication during the execution of a contingency.
+          An array of ContingencyPlans wherein this operation may land if needed/required during operation. Aids in planning and communication during the execution of a contingency.
         type: array
         items:
-          $ref: '#/definitions/Contingency'
+          $ref: '#/definitions/ContingencyPlan'
       faa_rule:
         default: PART_107
         description: |
@@ -328,7 +328,7 @@ definitions:
         description: "Describes whether the operation volume is beyond the visual line of sight of the RPIC."
         type: boolean
 
-  Contingency:
+  ContingencyPlan:
     type: object
     properties:
       contingency_id:
@@ -338,7 +338,48 @@ definitions:
         format: integer
         minimum: 1
         maximum: 1000 # for sanity checking input   
-      contingency_type:
+      contingency_cause:
+        
+        description: >-
+          A cause that necessitates a contingency response. In planning an operation, this array of values represents the various causes that may necessitate the provided contingency_repsonse.
+          
+          1. LOST_C2
+            The operation has lost command or control links to the vehicle.
+          2. LOST_NAV
+            The vehicle no longer has sufficient navigation sources.
+          3. LOST_SAA
+            The vehicle's sense and avoid solution is no longer reliable.
+          4. LOW_FUEL
+            The vehicle does not have enough power to complete its mission. Still enough fuel to safely land or potentially return to base.
+          5. NO_FUEL
+            The vehicle is either completely without fuel or has only enough fuel to land immediately.
+          6. MECHANICAL_PROBLEM
+          
+        type: array
+        items:
+          type: string
+          enum:
+          - LOST_C2
+          - LOST_NAV
+          - LOST_SAA
+          - LOW_FUEL
+          - NO_FUEL
+          - MECHANICAL_PROBLEM
+          - ENVIRONMENTAL
+          - SECURITY
+          - TRAFFIC
+          - OTHER
+          - ANY
+      contingency_response:
+        description: >-
+          The type of contingency response.
+          
+          1. LANDING
+            The operation will be landing by targeting the contingency_point.
+          2. LOITERING
+            The operation will loiter at the contingency_point at the specified altitude with the noted loiter_radius_ft.
+          3. RETURN_TO_BASE
+            The operation will return to base as specified by the contingency_point. The USS may issue an update to the operation plan to support this maneuver.
         type: string
         enum:
         - LANDING
@@ -570,13 +611,13 @@ definitions:
         - OPERATION_ROGUE
         - OPERATION_CONFORMING
         - OPERATION_CLOSED
-        - CONTINGENCY_INITIATED
+        - CONTINGENCY_PLAN_INITIATED
         - OTHER_SEE_FREE_TEXT 
       last_known_position:
         # Last known position of the operation.  The Position model has time incorporated, together with other relevant data.
         $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Position'
       contingency:
-        # Required if this is a CONTINGENCY_INITIATED message.
+        # Required if this is a CONTINGENCY_PLAN_INITIATED message.
         $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Contingency'
       metadata:
         type: string
@@ -837,6 +878,6 @@ pathitems:
         - A. Required Endpoints
       responses:
         200:
-          description: "Successfully got the address"
+          description: "Success"
           schema:
             $ref: '#/definitions/Version'
