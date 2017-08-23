@@ -1,421 +1,421 @@
----
-swagger: "2.0"
+swagger: '2.0'
 info:
-  description: "FIMS_Authz provides authorization services for FIMS and USS stakeholders\
-    \ within UTM.  FIMS_Authz is an OAuth 2.0 compliant server.  The endpoints and\
-    \ data exchnages provided by this server are based on open standards."
   version: "v1"
-  title: "Flight Information Management System (FIMS) Authorization (Authz) Server"
-host: "tmiserver.arc.nasa.gov"
-basePath: "/fimsAuthServer"
+  title: Flight Information Management System (FIMS) Authorization (Authz) Server
+  description: FIMS_Authz provides authorization services for FIMS and USS stakeholders within UTM.  FIMS_Authz is an OAuth 2.0 compliant server.  The endpoints and data exchnages provided by this server are based on open standards.
+externalDocs:
+  description: SwaggerHub Documentation
+  url: https://app.swaggerhub.com/apis/utm/fims_authz/
+
+host: tmiserver.arc.nasa.gov
 schemes:
-- "https"
+ - https
+basePath: /fimsAuthServer
+securityDefinitions:
+  application:
+    type: oauth2
+    # Should be updated to the Token URL of your OAuth provider.
+    tokenUrl: http://thisserver.com/oauth/token
+    flow: application
+    scopes:
+      Baseline_USS: A Baseline USS that can perform the set of essential USS requests
+      PublicSafety_USS: A USS with the capability to manaage public safety operations
+      Operations_FIMS: For FIMS to perform baseline FIMS requests
+
+# Here we apply the security flow called 'password' globally to all the opeartions in the spec.
+# This security scheme is defined above in the 'securityDefinitions' section.
+# Global security can be overriden an operation level as seen in the example below
 security:
-- application:
-  - "Baseline_USS"
+  - application:
+    - Baseline_USS
+
 paths:
+  /api:
+    $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/pathitems/getVersion'
   /authorize:
     get:
       tags:
-      - "Restful Endpoints"
-      summary: "Obtain an authorization grant (unsupported in UTM, but required by\
-        \ OAuth specification)"
-      description: "This endpoint is required as per RFC 6749.  However since FIMS\
-        \ only supports the Client Credentials Grant flow, there is no use of this\
-        \ endpoint currently. It is defined in case there is an use case in the future\
-        \ that requires it. Currently returns 501 (Not implemented) on a GET.  POST\
-        \ not supported at all.\n"
-      operationId: "getAuthorizationGrant"
-      parameters: []
+        - 'A. Required Endpoints'
+      summary: Obtain an authorization grant (unsupported in UTM, but required by OAuth specification)
+      operationId: getAuthorizationGrant
+      description: >
+        This endpoint is required as per RFC 6749.  However since FIMS only supports the Client Credentials Grant flow, there is no use of this endpoint currently. It is defined in case there is an use case in the future that requires it. Currently returns 501 (Not implemented) on a GET.  POST not supported at all.
+
       responses:
-        501:
-          description: "Not Implemented"
+        '501':
+          description: Not Implemented
           schema:
-            $ref: "#/definitions/Version"
+            $ref: '#/definitions/Version'
+    
   /token:
     post:
       tags:
-      - "Restful Endpoints"
-      summary: "Obtain an access token."
-      description: "This endpoint is required as per RFC 6749.  A POST to this endpoint\
-        \ acts as a request for an access token. This endpoint is protected using\
-        \ TLS client authentication. \n"
-      operationId: "obtainAccessToken"
+        - 'A. Required Endpoints'
+      summary: Obtain an access token.
+      operationId: obtainAccessToken
       consumes:
-      - "application/x-www-form-urlencoded"
+        - application/x-www-form-urlencoded
       produces:
-      - "application/json"
+        - application/json
+      description: >
+        This endpoint is required as per RFC 6749.  A POST to this endpoint acts as a request for an access token. This endpoint is protected using TLS client authentication. 
       parameters:
-      - name: "grant_type"
-        in: "formData"
-        description: "Type of grant. Must be 'client_credentials'."
-        required: true
-        type: "string"
-        enum:
-        - "client_credentials"
-      - name: "scope"
-        in: "formData"
-        description: "dfs"
-        required: true
-        type: "string"
-        enum:
-        - "scope1"
-        - "scope2"
-        - "scope3"
+        - name: grant_type
+          in: formData
+          description: Type of grant. Must be 'client_credentials'.
+          required: true
+          type: string
+          enum:
+          - client_credentials
+        - name: scope
+          in: formData
+          description: dfs
+          required: true
+          type: string
+          enum:
+          - scope1 # These should match the "commons" scopes value. Can that be done? 
+          - scope2 # See https://github.com/OAI/OpenAPI-Specification/issues/300
+          - scope3 # Maybe solved in v3.0 OpenAPI spec, maybe stuck until then.
       responses:
-        200:
-          description: "OK"
+        # TODO: add appropriate JSON response.  Model needs to be written.
+        '200':
+          description: OK
           schema:
-            $ref: "#/definitions/TokenResponse"
+            $ref: '#/definitions/TokenResponse'
+
+# This should align with our Spring configuration
+# (http://projects.spring.io/spring-security-oauth/docs/oauth2.html)
   /token_key:
     get:
       tags:
-      - "Restful Endpoints"
-      summary: "Get the OAuth server public key required for checking token signatures."
-      operationId: "getServerTokenKey"
+        - 'A. Required Endpoints'
+      summary: Get the OAuth server public key required for checking token signatures.
+      operationId: getServerTokenKey
+      # I'm not clear what Spring produces. JSON? Just a string? What is correct here?
       produces:
-      - "application/json"
-      parameters: []
+        - application/json
       responses:
-        200:
-          description: "OK"
+        '200':
+          description: OK
+          # TODO update ref to correct object when we have it defined.
           schema:
-            $ref: "#/definitions/TokenKeyResponse"
+            $ref: '#/definitions/TokenKeyResponse'
+      
+  # This is just a stub indicating we need this endpoint. See RFC 7662
+  # I think that Spring may be calling this "/oauth/check_token"? Prefer the RFC defn.
   /introspect:
     get:
       tags:
-      - "Restful Endpoints"
-      summary: "Check a token"
-      operationId: "tokenIntrospection"
+        - 'A. Required Endpoints'
+      summary: Check a token
+      operationId: tokenIntrospection
       consumes:
-      - "application/x-www-form-urlencoded"
+        - application/x-www-form-urlencoded
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - name: "token"
-        in: "formData"
-        description: "The string value of the token.  For access tokens, this is the\
-          \ \"access_token\" value returned from the token endpoint defined in OAuth\
-          \ 2.0 [RFC6749], Section 5.1.  For refresh tokens, this is the \"refresh_token\"\
-          \ value returned from the token endpoint as defined in OAuth 2.0 [RFC6749],\
-          \ Section 5.1."
-        required: true
-        type: "string"
-        format: "jwt"
-      - name: "token_type_hint"
-        in: "formData"
-        description: "A hint about the type of the token submitted for introspection.\
-          \  The protected resource MAY pass this parameter to help the authorization\
-          \ server optimize the token lookup.  If the server is unable to locate the\
-          \ token using the given hint, it MUST extend its search across all of its\
-          \ supported token types.  An authorization server MAY ignore this parameter,\
-          \ particularly if it is able to detect the token type automatically.  Values\
-          \ for this field are defined in the \"OAuth Token Type Hints\" registry\
-          \ defined in OAuth Token Revocation [RFC7009]."
-        required: false
-        type: "string"
-        enum:
-        - "access_token"
-        - "refresh_token"
+        - name: token
+          in: formData
+          type: string
+          format: jwt
+          required: true
+          description: >-
+            The string value of the token.  For access tokens, this is the "access_token" value returned from the token endpoint defined in OAuth 2.0 [RFC6749], Section 5.1.  For refresh tokens, this is the "refresh_token" value returned from the token endpoint as defined in OAuth 2.0 [RFC6749], Section 5.1.
+        - name: token_type_hint
+          in: formData
+          type: string
+          enum:
+          - access_token
+          - refresh_token
+          description: >-
+            A hint about the type of the token submitted for introspection.  The protected resource MAY pass this parameter to help the authorization server optimize the token lookup.  If the server is unable to locate the token using the given hint, it MUST extend its search across all of its supported token types.  An authorization server MAY ignore this parameter, particularly if it is able to detect the token type automatically.  Values for this field are defined in the "OAuth Token Type Hints" registry defined in OAuth Token Revocation [RFC7009].
       responses:
-        200:
-          description: "OK"
+        '200':
+          description: OK
           schema:
-            $ref: "#/definitions/IntrospectionResponse"
+            $ref: '#/definitions/IntrospectionResponse'          
+  
+  # Needs work.  See RFC 7009
   /revoke:
     post:
       tags:
-      - "Restful Endpoints"
-      summary: "Post a token revocation request"
-      operationId: "postRevocationRequest"
+        - 'A. Required Endpoints'
+      summary: Post a token revocation request
+      operationId: postRevocationRequest
       consumes:
-      - "application/x-www-form-urlencoded"
+        - application/x-www-form-urlencoded
       parameters:
-      - name: "token"
-        in: "formData"
-        description: "The Java Web Token that the client wants revoked."
-        required: true
-        type: "string"
-        format: "jwt"
-      - name: "token_hint"
-        in: "formData"
-        description: "A hint about the type of the token submitted for revocation.\
-          \  Clients MAY pass this parameter in order to help the authorization server\
-          \ to optimize the token lookup.  If the server is unable to locate the token\
-          \ using the given hint, it MUST extend its search across all of its supported\
-          \ token types.  An authorization server MAY ignore this parameter, particularly\
-          \ if it is able to detect the token type automatically."
-        required: false
-        type: "string"
-        enum:
-        - "access_token"
-        - "refresh_token"
+        - name: token
+          in: formData
+          description: The Java Web Token that the client wants revoked.
+          type: string
+          format: jwt
+          required: true
+        - name: token_hint
+          in: formData
+          description: >-
+            A hint about the type of the token submitted for revocation.  Clients MAY pass this parameter in order to help the authorization server to optimize the token lookup.  If the server is unable to locate the token using the given hint, it MUST extend its search across all of its supported token types.  An authorization server MAY ignore this parameter, particularly if it is able to detect the token type automatically.
+          type: string
+          enum:
+          - access_token
+          - refresh_token
       responses:
-        200:
-          description: "OK"
-        400:
-          description: "Bad request"
+        # Per spec, nothing is actually returned in nearly any case. see RFC 7009, Sec 2.2.
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+  
+  # Is authn required on this endpoint?        
   /oauth-authorization-server:
     get:
       tags:
-      - "Restful Endpoints"
-      summary: "Get API Info"
-      operationId: "getApiInfos"
+        - 'A. Required Endpoints'
+      summary: Get API Info
+      operationId: getApiInfos
       produces:
-      - "application/json"
-      parameters: []
+        - application/json
       responses:
-        200:
-          description: "OK"
+        '200':
+          description: OK
           schema:
-            $ref: "#/definitions/Metadata"
-securityDefinitions:
-  application:
-    type: "oauth2"
-    tokenUrl: "http://thisserver.com/oauth/token"
-    flow: "application"
-    scopes:
-      Baseline_USS: "A Baseline USS that can perform the set of essential USS requests"
-      PublicSafety_USS: "A USS with the capability to manaage public safety operations"
-      Operations_FIMS: "For FIMS to perform baseline FIMS requests"
+            $ref: '#/definitions/Metadata'
+        
+
 definitions:
   TokenResponse:
-    type: "object"
+    type: object
     properties:
       access_token:
-        $ref: "#/definitions/JwsCompactSerialization"
-      token_type:
-        type: "string"
+        $ref: '#/definitions/JwsCompactSerialization'
+      token_type: 
+        type: string
         enum:
         - "bearer"
+# Would like to remove this from the response since it open possbility of contradicting the 'exp' value in the token itself.
+#      expires_in:
+#        type: number
+#        format: integer
       jti:
-        type: "string"
-        format: "uuid"
+        type: string
+        format: uuid
+# Would like to remove this from response for same reason as 'expires_in'.
+#      scope:
+#        type: string
+        
+        
+
+            
+  
   JwsCompactSerialization:
-    type: "object"
+    description: >-
+      The token provided by the FIMS Authorization Server is a JWS representing a JWT.  The token is actually a JWS Compact Serialization string as described in RFC 7515.  For clarity of documentation, we represent the pre-serialized components here as a JSON schema.  This may be problematic when using automated tools to validate the schema using this file as input.
+    type: object
     properties:
       jose_header:
-        $ref: "#/definitions/JoseHeader"
+        $ref: '#/definitions/JoseHeader'
       jws_payload:
-        $ref: "#/definitions/JwtClaimsSet"
+        $ref: '#/definitions/JwtClaimsSet'
       jws_signature:
-        type: "string"
-        description: "See RFC 7515 for details."
-    description: "The token provided by the FIMS Authorization Server is a JWS representing\
-      \ a JWT.  The token is actually a JWS Compact Serialization string as described\
-      \ in RFC 7515.  For clarity of documentation, we represent the pre-serialized\
-      \ components here as a JSON schema.  This may be problematic when using automated\
-      \ tools to validate the schema using this file as input."
+        type: string
+        description: >-
+          See RFC 7515 for details.
+  
   JoseHeader:
-    type: "object"
+    type: object
     properties:
       alg:
-        type: "string"
+        type: string
       typ:
-        type: "string"
-        description: "The FIMS Authorization Server only support 'JWT' (JSON Web Token)\
-          \ as the algorithm type."
+        type: string
         enum:
-        - "JWT"
+        - JWT
+        description: >-
+          The FIMS Authorization Server only support 'JWT' (JSON Web Token) as the algorithm type.
+        
+      
+      
+  # From Spring OAuth. Documentation sparse.
   TokenKeyResponse:
-    type: "object"
+    type: object
     properties:
       alg:
-        type: "string"
-        description: "A designator for the algorithm used to sign the key.  Values\
-          \ defined by a Java specfication from Oracle (http://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html)."
+        type: string
+        # This seems like it would be a value from an RFC, but is from a Java spec (I think):
+        # http://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html
+        description: >-
+          A designator for the algorithm used to sign the key.  Values defined by a Java specfication from Oracle (http://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html).
       value:
-        type: "string"
-        description: "A key signed by the algorithm noted in 'alg' property.  The\
-          \ key is preceded by '-----BEGIN PUBLIC KEY-----\\n' without the single\
-          \ quotes and appended with '\\n-----END PUBLIC KEY-----' without the single\
-          \ quotes."
+        type: string
+        description: >-
+          A key signed by the algorithm noted in 'alg' property.  The key is preceded by '-----BEGIN PUBLIC KEY-----\n' without the single quotes and appended with '\n-----END PUBLIC KEY-----' without the single quotes.
+        
+  
+  # From RFC 7662
   IntrospectionResponse:
-    type: "object"
+    type: object
     required:
-    - "active"
+      - active
     properties:
       active:
-        type: "boolean"
-        description: "Boolean indicator of whether or not the presented token is currently\
-          \ active.  The specifics of a token's \"active\" state will vary depending\
-          \ on the implementation of the authorization server and the information\
-          \ it keeps about its tokens, but a \"true\" value return for the \"active\"\
-          \ property will generally indicate that a given token has been issued by\
-          \ this authorization server, has not been revoked by the resource owner,\
-          \ and is within its given time window of validity (e.g., after its issuance\
-          \ time and before its expiration time).  See Section 4 for information on\
-          \ implementation of such checks."
+        type: boolean
+        description: >-
+          Boolean indicator of whether or not the presented token is currently active.  The specifics of a token's "active" state will vary depending on the implementation of the authorization server and the information it keeps about its tokens, but a "true" value return for the "active" property will generally indicate that a given token has been issued by this authorization server, has not been revoked by the resource owner, and is within its given time window of validity (e.g., after its issuance time and before its expiration time).  See Section 4 for information on implementation of such checks.
+    
   JwtClaimsSet:
-    type: "object"
+    type: object
     properties:
       iss:
-        type: "string"
-        format: "URL"
-        description: "The \"iss\" (issuer) claim identifies the principal that issued\
-          \ the JWT. The URL of the FIMS Authorization Server."
+        type: string
+        format: URL
+        description: >-
+          The "iss" (issuer) claim identifies the principal that issued the JWT. The URL of the FIMS Authorization Server.
+      # We should discuss the right identifier for 'sub'
       sub:
-        type: "string"
-        description: "The \"sub\" (subject) claim identifies the principal that is\
-          \ the subject of the JWT."
+        type: string
+        description: >-
+          The "sub" (subject) claim identifies the principal that is the subject of the JWT.
+      # aud.  We don't need the aud claim as of now as far as I can tell.
+      # The time values are tricky. Would be nice to have common format with other APIs.  These defs are in RFC7519.
       exp:
-        type: "integer"
-        format: "unix-time"
-        description: "The \"exp\" (expiration time) claim identifies the expiration\
-          \ time on or after which the JWT MUST NOT be accepted for processing.  The\
-          \ processing of the \"exp\" claim requires that the current date/time MUST\
-          \ be before the expiration date/time listed in the \"exp\" claim."
+        type: integer
+        format: unix-time
+        description: >-
+          The "exp" (expiration time) claim identifies the expiration time on or after which the JWT MUST NOT be accepted for processing.  The processing of the "exp" claim requires that the current date/time MUST be before the expiration date/time listed in the "exp" claim.
       nbf:
-        type: "integer"
-        format: "unix-time"
-        description: "The \"nbf\" (not before) claim identifies the time before which\
-          \ the JWT MUST NOT be accepted for processing.  The processing of the \"\
-          nbf\" claim requires that the current date/time MUST be after or equal to\
-          \ the not-before date/time listed in the \"nbf\" claim."
+        type: integer
+        format: unix-time
+        description: >-
+          The "nbf" (not before) claim identifies the time before which the JWT MUST NOT be accepted for processing.  The processing of the "nbf" claim requires that the current date/time MUST be after or equal to the not-before date/time listed in the "nbf" claim.
       iat:
-        type: "integer"
-        format: "unix-time"
-        description: "The \"iat\" (issued at) claim identifies the time at which the\
-          \ JWT was issued.  This claim can be used to determine the age of the JWT."
+        type: integer
+        format: unix-time
+        description: >-
+          The "iat" (issued at) claim identifies the time at which the JWT was issued.  This claim can be used to determine the age of the JWT.
       jti:
-        type: "string"
-        format: "uuid"
-        description: "The \"jti\" (JWT ID) claim provides a unique identifier for\
-          \ the JWT. For this server, this is satisfied by the use of a UUID."
-      scope:
-        type: "array"
+        type: string
+        format: uuid
+        description: >-
+          The "jti" (JWT ID) claim provides a unique identifier for the JWT. For this server, this is satisfied by the use of a UUID.
+      
+      scope: # These should match 'commons' scopes.  Can that be done?
+        type: array
         items:
-          $ref: "#/definitions/scopes"
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/scopes'
+
+        
   Metadata:
-    type: "object"
+    type: object
     required:
-    - "authorization_endpoint"
-    - "issuer"
+      - issuer
+      - authorization_endpoint
     properties:
       issuer:
-        type: "string"
-        format: "url"
-        description: "The authorization server's issuer identifier, which is a URL\
-          \ that uses the \"https\" scheme and has no query or fragment components.\
-          \  This is the location where \".well-known\" RFC 5785 resources containing\
-          \ information about the authorization server are published.  Using these\
-          \ well-known resources is described in Section 3.  The issuer identifier\
-          \ is used to prevent authorization server mix-up attacks, as described in\
-          \ \"OAuth 2.0 Mix-Up Mitigation\"."
+        type: string
+        format: url
+        description: >-
+          The authorization server's issuer identifier, which is a URL that uses the "https" scheme and has no query or fragment components.  This is the location where ".well-known" RFC 5785 resources containing information about the authorization server are published.  Using these well-known resources is described in Section 3.  The issuer identifier is used to prevent authorization server mix-up attacks, as described in "OAuth 2.0 Mix-Up Mitigation".
       authorization_endpoint:
-        type: "string"
-        format: "url"
-        description: "URL of the authorization server's authorization endpoint [RFC6749]."
+        type: string
+        format: url
+        description: >-
+          URL of the authorization server's authorization endpoint [RFC6749].
       token_endpoint:
-        type: "string"
-        format: "url"
-        description: "URL of the authorization server's token endpoint [RFC6749].\
-          \  This is REQUIRED unless only the implicit grant type is used."
+        type: string
+        format: url
+        description: >-
+          URL of the authorization server's token endpoint [RFC6749].  This is REQUIRED unless only the implicit grant type is used.
+# Scopes will be values like USS_BASIC, USS_PUBLIC_SAFETY, FIMS_BASIC, etc. Needs discussion.
       scopes_supported:
-        type: "array"
-        description: "JSON array containing a list of the OAuth 2.0 [RFC6749] \"scope\"\
-          \ values that this authorization server supports. Servers MAY choose not\
-          \ to advertise some supported scope values even when this parameter is used."
+        type: array
         items:
-          type: "string"
+          type: string
+        description: >-
+          JSON array containing a list of the OAuth 2.0 [RFC6749] "scope" values that this authorization server supports. Servers MAY choose not to advertise some supported scope values even when this parameter is used.
+# Currently no response types supported, return empty array
       response_types_supported:
-        type: "array"
-        description: "JSON array containing a list of the OAuth 2.0 \"response_type\"\
-          \ values that this authorization server supports. These values are required\
-          \ for responses from calls to the authorization endpoint, thus this array\
-          \ may be empty if no grant flows use the authorization endpoint. (definitions\
-          \ in RFC 7591)"
+        type: array
         items:
-          type: "string"
+          type: string
+        description: >-
+          JSON array containing a list of the OAuth 2.0 "response_type" values that this authorization server supports. These values are required for responses from calls to the authorization endpoint, thus this array may be empty if no grant flows use the authorization endpoint. (definitions in RFC 7591)
+# Currently no response modes supported, return empty array
       response_modes_supported:
-        type: "array"
-        description: "JSON array containing a list of the OAuth 2.0 \"response_mode\"\
-          \ values that this authorization server supports, as specified in OAuth\
-          \ 2.0 Multiple Response Type Encoding Practices.  If omitted, the default\
-          \ is \"[\"query\", \"fragment\"]\".  The response mode value \"form_post\"\
-          \ is also defined in OAuth 2.0 Form Post Response Mode.dd"
+        type: array
         items:
-          type: "string"
+          type: string
+        description: >-
+          JSON array containing a list of the OAuth 2.0 "response_mode" values that this authorization server supports, as specified in OAuth 2.0 Multiple Response Type Encoding Practices.  If omitted, the default is "["query", "fragment"]".  The response mode value "form_post" is also defined in OAuth 2.0 Form Post Response Mode.dd
+# Only grant type currently supported is "client_credentials"
       grant_types_supported:
-        type: "array"
-        description: "JSON array containing a list of the OAuth 2.0 grant type values\
-          \ that this authorization server supports. (definitions in RFC 7591)"
-        items:
-          type: "string"
+        type: array
+        items: 
+          type: string
+        description: >-
+          JSON array containing a list of the OAuth 2.0 grant type values that this authorization server supports. (definitions in RFC 7591)
+# The value we want is not defined in the specs. Will likely be an array with
+# a single value.  Something like tls_client_auth.
       token_endpoint_auth_methods_supported:
-        type: "array"
-        description: "JSON array containing a list of client authentication methods\
-          \ supported by this token endpoint.  Client authentication method values\
-          \ are used in the \"token_endpoint_auth_method\" parameter defined in Section\
-          \ 2 of [RFC7591].  If omitted, the default is \"client_secret_basic\" --\
-          \ the HTTP Basic Authentication Scheme specified in Section 2.3.1 of OAuth\
-          \ 2.0 [RFC6749]."
+        type: array
         items:
-          type: "string"
+          type: string
+        description: >-
+          JSON array containing a list of client authentication methods supported by this token endpoint.  Client authentication method values are used in the "token_endpoint_auth_method" parameter defined in Section 2 of [RFC7591].  If omitted, the default is "client_secret_basic" -- the HTTP Basic Authentication Scheme specified in Section 2.3.1 of OAuth 2.0 [RFC6749].
+#      token_endpoint_auth_signing_alg_values_supported:
+#        type: array
+#        items:
+#          type: string
+#        description: : >-
+#          JSON array containing a list of the JWS signing algorithms ("alg" values) supported by the token endpoint for the signature on the JWT [JWT] used to authenticate the client at the token endpoint for the "private_key_jwt" and "client_secret_jwt" authentication methods.  Servers SHOULD support "RS256".  The value "none" MUST NOT be used.
+  
       service_documentation:
-        type: "string"
-        format: "url"
-        description: "URL of a page containing human-readable information that developers\
-          \ might want or need to know when using the authorization server.  In particular,\
-          \ if the authorization server does not support Dynamic Client Registration,\
-          \ then information on how to register clients needs to be provided in this\
-          \ documentation."
+        type: string
+        format: url
+        description: >-
+          URL of a page containing human-readable information that developers might want or need to know when using the authorization server.  In particular, if the authorization server does not support Dynamic Client Registration, then information on how to register clients needs to be provided in this documentation.
       op_tos_uri:
-        type: "string"
-        format: "url"
-        description: "URL that the authorization server provides to the person registering\
-          \ the client to read about the authorization server's terms of service.\
-          \  The registration process SHOULD display this URL to the person registering\
-          \ the client if it is given."
+        type: string
+        format: url
+        description: >-
+          URL that the authorization server provides to the person registering the client to read about the authorization server's terms of service.  The registration process SHOULD display this URL to the person registering the client if it is given.
       revocation_endpoint:
-        type: "string"
-        format: "url"
-        description: "URL of the authorization server's OAuth 2.0 revocation endpoint\
-          \ [RFC7009]."
+        type: string
+        format: url
+        description: >-
+          URL of the authorization server's OAuth 2.0 revocation endpoint [RFC7009].
+# The return array for this endpoint should match token_endpoint_auth_methods_supported
       revocation_endpoint_auth_methods_supported:
-        type: "array"
-        description: "JSON array containing a list of client authentication methods\
-          \ supported by this revocation endpoint.  The valid client authentication\
-          \ method values are those registered in the IANA \"OAuth Token Endpoint\
-          \ Authentication Methods\" registry [IANA.OAuth.Parameters]."
+        type: array
         items:
-          type: "string"
+          type: string
+        description: >-
+          JSON array containing a list of client authentication methods supported by this revocation endpoint.  The valid client authentication method values are those registered in the IANA "OAuth Token Endpoint Authentication Methods" registry [IANA.OAuth.Parameters].
       introspection_endpoint:
-        type: "string"
-        format: "url"
-        description: "URL of the authorization server's OAuth 2.0 introspection endpoint\
-          \ [RFC7662]."
+        type: string
+        format: url
+        description: >-
+          URL of the authorization server's OAuth 2.0 introspection endpoint [RFC7662].
+      # The return array for this endpoint should match token_endpoint_auth_methods_supported
       introspection_endpoint_auth_methods_supported:
-        type: "array"
-        description: "JSON array containing a list of client authentication methods\
-          \ supported by this introspection endpoint.  The valid client authentication\
-          \ method values are those registered in the IANA \"OAuth Token Endpoint\
-          \ Authentication Methods\" registry [IANA.OAuth.Parameters] or those registered\
-          \ in the IANA \"OAuth Access Token Types\" registry [IANA.OAuth.Parameters].\
-          \  (These values are and will remain distinct, due to Section 7.2.)"
+        type: array
         items:
-          type: "string"
+          type: string
+        description: >-
+          JSON array containing a list of client authentication methods supported by this introspection endpoint.  The valid client authentication method values are those registered in the IANA "OAuth Token Endpoint Authentication Methods" registry [IANA.OAuth.Parameters] or those registered in the IANA "OAuth Access Token Types" registry [IANA.OAuth.Parameters].  (These values are and will remain distinct, due to Section 7.2.)
+      
+      # TODO: This is not the right way to describe our claims.  needs fixing.  It's like we really want to be returning the YAML/JSON model schema itself, not an instance of it as is implied by this definition.
       jwt_claims:
-        $ref: "#/definitions/JwtClaimsSet"
+        $ref: '#/definitions/JwtClaimsSet'
+          
   Version:
-    type: "object"
+    type: object
     properties:
       version:
-        type: "string"
-        description: "Version number for the API"
+        type: string
+        description: Version number for the API
       title:
-        type: "string"
-        description: "Title of the API"
+        type: string
+        description: Title of the API
       documentation:
-        type: "string"
-        description: "URL for API Documentation"
-  scopes:
-    type: "string"
-    enum:
-    - "USS_BASIC"
-    - "USS_PUBLICSAFETY"
-    - "FIMS_BASIC"
-    - "FIMS_USSDISCOVERY"
-externalDocs:
-  description: "SwaggerHub Documentation"
-  url: "https://app.swaggerhub.com/apis/utm/fims_authz/"
+        type: string
+        description: URL for API Documentation
