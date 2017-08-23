@@ -43,24 +43,19 @@ paths:
   /api:
     get:
       tags:
-      - "A. Required REST endpoints"
+      - "A. Required Endpoints"
       summary: "API version and other data. Can be used to test whether server is\
         \ up."
-      description: "Provides versioning information for the software and API. Can\
-        \ be used to determine if service is up."
-      operationId: "getVersion"
-      produces:
-      - "application/json"
       parameters: []
       responses:
         200:
-          description: "Version data"
+          description: "Successfully got the address"
           schema:
             $ref: "#/definitions/Version"
   /alert_messages:
     post:
       tags:
-      - "A. Required REST endpoints"
+      - "A. Required Endpoints"
       summary: "Allow other authorized entities to send a message to this USS."
       description: "Allows another USS or FIMS to POST a message to this USS."
       operationId: "postAlertMessage"
@@ -79,7 +74,7 @@ paths:
   /uss:
     post:
       tags:
-      - "A. Required REST endpoints"
+      - "A. Required Endpoints"
       summary: "Allow USS Discovery Service to send data"
       description: "As per the USS Discovery Service specification, this endpoint\
         \ is for receiving messages about the USS Network from the USS Discovery Service.\
@@ -101,7 +96,7 @@ paths:
   /negotiations:
     post:
       tags:
-      - "A. Required REST endpoints"
+      - "A. Required Endpoints"
       summary: "Allow other USSs to submit a negotiation request"
       description: "A POST to the negotiations endpoint is interpretted as a request\
         \ for alteration in an existing operation managed by the receiving USS.  The\
@@ -129,7 +124,7 @@ paths:
   /operations:
     get:
       tags:
-      - "A. Required REST endpoints"
+      - "A. Required Endpoints"
       summary: "Request information regarding Operations"
       description: "Allows querying for Operation data."
       operationId: "getOps"
@@ -198,7 +193,7 @@ paths:
           description: "Too many recent requests from you. Wait to make further queries."
     post:
       tags:
-      - "A. Required REST endpoints"
+      - "A. Required Endpoints"
       summary: "Allow other USSs to submit their UAS Operations."
       description: "A POST to the operations endpoint allows for sharing of operational\
         \ data between USSs.  This is the primary mechanism by which USSs become aware\
@@ -228,7 +223,7 @@ paths:
           description: "Too many recent requests from you. Wait to make further submissions."
     put:
       tags:
-      - "A. Required REST endpoints"
+      - "A. Required Endpoints"
       summary: "Submit updates to a previously communicated UAS Operation."
       description: "Allows for other USSs to update a previous plan submission."
       operationId: "putOp"
