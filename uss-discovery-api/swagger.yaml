@@ -40,7 +40,7 @@ info:
 host: "ussdiscovery.arc.nasa.gov"
 basePath: "/ussdisc"
 tags:
-- name: "A. Discovery Endpoints"
+- name: "A. Required Endpoints"
   description: "The primary RESTful endpoints for sharing USS Instance data."
 - name: "B. Subscription Points"
   description: "Non-REST endpoints for asynchronous communications with FIMS"
@@ -53,7 +53,7 @@ paths:
   /uss:
     get:
       tags:
-      - "A. Discovery Endpoints"
+      - "A. Required Endpoints"
       summary: "Request information regarding USS instances"
       description: "Allows for querying for USS instances."
       operationId: "getUSSes"
@@ -136,7 +136,7 @@ paths:
       - password: []
     post:
       tags:
-      - "A. Discovery Endpoints"
+      - "A. Required Endpoints"
       summary: "Submit information regarding USS Instances"
       description: "Allows for submission of USS Instances to the service discovery\
         \ system."
@@ -175,7 +175,7 @@ paths:
   /uss/{id}:
     get:
       tags:
-      - "A. Discovery Endpoints"
+      - "A. Required Endpoints"
       summary: "Request information regarding a single USS Instance"
       description: "Allows for querying for USS Instances."
       operationId: "getUSS"
@@ -213,7 +213,7 @@ paths:
       - password: []
     put:
       tags:
-      - "A. Discovery Endpoints"
+      - "A. Required Endpoints"
       summary: "Submit updates to an existing USS Instance"
       description: "Allows for USS operators to update an previous USS Instance submission."
       operationId: "putUSS"
@@ -450,32 +450,37 @@ definitions:
       message: "Resource created."
       resource: "/resource/683c0e9e-49dc-44ce-82de-a5723b1f6965"
   Polygon:
-    allOf:
-    - $ref: "#/definitions/Geometry"
-    - properties:
-        coordinates:
-          type: "array"
-          items:
-            type: "array"
-            items:
-              $ref: "#/definitions/Point2D"
-    description: "GeoJSon Polygon. Points all 2D."
-  Geometry:
     type: "object"
-    required:
-    - "type"
-    discriminator: "type"
     properties:
       type:
         type: "string"
-        description: "the geometry type"
+        description: "The type of Geometry. In this case, must be 'Polygon' per GeoJSON\
+          \ spec.\n"
         enum:
-        - "Point"
-        - "LineString"
         - "Polygon"
+      coordinates:
+        type: "array"
+        items:
+          type: "array"
+          items:
+            $ref: "#/definitions/Position"
     externalDocs:
-      url: "https://tools.ietf.org/html/rfc7946#section-3.1"
-    description: "GeoJSon geometry"
+      url: "https://tools.ietf.org/html/rfc7946#section-3.1.6"
+    description: "GeoJSon Polygon. Positions all 2D."
+  Position:
+    type: "object"
+    required:
+    - "coordinates"
+    properties:
+      coordinates:
+        type: "array"
+        items:
+          type: "number"
+          format: "double"
+        maxItems: 2
+        minItems: 2
+    description: "Array of doubles of longitude-latitude values. Note that longitude\
+      \ is first.\n"
 responses:
   WRONG_PROTOCOL:
     description: "A RESTful call was made to this endpoint but is not a REST endpoint.\
