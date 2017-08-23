@@ -47,30 +47,17 @@ schemes:
   - https
   - wss
 tags:
-  - name: A. SDS Discovery Endpoints
+  - name: A. Required Endpoints
     description: |
       The primary RESTful endpoints for using the SDSP Discovery service.
 paths:
   /api:
-    get:
-      summary: API version and other data. Can be used to test whether server is up.
-      operationId: getVersion
-      tags:
-      - A. Discovery Endpoints
-      description: >-
-        Provides versioning information for the software and API. Can be used to determine if service is up.
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Version data
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Version'
+    $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/pathitems/getVersion'
             
   /sds:
     post:
       tags:
-        - A. Discovery Endpoints
+        - A. Required Endpoints
       summary: Submit information regarding USS Operations
       operationId: postSds
       description: Allows for submission of USS opreations to the service discovery system.
@@ -101,7 +88,7 @@ paths:
 
     put:
       tags:
-        - A. Discovery Endpoints
+        - A. Required Endpoints
       summary: Submit updates to an existing USS Operation
       operationId: putSds
       description: Allows for SDSP to update an previous plan submission.
@@ -132,7 +119,7 @@ paths:
           description: Too many recent requests from you. Wait to make further queries.
     get:
       tags:
-        - A. Discovery Endpoints
+        - A. Required Endpoints
       summary: Request information regarding SDSPs
       operationId: getSds
       description: Allows for querying for SDSPs.
