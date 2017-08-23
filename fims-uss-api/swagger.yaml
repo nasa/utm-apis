@@ -23,7 +23,7 @@ schemes:
 - https
 - wss
 tags: # Have to add 'A' 'B' etc since ordering isn't respected in SwaggerUI.
-- name: A. FIMS Endpoints
+- name: A. Required Endpoints
   description: Primary RESTful endpoints for operators accessing FIMS
   externalDocs:
     url: "https://tmiserver.arc.nasa.gov/fims/api/"
@@ -57,7 +57,7 @@ paths:
   /operations:
     post:
       tags:
-        - A. FIMS Endpoints
+        - A. Required Endpoints
       summary: Submit an operation to FIMS
       security:
       - application:
@@ -94,7 +94,7 @@ paths:
   /operations/{gufi}:
     put:
       tags:
-        - A. FIMS Endpoints
+        - A. Required Endpoints
       summary: Modify an operation
 #      security:
 #        - OauthSecurity: [ ]
@@ -138,7 +138,7 @@ paths:
   /positions:
     post:
       tags:
-        - A. FIMS Endpoints
+        - A. Required Endpoints
       summary: Submit position report
 #      security:
 #         - OauthSecurity: [ ]
@@ -164,7 +164,7 @@ paths:
   /alertMessages:
     post:
       tags:
-      - "A. FIMS Endpoints"
+      - "A. Required Endpoints"
       summary: "Submit alert  to FIMS"
       description: "Allows posting of a message to FIMS. Typically an intent message\
         \ related to a particular operation."
