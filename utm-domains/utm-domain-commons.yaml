@@ -7,7 +7,8 @@
 
 definitions:
   scope:
-    description: The set of scopes used in UTM OAuth 2.0 implementationa
+    description: >-
+      The set of scopes used in UTM OAuth 2.0 implementationa
     type: string
     enum:
     - USS_BASIC
@@ -629,7 +630,7 @@ definitions:
         $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Position'
       contingency:
         # Required if this is a CONTINGENCY_PLAN_INITIATED message.
-        $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Contingency'
+        $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/ContingencyPlan'
       metadata:
         type: string
         description: Reserved field.
