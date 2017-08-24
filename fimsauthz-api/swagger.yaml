@@ -40,7 +40,6 @@ paths:
       operationId: getAuthorizationGrant
       description: >
         This endpoint is required as per RFC 6749.  However since FIMS only supports the Client Credentials Grant flow, there is no use of this endpoint currently. It is defined in case there is an use case in the future that requires it. Currently returns 501 (Not implemented) on a GET.  POST not supported at all.
-
       responses:
         '501':
           description: Not Implemented
@@ -301,7 +300,7 @@ definitions:
       scope: # These should match 'commons' scopes.  Can that be done?
         type: array
         items:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/scopes'
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/scope'
 
         
   Metadata:
@@ -325,11 +324,10 @@ definitions:
         format: url
         description: >-
           URL of the authorization server's token endpoint [RFC6749].  This is REQUIRED unless only the implicit grant type is used.
-# Scopes will be values like USS_BASIC, USS_PUBLIC_SAFETY, FIMS_BASIC, etc. Needs discussion.
       scopes_supported:
         type: array
         items:
-          type: string
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/scope'
         description: >-
           JSON array containing a list of the OAuth 2.0 [RFC6749] "scope" values that this authorization server supports. Servers MAY choose not to advertise some supported scope values even when this parameter is used.
 # Currently no response types supported, return empty array
