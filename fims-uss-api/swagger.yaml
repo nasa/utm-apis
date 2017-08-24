@@ -1,7 +1,7 @@
 ---
 swagger: "2.0"
 info:
-  description: "This API describes the RESTful interface from a UAS Service Supplier (USS) to the Flight Information Management System (FIMS) within UTM.  There is an additional API for asynchronous communications that is described in the Subscription Points section."
+  description: "This API describes the RESTful interface from a UAS Service Supplier (USS) to the Flight."
   version: "v2"
   title: "UTM Research Platform, FIMS-USS Interface"
   contact:
@@ -28,8 +28,8 @@ tags: # Have to add 'A' 'B' etc since ordering isn't respected in SwaggerUI.
   externalDocs:
     url: "https://tmiserver.arc.nasa.gov/fims/api/"
     description: NASA FIMS server generated from this API specification.
-- name: B. Subscription Points
-  description: Non-REST endpoints for asynchronous communications with FIMS
+- name: B. Webhooks
+  description: data exchange from FIMS to USS, for example, to push an alert.  
 - name: C. Data Types
   description: Psuedo endpoints used for the documentation of the data schema
 - name: D. Version
@@ -190,78 +190,6 @@ paths:
 
         403:
           description: "Unauthorized user."
-
-
-  /topic/positions:
-    get:
-      tags:
-        - B. Subscription Points
-      summary: Subscription point for receiving position reports
-      description: |
-        Stakeholders should subscribe to this topic to receive position reports provided to the FIMS by various operators. This is essentially an echo of the Postion data POSTed to the /positions endpoint.
-
-        See the schema information describing Postions included within this document to understand the data that will be received via this queue.
-
-        Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint.
-      responses:
-        410:
-          $ref: "#/responses/WRONG_PROTOCOL"
-      produces:
-        - application/json
-
-  /topic/operations:
-    get:
-      tags:
-        - B. Subscription Points
-      summary: Subscription point for receiving announcements about operations
-      description: |
-        Stakeholders should subscribe to this topic to receive announcements about operations that have been accepted/authorized. Information about denied operations will not be provided here.
-
-        See the schema information describing Operations included within this document to understand the data that will be received via this queue.
-
-        Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint.
-      responses:
-        410:
-          $ref: "#/responses/WRONG_PROTOCOL"
-      produces:
-        - application/json
-
-  /topic/constraintChange:
-      get:
-        tags:
-          - B. Subscription Points
-        summary: Subscription point for airspace constraint changes
-        description: |
-          Stakeholders should subscribe to this topic to get alert messages regarding airspace constraint changes.
-
-          Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint.
-        operationId: topicConstraintChangeUsingGET
-        produces:
-          - application/json
-        responses:
-          410:
-            $ref: "#/responses/WRONG_PROTOCOL"
-
-
-  /topic/emergency:
-      get:
-        tags:
-          - B. Subscription Points
-        summary: Subscription point for emergency alerts
-        description: |
-          Stakeholders should subscribe to this topic to get alert messages regarding emergencies.
-
-          Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint.
-        operationId: topicEmergencyUsingGET
-        produces:
-          - application/json
-        responses:
-          200:
-            description: OK
-            schema:
-              $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/AlertMessage'
-          410:
-            $ref: "#/responses/WRONG_PROTOCOL"
 
   /schema/Operation:
     get:
