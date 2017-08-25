@@ -30,7 +30,8 @@ tags: # Have to add 'A' 'B' etc since ordering isn't respected in SwaggerUI.
     description: NASA FIMS server generated from this API specification.
 - name: B. FIMS Notifications and Alerts
   description: |
-    FIMS sends Alerts and other notifications to USS's by using the USS Required API's POST alertMessages. 
+    FIMS sends Alerts and other notifications to USS's by using the USS Required API's POST alertMessages. FIMS subscribes to USS Discovery to learn about the USS Network.
+
 - name: C. Data Types
   description: Psuedo endpoints used for the documentation of the data schema
 - name: D. Version
