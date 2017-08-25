@@ -28,8 +28,9 @@ tags: # Have to add 'A' 'B' etc since ordering isn't respected in SwaggerUI.
   externalDocs:
     url: "https://tmiserver.arc.nasa.gov/fims/api/"
     description: NASA FIMS server generated from this API specification.
-- name: B. Webhooks
-  description: data exchange from FIMS to USS, for example, to push an alert.  
+- name: B. FIMS Notifications and Alerts
+  description: |
+    FIMS sends Alerts and other notifications to USS's by using the USS Required API's POST alertMessages. 
 - name: C. Data Types
   description: Psuedo endpoints used for the documentation of the data schema
 - name: D. Version
