@@ -162,7 +162,7 @@ paths:
         schema:
           $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Position'
   
-  /alertMessages:
+  /alert_messages:
     post:
       tags:
       - "A. Required Endpoints"
