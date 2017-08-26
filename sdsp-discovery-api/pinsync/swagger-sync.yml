@@ -42,7 +42,22 @@ tags:
 schemes:
 - "https"
 - "wss"
+security:
+- application:
+  - "Baseline_USS"
 paths:
+  /api:
+    get:
+      tags:
+      - "A. Required Endpoints"
+      summary: "API version and other data. Can be used to test whether server is\
+        \ up."
+      parameters: []
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Version"
   /sds:
     get:
       tags:
@@ -190,6 +205,13 @@ paths:
             \ and retry."
         429:
           description: "Too many recent requests from you. Wait to make further queries."
+securityDefinitions:
+  application:
+    type: "oauth2"
+    tokenUrl: "http://thisserver.com/oauth/token"
+    flow: "application"
+    scopes:
+      Baseline_USS: "A Baseline USS that can perform the set of essential USS requests"
 definitions:
   Sds:
     type: "object"
@@ -353,6 +375,21 @@ definitions:
       - "streaming_data"
       notes: "We provide free streaming wind and precipitation data via an elegant\
         \ API."
+  Version:
+    type: "object"
+    properties:
+      title:
+        type: "string"
+        description: "Title of the API"
+      version:
+        type: "string"
+        description: "Version number for the API"
+      build_time:
+        type: "string"
+        description: "Time of the latest build"
+      api_documentation:
+        type: "string"
+        description: "URL for API Documentation"
   UTMRestResponse:
     type: "object"
     properties:
