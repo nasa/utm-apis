@@ -51,8 +51,8 @@ tags:
     description: |
       The primary RESTful endpoints for using the SDSP Discovery service.
 paths:
-  /api:
-    $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/pathitems/getVersion'
+#   /api:
+#     $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/pathitems/getVersion'
             
   /sds:
     post:
