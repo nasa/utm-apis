@@ -75,8 +75,8 @@ definitions:
         type: string
         default: "NOT PROVIDED"
         maxLength: 1000
-      geography_description:
-        description: "Informative text about the operational geography. Not used by the UTM System. Only for human stakeholders."
+      volumes_description:
+        description: "Informative text about the operational volumes. Not used by the UTM System. Only for human stakeholders."
         type: string
         default: "NOT PROVIDED"
         maxLength: 1000
@@ -93,11 +93,6 @@ definitions:
         format: uuid
         maxLength: 36
         minLength: 36
-#registration_source:
-#        description: "See 'registration' field. This contains the source of the registration ID."
-#        type: string
-#        default: "NOT PROVIDED"
-#        maxLength: 1000
       flight_number:
         description: "Optional. For use by USS for identification purposes."
         type: string
@@ -353,39 +348,48 @@ definitions:
           description: >-
             A cause that necessitates a contingency response. In planning an operation, this array of values represents the various causes that may necessitate the provided contingency_repsonse.
           
-            1. LOST_C2
-              The operation has lost command or control links to the vehicle.
-            2. LOST_NAV
+            1. LOST_C2_UPLINK
+              The operation has lost command or control uplink to the vehicle.
+            2. LOST_C2_DOWNLINK
+              The operation has lost downlinks from the vehicle.
+            3. LOST_NAV
               The vehicle no longer has sufficient navigation sources.
-            3. LOST_SAA
+            4. LOST_SAA
               The vehicle's sense and avoid solution is no longer reliable.
-            4. LOW_FUEL
+            5. LOW_FUEL
               The vehicle does not have enough power to complete its mission. Still enough fuel to safely land or potentially return to base.
-            5. NO_FUEL
+            6. NO_FUEL
               The vehicle is either completely without fuel or has only enough fuel to land immediately.
-            6. MECHANICAL_PROBLEM 
+            7. MECHANICAL_PROBLEM 
               The vehicle is experiencing a mechanical problem necessitating initiation of a contingency response.
-            7. ENVIRONMENTAL
+            8. SOFTWARE_PROBLEM
+              The vehicle or some component of the required platform ground equipment is experiencing a software problem.
+            9. ENVIRONMENTAL
               There are conditions in the environment necessitating initiation of a contingency response. Generally this will be weather realted phenonmena.
-            8. SECURITY
+            10. SECURITY
               There is a security incident interrupting this operation.
-            9. TRAFFIC
+            11. TRAFFIC
               The density or type of air traffic near the vehicle necessitated a contingency response.
-            10. OTHER
+            12. LOST_USS
+              The operation has lost at least some portion of expected USS services.
+            13. OTHER
               Some cause not captured in any other category.
-            11. ANY
+            14. ANY
               This category should only be used wihtin an operation plan when a particular contingency response is appropriate for any contingency cause.
           type: string
           enum:
-          - LOST_C2
+          - LOST_C2_UPLINK
+          - LOST_C2_DOWNLINK
           - LOST_NAV
           - LOST_SAA
           - LOW_FUEL
           - NO_FUEL
           - MECHANICAL_PROBLEM
+          - SOFTWARE_PROBLEM
           - ENVIRONMENTAL
           - SECURITY
           - TRAFFIC
+          - LOST_USS
           - OTHER
           - ANY
       contingency_response:
@@ -425,6 +429,13 @@ definitions:
           Optional description of the contingency location.
         type: string
         maxLength: 1000
+      relevant_operation_volumes:
+        description: >-
+          In the planning stage of an operation, this array may be populated with ordinals that correspond to the ordinal values supplied with each OperationVolume. This is an indicator that this particular ContingencyPlan is valid for use when the operation is active in any of the particular noted OperationVolumes.
+        type: array
+        items:
+          type: integer
+          format: int32
       valid_time_begin:
         description: >-
           Optional. Time that this location is expected to be first available. For example, if an operation begins at 1100, but this location is not available until 1105 at the earliest, then this field could indicate that fact. Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy (three positions after decimal).  The 'Z' implies UTC times and is the only timezone accepted.
