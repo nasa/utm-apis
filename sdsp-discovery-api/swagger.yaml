@@ -50,9 +50,22 @@ tags:
   - name: A. Required Endpoints
     description: |
       The primary RESTful endpoints for using the SDSP Discovery service.
+      
+securityDefinitions:
+  application:
+    type: oauth2
+    tokenUrl: http://thisserver.com/oauth/token
+    flow: application
+    scopes:
+      Baseline_USS: A Baseline USS that can perform the set of essential USS requests
+
+security:
+  - application:
+    - Baseline_USS
+
 paths:
-#   /api:
-#     $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/pathitems/getVersion'
+  /api:
+    $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/pathitems/getVersion'
             
   /sds:
     post:
