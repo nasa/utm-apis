@@ -8,13 +8,19 @@
 definitions:
   scope:
     description: >-
-      The set of scopes used in UTM OAuth 2.0 implementationa
+      The set of scopes used in UTM OAuth 2.0 implementation
     type: string
     enum:
-    - USS_BASIC
-    - USS_PUBLICSAFETY
-    - FIMS_BASIC
-    - FIMS_USSDISCOVERY
+    - uss.operation.write
+    - uss.operation.readonly
+    - uss.publicsafety.write
+    - uss.publicsafety.readonly
+    - uss.constraint.write
+    - uss.sdsp.access
+    - fims.all
+    - fims.message.write
+    - fims.operation.readonly
+    - public.read
   
   # Labels taken from RFC 5424
   severity:
