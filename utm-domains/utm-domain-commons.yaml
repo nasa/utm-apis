@@ -8,19 +8,19 @@
 definitions:
   scope:
     description: >-
-      The set of scopes used in UTM OAuth 2.0 implementation
+      The set of scopes used in UTM OAuth 2.0 implementation. Scopes take the form of <principal>.<action>.<subject> where "principal" is the type of entity using the scope, "action" is the type of permission (read/write, etc.), and "subject" is the type of thing the principal is performing the action upon. A "write" action should be assumed to all read access to the subject as well as writing.
     type: string
     enum:
-    - uss.operation.write
-    - uss.operation.readonly
-    - uss.publicsafety.write
-    - uss.publicsafety.readonly
-    - uss.constraint.write
-    - uss.sdsp.access
-    - fims.all
-    - fims.message.write
-    - fims.operation.readonly
-    - public.read
+    - uss.write.operation
+    - uss.readonly.operation
+    - uss.write.publicsafety
+    - uss.readonly.publicsafety
+    - uss.write.constraint
+    - uss.access.sdsp
+    - fims.all.all
+    - fims.write.message
+    - fims.readonly.operation
+    - public.read.all
   
   # Labels taken from RFC 5424
   severity:
