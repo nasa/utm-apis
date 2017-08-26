@@ -1,8 +1,7 @@
 ---
 swagger: "2.0"
 info:
-  description: "This API describes the RESTful interface from a UAS Service Supplier\
-    \ (USS) to the Flight."
+  description: "Temp sandbox"
   version: "v2fix"
   title: "UTM Research Platform, FIMS-USS Interface"
   termsOfService: "\nA. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT\
