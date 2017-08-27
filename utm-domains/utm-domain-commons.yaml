@@ -512,13 +512,15 @@ definitions:
         maxLength: 36
         minLength: 36
       origin:
-        description: The user or process that generated this message
+        description: >-
+          The user or process that generated this message
         type: string
         enum:
         - FIMS
         - USS
       originator_id:
-        description: A name identifying the originator of this message.
+        description: >-
+          A name identifying the originator of this message.
         type: string
         maxLength: 100
       gufi:
@@ -550,6 +552,7 @@ definitions:
         - OPERATION_CLOSED
         - CONTINGENCY_PLAN_INITIATED
         - CONTINGENCY_PLAN_CANCELLED
+        - POSITION_REPORT_REQUESTED
         - OTHER_SEE_FREE_TEXT 
       last_known_position:
         # Last known position of the operation.  The Position model has time incorporated, together with other relevant data.
@@ -558,7 +561,8 @@ definitions:
         # Required if this is a CONTINGENCY_PLAN_INITIATED message.
         $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/ContingencyPlan'
       prev_message_id:
-        description: A message_id of a previously sent message that has relevance or context for this message. Example might be "CONTINGENCY_PLAN_CANCELLED" referencing the previous "CONTINGENCY_PLAN_INITIATED" message.
+        description: >-
+          A message_id of a previously sent message that has relevance or context for this message. Example might be "CONTINGENCY_PLAN_CANCELLED" referencing the previous "CONTINGENCY_PLAN_INITIATED" message.
         type: string
         format: uuid
         maxLength: 36
