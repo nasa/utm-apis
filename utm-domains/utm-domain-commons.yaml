@@ -704,14 +704,131 @@ definitions:
         type: string
         maxLength: 1000
         
-  UssInstanceMessage:
+  UssInstance:
     type: object
     description: >-
-      A message.
+      A contiguous area within which a USS has committed to providing services
+      for UAS operations.  The specific level of services provided may be
+      contained within the data provided from here in combination with data
+      provided directly from the USS.  In the future, the information provided
+      by this object may include more specific information about the services
+      provided by the USS or the types of UAS operations that are supported by
+      this USS Instance.
+    required:
+      - time_available_begin
+      - time_available_end
+      - coverage_area
+      - uss_instance_discovery_callback_url
     properties:
-      a:
+      uss_instance_id:
+        description: >-
+          A unique USS Instance identifier, minted by the USS.
         type: string
-        
+        format: uuid
+      uss_name:
+        description: >-
+          The name of the entity providing UAS Support Services. Populated by
+          the service discovery system based on credential information provided
+          by the USS.
+        type: string
+      time_submitted:
+        type: string
+        format: date-time
+        description: >-
+          The time at which the submission of this USS Instance was received at
+          this discovery service.  Only modifiable by discovery service.
+      time_available_begin:
+        type: string
+        format: date-time
+        description: >-
+          The time at which the USS will begin providing services for active UAS
+          operations for this USS Instance.  Note that the USS may provide
+          planning services prior to the time_available_begin depending on the
+          policies of the USS.
+      time_available_end:
+        type: string
+        format: date-time
+        description: >-
+          The time at which the USS will cease providing services for active UAS
+          operations for this USS Instance.  This means that there will not be
+          any UAS operations airborne after this time that would be supported by
+          this USS Instance.
+      coverage_area:
+        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Polygon'
+      time_last_modified:
+        type: string
+        format: date-time
+        description: >-
+          The last time there was an update to the data regarding this USS
+          Instance. Only modifiable by discovery service.
+      contact_email:
+        type: string
+        format: email
+        description: An optional contact email address for the USS.
+      contact_phone:
+        type: string
+        format: phone
+        description: An optional contact number for the USS.
+      uss_instance_discovery_callback_url:
+        type: string
+        format: url
+        description: A URL used by the USS Discovery Service to send messages to the USS Instance as defined further in the USS API defined elsewhere (link to documentation to be provided later in this document).  This URL may be unique to the USS Instance or may be shared by other USS Instances created by this USS.  URLs that are common to multiple USS Instances will receive only one copy of each message.
+      uss_informational_url:
+        type: string
+        format: url
+        description: An optional website URL for the USS for human use.
+      uss_openapi_url:
+        type: string
+        format: url
+        description: >-
+          An optional URL for the USS to supply an OpenAPI specification of its
+          UAS Operator interface.
+      uss_registration_url:
+        type: string
+        format: url
+        description: >-
+          An optional URL for UAS operators to register with this USS for
+          services.
+      notes:
+        type: string
+        description: >-
+          Any additional free text that would aid consumers of the service
+          discovery API in understanding this USS Instance.
+    example:
+      uss_instance_id: 00000000-0000-4444-8888-FEEDDEADBEEF
+      uss_name: NUSS
+      time_submitted: '2016-08-03T00:15:40.931Z'
+      time_available_begin: '2016-10-04T09:15:40Z'
+      time_available_end: '2016-11-04T13:20:42Z'
+      time_last_modified: '2016-08-04T17:31:01.253Z'
+      coverage_area:
+        type: Polygon
+        coordinates:
+          - - - -122.06382530000002
+              - 37.4090697
+            - - -122.05094253233
+              - 37.4193006277
+            - - -122.03276206976
+              - 37.41929920176
+            - - -122.06382530000002
+              - 37.4090697
+          - - - -122.062176579
+              - 37.40968041145
+            - - -122.05187056889
+              - 37.41786527236
+            - - -122.03732647634
+              - 37.41786440108
+            - - -122.062176579
+              - 37.40968041145
+      notes: >-
+        NUSS will only provide services for fixed-wing aircraft within this USS
+        Instance volume.
+      uss_informational_url: 'https://utm.arc.nasa.gov'
+      uss_openapi_url: 'https://nuss.arc.nasa.gov/api'
+      uss_registration_url: 'https://nuss.arc.nasa.gov/signup'
+      contact_email: joseph.rios@nasa.gov
+      contact_number: 650-555-5555
+      
   Version:
     type: object
     properties:
