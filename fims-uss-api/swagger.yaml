@@ -142,8 +142,6 @@ paths:
       tags:
         - A. Required Endpoints
       summary: Submit position report
-#      security:
-#         - OauthSecurity: [ ]
       description: Allows for submission of position data related to a particular operation.
       operationId: postPosition
       responses:
@@ -167,9 +165,8 @@ paths:
     post:
       tags:
       - "A. Required Endpoints"
-      summary: "Submit alert  to FIMS"
-      description: "Allows posting of a message to FIMS. Typically an intent message\
-        \ related to a particular operation."
+      summary: "Submit alert to FIMS"
+      description: "Allows posting of an alert message to FIMS."
       operationId: "postMessage"
       consumes:
       - "application/json"
