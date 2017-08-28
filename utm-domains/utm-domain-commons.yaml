@@ -914,6 +914,8 @@ pathitems:
       summary: API version and other data. Can be used to test whether server is up.
       tags:
         - A. Required Endpoints
+      security:
+         - OauthSecurity: []
       responses:
         200:
           description: "Success"
