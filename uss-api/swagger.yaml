@@ -49,7 +49,7 @@ paths:
       parameters: []
       responses:
         200:
-          description: "Successfully got the address"
+          description: "Success"
           schema:
             $ref: "#/definitions/Version"
   /alert_messages:
@@ -86,13 +86,13 @@ paths:
       parameters:
       - in: "body"
         name: "message"
-        description: "The message being sent"
+        description: "The USS Instance information being sent"
         required: true
         schema:
-          $ref: "#/definitions/UssInstanceMessage"
+          $ref: "#/definitions/UssInstance"
       responses:
         201:
-          description: "Message data received."
+          description: "Data received."
   /negotiations:
     post:
       tags:
@@ -330,12 +330,22 @@ definitions:
         - "OPERATION_ROGUE"
         - "OPERATION_CONFORMING"
         - "OPERATION_CLOSED"
-        - "CONTINGENCY_INITIATED"
+        - "CONTINGENCY_PLAN_INITIATED"
+        - "CONTINGENCY_PLAN_CANCELLED"
+        - "POSITION_REPORT_REQUESTED"
         - "OTHER_SEE_FREE_TEXT"
       last_known_position:
         $ref: "#/definitions/Position"
       contingency:
-        $ref: "#/definitions/Contingency"
+        $ref: "#/definitions/ContingencyPlan"
+      prev_message_id:
+        type: "string"
+        format: "uuid"
+        description: "A message_id of a previously sent message that has relevance\
+          \ or context for this message. Example might be \"CONTINGENCY_PLAN_CANCELLED\"\
+          \ referencing the previous \"CONTINGENCY_PLAN_INITIATED\" message."
+        minLength: 36
+        maxLength: 36
       metadata:
         type: "string"
         description: "Reserved field."
@@ -347,20 +357,6 @@ definitions:
         maxLength: 1000
     description: "An alert message. Used to make other stakeholders aware about an\
       \ issue with a specific operation."
-    example:
-      gufi: "00000000-0000-4444-8888-000000000000"
-      category: "AlertMessage"
-      origin: "FIMS"
-      sent_time: "2016-10-04T09:15:42.727Z"
-      alert_message: "OPERATIONS"
-      alert_severity: "WARNING"
-      alert_text: "UA_LEAVING_DEFINED_VOLUME"
-      free_text: " reason=RogueNearby, reasonDetail=nearby operation 86250f05-d89c-40cf-b932-aa8d10a426a2\
-        \ in state U is lateral distance 711.45 feet and vertical danger zone envelope\
-        \ 600 feet; This alert message valid for the next 30 seconds (far lateral/far\
-        \ altitude), vehicleType=FixedWing vehicleModelName=Silent Falcon, longLat=-119.87933795058\
-        \ 39.69702548394, alt_gps_wgs84_ft=5187.3645438621, track_ground_speed_kn=0.77703200548507,\
-        \ track_magnet ic_north_deg=null"
   severity:
     type: "string"
     enum:
@@ -408,7 +404,7 @@ definitions:
       enroute_positions_id:
         type: "string"
         format: "uuid"
-        description: "Each position will be assigned a UUIDv4 by the FIMS"
+        description: "Each position will be assigned a UUIDv4 by the USS"
         minLength: 36
         maxLength: 36
       gufi:
@@ -522,7 +518,7 @@ definitions:
     externalDocs:
       url: "https://tools.ietf.org/html/rfc7946#section-3.1.2"
     description: "GeoJSon Point, limited to 2D."
-  Contingency:
+  ContingencyPlan:
     type: "object"
     properties:
       contingency_id:
@@ -533,8 +529,56 @@ definitions:
           \ not required."
         minimum: 1
         maximum: 1000
-      contingency_type:
+      contingency_cause:
+        type: "array"
+        items:
+          type: "string"
+          description: "A cause that necessitates a contingency response. In planning\
+            \ an operation, this array of values represents the various causes that\
+            \ may necessitate the provided contingency_repsonse.\n1. LOST_C2_UPLINK\n\
+            \  The operation has lost command or control uplink to the vehicle.\n\
+            2. LOST_C2_DOWNLINK\n  The operation has lost downlinks from the vehicle.\n\
+            3. LOST_NAV\n  The vehicle no longer has sufficient navigation sources.\n\
+            4. LOST_SAA\n  The vehicle's sense and avoid solution is no longer reliable.\n\
+            5. LOW_FUEL\n  The vehicle does not have enough power to complete its\
+            \ mission. Still enough fuel to safely land or potentially return to base.\n\
+            6. NO_FUEL\n  The vehicle is either completely without fuel or has only\
+            \ enough fuel to land immediately.\n7. MECHANICAL_PROBLEM \n  The vehicle\
+            \ is experiencing a mechanical problem necessitating initiation of a contingency\
+            \ response.\n8. SOFTWARE_PROBLEM\n  The vehicle or some component of the\
+            \ required platform ground equipment is experiencing a software problem.\n\
+            9. ENVIRONMENTAL\n  There are conditions in the environment necessitating\
+            \ initiation of a contingency response. Generally this will be weather\
+            \ realted phenonmena.\n10. SECURITY\n  There is a security incident interrupting\
+            \ this operation.\n11. TRAFFIC\n  The density or type of air traffic near\
+            \ the vehicle necessitated a contingency response.\n12. LOST_USS\n  The\
+            \ operation has lost at least some portion of expected USS services.\n\
+            13. OTHER\n  Some cause not captured in any other category.\n14. ANY\n\
+            \  This category should only be used wihtin an operation plan when a particular\
+            \ contingency response is appropriate for any contingency cause."
+          enum:
+          - "LOST_C2_UPLINK"
+          - "LOST_C2_DOWNLINK"
+          - "LOST_NAV"
+          - "LOST_SAA"
+          - "LOW_FUEL"
+          - "NO_FUEL"
+          - "MECHANICAL_PROBLEM"
+          - "SOFTWARE_PROBLEM"
+          - "ENVIRONMENTAL"
+          - "SECURITY"
+          - "TRAFFIC"
+          - "LOST_USS"
+          - "OTHER"
+          - "ANY"
+      contingency_response:
         type: "string"
+        description: "The type of contingency response.\n1. LANDING\n  The operation\
+          \ will be landing by targeting the contingency_point.\n2. LOITERING\n  The\
+          \ operation will loiter at the contingency_point at the specified altitude\
+          \ with the noted loiter_radius_ft.\n3. RETURN_TO_BASE\n  The operation will\
+          \ return to base as specified by the contingency_point. The USS may issue\
+          \ an update to the operation plan to support this maneuver."
         enum:
         - "LANDING"
         - "LOITERING"
@@ -570,6 +614,16 @@ definitions:
         type: "string"
         description: "Optional description of the contingency location."
         maxLength: 1000
+      relevant_operation_volumes:
+        type: "array"
+        description: "In the planning stage of an operation, this array may be populated\
+          \ with ordinals that correspond to the ordinal values supplied with each\
+          \ OperationVolume. This is an indicator that this particular ContingencyPlan\
+          \ is valid for use when the operation is active in any of the particular\
+          \ noted OperationVolumes."
+        items:
+          type: "integer"
+          format: "int32"
       valid_time_begin:
         type: "string"
         format: "date-time"
@@ -590,12 +644,141 @@ definitions:
           \ Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.\
           \  Seconds may have up to millisecond accuracy (three positions after decimal).\
           \  The 'Z' implies UTC times and is the only timezone accepted."
-  UssInstanceMessage:
+  UssInstance:
+    type: "object"
+    required:
+    - "coverage_area"
+    - "time_available_begin"
+    - "time_available_end"
+    - "uss_instance_discovery_callback_url"
+    properties:
+      uss_instance_id:
+        type: "string"
+        format: "uuid"
+        description: "A unique USS Instance identifier, minted by the USS."
+      uss_name:
+        type: "string"
+        description: "The name of the entity providing UAS Support Services. Populated\
+          \ by the service discovery system based on credential information provided\
+          \ by the USS."
+      time_submitted:
+        type: "string"
+        format: "date-time"
+        description: "The time at which the submission of this USS Instance was received\
+          \ at this discovery service.  Only modifiable by discovery service."
+      time_available_begin:
+        type: "string"
+        format: "date-time"
+        description: "The time at which the USS will begin providing services for\
+          \ active UAS operations for this USS Instance.  Note that the USS may provide\
+          \ planning services prior to the time_available_begin depending on the policies\
+          \ of the USS."
+      time_available_end:
+        type: "string"
+        format: "date-time"
+        description: "The time at which the USS will cease providing services for\
+          \ active UAS operations for this USS Instance.  This means that there will\
+          \ not be any UAS operations airborne after this time that would be supported\
+          \ by this USS Instance."
+      coverage_area:
+        $ref: "#/definitions/Polygon"
+      time_last_modified:
+        type: "string"
+        format: "date-time"
+        description: "The last time there was an update to the data regarding this\
+          \ USS Instance. Only modifiable by discovery service."
+      contact_email:
+        type: "string"
+        format: "email"
+        description: "An optional contact email address for the USS."
+      contact_phone:
+        type: "string"
+        format: "phone"
+        description: "An optional contact number for the USS."
+      uss_instance_discovery_callback_url:
+        type: "string"
+        format: "url"
+        description: "A URL used by the USS Discovery Service to send messages to\
+          \ the USS Instance as defined further in the USS API defined elsewhere (link\
+          \ to documentation to be provided later in this document).  This URL may\
+          \ be unique to the USS Instance or may be shared by other USS Instances\
+          \ created by this USS.  URLs that are common to multiple USS Instances will\
+          \ receive only one copy of each message."
+      uss_informational_url:
+        type: "string"
+        format: "url"
+        description: "An optional website URL for the USS for human use."
+      uss_openapi_url:
+        type: "string"
+        format: "url"
+        description: "An optional URL for the USS to supply an OpenAPI specification\
+          \ of its UAS Operator interface."
+      uss_registration_url:
+        type: "string"
+        format: "url"
+        description: "An optional URL for UAS operators to register with this USS\
+          \ for services."
+      notes:
+        type: "string"
+        description: "Any additional free text that would aid consumers of the service\
+          \ discovery API in understanding this USS Instance."
+    description: "A contiguous area within which a USS has committed to providing\
+      \ services for UAS operations.  The specific level of services provided may\
+      \ be contained within the data provided from here in combination with data provided\
+      \ directly from the USS.  In the future, the information provided by this object\
+      \ may include more specific information about the services provided by the USS\
+      \ or the types of UAS operations that are supported by this USS Instance."
+    example:
+      uss_instance_id: "00000000-0000-4444-8888-FEEDDEADBEEF"
+      uss_name: "NUSS"
+      time_submitted: "2016-08-03T00:15:40.931Z"
+      time_available_begin: "2016-10-04T09:15:40Z"
+      time_available_end: "2016-11-04T13:20:42Z"
+      time_last_modified: "2016-08-04T17:31:01.253Z"
+      coverage_area:
+        type: "Polygon"
+        coordinates:
+        - - - -122.06382530000002
+            - 37.4090697
+          - - -122.05094253233
+            - 37.4193006277
+          - - -122.03276206976
+            - 37.41929920176
+          - - -122.06382530000002
+            - 37.4090697
+        - - - -122.062176579
+            - 37.40968041145
+          - - -122.05187056889
+            - 37.41786527236
+          - - -122.03732647634
+            - 37.41786440108
+          - - -122.062176579
+            - 37.40968041145
+      notes: "NUSS will only provide services for fixed-wing aircraft within this\
+        \ USS Instance volume."
+      uss_informational_url: "https://utm.arc.nasa.gov"
+      uss_openapi_url: "https://nuss.arc.nasa.gov/api"
+      uss_registration_url: "https://nuss.arc.nasa.gov/signup"
+      contact_email: "joseph.rios@nasa.gov"
+      contact_number: "650-555-5555"
+  Polygon:
     type: "object"
     properties:
-      a:
+      type:
         type: "string"
-    description: "A message."
+        description: "The type of Geometry. In this case, must be 'Polygon' per GeoJSON\
+          \ spec.\n"
+        enum:
+        - "Polygon"
+      coordinates:
+        type: "array"
+        items:
+          type: "array"
+          items:
+            $ref: "#/definitions/Position"
+    externalDocs:
+      url: "https://tools.ietf.org/html/rfc7946#section-3.1.6"
+    description: "GeoJSon Polygon. Positions all 2D."
   Operation:
     type: "object"
     required:
@@ -642,9 +825,9 @@ definitions:
           \ Only for human stakeholders."
         maxLength: 1000
         default: "NOT PROVIDED"
-      geography_description:
+      volumes_description:
         type: "string"
-        description: "Informative text about the operational geography. Not used by\
+        description: "Informative text about the operational volumes. Not used by\
           \ the UTM System. Only for human stakeholders."
         maxLength: 1000
         default: "NOT PROVIDED"
@@ -711,13 +894,13 @@ definitions:
         $ref: "#/definitions/Point"
       gcs_location:
         $ref: "#/definitions/Point"
-      contingency_locations:
+      contingency_plans:
         type: "array"
-        description: "An array of ContingencyLocations wherein this operation may\
-          \ land if needed/required during operation. Aids in planning and communication\
+        description: "An array of ContingencyPlans wherein this operation may land\
+          \ if needed/required during operation. Aids in planning and communication\
           \ during the execution of a contingency."
         items:
-          $ref: "#/definitions/Contingency"
+          $ref: "#/definitions/ContingencyPlan"
       faa_rule:
         type: "string"
         description: "PART_107: The operation follows FAA rule 107. If USS notifies\
@@ -752,67 +935,6 @@ definitions:
       metadata:
         type: "string"
         description: "Reserved field."
-    example:
-      gufi: "00000000-0000-4444-8888-000000000000"
-      submit_time: "2016-10-04T09:15:40.727Z"
-      decision_time: "2016-10-04T09:15:40.727Z"
-      aircraft_comments: "Comments about the aircraft"
-      flight_comments: "Comments about the flight"
-      flight_geography_description: "A description of the geography"
-      registration: "00000000-0000-4444-8888-000000000000"
-      flight_number: "Flight number"
-      user_id: "fimsUser"
-      created_by: "fimsUser"
-      primary_contact_name: "Jane Pilot"
-      primary_contact_phone: "XXX-XXX-XXXX"
-      primary_contact_email: "pilotjane@janepilot.com"
-      extra_contact_info: "Fax: XXX-XXX-XXXX"
-      state: "A"
-      controller_location:
-        type: "Point"
-        coordinates:
-        - -122.048589
-        - 37.414869
-      gcs_location:
-        type: "Point"
-        coordinates:
-        - -122.048589
-        - 37.414869
-      operation_volumes:
-      - ordinal: 1
-        near_structure: false
-        effective_time_begin: "2017-10-04T09:15:40.727Z"
-        effective_time_end: "2017-10-04T09:25:40.727Z"
-        actual_time_end: "2017-10-04T09:25:40.727Z"
-        conformance_time_begin: "2017-10-04T09:14:40.727Z"
-        conformance_time_end: "2017-10-04T09:26:40.727Z"
-        min_altitude_wgs84_ft: 0.0
-        max_altitude_wgs84_ft: 300.0
-        conform_min_altitude_wgs84_ft: 0.0
-        conform_max_altitude_wgs84_ft: 400.0
-        flight_geography:
-          type: "Polygon"
-          coordinates:
-          - - - -122.062176579
-              - 37.40968041145
-            - - -122.05187056889
-              - 37.41786527236
-            - - -122.03732647634
-              - 37.41786440108
-            - - -122.062176579
-              - 37.40968041145
-        conformance_geography:
-          type: "Polygon"
-          coordinates:
-          - - - -122.06382530000002
-              - 37.4090697
-            - - -122.05094253233
-              - 37.4193006277
-            - - -122.03276206976
-              - 37.41929920176
-            - - -122.06382530000002
-              - 37.4090697
-        beyond_visual_line_of_sight: false
   OperationVolume:
     type: "object"
     required:
@@ -874,21 +996,3 @@ definitions:
         type: "boolean"
         description: "Describes whether the operation volume is beyond the visual\
           \ line of sight of the RPIC."
-  Polygon:
-    type: "object"
-    properties:
-      type:
-        type: "string"
-        description: "The type of Geometry. In this case, must be 'Polygon' per GeoJSON\
-          \ spec.\n"
-        enum:
-        - "Polygon"
-      coordinates:
-        type: "array"
-        items:
-          type: "array"
-          items:
-            $ref: "#/definitions/Position"
-    externalDocs:
-      url: "https://tools.ietf.org/html/rfc7946#section-3.1.6"
-    description: "GeoJSon Polygon. Positions all 2D."
