@@ -12,18 +12,41 @@ definitions:
     type: string
     enum:
     - uss.write.operation
-    - uss.readonly.operation
+    - uss.read.operation
+    - uss.write.message
+    - uss.read.message
     - uss.write.publicsafety
-    - uss.readonly.publicsafety
+    - uss.read.publicsafety
     - uss.write.constraint
-    - uss.access.sdsp
+    - uss.read.sdsp
+    - uss.write.sdsp
     - fims.all.all
     - fims.write.message
-    - fims.readonly.operation
+    - fims.read.operation
     - public.read.all
   
   # Labels taken from RFC 5424
   severity:
+    description: >-
+      The severity level of a UTMMessage. This severity labeling may be used by other components within UTM as well.  The labels are ordered such that they may be given priority handling by software systems and human users.
+      
+      **EMERGENCY > ALERT > CRITICAL > WARNING > NOTICE > INFORMATIONAL**
+      
+      In relation to a UTMMessage, the severities may be interpreted as follows.
+      
+      1. **EMERGENCY**
+        Desc.
+      2. **ALERT**
+        Desc.
+      3. **CRITICAL**
+        Desc.
+      4. **WARNING**
+        Desc.
+      5. **NOTICE**
+        Desc.
+      6. **INFORMATIONAL**
+        Desc.
+      
     type: string
     enum:
     - EMERGENCY       # Event/message likely requires grounding of operations
@@ -500,10 +523,10 @@ definitions:
         - -122.05635935068132
         - 37.41436490284069
   
-  AlertMessage:
+  UTMMessage:
     type: object
     description: >-
-      An alert message. Used to make other stakeholders aware about an issue with a specific operation.
+      A message. Used to make other stakeholders aware about an issue.
     properties:
       message_id:
         description: A UUID assigned to this message by the originator
@@ -541,7 +564,28 @@ definitions:
         $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/severity'
       alert_type:
         description: >-
-          The type of alert message. An enum to constrain messages and allow better interoperability.
+          The type of alert message. An enum to constrain messages and allow better interoperability. Required with "CRITICAL" or higher severity, may be ignored by receiver otherwise.
+          
+          1. UNPLANNED_LANDING
+            This operation had to land earlier than expected and/or at a location other than was originally planned.
+          2. UNCONTROLLED_LANDING
+            This operation had an uncontrolled landing either at the originally planned landing location or another location.
+          3. OPERATION_NON_CONFORMING
+            This operation has entered the NON-CONFORMING state.
+          4. OPERATION_ROGUE
+            This operation has entered the ROGUE state.
+          5. OPERATION_CONFORMING
+            This operation was previously in the NON-CONFORMING state and has transitioned back to the ACTIVE state
+          6. OPERATION_CLOSED
+            This operation has entered the terminal CLOSED state. The operation will not again be active or in flight. This message is not required if the operation is transitioned to the CLOSED state from the ACTIVE state, but may be provided at the USSs discretion. This message is required when the operation transitioned from any state other than the ACTIVE state to teh CLOSED state. If transitioning an operation from ACCEPTED to CLOSED, this message must have a severity of NOTICE. If transitioning from NON-COFORMING or ROGUE, this message must have a severity of ALERT.
+          7. CONTINGENCY_PLAN_INITIATED
+            Description TBD.
+          8. CONTINGENCY_PLAN_CANCELLED
+            Description TBD.
+          9. POSITION_REPORT_REQUESTED
+            Description TBD.
+          10. OTHER_SEE_FREE_TEXT
+            Description TBD.
         type: string
         enum:
         - UNPLANNED_LANDING
