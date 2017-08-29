@@ -571,10 +571,10 @@ definitions:
             This operation had to land earlier than expected and/or at a location other than was originally planned.
           2. UNCONTROLLED_LANDING
             This operation had an uncontrolled landing either at the originally planned landing location or another location.
-          3. OPERATION_NON_CONFORMING
-            This operation has entered the NON-CONFORMING state.
+          3. OPERATION_NONCONFORMING
+            This operation has entered the NONCONFORMING state. Must be sent to LUN anytime operation transitions to this state. Must be sent with severity CRITICAL.
           4. OPERATION_ROGUE
-            This operation has entered the ROGUE state.
+            This operation has entered the ROGUE state. Must be sent to LUN anytime operation transitions to ROGUE state. Must be sent with severity ALERT.
           5. OPERATION_CONFORMING
             This operation was previously in the NON-CONFORMING state and has transitioned back to the ACTIVE state
           6. OPERATION_CLOSED
@@ -591,7 +591,7 @@ definitions:
         enum:
         - UNPLANNED_LANDING
         - UNCONTROLLED_LANDING
-        - OPERATION_NON_CONFORMING
+        - OPERATION_NONCONFORMING
         - OPERATION_ROGUE
         - OPERATION_CONFORMING
         - OPERATION_CLOSED
