@@ -161,12 +161,12 @@ paths:
         schema:
           $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Position'
   
-  /alert_messages:
+  /utm_messages:
     post:
       tags:
       - "A. Required Endpoints"
       summary: "Submit alert to FIMS"
-      description: "Allows posting of an alert message to FIMS."
+      description: "Allows posting of a message to FIMS."
       operationId: "postMessage"
       consumes:
       - "application/json"
@@ -178,7 +178,7 @@ paths:
         description: "Message object being sent"
         required: true
         schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/AlertMessage'
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMMessage'
       responses:
         201:
           description: "Returns message ID if received successfully."
