@@ -960,7 +960,7 @@ pathitems:
       tags:
         - A. Required Endpoints
       security:
-         - OauthSecurity: []
+         - security: []
       responses:
         200:
           description: "Success"
