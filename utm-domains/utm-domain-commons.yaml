@@ -541,6 +541,7 @@ definitions:
         enum:
         - FIMS
         - USS
+        - OTHER
       originator_id:
         description: >-
           A name identifying the originator of this message.
