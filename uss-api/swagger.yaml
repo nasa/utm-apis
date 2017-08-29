@@ -52,13 +52,15 @@ paths:
           description: "Success"
           schema:
             $ref: "#/definitions/Version"
-  /alert_messages:
+      security:
+      - security: []
+  /utm_messages:
     post:
       tags:
       - "A. Required Endpoints"
       summary: "Allow other authorized entities to send a message to this USS."
       description: "Allows another USS or FIMS to POST a message to this USS."
-      operationId: "postAlertMessage"
+      operationId: "postUtmMessage"
       consumes:
       - "application/json"
       parameters:
@@ -67,7 +69,7 @@ paths:
         description: "The message being sent"
         required: true
         schema:
-          $ref: "#/definitions/AlertMessage"
+          $ref: "#/definitions/UTMMessage"
       responses:
         201:
           description: "Message data received."
@@ -284,7 +286,7 @@ definitions:
       api_documentation:
         type: "string"
         description: "URL for API Documentation"
-  AlertMessage:
+  UTMMessage:
     type: "object"
     properties:
       message_id:
@@ -299,6 +301,7 @@ definitions:
         enum:
         - "FIMS"
         - "USS"
+        - "OTHER"
       originator_id:
         type: "string"
         description: "A name identifying the originator of this message."
@@ -322,7 +325,26 @@ definitions:
       alert_type:
         type: "string"
         description: "The type of alert message. An enum to constrain messages and\
-          \ allow better interoperability."
+          \ allow better interoperability. Required with \"CRITICAL\" or higher severity,\
+          \ may be ignored by receiver otherwise.\n1. UNPLANNED_LANDING\n  This operation\
+          \ had to land earlier than expected and/or at a location other than was\
+          \ originally planned.\n2. UNCONTROLLED_LANDING\n  This operation had an\
+          \ uncontrolled landing either at the originally planned landing location\
+          \ or another location.\n3. OPERATION_NON_CONFORMING\n  This operation has\
+          \ entered the NON-CONFORMING state.\n4. OPERATION_ROGUE\n  This operation\
+          \ has entered the ROGUE state.\n5. OPERATION_CONFORMING\n  This operation\
+          \ was previously in the NON-CONFORMING state and has transitioned back to\
+          \ the ACTIVE state\n6. OPERATION_CLOSED\n  This operation has entered the\
+          \ terminal CLOSED state. The operation will not again be active or in flight.\
+          \ This message is not required if the operation is transitioned to the CLOSED\
+          \ state from the ACTIVE state, but may be provided at the USSs discretion.\
+          \ This message is required when the operation transitioned from any state\
+          \ other than the ACTIVE state to teh CLOSED state. If transitioning an operation\
+          \ from ACCEPTED to CLOSED, this message must have a severity of NOTICE.\
+          \ If transitioning from NON-COFORMING or ROGUE, this message must have a\
+          \ severity of ALERT.\n7. CONTINGENCY_PLAN_INITIATED\n  Description TBD.\n\
+          8. CONTINGENCY_PLAN_CANCELLED\n  Description TBD.\n9. POSITION_REPORT_REQUESTED\n\
+          \  Description TBD.\n10. OTHER_SEE_FREE_TEXT\n  Description TBD."
         enum:
         - "UNPLANNED_LANDING"
         - "UNCONTROLLED_LANDING"
@@ -355,10 +377,16 @@ definitions:
           \ All time critical elements should be captured in the other data fields\
           \ for easier consumption by other automated systems."
         maxLength: 1000
-    description: "An alert message. Used to make other stakeholders aware about an\
-      \ issue with a specific operation."
+    description: "A message. Used to make other stakeholders aware about an issue."
   severity:
     type: "string"
+    description: "The severity level of a UTMMessage. This severity labeling may be\
+      \ used by other components within UTM as well.  The labels are ordered such\
+      \ that they may be given priority handling by software systems and human users.\n\
+      **EMERGENCY > ALERT > CRITICAL > WARNING > NOTICE > INFORMATIONAL**\nIn relation\
+      \ to a UTMMessage, the severities may be interpreted as follows.\n1. **EMERGENCY**\n\
+      \  Desc.\n2. **ALERT**\n  Desc.\n3. **CRITICAL**\n  Desc.\n4. **WARNING**\n\
+      \  Desc.\n5. **NOTICE**\n  Desc.\n6. **INFORMATIONAL**\n  Desc."
     enum:
     - "EMERGENCY"
     - "ALERT"
