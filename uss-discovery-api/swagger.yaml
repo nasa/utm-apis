@@ -70,11 +70,7 @@ tags:
   - name: C. Data Types
     description: Psuedo endpoints used for the documentation of data schema
     
-responses:
-  WRONG_PROTOCOL:
-    description: >-
-      A RESTful call was made to this endpoint but is not a REST endpoint.
-      Do not use this endpoint for REST calls.
+
 paths:
   /uss:
     post:
@@ -458,10 +454,10 @@ definitions:
           services.
       notes:
         type: string
-        description: >-
+        description: |
           Any additional free text that would aid consumers of the service
           discovery API in understanding this USS Instance.
-    example:
+    example: 
       uss_instance_id: 00000000-0000-4444-8888-FEEDDEADBEEF
       uss_name: NUSS
       time_submitted: '2016-08-03T00:15:40.931Z'
