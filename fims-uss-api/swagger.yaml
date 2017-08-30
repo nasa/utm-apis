@@ -52,9 +52,7 @@ responses:
     description: A RESTful call was made to this endpoint but this is not a REST endpoint. Do not use this endpoint for REST calls.
 
 paths:
-  /api:
-    $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/pathitems/getVersion'
-            
+
             
   /operations:
     post:
@@ -283,7 +281,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/AlertMessage'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMMessage'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 
