@@ -30,8 +30,7 @@ security:
     - Baseline_USS
 
 paths:
-  /api:
-    $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/pathitems/getVersion'
+
   /authorize:
     get:
       tags:
