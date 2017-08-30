@@ -903,7 +903,9 @@ definitions:
         type: string
         description: Time of the latest build 
       api_documentation:
-        type: string
+        type: array
+        items:
+          type: string
         description: URL for API Documentation
       
   UTMRestResponse:
