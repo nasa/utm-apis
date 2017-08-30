@@ -40,20 +40,6 @@ schemes:
 - "https"
 - "wss"
 paths:
-  /api:
-    get:
-      tags:
-      - "A. Required Endpoints"
-      summary: "API version and other data. Can be used to test whether server is\
-        \ up."
-      parameters: []
-      responses:
-        200:
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Version"
-      security:
-      - security: []
   /utm_messages:
     post:
       tags:
@@ -271,21 +257,6 @@ definitions:
         - "A"
         - "B"
         - "C"
-  Version:
-    type: "object"
-    properties:
-      title:
-        type: "string"
-        description: "Title of the API"
-      version:
-        type: "string"
-        description: "Version number for the API"
-      build_time:
-        type: "string"
-        description: "Time of the latest build"
-      api_documentation:
-        type: "string"
-        description: "URL for API Documentation"
   UTMMessage:
     type: "object"
     properties:
@@ -330,25 +301,28 @@ definitions:
           \ had to land earlier than expected and/or at a location other than was\
           \ originally planned.\n2. UNCONTROLLED_LANDING\n  This operation had an\
           \ uncontrolled landing either at the originally planned landing location\
-          \ or another location.\n3. OPERATION_NON_CONFORMING\n  This operation has\
-          \ entered the NON-CONFORMING state.\n4. OPERATION_ROGUE\n  This operation\
-          \ has entered the ROGUE state.\n5. OPERATION_CONFORMING\n  This operation\
-          \ was previously in the NON-CONFORMING state and has transitioned back to\
-          \ the ACTIVE state\n6. OPERATION_CLOSED\n  This operation has entered the\
-          \ terminal CLOSED state. The operation will not again be active or in flight.\
-          \ This message is not required if the operation is transitioned to the CLOSED\
-          \ state from the ACTIVE state, but may be provided at the USSs discretion.\
-          \ This message is required when the operation transitioned from any state\
-          \ other than the ACTIVE state to teh CLOSED state. If transitioning an operation\
-          \ from ACCEPTED to CLOSED, this message must have a severity of NOTICE.\
-          \ If transitioning from NON-COFORMING or ROGUE, this message must have a\
-          \ severity of ALERT.\n7. CONTINGENCY_PLAN_INITIATED\n  Description TBD.\n\
-          8. CONTINGENCY_PLAN_CANCELLED\n  Description TBD.\n9. POSITION_REPORT_REQUESTED\n\
-          \  Description TBD.\n10. OTHER_SEE_FREE_TEXT\n  Description TBD."
+          \ or another location.\n3. OPERATION_NONCONFORMING\n  This operation has\
+          \ entered the NONCONFORMING state. Must be sent to LUN anytime operation\
+          \ transitions to this state. Must be sent with severity CRITICAL.\n4. OPERATION_ROGUE\n\
+          \  This operation has entered the ROGUE state. Must be sent to LUN anytime\
+          \ operation transitions to ROGUE state. Must be sent with severity ALERT.\n\
+          5. OPERATION_CONFORMING\n  This operation was previously in the NON-CONFORMING\
+          \ state and has transitioned back to the ACTIVE state\n6. OPERATION_CLOSED\n\
+          \  This operation has entered the terminal CLOSED state. The operation will\
+          \ not again be active or in flight. This message is not required if the\
+          \ operation is transitioned to the CLOSED state from the ACTIVE state, but\
+          \ may be provided at the USSs discretion. This message is required when\
+          \ the operation transitioned from any state other than the ACTIVE state\
+          \ to teh CLOSED state. If transitioning an operation from ACCEPTED to CLOSED,\
+          \ this message must have a severity of NOTICE. If transitioning from NON-COFORMING\
+          \ or ROGUE, this message must have a severity of ALERT.\n7. CONTINGENCY_PLAN_INITIATED\n\
+          \  Description TBD.\n8. CONTINGENCY_PLAN_CANCELLED\n  Description TBD.\n\
+          9. POSITION_REPORT_REQUESTED\n  Description TBD.\n10. OTHER_SEE_FREE_TEXT\n\
+          \  Description TBD."
         enum:
         - "UNPLANNED_LANDING"
         - "UNCONTROLLED_LANDING"
-        - "OPERATION_NON_CONFORMING"
+        - "OPERATION_NONCONFORMING"
         - "OPERATION_ROGUE"
         - "OPERATION_CONFORMING"
         - "OPERATION_CLOSED"
