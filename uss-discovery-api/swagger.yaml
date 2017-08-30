@@ -1,488 +1,499 @@
----
-swagger: "2.0"
+swagger: '2.0'
 info:
-  description: "This API describes the RESTful interface to the USS discovery service\
-    \ within the UTM System.  This service allows for authenticated USS operators\
-    \ to submit information about their USS and for all stakeholders to query for\
-    \ a USS matching certain parameters. In addition, this document defines an asynchronous\
-    \ interface wherein each authenticated USS can be notifed of changes to information\
-    \ about other USSs."
-  version: "v1"
-  title: "UTM USS Service Discovery"
-  termsOfService: "\nA. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT\
-    \ ANY WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,\
-    \ BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL CONFORM TO SPECIFICATIONS,\
-    \ ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,\
-    \ OR FREEDOM FROM INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE\
-    \ ERROR FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM TO\
-    \ THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER, CONSTITUTE AN\
-    \ ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT OF ANY RESULTS, RESULTING\
-    \ DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY OTHER APPLICATIONS RESULTING FROM\
-    \ USE OF THE SUBJECT SOFTWARE. FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES\
-    \ AND LIABILITIES REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,\
-    \ AND DISTRIBUTES IT \"AS IS.\"\n\nB. Waiver and Indemnity: RECIPIENT AGREES TO\
-    \ WAIVE ANY AND ALL CLAIMS AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS\
-    \ AND SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT''S USE OF THE\
-    \ SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES\
-    \ ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING\
-    \ FROM, RECIPIENT''S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY AND\
-    \ HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS,\
-    \ AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT''S\
-    \ SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL TERMINATION\
-    \ OF THIS AGREEMENT.\n"
+  description: >-
+    This API describes the RESTful interface to the USS discovery service within
+    the UTM System.  This service allows for authenticated USS operators to
+    submit information about their USS and for all stakeholders to query for a
+    USS matching certain parameters. In addition, this document defines an
+    asynchronous interface wherein each authenticated USS can be notifed of
+    changes to information about other USSs.
+  version: v1
+  title: UTM USS Service Discovery
   contact:
-    name: "NASA Ames Research Center, Aviation Systems Division"
-    url: "https://utm.arc.nasa.gov/"
-    email: "joseph.rios@nasa.gov"
+    name: 'NASA Ames Research Center, Aviation Systems Division'
+    url: 'https://utm.arc.nasa.gov/'
+    email: joseph.rios@nasa.gov
   license:
-    name: "NASA Open Source Agreement"
-    url: "https://ti.arc.nasa.gov/opensource/nosa/"
+    name: NASA Open Source Agreement
+    url: 'https://ti.arc.nasa.gov/opensource/nosa/'
+    
+  termsOfService: >
+
+    A. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+    WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,
+    BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL CONFORM TO
+    SPECIFICATIONS, ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+    PARTICULAR PURPOSE, OR FREEDOM FROM INFRINGEMENT, ANY WARRANTY THAT THE
+    SUBJECT SOFTWARE WILL BE ERROR FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF
+    PROVIDED, WILL CONFORM TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN
+    ANY MANNER, CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR
+    RECIPIENT OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR
+    ANY OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE. FURTHER,
+    GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES REGARDING
+    THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE, AND DISTRIBUTES
+    IT "AS IS."
+
+
+    B. Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+    AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS
+    WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT''S USE OF THE SUBJECT SOFTWARE
+    RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES ARISING
+    FROM SUCH USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING
+    FROM, RECIPIENT''S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY
+    AND HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+    SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY
+    LAW. RECIPIENT''S SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE,
+    UNILATERAL TERMINATION OF THIS AGREEMENT.
+    
+
+
+securityDefinitions:
+  password:
+    type: oauth2
+    tokenUrl: https://<<host>>/fimsAuthServer/oauth/token
+    flow: password
+    scopes:
+      USS: A USS can read and write
+      
 host: "ussdiscovery.arc.nasa.gov"
 basePath: "/ussdisc"
-tags:
-- name: "A. Required Endpoints"
-  description: "The primary RESTful endpoints for sharing USS Instance data."
-- name: "B. Subscription Points"
-  description: "Non-REST endpoints for asynchronous communications with FIMS"
-- name: "C. Data Types"
-  description: "Psuedo endpoints used for the documentation of data schema"
+
 schemes:
-- "https"
-- "wss"
+  - https
+  - wss
+  
+tags:
+  - name: A. Required Endpoints
+    description: The primary RESTful endpoints for sharing USS Instance data.
+  - name: B. Subscription Points
+    description: Non-REST endpoints for asynchronous communications with FIMS
+  - name: C. Data Types
+    description: Psuedo endpoints used for the documentation of data schema
+    
+responses:
+  WRONG_PROTOCOL:
+    description: >-
+      A RESTful call was made to this endpoint but is not a REST endpoint.
+      Do not use this endpoint for REST calls.
 paths:
   /uss:
-    get:
-      tags:
-      - "A. Required Endpoints"
-      summary: "Request information regarding USS instances"
-      description: "Allows for querying for USS instances."
-      operationId: "getUSSes"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "fields"
-        in: "query"
-        description: "The specific subset of fields to return. Comma separated list.\
-          \ Default will be all fields."
-        required: false
-        type: "string"
-      - name: "q"
-        in: "query"
-        description: "Query with specific criteria.  <br/><br/>\n<b>example usage:</b>\
-          \ .../api/v1/uss?q=uss_name eq NUSS, time_available_begin gte 2016-10-02T00:00:00Z,\
-          \ coverage_area contains POINT (-122.056455 37.414336) <br/><br/>\nA series\
-          \ of binary operators and operands.  <br/>\nThe lefthand side operands are\
-          \ the field names.  <br/>\nThe righthand side operands are constants of\
-          \ the corresponding type. <br/>\nThe allowed operators are dependent on\
-          \ the operand types.  <br/>\nFor geometric RHS, the input should be OGC\
-          \ well-known text (http://en.wikipedia.org/wiki/Well-known_text), limited\
-          \ to point, linestring, and polygon types.  <br/>\nWe also allow the non-standard\
-          \ bounding box as a geometric RHS. This is of the form BBOX(lower_left_long\
-          \ lower_left_lat, upper_right_lon upper_right_lat).  <br/>\nString-typed\
-          \ operands may use `eq`, `contains`, and `not`.  <br/>\nNumeric-typed and\
-          \ time operands may use `eq`, `lt`, `lte`, `gt`, `gte`, and `not`. <br/>\n\
-          Geometric-types operands may use `intersects`, `contains`, and `within`.\
-          \ <br/>\nIf multiple criteria are specified, they are considered as an *AND*\
-          \ operation. <br/>\n"
-        required: false
-        type: "string"
-      - name: "sort"
-        in: "query"
-        description: "A valid field name to use for sorting records. If multiple fields\
-          \ are provided, the sorting is based on the ordered priorty of that list."
-        required: false
-        type: "string"
-        default: "time_submitted"
-      - name: "sort_increasing"
-        in: "query"
-        description: "For optional use with the 'sort' parameter. If 'sort' is not\
-          \ provided, then 'sort_increasing' will be ignored. Boolean value.  If multiple\
-          \ fields are provided in the 'sort' paramenter, this boolean value will\
-          \ apply to all of them."
-        required: false
-        type: "boolean"
-        default: true
-      - name: "limit"
-        in: "query"
-        description: "The maximum number or records to return."
-        required: false
-        type: "integer"
-        default: 10
-        format: "int32"
-      - name: "offset"
-        in: "query"
-        description: "The index from which to begin the list of returned records."
-        required: false
-        type: "integer"
-        default: 0
-        format: "int32"
-      responses:
-        200:
-          description: "Successful data request. Response includes requested data."
-          schema:
-            $ref: "#/definitions/UssInstance"
-        400:
-          description: "Bad request. Typically validation error. Fix your request\
-            \ and retry."
-          schema:
-            $ref: "#/definitions/UTMRestResponse"
-        429:
-          description: "Too many recent requests from you. Wait to make further queries."
-          schema:
-            $ref: "#/definitions/UTMRestResponse"
-      security:
-      - password: []
     post:
       tags:
-      - "A. Required Endpoints"
-      summary: "Submit information regarding USS Instances"
-      description: "Allows for submission of USS Instances to the service discovery\
-        \ system."
-      operationId: "postUSS"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "uss_instance"
-        description: "USS Instance plan to add"
-        required: true
-        schema:
-          $ref: "#/definitions/UssInstance"
-      responses:
-        201:
-          description: "USS Instance received."
-          schema:
-            $ref: "#/definitions/UTMRestResponse"
-        400:
-          description: "Bad request. Typically validation error. Fix your request\
-            \ and retry."
-          schema:
-            $ref: "#/definitions/UTMRestResponse"
-        403:
-          description: "Invalid ID supplied.  Fix authorization and retry."
-          schema:
-            $ref: "#/definitions/UTMRestResponse"
-        429:
-          description: "Too many recent requests from you. Wait to make further submissions."
-          schema:
-            $ref: "#/definitions/UTMRestResponse"
+        - A. Required Endpoints
+      summary: Submit information regarding USS Instances
       security:
-      - password: []
+        - password: [ ]
+      operationId: postUSS
+      description: Allows for submission of USS Instances to the service discovery system.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: uss_instance
+          description: USS Instance plan to add
+          required: true
+          schema:
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
+      responses:
+        '201':
+          description: USS Instance received.
+          schema:
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+        '400':
+          description: Bad request. Typically validation error. Fix your request and retry.
+          schema:
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+        '403':
+          description: Invalid ID supplied.  Fix authorization and retry.
+          schema:
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+        '429':
+          description: Too many recent requests from you. Wait to make further submissions.
+          schema:
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+    get:
+      tags:
+        - A. Required Endpoints
+      summary: Request information regarding USS instances
+      security:
+        - password: []
+      operationId: getUSSes
+      description: Allows for querying for USS instances.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: fields
+          in: query
+          description: >-
+            The specific subset of fields to return. Comma separated list.
+            Default will be all fields.
+          required: false
+          type: string
+        - name: q
+          in: query
+          description: >
+            Query with specific criteria.  <br/><br/>
+
+            <b>example usage:</b> .../api/v1/uss?q=uss_name eq NUSS,
+            time_available_begin gte 2016-10-02T00:00:00Z, coverage_area
+            contains POINT (-122.056455 37.414336) <br/><br/>
+
+            A series of binary operators and operands.  <br/>
+
+            The lefthand side operands are the field names.  <br/>
+
+            The righthand side operands are constants of the corresponding type.
+            <br/>
+
+            The allowed operators are dependent on the operand types.  <br/>
+
+            For geometric RHS, the input should be OGC well-known text
+            (http://en.wikipedia.org/wiki/Well-known_text), limited to point,
+            linestring, and polygon types.  <br/>
+
+            We also allow the non-standard bounding box as a geometric RHS. This
+            is of the form BBOX(lower_left_long lower_left_lat, upper_right_lon
+            upper_right_lat).  <br/>
+
+            String-typed operands may use `eq`, `contains`, and `not`.  <br/>
+
+            Numeric-typed and time operands may use `eq`, `lt`, `lte`, `gt`,
+            `gte`, and `not`. <br/>
+
+            Geometric-types operands may use `intersects`, `contains`, and
+            `within`. <br/>
+
+            If multiple criteria are specified, they are considered as an *AND*
+            operation. <br/>
+          required: false
+          type: string
+        - name: sort
+          in: query
+          description: >-
+            A valid field name to use for sorting records. If multiple fields
+            are provided, the sorting is based on the ordered priorty of that
+            list.
+          required: false
+          default: time_submitted
+          type: string
+        - name: sort_increasing
+          in: query
+          description: >-
+            For optional use with the 'sort' parameter. If 'sort' is not
+            provided, then 'sort_increasing' will be ignored. Boolean value.  If
+            multiple fields are provided in the 'sort' paramenter, this boolean
+            value will apply to all of them.
+          required: false
+          default: true
+          type: boolean
+        - name: limit
+          in: query
+          description: The maximum number or records to return.
+          required: false
+          type: integer
+          default: 10
+          format: int32
+        - name: offset
+          in: query
+          description: The index from which to begin the list of returned records.
+          required: false
+          type: integer
+          default: 0
+          format: int32
+      responses:
+        '200':
+          description: Successful data request. Response includes requested data.
+          schema:
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
+        '400':
+          description: Bad request. Typically validation error. Fix your request and retry.
+          schema:
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+        '429':
+          description: Too many recent requests from you. Wait to make further queries.
+          schema:
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
   /uss/{id}:
     get:
       tags:
-      - "A. Required Endpoints"
-      summary: "Request information regarding a single USS Instance"
-      description: "Allows for querying for USS Instances."
-      operationId: "getUSS"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "id"
-        in: "path"
-        description: "id"
-        required: true
-        type: "string"
-      - name: "fields"
-        in: "query"
-        description: "The specific subset of fields to return. Comma separated list.\
-          \ Default will be all fields."
-        required: false
-        type: "string"
-      responses:
-        200:
-          description: "Successful data request. Response includes requested data."
-          schema:
-            $ref: "#/definitions/UssInstance"
-        400:
-          description: "Bad request. Typically validation error. Fix your request\
-            \ and retry."
-          schema:
-            $ref: "#/definitions/UTMRestResponse"
-        429:
-          description: "Too many recent requests from you. Wait to make further queries."
-          schema:
-            $ref: "#/definitions/UTMRestResponse"
+        - A. Required Endpoints
+      summary: Request information regarding a single USS Instance
       security:
-      - password: []
+        - password: []
+      operationId: getUSS
+      description: Allows for querying for USS Instances.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+        - name: fields
+          in: query
+          description: >-
+            The specific subset of fields to return. Comma separated list.
+            Default will be all fields.
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Successful data request. Response includes requested data.
+          schema:
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
+        '400':
+          description: Bad request. Typically validation error. Fix your request and retry.
+          schema:
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+        '429':
+          description: Too many recent requests from you. Wait to make further queries.
+          schema:
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
     put:
       tags:
-      - "A. Required Endpoints"
-      summary: "Submit updates to an existing USS Instance"
-      description: "Allows for USS operators to update an previous USS Instance submission."
-      operationId: "putUSS"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "id"
-        in: "path"
-        description: "id"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "uss_instance"
-        description: "USS Instance with the following properties:\n  1. Contains a\
-          \ valid uss_instance_id.\n  2. Instance has time_available_end value that\
-          \ is in the future.\n  3. No date-time fields that are in the past are modified.\n\
-          \  4. Other rules for a USS Instance POST are satisfied.\n"
-        required: true
-        schema:
-          $ref: "#/definitions/UssInstance"
-      responses:
-        200:
-          description: "Successful data request. Response includes requested data."
-          schema:
-            $ref: "#/definitions/UssInstance"
-        400:
-          description: "Bad request. Typically validation error. Fix your request\
-            \ and retry."
-          schema:
-            $ref: "#/definitions/UTMRestResponse"
-        429:
-          description: "Too many recent requests from you. Wait to make further queries."
-          schema:
-            $ref: "#/definitions/UTMRestResponse"
+        - A. Required Endpoints
+      summary: Submit updates to an existing USS Instance
       security:
-      - password: []
+        - password: []
+      operationId: putUSS
+      description: Allows for USS operators to update an previous USS Instance submission.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+        - in: body
+          name: uss_instance
+          description: |
+            USS Instance with the following properties:
+              1. Contains a valid uss_instance_id.
+              2. Instance has time_available_end value that is in the future.
+              3. No date-time fields that are in the past are modified.
+              4. Other rules for a USS Instance POST are satisfied.
+          required: true
+          schema:
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
+      responses:
+        '200':
+          description: Successful data request. Response includes requested data.
+          schema:
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
+        '400':
+          description: Bad request. Typically validation error. Fix your request and retry.
+          schema:
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+        '429':
+          description: Too many recent requests from you. Wait to make further queries.
+          schema:
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
   /topic/ussUpdates:
     get:
       tags:
-      - "B. Subscription Points"
-      summary: "Subscription point for receiving USS Instance updates"
-      description: "Stakeholders should subscribe to this topic to receive updates\
-        \ on USS Instances. Data will be produced on this topic whenever:\n\n  1.\
-        \ A new, valid USS Instance is submitted.\n  2. There is an update to a USS\
-        \ Instance.\n  \nData will not be produced on this topic when a USS Instance\
-        \ ends according to its originally submited time_available_end value.\n\n\
-        See the schema information describing UssInstance included within this document\
-        \ to understand the data that will be received via this queue.\n\nNote that\
-        \ if you are viewing this in a SwaggerUI, the \"try it out\" feature will\
-        \ not work since this is not a RESTful endpoint.\n"
-      produces:
-      - "application/json"
-      parameters: []
+        - B. Subscription Points
+      summary: Subscription point for receiving USS Instance updates
+      description: >
+        Stakeholders should subscribe to this topic to receive updates on USS
+        Instances. Data will be produced on this topic whenever:
+
+          1. A new, valid USS Instance is submitted.
+          2. There is an update to a USS Instance.
+          
+        Data will not be produced on this topic when a USS
+        Instance ends according to its originally submited time_available_end
+        value.
+
+
+        See the schema information describing UssInstance included within this
+        document to understand the data that will be received via this queue.
+
+
+        Note that if you are viewing this in a SwaggerUI, the "try it out"
+        feature will not work since this is not a RESTful endpoint.
       responses:
-        410:
-          description: "A RESTful call was made to this endpoint but is not a REST\
-            \ endpoint. Do not use this endpoint for REST calls."
+        '410':
+          $ref: '#/responses/WRONG_PROTOCOL'
+      produces:
+        - application/json
   /schema/UssInstance:
     get:
       tags:
-      - "C. Data Types"
-      summary: "Instance schema"
-      description: "Illustrates a USS Instance in JSON. This endpoint is not intended\
-        \ for use.\n\nNote that if you are viewing this in a SwaggerUI, the \"try\
-        \ it out\" feature will not work since this is not a RESTful endpoint.\n"
+        - C. Data Types
+      summary: Instance schema
+      description: >
+        Illustrates a USS Instance in JSON. This endpoint is not intended for
+        use.
+
+
+        Note that if you are viewing this in a SwaggerUI, the "try it out"
+        feature will not work since this is not a RESTful endpoint.
       produces:
-      - "application/json"
-      parameters: []
+        - application/json
       responses:
-        200:
-          description: "OK"
+        '200':
+          description: OK
           schema:
-            $ref: "#/definitions/UssInstance"
-        410:
-          description: "A RESTful call was made to this endpoint but is not a REST\
-            \ endpoint. Do not use this endpoint for REST calls."
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance''
+        '410':
+          $ref: '#/responses/WRONG_PROTOCOL'
   /schema/Polygon:
     get:
       tags:
-      - "C. Data Types"
-      summary: "Polygon schema"
-      description: "Illustrates a Polygon in JSON. This endpoint is not intended for\
-        \ use.\n\nNote that if you are viewing this in a SwaggerUI, the \"try it out\"\
-        \ feature will not work since this is not a RESTful endpoint.\n"
+        - C. Data Types
+      summary: Polygon schema
+      description: >
+        Illustrates a Polygon in JSON. This endpoint is not intended for use.
+
+
+        Note that if you are viewing this in a SwaggerUI, the "try it out"
+        feature will not work since this is not a RESTful endpoint.
       produces:
-      - "application/json"
-      parameters: []
+        - application/json
       responses:
-        200:
-          description: "OK"
+        '200':
+          description: OK
           schema:
-            $ref: "#/definitions/Polygon"
-        410:
-          description: "A RESTful call was made to this endpoint but is not a REST\
-            \ endpoint. Do not use this endpoint for REST calls."
-securityDefinitions:
-  password:
-    type: "oauth2"
-    tokenUrl: "https://<<host>>/fimsAuthServer/oauth/token"
-    flow: "password"
-    scopes:
-      USS: "A USS can read and write"
+            $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Polygon'
+        '410':
+          $ref: '#/responses/WRONG_PROTOCOL'
+
+
+    
 definitions:
   UssInstance:
-    type: "object"
+    type: object
+    description: >-
+      A contiguous area within which a USS has committed to providing services
+      for UAS operations.  The specific level of services provided may be
+      contained within the data provided from here in combination with data
+      provided directly from the USS.  In the future, the information provided
+      by this object may include more specific information about the services
+      provided by the USS or the types of UAS operations that are supported by
+      this USS Instance.
     required:
-    - "coverage_area"
-    - "time_available_begin"
-    - "time_available_end"
-    - "uss_instance_discovery_callback_url"
+      - time_available_begin
+      - time_available_end
+      - coverage_area
+      - uss_instance_discovery_callback_url
     properties:
       uss_instance_id:
-        type: "string"
-        format: "uuid"
-        description: "A unique USS Instance identifier, minted by the USS."
+        description: >-
+          A unique USS Instance identifier, minted by the USS.
+        type: string
+        format: uuid
       uss_name:
-        type: "string"
-        description: "The name of the entity providing UAS Support Services. Populated\
-          \ by the service discovery system based on credential information provided\
-          \ by the USS."
+        description: >-
+          The name of the entity providing UAS Support Services. Populated by
+          the service discovery system based on credential information provided
+          by the USS.
+        type: string
       time_submitted:
-        type: "string"
-        format: "date-time"
-        description: "The time at which the submission of this USS Instance was received\
-          \ at this discovery service.  Only modifiable by discovery service."
+        type: string
+        format: date-time
+        description: >-
+          The time at which the submission of this USS Instance was received at
+          this discovery service.  Only modifiable by discovery service.
       time_available_begin:
-        type: "string"
-        format: "date-time"
-        description: "The time at which the USS will begin providing services for\
-          \ active UAS operations for this USS Instance.  Note that the USS may provide\
-          \ planning services prior to the time_available_begin depending on the policies\
-          \ of the USS."
+        type: string
+        format: date-time
+        description: >-
+          The time at which the USS will begin providing services for active UAS
+          operations for this USS Instance.  Note that the USS may provide
+          planning services prior to the time_available_begin depending on the
+          policies of the USS.
       time_available_end:
-        type: "string"
-        format: "date-time"
-        description: "The time at which the USS will cease providing services for\
-          \ active UAS operations for this USS Instance.  This means that there will\
-          \ not be any UAS operations airborne after this time that would be supported\
-          \ by this USS Instance."
+        type: string
+        format: date-time
+        description: >-
+          The time at which the USS will cease providing services for active UAS
+          operations for this USS Instance.  This means that there will not be
+          any UAS operations airborne after this time that would be supported by
+          this USS Instance.
       coverage_area:
-        $ref: "#/definitions/Polygon"
+        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Polygon'
       time_last_modified:
-        type: "string"
-        format: "date-time"
-        description: "The last time there was an update to the data regarding this\
-          \ USS Instance. Only modifiable by discovery service."
+        type: string
+        format: date-time
+        description: >-
+          The last time there was an update to the data regarding this USS
+          Instance. Only modifiable by discovery service.
       contact_email:
-        type: "string"
-        format: "email"
-        description: "An optional contact email address for the USS."
+        type: string
+        format: email
+        description: An optional contact email address for the USS.
       contact_phone:
-        type: "string"
-        format: "phone"
-        description: "An optional contact number for the USS."
+        type: string
+        format: phone
+        description: An optional contact number for the USS.
       uss_instance_discovery_callback_url:
-        type: "string"
-        format: "url"
-        description: "A URL used by the USS Discovery Service to send messages to\
-          \ the USS Instance as defined further in the USS API defined elsewhere (link\
-          \ to documentation to be provided later in this document).  This URL may\
-          \ be unique to the USS Instance or may be shared by other USS Instances\
-          \ created by this USS.  URLs that are common to multiple USS Instances will\
-          \ receive only one copy of each message."
+        type: string
+        format: url
+        description: A URL used by the USS Discovery Service to send messages to the USS Instance as defined further in the USS API defined elsewhere (link to documentation to be provided later in this document).  This URL may be unique to the USS Instance or may be shared by other USS Instances created by this USS.  URLs that are common to multiple USS Instances will receive only one copy of each message.
       uss_informational_url:
-        type: "string"
-        format: "url"
-        description: "An optional website URL for the USS for human use."
+        type: string
+        format: url
+        description: An optional website URL for the USS for human use.
       uss_openapi_url:
-        type: "string"
-        format: "url"
-        description: "An optional URL for the USS to supply an OpenAPI specification\
-          \ of its UAS Operator interface."
+        type: string
+        format: url
+        description: >-
+          An optional URL for the USS to supply an OpenAPI specification of its
+          UAS Operator interface.
       uss_registration_url:
-        type: "string"
-        format: "url"
-        description: "An optional URL for UAS operators to register with this USS\
-          \ for services."
+        type: string
+        format: url
+        description: >-
+          An optional URL for UAS operators to register with this USS for
+          services.
       notes:
-        type: "string"
-        description: "Any additional free text that would aid consumers of the service\
-          \ discovery API in understanding this USS Instance."
-    description: "A contiguous area within which a USS has committed to providing\
-      \ services for UAS operations.  The specific level of services provided may\
-      \ be contained within the data provided from here in combination with data provided\
-      \ directly from the USS.  In the future, the information provided by this object\
-      \ may include more specific information about the services provided by the USS\
-      \ or the types of UAS operations that are supported by this USS Instance."
+        type: string
+        description: >-
+          Any additional free text that would aid consumers of the service
+          discovery API in understanding this USS Instance.
     example:
-      uss_instance_id: "00000000-0000-4444-8888-FEEDDEADBEEF"
-      uss_name: "NUSS"
-      time_submitted: "2016-08-03T00:15:40.931Z"
-      time_available_begin: "2016-10-04T09:15:40Z"
-      time_available_end: "2016-11-04T13:20:42Z"
-      time_last_modified: "2016-08-04T17:31:01.253Z"
+      uss_instance_id: 00000000-0000-4444-8888-FEEDDEADBEEF
+      uss_name: NUSS
+      time_submitted: '2016-08-03T00:15:40.931Z'
+      time_available_begin: '2016-10-04T09:15:40Z'
+      time_available_end: '2016-11-04T13:20:42Z'
+      time_last_modified: '2016-08-04T17:31:01.253Z'
       coverage_area:
-        type: "Polygon"
+        type: Polygon
         coordinates:
-        - - - -122.06382530000001906955731101334095001220703125
-            - 37.409069700000003422246663831174373626708984375
-          - - -122.05094253232999790270696394145488739013671875
-            - 37.4193006276999966530638630501925945281982421875
-          - - -122.0327620697599968480062671005725860595703125
-            - 37.41929920175999768616748042404651641845703125
-          - - -122.06382530000001906955731101334095001220703125
-            - 37.409069700000003422246663831174373626708984375
-        - - - -122.0621765789999955131861497648060321807861328125
-            - 37.4096804114499974502905388362705707550048828125
-          - - -122.051870568889995638528489507734775543212890625
-            - 37.41786527235999670892852009274065494537353515625
-          - - -122.0373264763399987486991449259221553802490234375
-            - 37.41786440108000277859900961630046367645263671875
-          - - -122.0621765789999955131861497648060321807861328125
-            - 37.4096804114499974502905388362705707550048828125
-      notes: "NUSS will only provide services for fixed-wing aircraft within this\
-        \ USS Instance volume."
-      uss_informational_url: "https://utm.arc.nasa.gov"
-      uss_openapi_url: "https://nuss.arc.nasa.gov/api"
-      uss_registration_url: "https://nuss.arc.nasa.gov/signup"
-      contact_email: "joseph.rios@nasa.gov"
-      contact_number: "650-555-5555"
-  UTMRestResponse:
-    type: "object"
-    properties:
-      http_status_code:
-        type: "integer"
-      message:
-        type: "string"
-      resource:
-        type: "string"
-    example:
-      http_status_code: 201
-      message: "Resource created."
-      resource: "/resource/683c0e9e-49dc-44ce-82de-a5723b1f6965"
-  Polygon:
-    type: "object"
-    properties:
-      type:
-        type: "string"
-        description: "The type of Geometry. In this case, must be 'Polygon' per GeoJSON\
-          \ spec.\n"
-        enum:
-        - "Polygon"
-      coordinates:
-        type: "array"
-        items:
-          type: "array"
-          items:
-            $ref: "#/definitions/Position"
-    externalDocs:
-      url: "https://tools.ietf.org/html/rfc7946#section-3.1.6"
-    description: "GeoJSon Polygon. Positions all 2D."
-  Position:
-    type: "object"
-    required:
-    - "coordinates"
-    properties:
-      coordinates:
-        type: "array"
-        items:
-          type: "number"
-          format: "double"
-        maxItems: 2
-        minItems: 2
-    description: "Array of doubles of longitude-latitude values. Note that longitude\
-      \ is first.\n"
-responses:
-  WRONG_PROTOCOL:
-    description: "A RESTful call was made to this endpoint but is not a REST endpoint.\
-      \ Do not use this endpoint for REST calls."
-x-azure-api-id: "sh-1469571953760"
+          - - - -122.06382530000002
+              - 37.4090697
+            - - -122.05094253233
+              - 37.4193006277
+            - - -122.03276206976
+              - 37.41929920176
+            - - -122.06382530000002
+              - 37.4090697
+          - - - -122.062176579
+              - 37.40968041145
+            - - -122.05187056889
+              - 37.41786527236
+            - - -122.03732647634
+              - 37.41786440108
+            - - -122.062176579
+              - 37.40968041145
+      notes: >-
+        NUSS will only provide services for fixed-wing aircraft within this USS
+        Instance volume.
+      uss_informational_url: 'https://utm.arc.nasa.gov'
+      uss_openapi_url: 'https://nuss.arc.nasa.gov/api'
+      uss_registration_url: 'https://nuss.arc.nasa.gov/signup'
+      contact_email: joseph.rios@nasa.gov
+      contact_number: 650-555-5555
+ 
+x-azure-api-id: sh-1469571953760
