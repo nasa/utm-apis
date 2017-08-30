@@ -57,15 +57,24 @@ securityDefinitions:
     tokenUrl: http://thisserver.com/oauth/token
     flow: application
     scopes:
-      Baseline_USS: A Baseline USS that can perform the set of essential USS requests
+      OauthSecurity: A Baseline USS that can perform the set of essential USS requests
 
 security:
   - application:
-    - Baseline_USS
+    - OauthSecurity
 
 paths:
   /api:
-    $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/pathitems/getVersion'
+    get:
+      summary: API version and other data. Can be used to test whether server is up.
+      tags:
+        - A. Required Endpoints
+      security: []
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Version'
             
   /sds:
     post:
