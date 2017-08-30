@@ -166,11 +166,11 @@ paths:
           description: "Invalid message. Please fix and retry."
           schema:
             $ref: "#/definitions/UTMRestResponse"
-  /alert_messages:
-    post:
+  /temp:
+    get:
       tags:
       - "A. Required Endpoints"
-      summary: "Submit alert  to FIMS"
+      summary: "Submit uss instance  to FIMS"
       description: "Allows posting of a message to FIMS. Typically an intent message\
         \ related to a particular operation."
       operationId: "postMessage"
@@ -184,7 +184,7 @@ paths:
         description: "Message object being sent"
         required: true
         schema:
-          $ref: "#/definitions/AlertMessage"
+          $ref: "#/definitions/UssInstance"
       responses:
         201:
           description: "Returns message ID if received successfully."
@@ -270,27 +270,6 @@ paths:
         410:
           description: "A RESTful call was made to this endpoint but this is not a\
             \ REST endpoint. Do not use this endpoint for REST calls."
-  /schema/AlertMessage:
-    get:
-      tags:
-      - "C. Data Types"
-      summary: "Alert Message schema"
-      description: "Illustrates the FIMS Alert Message. FIMS may send out Alert Messages\
-        \ from time to time. This endpoint is not intended for use.\n\nNote that if\
-        \ you are viewing this in a SwaggerUI, the \"try it out\" feature will not\
-        \ work since this is not a RESTful endpoint\n"
-      operationId: "alertMsgUsingGET"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/AlertMessage"
-        410:
-          description: "A RESTful call was made to this endpoint but this is not a\
-            \ REST endpoint. Do not use this endpoint for REST calls."
   /schema/ConstraintMessage:
     get:
       tags:
@@ -333,9 +312,11 @@ definitions:
       build_time:
         type: "string"
         description: "Time of the latest build"
-      api_documentation:
-        type: "string"
-        description: "URL for API Documentation"
+      api_docs:
+        type: "array"
+        description: "URL(s) for API Documentation"
+        items:
+          type: "string"
   Operation:
     type: "object"
     required:
@@ -397,7 +378,7 @@ definitions:
           type: "string"
           maxLength: 1000
         minItems: 1
-      performance_authorization:
+      airspace_authorization:
         type: "string"
         format: "uuid"
         description: "TBD"
@@ -460,29 +441,21 @@ definitions:
           $ref: "#/definitions/ContingencyPlan"
       faa_rule:
         type: "string"
-        description: "PART_107: The operation follows FAA rule 107. If USS notifies\
-          \ FIMS about this class of operations,\nFIMS will reply that authorization\
-          \ is not required. (For TCL2nc FIMS will always accept the operation.)\n\
-          \nPART_107X:  In general, operations are 107X if they are doing something\
-          \ outside the 107 rule that would require\na waiver under 107.\n\nPART_101E:\
-          \ This class of operations could be hobbyists being friendly with other\
-          \ users by announcing their intent.\n(For TCL2nc, FIMS will reply with inform\
-          \ message \"authorization not required\" and accept the operation. For TCL2nc\
-          \ FIMS does not check\nwhether the operation is in a preauthorized area.)\
-          \ In the future, a better response for 101E is\n\"Notification received\"\
-          \ if within 5 statute miles of an airport, and \"Notification not required\"\
-          \ if not within 5 miles.\n\nOTHER: Placeholder for other types of operations.\n"
+        description: "1. PART_107\n  The operation follows FAA rule 107. Submission\
+          \ of such operations is mandatory\n\n2. PART_107X\n  In general, operations\
+          \ are 107X if they are doing something that would require a waiver under\
+          \ current 107 rules. Submission of such operations is mandatory.\n\n3. PART_101E\n\
+          \  Submission of 101E would be required if operation is within 5 statute\
+          \ miles of an airport. Optional otherwise.\n\n4. OTHER\n  Placeholder for\
+          \ other types of operations."
         enum:
         - "PART_107"
         - "PART_107X"
         - "PART_101E"
         - "OTHER"
         default: "PART_107"
-      priority_op:
-        type: "boolean"
-        description: "If true this operation is managed as a priority operation. Only\
-          \ FIMS or a USS with the public safety role may set this field to true."
-        default: false
+      priority_elements:
+        $ref: "#/definitions/PriorityElements"
       operation_volumes:
         type: "array"
         description: "The actual geographical information for the operation.  Maximum\
@@ -646,6 +619,46 @@ definitions:
           \ Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.\
           \  Seconds may have up to millisecond accuracy (three positions after decimal).\
           \  The 'Z' implies UTC times and is the only timezone accepted."
+  PriorityElements:
+    type: "object"
+    required:
+    - "priority_level"
+    - "priority_status"
+    properties:
+      priority_level:
+        $ref: "#/definitions/severity"
+      priority_status:
+        type: "string"
+        description: "If a PUBLIC_SAFETY operation is POSTed to any endpoint, the\
+          \ correct scope will be required. Any USS may POST an INFLIGHT_EMERGENCY\
+          \ with non-priority scopes.  NONE should only be used to indicate that an\
+          \ operation that previously had a priority status now has no priority status."
+        enum:
+        - "NONE"
+        - "PUBLIC_SAFETY"
+        - "INFLIGHT_EMERGENCY"
+    description: "Data elements used to describe the status of priority operation.\
+      \ Nominal operations need not include these data.\npriority_level must take\
+      \ one of the four values EMERGENCY, ALERT, CRITICAL, or NOTICE.  NOTICE must\
+      \ only be used with a priority_status of NONE.  The other values should be used\
+      \ based on impact to other operations and safety of people and property on the\
+      \ ground."
+  severity:
+    type: "string"
+    description: "The severity level of a UTMMessage. This severity labeling may be\
+      \ used by other components within UTM as well.  The labels are ordered such\
+      \ that they may be given priority handling by software systems and human users.\n\
+      **EMERGENCY > ALERT > CRITICAL > WARNING > NOTICE > INFORMATIONAL**\nIn relation\
+      \ to a UTMMessage, the severities may be interpreted as follows.\n1. **EMERGENCY**\n\
+      \  Desc.\n2. **ALERT**\n  Desc.\n3. **CRITICAL**\n  Desc.\n4. **WARNING**\n\
+      \  Desc.\n5. **NOTICE**\n  Desc.\n6. **INFORMATIONAL**\n  Desc."
+    enum:
+    - "EMERGENCY"
+    - "ALERT"
+    - "CRITICAL"
+    - "WARNING"
+    - "NOTICE"
+    - "INFORMATIONAL"
   OperationVolume:
     type: "object"
     required:
@@ -738,87 +751,123 @@ definitions:
       http_status_code: 201
       message: "Resource created."
       resource: "/resource/683c0e9e-49dc-44ce-82de-a5723b1f6965"
-  AlertMessage:
+  UssInstance:
     type: "object"
+    required:
+    - "coverage_area"
+    - "time_available_begin"
+    - "time_available_end"
+    - "uss_instance_discovery_callback_url"
     properties:
-      message_id:
+      uss_instance_id:
         type: "string"
         format: "uuid"
-        description: "A UUID assigned to this message by the originator"
-        minLength: 36
-        maxLength: 36
-      origin:
+        description: "A unique USS Instance identifier, minted by the USS."
+      uss_name:
         type: "string"
-        description: "The user or process that generated this message"
-        enum:
-        - "FIMS"
-        - "USS"
-      originator_id:
-        type: "string"
-        description: "A name identifying the originator of this message."
-        maxLength: 100
-      gufi:
-        type: "string"
-        format: "uuid"
-        description: "The GUFI for the operation referenced in this message."
-        minLength: 36
-        maxLength: 36
-      sent_time:
+        description: "The name of the entity providing UAS Support Services. Populated\
+          \ by the service discovery system based on credential information provided\
+          \ by the USS."
+      time_submitted:
         type: "string"
         format: "date-time"
-        example: "2015-08-20T14:11:57.345Z"
-        description: "Time the message was generated by the origin.  Uses the ISO\
-          \ 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds\
-          \ may have up to millisecond accuracy (three positions after decimal). \
-          \ The 'Z' implies UTC times and is the only timezone accepted.\""
-      severity:
-        $ref: "#/definitions/severity"
-      alert_type:
+        description: "The time at which the submission of this USS Instance was received\
+          \ at this discovery service.  Only modifiable by discovery service."
+      time_available_begin:
         type: "string"
-        description: "The type of alert message. An enum to constrain messages and\
-          \ allow better interoperability."
-        enum:
-        - "UNPLANNED_LANDING"
-        - "UNCONTROLLED_LANDING"
-        - "OPERATION_NON_CONFORMING"
-        - "OPERATION_ROGUE"
-        - "OPERATION_CONFORMING"
-        - "OPERATION_CLOSED"
-        - "CONTINGENCY_PLAN_INITIATED"
-        - "CONTINGENCY_PLAN_CANCELLED"
-        - "OTHER_SEE_FREE_TEXT"
-      last_known_position:
-        $ref: "#/definitions/Position"
-      contingency:
-        $ref: "#/definitions/ContingencyPlan"
-      prev_message_id:
+        format: "date-time"
+        description: "The time at which the USS will begin providing services for\
+          \ active UAS operations for this USS Instance.  Note that the USS may provide\
+          \ planning services prior to the time_available_begin depending on the policies\
+          \ of the USS."
+      time_available_end:
         type: "string"
-        format: "uuid"
-        description: "A message_id of a previously sent message that has relevance\
-          \ or context for this message. Example might be \"CONTINGENCY_PLAN_CANCELLED\"\
-          \ referencing the previous \"CONTINGENCY_PLAN_INITIATED\" message."
-        minLength: 36
-        maxLength: 36
-      metadata:
+        format: "date-time"
+        description: "The time at which the USS will cease providing services for\
+          \ active UAS operations for this USS Instance.  This means that there will\
+          \ not be any UAS operations airborne after this time that would be supported\
+          \ by this USS Instance."
+      coverage_area:
+        $ref: "#/definitions/Polygon"
+      time_last_modified:
         type: "string"
-        description: "Reserved field."
-      free_text:
+        format: "date-time"
+        description: "The last time there was an update to the data regarding this\
+          \ USS Instance. Only modifiable by discovery service."
+      contact_email:
         type: "string"
-        description: "Any additional information. Note that this is for human consumption.\
-          \ All time critical elements should be captured in the other data fields\
-          \ for easier consumption by other automated systems."
-        maxLength: 1000
-    description: "An alert message. Used to make other stakeholders aware about an\
-      \ issue with a specific operation."
-  severity:
-    type: "string"
-    enum:
-    - "EMERGENCY"
-    - "ALERT"
-    - "CRITICAL"
-    - "WARNING"
-    - "NOTICE"
-    - "INFORMATIONAL"
+        format: "email"
+        description: "An optional contact email address for the USS."
+      contact_phone:
+        type: "string"
+        format: "phone"
+        description: "An optional contact number for the USS."
+      uss_instance_discovery_callback_url:
+        type: "string"
+        format: "url"
+        description: "A URL used by the USS Discovery Service to send messages to\
+          \ the USS Instance as defined further in the USS API defined elsewhere (link\
+          \ to documentation to be provided later in this document).  This URL may\
+          \ be unique to the USS Instance or may be shared by other USS Instances\
+          \ created by this USS.  URLs that are common to multiple USS Instances will\
+          \ receive only one copy of each message."
+      uss_informational_url:
+        type: "string"
+        format: "url"
+        description: "An optional website URL for the USS for human use."
+      uss_openapi_url:
+        type: "string"
+        format: "url"
+        description: "An optional URL for the USS to supply an OpenAPI specification\
+          \ of its UAS Operator interface."
+      uss_registration_url:
+        type: "string"
+        format: "url"
+        description: "An optional URL for UAS operators to register with this USS\
+          \ for services."
+      notes:
+        type: "string"
+        description: "Any additional free text that would aid consumers of the service\
+          \ discovery API in understanding this USS Instance."
+    description: "A contiguous area within which a USS has committed to providing\
+      \ services for UAS operations.  The specific level of services provided may\
+      \ be contained within the data provided from here in combination with data provided\
+      \ directly from the USS.  In the future, the information provided by this object\
+      \ may include more specific information about the services provided by the USS\
+      \ or the types of UAS operations that are supported by this USS Instance."
+    example:
+      uss_instance_id: "00000000-0000-4444-8888-FEEDDEADBEEF"
+      uss_name: "NUSS"
+      time_submitted: "2016-08-03T00:15:40.931Z"
+      time_available_begin: "2016-10-04T09:15:40Z"
+      time_available_end: "2016-11-04T13:20:42Z"
+      time_last_modified: "2016-08-04T17:31:01.253Z"
+      coverage_area:
+        type: "Polygon"
+        coordinates:
+        - - - -122.06382530000002
+            - 37.4090697
+          - - -122.05094253233
+            - 37.4193006277
+          - - -122.03276206976
+            - 37.41929920176
+          - - -122.06382530000002
+            - 37.4090697
+        - - - -122.062176579
+            - 37.40968041145
+          - - -122.05187056889
+            - 37.41786527236
+          - - -122.03732647634
+            - 37.41786440108
+          - - -122.062176579
+            - 37.40968041145
+      notes: "NUSS will only provide services for fixed-wing aircraft within this\
+        \ USS Instance volume."
+      uss_informational_url: "https://utm.arc.nasa.gov"
+      uss_openapi_url: "https://nuss.arc.nasa.gov/api"
+      uss_registration_url: "https://nuss.arc.nasa.gov/signup"
+      contact_email: "joseph.rios@nasa.gov"
+      contact_number: "650-555-5555"
   LineString:
     type: "object"
     properties:
