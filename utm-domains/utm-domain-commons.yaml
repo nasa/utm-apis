@@ -204,22 +204,20 @@ definitions:
   PriorityElements:
     description: >-
       Data elements used to describe the status priority operation. Nominal operations need not include these data.
+      
+      priority_level must take one of the four values EMERGENCY, ALERT, CRITICAL, or NOTICE.  NOTICE must only be used with a priority_status of NONE.  The other values should be used based on impact to other operations and safety of people and property on the ground.
     type: object
     required:
-    - priority_op
     - priority_level
-    - priority_reason
+    - priority_status
     properties:
-      priority_op:
-        type: boolean
-        default: false
-        description: "If true this operation is managed as a priority operation.  Should always be true when using PriorityElements except in the case that the USS is trying to signal that an operation previously desgniated as a priority operation is no longer a priority operation."
       priority_level:
         $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/severity'
-      priority_reason:
+      priority_status:
         type: string
-        description: If priority_op is 'true' then this field is mandatory. This field is to be ignored otherwise. If a PUBLIC_SAFETY operation is POSTed to any endpoint, the correct scope will be required. Any USS may POST an INFLIGHT_EMERGENCY with usual scopes.
+        description: If a PUBLIC_SAFETY operation is POSTed to any endpoint, the correct scope will be required. Any USS may POST an INFLIGHT_EMERGENCY with usual scopes.  NONE should only be used to indicate that an operaiton that previously had a priority status now has no priority status.
         enum:
+        - NONE
         - PUBLIC_SAFETY
         - INFLIGHT_EMERGENCY
       
