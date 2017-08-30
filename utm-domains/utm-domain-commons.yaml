@@ -109,7 +109,7 @@ definitions:
           type: string
           maxLength: 1000
         minItems: 1  
-      performance_authorization:
+      airspace_authorization:
         description: TBD
         type: string
         format: uuid
@@ -169,19 +169,18 @@ definitions:
           $ref: '#/definitions/ContingencyPlan'
       faa_rule:
         default: PART_107
-        description: |
-          PART_107: The operation follows FAA rule 107. If USS notifies FIMS about this class of operations,
-          FIMS will reply that authorization is not required. (For TCL2nc FIMS will always accept the operation.)
+        description: >-
+          1. PART_107
+            The operation follows FAA rule 107. Submission of such operations is mandatory
 
-          PART_107X:  In general, operations are 107X if they are doing something outside the 107 rule that would require
-          a waiver under 107.
+          2. PART_107X
+            In general, operations are 107X if they are doing something that would require a waiver under current 107 rules. Submission of such operations is mandatory.
 
-          PART_101E: This class of operations could be hobbyists being friendly with other users by announcing their intent.
-          (For TCL2nc, FIMS will reply with inform message "authorization not required" and accept the operation. For TCL2nc FIMS does not check
-          whether the operation is in a preauthorized area.) In the future, a better response for 101E is
-          "Notification received" if within 5 statute miles of an airport, and "Notification not required" if not within 5 miles.
+          3. PART_101E
+            Submission of 101E would be required if operation is within 5 statute miles of an airport. Optional otherwise.
 
-          OTHER: Placeholder for other types of operations.
+          4. OTHER
+            Placeholder for other types of operations.
         type: string
         enum:
         - PART_107
@@ -191,7 +190,13 @@ definitions:
       priority_op:
         type: boolean
         default: false
-        description: "If true this operation is managed as a priority operation. Only FIMS or a USS with the public safety role may set this field to true."
+        description: "If true this operation is managed as a priority operation."
+      priority_reason:
+        type: string
+        description: If priority_op is 'true' then this field is mandatory. This field is to be ignored otherwise. If a PUBLIC_SAFETY operation is POSTed to any endpoint, the correct scope will be required. Any USS may POST an INFLIGHT_EMERGENCY with usual scopes.
+        enum:
+        - PUBLIC_SAFETY
+        - INFLIGHT_EMERGENCY
 
       operation_volumes:
         description: "The actual geographical information for the operation.  Maximum array length of 12 currently allowed."
