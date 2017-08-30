@@ -902,11 +902,11 @@ definitions:
       build_time:
         type: string
         description: Time of the latest build 
-      api_documentation:
+      api_docs:
         type: array
         items:
           type: string
-        description: URL for API Documentation
+        description: URL(s) for API Documentation
       
   UTMRestResponse:
     type: object
