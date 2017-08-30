@@ -46,19 +46,6 @@ security:
 - application:
   - "OauthSecurity"
 paths:
-  /api:
-    get:
-      tags:
-      - "A. Required Endpoints"
-      summary: "API version and other data. Can be used to test whether server is\
-        \ up."
-      parameters: []
-      responses:
-        200:
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Version"
-      security: []
   /sds:
     get:
       tags:
@@ -376,21 +363,6 @@ definitions:
       - "streaming_data"
       notes: "We provide free streaming wind and precipitation data via an elegant\
         \ API."
-  Version:
-    type: "object"
-    properties:
-      title:
-        type: "string"
-        description: "Title of the API"
-      version:
-        type: "string"
-        description: "Version number for the API"
-      build_time:
-        type: "string"
-        description: "Time of the latest build"
-      api_documentation:
-        type: "string"
-        description: "URL for API Documentation"
   UTMRestResponse:
     type: "object"
     properties:
