@@ -187,16 +187,8 @@ definitions:
         - PART_107X
         - PART_101E
         - OTHER
-      priority_op:
-        type: boolean
-        default: false
-        description: "If true this operation is managed as a priority operation."
-      priority_reason:
-        type: string
-        description: If priority_op is 'true' then this field is mandatory. This field is to be ignored otherwise. If a PUBLIC_SAFETY operation is POSTed to any endpoint, the correct scope will be required. Any USS may POST an INFLIGHT_EMERGENCY with usual scopes.
-        enum:
-        - PUBLIC_SAFETY
-        - INFLIGHT_EMERGENCY
+      priority_elements:
+        $ref: '#/definitions/PriorityElements'
 
       operation_volumes:
         description: "The actual geographical information for the operation.  Maximum array length of 12 currently allowed."
@@ -209,6 +201,28 @@ definitions:
         type: string
         description: Reserved field.
     
+  PriorityElements:
+    description: >-
+      Data elements used to describe the status priority operation. Nominal operations need not include these data.
+    type: object
+    required:
+    - priority_op
+    - priority_level
+    - priority_reason
+    properties:
+      priority_op:
+        type: boolean
+        default: false
+        description: "If true this operation is managed as a priority operation.  Should always be true when using PriorityElements except in the case that the USS is trying to signal that an operation previously desgniated as a priority operation is no longer a priority operation."
+      priority_level:
+        $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/severity'
+      priority_reason:
+        type: string
+        description: If priority_op is 'true' then this field is mandatory. This field is to be ignored otherwise. If a PUBLIC_SAFETY operation is POSTed to any endpoint, the correct scope will be required. Any USS may POST an INFLIGHT_EMERGENCY with usual scopes.
+        enum:
+        - PUBLIC_SAFETY
+        - INFLIGHT_EMERGENCY
+      
 
   OperationVolume:
     type: object
