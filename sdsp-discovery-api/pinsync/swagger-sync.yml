@@ -44,7 +44,7 @@ schemes:
 - "wss"
 security:
 - application:
-  - "Baseline_USS"
+  - "OauthSecurity"
 paths:
   /api:
     get:
@@ -58,6 +58,7 @@ paths:
           description: "Success"
           schema:
             $ref: "#/definitions/Version"
+      security: []
   /sds:
     get:
       tags:
@@ -211,7 +212,7 @@ securityDefinitions:
     tokenUrl: "http://thisserver.com/oauth/token"
     flow: "application"
     scopes:
-      Baseline_USS: "A Baseline USS that can perform the set of essential USS requests"
+      OauthSecurity: "A Baseline USS that can perform the set of essential USS requests"
 definitions:
   Sds:
     type: "object"
