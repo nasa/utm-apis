@@ -40,6 +40,24 @@ schemes:
 - "https"
 - "wss"
 paths:
+  /constraints:
+    post:
+      tags:
+      - "A. Required Endpoints"
+      summary: "Allow constraints to be submitted from authorized entities."
+      operationId: "postConstraint"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "message"
+        description: "The message being sent"
+        required: true
+        schema:
+          $ref: "#/definitions/ConstraintMessage"
+      responses:
+        201:
+          description: "Message data received."
   /utm_messages:
     post:
       tags:
@@ -257,6 +275,101 @@ definitions:
         - "A"
         - "B"
         - "C"
+  ConstraintMessage:
+    properties:
+      message_id:
+        type: "string"
+        format: "uuid"
+        description: "A UUID assigned to this message by the originator"
+        minLength: 36
+        maxLength: 36
+      origin:
+        type: "string"
+        description: "The user or process that generated this message"
+        enum:
+        - "FIMS"
+        - "USS"
+      originator_id:
+        type: "string"
+        description: "A name identifying the originator of this message."
+        maxLength: 100
+      type:
+        type: "string"
+        enum:
+        - "WEATHER"
+        - "ATC"
+        - "SECURITY"
+        - "SAFETY"
+        - "MUNICIPALITY"
+        - "OTHER"
+      constraint_geography:
+        $ref: "#/definitions/Polygon"
+      begin_time:
+        type: "string"
+        format: "date-time"
+        description: "The time that the constraint begins. Null or no value implies\
+          \ -infinity begin time."
+      end_time:
+        type: "string"
+        format: "date-time"
+        description: "The time that the constraint ends. Null or no value implies\
+          \ on-going constraint."
+      min_altitude:
+        type: "number"
+        format: "double"
+        description: "The minimum altitude of the constraint. Must be less than max_altitude."
+      max_altitude:
+        type: "number"
+        format: "double"
+        description: "The maximum altitude of the constraint. Must be greater than\
+          \ min_altitude."
+      metadata:
+        type: "string"
+        description: "Reserved field."
+      reason:
+        type: "string"
+        description: "The reason for the constraint. Meant for human consumption."
+        maxLength: 1000
+    example:
+      gufi: "*"
+      category: "ConstraintMessage"
+      origin: "FIMS"
+      free_text: "Constraint added."
+      sent_time: "2016-11-29T01:16:41.727Z"
+      constraint_geography:
+        type: "Polygon"
+        coordinates:
+        - - - -122.062176579
+            - 37.40968041145
+          - - -122.05187056889
+            - 37.41786527236
+          - - -122.03732647634
+            - 37.41786440108
+          - - -122.062176579
+            - 37.40968041145
+      begin_time: "2016-11-29T01:16:41.727Z"
+      end_time: "2016-11-30T01:16:41.727Z"
+      min_altitude: 0.0
+      max_altitude: 400.0
+      reason: "A UA leaving defined volume"
+  Polygon:
+    type: "object"
+    properties:
+      type:
+        type: "string"
+        description: "The type of Geometry. In this case, must be 'Polygon' per GeoJSON\
+          \ spec.\n"
+        enum:
+        - "Polygon"
+      coordinates:
+        type: "array"
+        items:
+          type: "array"
+          items:
+            $ref: "#/definitions/Position"
+    externalDocs:
+      url: "https://tools.ietf.org/html/rfc7946#section-3.1.6"
+    description: "GeoJSon Polygon. Positions all 2D."
   UTMMessage:
     type: "object"
     properties:
@@ -763,24 +876,6 @@ definitions:
       uss_registration_url: "https://nuss.arc.nasa.gov/signup"
       contact_email: "joseph.rios@nasa.gov"
       contact_number: "650-555-5555"
-  Polygon:
-    type: "object"
-    properties:
-      type:
-        type: "string"
-        description: "The type of Geometry. In this case, must be 'Polygon' per GeoJSON\
-          \ spec.\n"
-        enum:
-        - "Polygon"
-      coordinates:
-        type: "array"
-        items:
-          type: "array"
-          items:
-            $ref: "#/definitions/Position"
-    externalDocs:
-      url: "https://tools.ietf.org/html/rfc7946#section-3.1.6"
-    description: "GeoJSon Polygon. Positions all 2D."
   NegotiationMessage:
     properties:
       message_id:
