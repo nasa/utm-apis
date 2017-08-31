@@ -101,7 +101,7 @@ paths:
         description: "The operation data"
         required: true
         schema:
-          $ref: "#/definitions/Operation"
+          $ref: "#/definitions/NegotiationMessage"
       responses:
         200:
           description: "Negotiation request received, decision provided"
@@ -781,6 +781,66 @@ definitions:
     externalDocs:
       url: "https://tools.ietf.org/html/rfc7946#section-3.1.6"
     description: "GeoJSon Polygon. Positions all 2D."
+  NegotiationMessage:
+    properties:
+      message_id:
+        type: "string"
+        format: "uuid"
+        description: "A UUID assigned to this message by the originator"
+        minLength: 36
+        maxLength: 36
+      origin:
+        type: "string"
+        description: "The user or process that generated this message"
+        enum:
+        - "FIMS"
+        - "USS"
+      originator_id:
+        type: "string"
+        description: "A name identifying the originator of this message."
+        maxLength: 100
+      type:
+        type: "string"
+        enum:
+        - "INTERSECTING_OPERATION_NOTIFICATION"
+        - "REPLAN_BEGINNING_AS_SECONDARY_OPERATION"
+        - "REQUESTING_MANUAL_CLEARANCE"
+        - "MANUAL_CLEARANCE_GRANTED"
+        - "MANUAL_CLEARANCE_DENIED"
+        - "OTHER"
+      gufi_of_originator:
+        type: "string"
+        format: "uuid"
+        description: "The GUFI of the relevant operation of the originating USS. Note\
+          \ that the origin and receiver roles are strictly dependent on which USS\
+          \ is generating this message. May be empty in the case of ATC communication\
+          \ to USS via FIMS."
+        minLength: 36
+        maxLength: 36
+      gufi_of_receiver:
+        type: "string"
+        format: "uuid"
+        description: "The GUFI of the relevant operation of the receiving USS. May\
+          \ be empty in cases of communication with ATC via FIMS.\n"
+        minLength: 36
+        maxLength: 36
+      reference_message_ids:
+        type: "array"
+        description: "A set of UUIDs of any previous messages related to the same\
+          \ negotiation process. This field must not be empty when sending a message\
+          \ of type 'REPLAN_BEGINNING_AS_SECONDARY_OPERATION'.  This set of ids need\
+          \ not be complete. The goal is to have at least one id that can be used\
+          \ to link this message to the set of previous messages sent and received.\
+          \ The USS should make this list as complete as possible to aid the negotiation\
+          \ process."
+        items:
+          type: "string"
+          format: "uuid"
+          minLength: 36
+          maxLength: 36
+      free_text:
+        type: "string"
+        maxLength: 1000
   Operation:
     type: "object"
     required:
@@ -842,7 +902,7 @@ definitions:
           type: "string"
           maxLength: 1000
         minItems: 1
-      performance_authorization:
+      airspace_authorization:
         type: "string"
         format: "uuid"
         description: "TBD"
@@ -905,29 +965,21 @@ definitions:
           $ref: "#/definitions/ContingencyPlan"
       faa_rule:
         type: "string"
-        description: "PART_107: The operation follows FAA rule 107. If USS notifies\
-          \ FIMS about this class of operations,\nFIMS will reply that authorization\
-          \ is not required. (For TCL2nc FIMS will always accept the operation.)\n\
-          \nPART_107X:  In general, operations are 107X if they are doing something\
-          \ outside the 107 rule that would require\na waiver under 107.\n\nPART_101E:\
-          \ This class of operations could be hobbyists being friendly with other\
-          \ users by announcing their intent.\n(For TCL2nc, FIMS will reply with inform\
-          \ message \"authorization not required\" and accept the operation. For TCL2nc\
-          \ FIMS does not check\nwhether the operation is in a preauthorized area.)\
-          \ In the future, a better response for 101E is\n\"Notification received\"\
-          \ if within 5 statute miles of an airport, and \"Notification not required\"\
-          \ if not within 5 miles.\n\nOTHER: Placeholder for other types of operations.\n"
+        description: "1. PART_107\n  The operation follows FAA rule 107. Submission\
+          \ of such operations is mandatory\n\n2. PART_107X\n  In general, operations\
+          \ are 107X if they are doing something that would require a waiver under\
+          \ current 107 rules. Submission of such operations is mandatory.\n\n3. PART_101E\n\
+          \  Submission of 101E would be required if operation is within 5 statute\
+          \ miles of an airport. Optional otherwise.\n\n4. OTHER\n  Placeholder for\
+          \ other types of operations."
         enum:
         - "PART_107"
         - "PART_107X"
         - "PART_101E"
         - "OTHER"
         default: "PART_107"
-      priority_op:
-        type: "boolean"
-        description: "If true this operation is managed as a priority operation. Only\
-          \ FIMS or a USS with the public safety role may set this field to true."
-        default: false
+      priority_elements:
+        $ref: "#/definitions/PriorityElements"
       operation_volumes:
         type: "array"
         description: "The actual geographical information for the operation.  Maximum\
@@ -937,6 +989,30 @@ definitions:
       metadata:
         type: "string"
         description: "Reserved field."
+  PriorityElements:
+    type: "object"
+    required:
+    - "priority_level"
+    - "priority_status"
+    properties:
+      priority_level:
+        $ref: "#/definitions/severity"
+      priority_status:
+        type: "string"
+        description: "If a PUBLIC_SAFETY operation is POSTed to any endpoint, the\
+          \ correct scope will be required. Any USS may POST an INFLIGHT_EMERGENCY\
+          \ with non-priority scopes.  NONE should only be used to indicate that an\
+          \ operation that previously had a priority status now has no priority status."
+        enum:
+        - "NONE"
+        - "PUBLIC_SAFETY"
+        - "INFLIGHT_EMERGENCY"
+    description: "Data elements used to describe the status of priority operation.\
+      \ Nominal operations need not include these data.\npriority_level must take\
+      \ one of the four values EMERGENCY, ALERT, CRITICAL, or NOTICE.  NOTICE must\
+      \ only be used with a priority_status of NONE.  The other values should be used\
+      \ based on impact to other operations and safety of people and property on the\
+      \ ground."
   OperationVolume:
     type: "object"
     required:
