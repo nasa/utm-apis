@@ -122,16 +122,16 @@ paths:
         200:
           description: "Successful data request. Response includes requested data."
           schema:
-            $ref: "#/definitions/UssInstance"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
           schema:
-            $ref: "#/definitions/UTMRestResponse"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         429:
           description: "Too many recent requests from you. Wait to make further queries."
           schema:
-            $ref: "#/definitions/UTMRestResponse"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
       security:
       - password: []
     post:
@@ -151,25 +151,25 @@ paths:
         description: "USS Instance plan to add"
         required: true
         schema:
-          $ref: "#/definitions/UssInstance"
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
       responses:
         201:
           description: "USS Instance received."
           schema:
-            $ref: "#/definitions/UTMRestResponse"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
           schema:
-            $ref: "#/definitions/UTMRestResponse"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         403:
           description: "Invalid ID supplied.  Fix authorization and retry."
           schema:
-            $ref: "#/definitions/UTMRestResponse"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         429:
           description: "Too many recent requests from you. Wait to make further submissions."
           schema:
-            $ref: "#/definitions/UTMRestResponse"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
       security:
       - password: []
   /uss/{id}:
@@ -199,16 +199,16 @@ paths:
         200:
           description: "Successful data request. Response includes requested data."
           schema:
-            $ref: "#/definitions/UssInstance"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
           schema:
-            $ref: "#/definitions/UTMRestResponse"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         429:
           description: "Too many recent requests from you. Wait to make further queries."
           schema:
-            $ref: "#/definitions/UTMRestResponse"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
       security:
       - password: []
     put:
@@ -235,21 +235,21 @@ paths:
           \  4. Other rules for a USS Instance POST are satisfied.\n"
         required: true
         schema:
-          $ref: "#/definitions/UssInstance"
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
       responses:
         200:
           description: "Successful data request. Response includes requested data."
           schema:
-            $ref: "#/definitions/UssInstance"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
           schema:
-            $ref: "#/definitions/UTMRestResponse"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         429:
           description: "Too many recent requests from you. Wait to make further queries."
           schema:
-            $ref: "#/definitions/UTMRestResponse"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
       security:
       - password: []
   /topic/ussUpdates:
@@ -288,7 +288,7 @@ paths:
         200:
           description: "OK"
           schema:
-            $ref: "#/definitions/UssInstance"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
         410:
           description: "A RESTful call was made to this endpoint but is not a REST\
             \ endpoint. Do not use this endpoint for REST calls."
@@ -307,7 +307,7 @@ paths:
         200:
           description: "OK"
           schema:
-            $ref: "#/definitions/Polygon"
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         410:
           description: "A RESTful call was made to this endpoint but is not a REST\
             \ endpoint. Do not use this endpoint for REST calls."
@@ -318,171 +318,5 @@ securityDefinitions:
     flow: "password"
     scopes:
       USS: "A USS can read and write"
-definitions:
-  UssInstance:
-    type: "object"
-    required:
-    - "coverage_area"
-    - "time_available_begin"
-    - "time_available_end"
-    - "uss_instance_discovery_callback_url"
-    properties:
-      uss_instance_id:
-        type: "string"
-        format: "uuid"
-        description: "A unique USS Instance identifier, minted by the USS."
-      uss_name:
-        type: "string"
-        description: "The name of the entity providing UAS Support Services. Populated\
-          \ by the service discovery system based on credential information provided\
-          \ by the USS."
-      time_submitted:
-        type: "string"
-        format: "date-time"
-        description: "The time at which the submission of this USS Instance was received\
-          \ at this discovery service.  Only modifiable by discovery service."
-      time_available_begin:
-        type: "string"
-        format: "date-time"
-        description: "The time at which the USS will begin providing services for\
-          \ active UAS operations for this USS Instance.  Note that the USS may provide\
-          \ planning services prior to the time_available_begin depending on the policies\
-          \ of the USS."
-      time_available_end:
-        type: "string"
-        format: "date-time"
-        description: "The time at which the USS will cease providing services for\
-          \ active UAS operations for this USS Instance.  This means that there will\
-          \ not be any UAS operations airborne after this time that would be supported\
-          \ by this USS Instance."
-      coverage_area:
-        $ref: "#/definitions/Polygon"
-      time_last_modified:
-        type: "string"
-        format: "date-time"
-        description: "The last time there was an update to the data regarding this\
-          \ USS Instance. Only modifiable by discovery service."
-      contact_email:
-        type: "string"
-        format: "email"
-        description: "An optional contact email address for the USS."
-      contact_phone:
-        type: "string"
-        format: "phone"
-        description: "An optional contact number for the USS."
-      uss_instance_discovery_callback_url:
-        type: "string"
-        format: "url"
-        description: "A URL used by the USS Discovery Service to send messages to\
-          \ the USS Instance as defined further in the USS API defined elsewhere (link\
-          \ to documentation to be provided later in this document).  This URL may\
-          \ be unique to the USS Instance or may be shared by other USS Instances\
-          \ created by this USS.  URLs that are common to multiple USS Instances will\
-          \ receive only one copy of each message."
-      uss_informational_url:
-        type: "string"
-        format: "url"
-        description: "An optional website URL for the USS for human use."
-      uss_openapi_url:
-        type: "string"
-        format: "url"
-        description: "An optional URL for the USS to supply an OpenAPI specification\
-          \ of its UAS Operator interface."
-      uss_registration_url:
-        type: "string"
-        format: "url"
-        description: "An optional URL for UAS operators to register with this USS\
-          \ for services."
-      notes:
-        type: "string"
-        description: "Any additional free text that would aid consumers of the service\
-          \ discovery API in understanding this USS Instance."
-    description: "A contiguous area within which a USS has committed to providing\
-      \ services for UAS operations.  The specific level of services provided may\
-      \ be contained within the data provided from here in combination with data provided\
-      \ directly from the USS.  In the future, the information provided by this object\
-      \ may include more specific information about the services provided by the USS\
-      \ or the types of UAS operations that are supported by this USS Instance."
-    example:
-      uss_instance_id: "00000000-0000-4444-8888-FEEDDEADBEEF"
-      uss_name: "NUSS"
-      time_submitted: "2016-08-03T00:15:40.931Z"
-      time_available_begin: "2016-10-04T09:15:40Z"
-      time_available_end: "2016-11-04T13:20:42Z"
-      time_last_modified: "2016-08-04T17:31:01.253Z"
-      coverage_area:
-        type: "Polygon"
-        coordinates:
-        - - - -122.06382530000001906955731101334095001220703125
-            - 37.409069700000003422246663831174373626708984375
-          - - -122.05094253232999790270696394145488739013671875
-            - 37.4193006276999966530638630501925945281982421875
-          - - -122.0327620697599968480062671005725860595703125
-            - 37.41929920175999768616748042404651641845703125
-          - - -122.06382530000001906955731101334095001220703125
-            - 37.409069700000003422246663831174373626708984375
-        - - - -122.0621765789999955131861497648060321807861328125
-            - 37.4096804114499974502905388362705707550048828125
-          - - -122.051870568889995638528489507734775543212890625
-            - 37.41786527235999670892852009274065494537353515625
-          - - -122.0373264763399987486991449259221553802490234375
-            - 37.41786440108000277859900961630046367645263671875
-          - - -122.0621765789999955131861497648060321807861328125
-            - 37.4096804114499974502905388362705707550048828125
-      notes: "NUSS will only provide services for fixed-wing aircraft within this\
-        \ USS Instance volume."
-      uss_informational_url: "https://utm.arc.nasa.gov"
-      uss_openapi_url: "https://nuss.arc.nasa.gov/api"
-      uss_registration_url: "https://nuss.arc.nasa.gov/signup"
-      contact_email: "joseph.rios@nasa.gov"
-      contact_number: "650-555-5555"
-  UTMRestResponse:
-    type: "object"
-    properties:
-      http_status_code:
-        type: "integer"
-      message:
-        type: "string"
-      resource:
-        type: "string"
-    example:
-      http_status_code: 201
-      message: "Resource created."
-      resource: "/resource/683c0e9e-49dc-44ce-82de-a5723b1f6965"
-  Polygon:
-    type: "object"
-    properties:
-      type:
-        type: "string"
-        description: "The type of Geometry. In this case, must be 'Polygon' per GeoJSON\
-          \ spec.\n"
-        enum:
-        - "Polygon"
-      coordinates:
-        type: "array"
-        items:
-          type: "array"
-          items:
-            $ref: "#/definitions/Position"
-    externalDocs:
-      url: "https://tools.ietf.org/html/rfc7946#section-3.1.6"
-    description: "GeoJSon Polygon. Positions all 2D."
-  Position:
-    type: "object"
-    required:
-    - "coordinates"
-    properties:
-      coordinates:
-        type: "array"
-        items:
-          type: "number"
-          format: "double"
-        maxItems: 2
-        minItems: 2
-    description: "Array of doubles of longitude-latitude values. Note that longitude\
-      \ is first.\n"
-responses:
-  WRONG_PROTOCOL:
-    description: "A RESTful call was made to this endpoint but is not a REST endpoint.\
-      \ Do not use this endpoint for REST calls."
+
 x-azure-api-id: "sh-1469571953760"
