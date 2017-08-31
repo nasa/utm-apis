@@ -735,7 +735,7 @@ definitions:
         type: string
         enum:
         - INTERSECTING_OPERATION_NOTIFICATION
-        - INTERSECTING_OPERATION_ACK
+        - REPLAN_BEGINNING_AS_SECONDARY_OPERATION
         - REQUESTING_MANUAL_CLEARANCE
         - MANUAL_CLEARANCE_GRANTED
         - MANUAL_CLEARANCE_DENIED
@@ -754,13 +754,15 @@ definitions:
         format: uuid
         maxLength: 36
         minLength: 36
-      reference_message_id:
+      reference_message_ids:
         description: >-
-          The UUID of a previous message to which this message refers. This field must not be empty when sending a message of type 'INTERSECTING_OPERATION_ACK'.  It must be empty when sending a message of type 'INTERSECTING_OPERATION_NOTIFICATION'.
-        type: string
-        format: uuid
-        maxLength: 36
-        minLength: 36
+          A set of UUIDs of any previous messages related to the same negotiation process. This field must not be empty when sending a message of type 'REPLAN_BEGINNING_AS_SECONDARY_OPERATION'.  This set of ids need not be complete. The goal is to have at least one id that can be used to link this message to the set of previous messages sent and received. The USS should make this list as complete as possible to aid the negotiation process.
+        type: array
+        items:
+          type: string
+          format: uuid
+          maxLength: 36
+          minLength: 36
       free_text:
         type: string
         maxLength: 1000
