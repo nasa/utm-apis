@@ -39,21 +39,6 @@
 #jlrios: flattened by removing Geometry to improve codegen, simplify schema
 
 definitions:
-  
-  Position:
-    description: |
-      Array of doubles of longitude-latitude values. Note that longitude is first.
-    type: object
-    required: 
-      - coordinates
-    properties:
-      coordinates:
-        type: array
-        maxItems: 2
-        minItems: 2
-        items:
-          type: number
-          format: double
           
   Point:
     type: object
