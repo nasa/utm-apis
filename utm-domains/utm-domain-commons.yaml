@@ -34,26 +34,26 @@ definitions:
       In relation to a UTMMessage, the severities may be interpreted as follows.
       
       1. **EMERGENCY**
-        Desc.
+        There is an **immediate** impact to the safety of other air operations, the safety of people, or the safety of structures on the groud. Actions to mitigate required by other operations.
       2. **ALERT**
-        Desc.
+        There may be an impact to the safety of other air operations, the safety of people, or the safety of structures on the groud. Actions to mitigate required by other operations.
       3. **CRITICAL**
-        Desc.
+        Without mitigations by the affected operation, the situation may rise to an emergency in the near future.
       4. **WARNING**
-        Desc.
+        There is a contained issue that may result in the loss of aircraft. No immediate or likley effect to other operations, people on the ground, or structures.
       5. **NOTICE**
-        Desc.
+        This issue is provided for situational awareness. Planning by operators and USSs may be affected.
       6. **INFORMATIONAL**
-        Desc.
+        This issue is provided for situational awareness.
       
     type: string
     enum:
-    - EMERGENCY       # Event/message likely requires grounding of operations
-    - ALERT           # Event/message has safety implications
-    - CRITICAL        # Event/message may effect current operations
-    - WARNING         # Event/message ...
-    - NOTICE          # Event/message may effect future operations, 
-    - INFORMATIONAL   # Event/message no immediate operational impact
+    - EMERGENCY      
+    - ALERT          
+    - CRITICAL       
+    - WARNING         
+    - NOTICE         
+    - INFORMATIONAL  
   
   Operation:
     type: object
@@ -145,7 +145,18 @@ definitions:
         maxLength: 1000
       state:
         description: |
-          The current state of the operation.  Must be maintained by the USS.
+          The current state of the operation.  Must be maintained by the USS. Some additional details in the USS Specification.
+          
+          1. ACCEPTED
+            This operation has been deemed ACCEPTED by the supporting USS. This implies that the operation meets the requirements for operating in the airspace based on the type of operation submitted.
+          2. ACTIVATED
+            This operation is active. The transition from ACCEPTED to ACTIVATED is not an announced transition. The transition is implied based on the submitted start time of the operation (i.e. the effective_time_begin of the first OperationVolume). Note that an ACTIVATED operation is not necessarily airborne, but is assumed to be "using" the OperationVolumes that it has announced.
+          3. CLOSED
+            This operation is closed. It is not airborne and will not become airborne again. If the UAS and the crew will fly again, it would need to be as a new operation. A USS may announce the closure of any operation, but is not required to announce unless the operation was ROGUE or NONCOFORMING.
+          4. NONCORMING
+            See USS Specifcation for requirements to transition to this state.
+          5. ROGUE
+            See USS Specifcation for requirements to transition to this state.
         type: string
         enum:
         - ACCEPTED
@@ -540,6 +551,12 @@ definitions:
         - 37.41436490284069
   
   UTMMessage:
+    required: 
+    - message_id
+    - origin
+    - originator_id
+    - sent_time
+    - severity
     type: object
     description: >-
       A message. Used to make other stakeholders aware about an issue.
