@@ -58,6 +58,8 @@ paths:
       responses:
         201:
           description: "Message data received."
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
   /utm_messages:
     post:
       tags:
@@ -366,12 +368,36 @@ definitions:
         items:
           type: "array"
           items:
-            $ref: "#/definitions/Position"
+            type: "array"
+            items:
+              type: "number"
+              format: "double"
+            maxItems: 2
+            minItems: 2
     externalDocs:
       url: "https://tools.ietf.org/html/rfc7946#section-3.1.6"
     description: "GeoJSon Polygon. Positions all 2D."
+  UTMRestResponse:
+    type: "object"
+    properties:
+      http_status_code:
+        type: "integer"
+      message:
+        type: "string"
+      resource:
+        type: "string"
+    example:
+      http_status_code: 201
+      message: "Resource created."
+      resource: "/resource/683c0e9e-49dc-44ce-82de-a5723b1f6965"
   UTMMessage:
     type: "object"
+    required:
+    - "message_id"
+    - "origin"
+    - "originator_id"
+    - "sent_time"
+    - "severity"
     properties:
       message_id:
         type: "string"
@@ -472,8 +498,18 @@ definitions:
       \ that they may be given priority handling by software systems and human users.\n\
       **EMERGENCY > ALERT > CRITICAL > WARNING > NOTICE > INFORMATIONAL**\nIn relation\
       \ to a UTMMessage, the severities may be interpreted as follows.\n1. **EMERGENCY**\n\
-      \  Desc.\n2. **ALERT**\n  Desc.\n3. **CRITICAL**\n  Desc.\n4. **WARNING**\n\
-      \  Desc.\n5. **NOTICE**\n  Desc.\n6. **INFORMATIONAL**\n  Desc."
+      \  There is an **immediate** impact to the safety of other air operations, the\
+      \ safety of people, or the safety of structures on the groud. Actions to mitigate\
+      \ required by other operations.\n2. **ALERT**\n  There may be an impact to the\
+      \ safety of other air operations, the safety of people, or the safety of structures\
+      \ on the groud. Actions to mitigate required by other operations.\n3. **CRITICAL**\n\
+      \  Without mitigations by the affected operation, the situation may rise to\
+      \ an emergency in the near future.\n4. **WARNING**\n  There is a contained issue\
+      \ that may result in the loss of aircraft. No immediate or likley effect to\
+      \ other operations, people on the ground, or structures.\n5. **NOTICE**\n  This\
+      \ issue is provided for situational awareness. Planning by operators and USSs\
+      \ may be affected.\n6. **INFORMATIONAL**\n  This issue is provided for situational\
+      \ awareness."
     enum:
     - "EMERGENCY"
     - "ALERT"
@@ -629,7 +665,12 @@ definitions:
         enum:
         - "Point"
       coordinates:
-        $ref: "#/definitions/Position"
+        type: "array"
+        items:
+          type: "number"
+          format: "double"
+        maxItems: 2
+        minItems: 2
     externalDocs:
       url: "https://tools.ietf.org/html/rfc7946#section-3.1.2"
     description: "GeoJSon Point, limited to 2D."
@@ -1038,7 +1079,22 @@ definitions:
       state:
         type: "string"
         description: "The current state of the operation.  Must be maintained by the\
-          \ USS.\n"
+          \ USS. Some additional details in the USS Specification.\n\n1. ACCEPTED\n\
+          \  This operation has been deemed ACCEPTED by the supporting USS. This implies\
+          \ that the operation meets the requirements for operating in the airspace\
+          \ based on the type of operation submitted.\n2. ACTIVATED\n  This operation\
+          \ is active. The transition from ACCEPTED to ACTIVATED is not an announced\
+          \ transition. The transition is implied based on the submitted start time\
+          \ of the operation (i.e. the effective_time_begin of the first OperationVolume).\
+          \ Note that an ACTIVATED operation is not necessarily airborne, but is assumed\
+          \ to be \"using\" the OperationVolumes that it has announced.\n3. CLOSED\n\
+          \  This operation is closed. It is not airborne and will not become airborne\
+          \ again. If the UAS and the crew will fly again, it would need to be as\
+          \ a new operation. A USS may announce the closure of any operation, but\
+          \ is not required to announce unless the operation was ROGUE or NONCOFORMING.\n\
+          4. NONCORMING\n  See USS Specifcation for requirements to transition to\
+          \ this state.\n5. ROGUE\n  See USS Specifcation for requirements to transition\
+          \ to this state.\n"
         minLength: 5
         maxLength: 13
         enum:
