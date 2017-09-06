@@ -28,14 +28,13 @@ tags: # Have to add 'A' 'B' etc since ordering isn't respected in SwaggerUI.
   externalDocs:
     url: "https://tmiserver.arc.nasa.gov/fims/api/"
     description: NASA FIMS server generated from this API specification.
-- name: B. FIMS Notifications and Alerts
+- name: B. Connections and Webhooks
   description: |
-    FIMS sends Alerts and other notifications to USS's by using the USS Required API's POST alertMessages. FIMS subscribes to USS Discovery to learn about the USS Network.
+    FIMS sends Alerts and other notifications to USS's using the USS API (webhooks pattern). Also, FIMS subscribes to USS Discovery to learn about the USS Network.
 
 - name: C. Data Types
   description: Psuedo endpoints used for the documentation of the data schema
-- name: D. Version
-  description: Get the API version
+
 
 securityDefinitions:
   application:
@@ -52,7 +51,19 @@ responses:
     description: A RESTful call was made to this endpoint but this is not a REST endpoint. Do not use this endpoint for REST calls.
 
 paths:
-
+  /api:
+    get:
+      tags:
+        - D. Version and Health
+      summary: get server info.  Can be used to check health
+      security: []
+      produces:
+        - application/json
+      responses:
+        201:
+          description: Operation Plan request received.
+          schema:
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Version' 
             
   /operations:
     post:
