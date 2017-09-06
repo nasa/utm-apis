@@ -52,16 +52,17 @@ tags:
       The primary RESTful endpoints for using the SDSP Discovery service.
       
 securityDefinitions:
-  application:
+  sds_discovery_security:
     type: oauth2
-    tokenUrl: http://thisserver.com/oauth/token
-    flow: application
+    tokenUrl: https://thisserver.com/oauth/token
+    flow: password
     scopes:
-      OauthSecurity: A Baseline USS that can perform the set of essential USS requests
+      'utm.nasa.gov_read.sdsp' : read all SDS Discovery data
+      'utm.nasa.gov_write.sdsp' : modify SDS data that you own
 
 security:
-  - application:
-    - OauthSecurity
+  - sds_discovery_security:
+    - 'utm.nasa.gov_read.sdsp'
 
 paths:
             
@@ -69,9 +70,12 @@ paths:
     post:
       tags:
         - A. Required Endpoints
-      summary: Submit information regarding USS Operations
+      summary: Submit information regarding Supplemental Data Service Providers
       operationId: postSds
-      description: Allows for submission of USS opreations to the service discovery system.
+      description: Submit SDS provider for discovery.
+      security:
+         - sds_discovery_security:
+           - utm.nasa.gov_write.sdsp
       consumes:
         - application/json
       produces:
@@ -100,9 +104,12 @@ paths:
     put:
       tags:
         - A. Required Endpoints
-      summary: Submit updates to an existing USS Operation
+      summary: Submit updates to an existing SDS Discovery entry
       operationId: putSds
       description: Allows for SDSP to update an previous plan submission.
+      security:
+         - sds_discovery_security:
+           - utm.nasa.gov_write.sdsp
       consumes:
         - application/json
       produces:
