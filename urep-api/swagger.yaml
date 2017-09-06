@@ -1,0 +1,546 @@
+---
+swagger: "2.0"
+info:
+  description: "This service allows an unmanned aircraft system (UAS) Service Supplier\
+    \ (USS) to submit a UREP to the greater UAS Traffic Management (UTM) ecosystem.\
+    \ This also allows USS to share UREPs amongst eachother, allowing for greater\
+    \ operational awareness within the UTM ecosystem."
+  version: "v1"
+  title: "UAS Report (UREP) Service"
+host: "utmalpha.arc.nasa.gov"
+basePath: "/urep"
+tags:
+- name: "A. Required Endpoints"
+  description: "An implementer of this SDSP implements these."
+- name: "B. Subscription Points"
+  description: "Non-REST endpoints for asynchronous communications with UREP."
+schemes:
+- "https"
+paths:
+  /ureps:
+    get:
+      tags:
+      - "A. Required Endpoints"
+      summary: "Get UREPs"
+      operationId: "getUrepsUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "fields"
+        in: "query"
+        description: "A ',' delimited list of field names from the Urep object to\
+          \ include within the results. All other fields will be excluded. Fields\
+          \ must be valid field names from the Urep object. If not present all fields\
+          \ will be returned."
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "csv"
+      - name: "sort"
+        in: "query"
+        description: "The parameter to sort by. Defaults to the time_measured if not\
+          \ present."
+        required: false
+        type: "string"
+      - name: "sort_d"
+        in: "query"
+        description: "Direction of the sort, defaults to DESC if not present. Must\
+          \ be either ASC or DESC"
+        required: false
+        type: "string"
+        enum:
+        - "ASC"
+        - "DESC"
+      - name: "limit"
+        in: "query"
+        description: "Max number of Ureps to return"
+        required: false
+        type: "integer"
+        default: 10
+        maximum: 100
+        minimum: 1
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "Offset number of records to return for pagination."
+        required: false
+        type: "integer"
+        default: 0
+        minimum: 0
+        format: "int32"
+      - name: "lat"
+        in: "query"
+        description: "Latitude of point for Geographic search. Must be present if\
+          \ lon or radius are present. If none of these fields are present, no geographic\
+          \ filtering will be performed."
+        required: false
+        type: "number"
+        maximum: 90.0
+        minimum: -90.0
+        format: "double"
+      - name: "lon"
+        in: "query"
+        description: "Longitude of point for Geographic search. Must be present if\
+          \ lat or radius are present. If none of these fields are present, no geographic\
+          \ filtering will be performed."
+        required: false
+        type: "number"
+        maximum: 180.0
+        minimum: -180.0
+        format: "double"
+      - name: "radius"
+        in: "query"
+        description: "Radius for Geographic search in nautical miles. Must be present\
+          \ if lat or lon are present. If none of these fields are present, no geographic\
+          \ filtering will be performed."
+        required: false
+        type: "number"
+        minimum: 0
+        format: "double"
+      - name: "before"
+        in: "query"
+        description: "Upper bound for a time based query on time_measured. Defaults\
+          \ to the current time if not present."
+        required: false
+        type: "string"
+        format: "date-time"
+      - name: "after"
+        in: "query"
+        description: "Lower bound for a time based query on time_measured. Defaults\
+          \ to 24 hours prior to the current time if not present."
+        required: false
+        type: "string"
+        format: "date-time"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Urep"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+    post:
+      tags:
+      - "A. Required Endpoints"
+      summary: "Add UREP"
+      operationId: "addUrepUsingPOST"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "urep"
+        description: "The UREP to be submitted. The ID will be minted by the service,\
+          \ so should not be provided."
+        required: true
+        schema:
+          $ref: "#/definitions/Urep"
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+      security:
+      - password:
+        - "USS"
+  /ureps/{id}:
+    get:
+      tags:
+      - "A. Required Endpoints"
+      summary: "Get UREPs by ID"
+      operationId: "getUrepsForIDUsingGET"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The urep_id for the requested UREP"
+        required: true
+        type: "string"
+        format: "uuid"
+      - name: "fields"
+        in: "query"
+        description: "A ',' delimited list of field names from the Urep object to\
+          \ include within the results. All other fields will be excluded. Fields\
+          \ must be valid field names from the Urep object. If not present all fields\
+          \ will be returned."
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "csv"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Urep"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+  /urepstream:
+    get:
+      tags:
+      - "B. Subscription Points"
+      summary: "Subscription point for receiving UREP updates"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        410:
+          description: "A RESTful call was made to this endpoint but this is not a\
+            \ REST endpoint. Do not use this endpoint for REST calls."
+securityDefinitions:
+  password:
+    type: "oauth2"
+    tokenUrl: "https://<host>/fimsAuthServer/oauth/token"
+    flow: "password"
+    scopes:
+      USS: "A USS can read and write UREPs"
+definitions:
+  Urep:
+    type: "object"
+    required:
+    - "altitude"
+    - "location"
+    - "source"
+    - "time_measured"
+    - "time_submitted"
+    - "user_id"
+    properties:
+      air_temperature:
+        type: "number"
+        format: "double"
+        description: "Air temperature in degrees Celcius."
+        minimum: -273.15
+      aircraft_sightings:
+        type: "array"
+        description: "An aircraft is in the vicinity of the report."
+        items:
+          $ref: "#/definitions/PointOut"
+      altitude:
+        type: "number"
+        format: "double"
+        description: "The altitude as measured via a GPS device on the aircraft. Units\
+          \ in international feet using the WGS84 reference system."
+        minimum: -250.0
+      gufi:
+        type: "string"
+        format: "uuid"
+        description: "The UUID of the reporting operation, if appropriate. Note that\
+          \ this field is not required, but recommended when UREP is related to a\
+          \ UTM-participating operation."
+        minLength: 36
+        maxLength: 36
+      icing_intensity:
+        type: "string"
+        description: "A qualitative measure of icing intensity. Use 'NEG' when icing\
+          \ was expected, but not encountered."
+        enum:
+        - "TRACE"
+        - "TRACE_LGT"
+        - "LGT"
+        - "LGT_MOD"
+        - "MOD"
+        - "MOD_SEV"
+        - "SEV"
+        - "NEG"
+      icing_type:
+        type: "string"
+        description: "The type of icing encountered. Can only be submitted with icing_intensity."
+        enum:
+        - "RIME"
+        - "CLR"
+        - "MX"
+      location:
+        $ref: "#/definitions/Point"
+      proximity:
+        type: "string"
+        description: "Qualifier for any weather value provided. Use this field if\
+          \ the observed phenomenon is not at the provided location, but is nearby.\
+          \ If included, must be equal to VC."
+        enum:
+        - "VC"
+      remarks:
+        type: "string"
+        description: "Any free text that cannot be captured using the standard fields.\
+          \ General use not advised."
+        maxLength: 1000
+      source:
+        type: "string"
+        description: "How the measured/observed activity was measured/observed. In\
+          \ the case of “OTHER” comments should be supplied in the “remarks” field."
+        enum:
+        - "VEHICLE"
+        - "OBSERVER"
+        - "GROUND_SENSOR"
+        - "AIRBORNE_SENSOR"
+        - "OTHER"
+      time_submitted:
+        type: "string"
+        format: "date-time"
+        description: "USS-assigned time for when the UREP was sent to the UTM System.\
+          \ Must be later than time_measured."
+      time_measured:
+        type: "string"
+        format: "date-time"
+        description: "USS-assigned time for when the data were initially measured.\
+          \ Must be earlier than time_submitted."
+      time_received:
+        type: "string"
+        format: "date-time"
+        description: "UREP system assigned time for when the UREP was received. If\
+          \ the time according to the UREP system is earlier than either the time_submitted\
+          \ or time_measured, the UREP submission will be rejected."
+      turbulence_intensity:
+        type: "string"
+        description: "A qualitative measure of turbulence intensity. Use 'NEG' when\
+          \ turbulence was expected, but not encountered."
+        enum:
+        - "LGT"
+        - "MOD"
+        - "SEV"
+        - "EXTRM"
+        - "LGT_MOD"
+        - "MOD_SEV"
+        - "SEV_EXTRM"
+        - "NEG"
+      urep_id:
+        type: "string"
+        format: "uuid"
+        description: "UREP system assigned identifier for a UREP."
+        minLength: 36
+        maxLength: 36
+      user_id:
+        type: "string"
+        description: "Identity of the principal submitting this UREP to the UREP server."
+        readOnly: true
+        maxLength: 1000
+      operator_id:
+        type: "string"
+        description: "Identity of the UAS Operator originating this UREP."
+        readOnly: true
+        maxLength: 1000
+      visibility:
+        type: "number"
+        format: "double"
+        description: "Visibility in statute miles, rounded down if necessary. Maximum\
+          \ value 99 indicates unrestricted visibility. Only use partial SM less than\
+          \ 1 SM (0.5 SM, but not 20.5 SM)."
+      weather:
+        type: "string"
+        description: "Flight visibility and flight weather, follows PIREP/METAR coding."
+        enum:
+        - "DRSN"
+        - "BLSN"
+        - "DRDU"
+        - "DRSA"
+        - "DZ"
+        - "FZDZ"
+        - "DU"
+        - "BLDU"
+        - "DS"
+        - "FG"
+        - "FZFG"
+        - "FZRA"
+        - "FC"
+        - "GR"
+        - "SHGR"
+        - "HZ"
+        - "IC"
+        - "PL"
+        - "SHPL"
+        - "BR"
+        - "BCFG"
+        - "PRFG"
+        - "RA"
+        - "SHRA"
+        - "SA"
+        - "BLSA"
+        - "SS"
+        - "MIFG"
+        - "SHGS"
+        - "GS"
+        - "FU"
+        - "SG"
+        - "SN"
+        - "SHSN"
+        - "PY"
+        - "SQ"
+        - "TS"
+        - "UP"
+        - "VA"
+        - "PO"
+      weather_intensity:
+        type: "string"
+        description: "Qualifier for any weather value provided.  Without a weather_intensity\
+          \ value, MODERATE is assumed."
+        enum:
+        - "HEAVY"
+        - "MODERATE"
+        - "LIGHT"
+      wind_direction:
+        type: "number"
+        format: "double"
+        description: "Magnetic wind direction, 0 to 360 (exclusive) degrees. Must\
+          \ be submitted when wind_speed is provided in the UREP ."
+        minimum: 0.0
+        maximum: 360.0
+        exclusiveMinimum: false
+        exclusiveMaximum: true
+      wind_speed:
+        type: "integer"
+        format: "int32"
+        description: "Wind speed in knots. Must be submitted when wind_direction is\
+          \ provided in the UREP."
+        minimum: 0
+        exclusiveMinimum: false
+  PointOut:
+    type: "object"
+    required:
+    - "altitude"
+    - "bearing"
+    - "distance"
+    - "north_ref"
+    - "point"
+    - "state"
+    - "track"
+    - "vehicle_type"
+    properties:
+      altitude:
+        type: "number"
+        format: "double"
+        description: "The altitude of the target. Units in feet using the WGS84 reference\
+          \ system. May be estimated."
+        minimum: -250.0
+      bearing:
+        type: "integer"
+        format: "int32"
+        description: "Degrees from north (as defined by north_ref) from reporter's\
+          \ position to target."
+        minimum: 0
+        maximum: 359
+      distance:
+        type: "number"
+        format: "double"
+        description: "Nautical miles (horizontal only) from reporter's position to\
+          \ target."
+        minimum: 0.0
+        exclusiveMinimum: false
+      north_ref:
+        type: "string"
+        description: "The reference for 'north' in reporting values"
+        enum:
+        - "MAGNETIC"
+      point:
+        $ref: "#/definitions/Point"
+      remarks:
+        type: "string"
+        description: "Any free text that cannot be captured using the standard fields."
+        maxLength: 1000
+      state:
+        type: "string"
+        description: "The current state of the target."
+        enum:
+        - "CRUISE"
+        - "DESCENT"
+        - "CLIMB"
+        - "HOVER"
+        - "LOITER"
+        - "UNKNOWN"
+      track:
+        type: "number"
+        format: "double"
+        description: "The track in decimal degrees relative to north_ref."
+        minimum: 0.0
+        maximum: 360.0
+        exclusiveMinimum: false
+        exclusiveMaximum: true
+      vehicle_type:
+        type: "string"
+        description: "The type of vehicle being pointed out."
+        enum:
+        - "SMALL_UAS"
+        - "LARGE_UAS"
+        - "HELICOPTER"
+        - "SMALL_MANNED_FIXED_WING"
+        - "HANG_GLIDER"
+        - "BALLOON"
+        - "LARGE_MANNED_FIXED_WING"
+        - "OTHER"
+  UTMRestResponse:
+    type: "object"
+    properties:
+      http_status_code:
+        type: "integer"
+      message:
+        type: "string"
+      resource:
+        type: "string"
+    example:
+      http_status_code: 201
+      message: "Resource created."
+      resource: "/resource/683c0e9e-49dc-44ce-82de-a5723b1f6965"
+  Point:
+    type: "object"
+    properties:
+      type:
+        type: "string"
+        description: "The type of Geometry. In this case, must be 'Point' per GeoJSON\
+          \ spec.\n"
+        enum:
+        - "Point"
+      coordinates:
+        type: "array"
+        items:
+          type: "number"
+          format: "double"
+        maxItems: 2
+        minItems: 2
+    externalDocs:
+      url: "https://tools.ietf.org/html/rfc7946#section-3.1.2"
+    description: "GeoJSon Point, limited to 2D."
+responses:
+  WRONG_PROTOCOL:
+    description: "A RESTful call was made to this endpoint but this is not a REST\
+      \ endpoint. Do not use this endpoint for REST calls."
+externalDocs:
+  description: "SwaggerHub Documentation"
+  url: "https://app.swaggerhub.com/apis/utm/urep/v1"
