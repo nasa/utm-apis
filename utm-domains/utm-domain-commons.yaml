@@ -18,7 +18,7 @@ definitions:
     - utm.nasa.gov_write.publicsafety
     - utm.nasa.gov_read.publicsafety
     - utm.nasa.gov_write.constraint
-    - utm.nasa.gov_read.contraint
+    - utm.nasa.gov_read.constraint
     - utm.nasa.gov_read.sdsp
     - utm.nasa.gov_write.sdsp
     - utm.nasa.gov_all.all
