@@ -57,7 +57,7 @@ paths:
           $ref: "#/definitions/ConstraintMessage"
       responses:
         201:
-          description: "Message data received."
+          description: "Constraint data received."
           schema:
             $ref: "#/definitions/UTMRestResponse"
   /utm_messages:
@@ -79,6 +79,8 @@ paths:
       responses:
         201:
           description: "Message data received."
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
   /uss:
     post:
       tags:
@@ -100,7 +102,9 @@ paths:
           $ref: "#/definitions/UssInstance"
       responses:
         201:
-          description: "Data received."
+          description: "USS Instance data received."
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
   /negotiations:
     post:
       tags:
@@ -129,6 +133,8 @@ paths:
             $ref: "#/definitions/NegotiationResponse"
         400:
           description: "Problem with submitted data"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
   /operations:
     get:
       tags:
@@ -224,6 +230,8 @@ paths:
       responses:
         201:
           description: "Operation data received."
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
@@ -251,9 +259,10 @@ paths:
           $ref: "#/definitions/Operation"
       responses:
         200:
-          description: "Successful data request. Response includes requested data."
+          description: "Updates to USS Instance received. Response includes requested\
+            \ data."
           schema:
-            $ref: "#/definitions/Operation"
+            $ref: "#/definitions/UTMRestResponse"
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
