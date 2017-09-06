@@ -43,8 +43,8 @@ schemes:
 - "https"
 - "wss"
 security:
-- application:
-  - "OauthSecurity"
+- sds_discovery_security:
+  - "utm.nasa.gov_read.sdsp"
 paths:
   /sds:
     get:
@@ -134,9 +134,8 @@ paths:
     post:
       tags:
       - "A. Required Endpoints"
-      summary: "Submit information regarding USS Operations"
-      description: "Allows for submission of USS opreations to the service discovery\
-        \ system."
+      summary: "Submit information regarding Supplemental Data Service Providers"
+      description: "Submit SDS provider for discovery."
       operationId: "postSds"
       consumes:
       - "application/json"
@@ -163,10 +162,13 @@ paths:
           description: "Invalid ID supplied.  Fix authorization and retry."
         429:
           description: "Too many recent requests from you. Wait to make further submissions."
+      security:
+      - sds_discovery_security:
+        - "utm.nasa.gov_write.sdsp"
     put:
       tags:
       - "A. Required Endpoints"
-      summary: "Submit updates to an existing USS Operation"
+      summary: "Submit updates to an existing SDS Discovery entry"
       description: "Allows for SDSP to update an previous plan submission."
       operationId: "putSds"
       consumes:
@@ -193,13 +195,17 @@ paths:
             \ and retry."
         429:
           description: "Too many recent requests from you. Wait to make further queries."
+      security:
+      - sds_discovery_security:
+        - "utm.nasa.gov_write.sdsp"
 securityDefinitions:
-  application:
+  sds_discovery_security:
     type: "oauth2"
-    tokenUrl: "http://thisserver.com/oauth/token"
-    flow: "application"
+    tokenUrl: "https://thisserver.com/oauth/token"
+    flow: "password"
     scopes:
-      OauthSecurity: "A Baseline USS that can perform the set of essential USS requests"
+      utm.nasa.gov_read.sdsp: "read all SDS Discovery data"
+      utm.nasa.gov_write.sdsp: "modify SDS data that you own"
 definitions:
   Sds:
     type: "object"
@@ -386,21 +392,12 @@ definitions:
         enum:
         - "Point"
       coordinates:
-        $ref: "#/definitions/Position"
-    externalDocs:
-      url: "https://tools.ietf.org/html/rfc7946#section-3.1.2"
-    description: "GeoJSon Point, limited to 2D."
-  Position:
-    type: "object"
-    required:
-    - "coordinates"
-    properties:
-      coordinates:
         type: "array"
         items:
           type: "number"
           format: "double"
         maxItems: 2
         minItems: 2
-    description: "Array of doubles of longitude-latitude values. Note that longitude\
-      \ is first.\n"
+    externalDocs:
+      url: "https://tools.ietf.org/html/rfc7946#section-3.1.2"
+    description: "GeoJSon Point, limited to 2D."
