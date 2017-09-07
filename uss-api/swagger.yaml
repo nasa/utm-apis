@@ -143,13 +143,14 @@ paths:
       parameters:
       - in: "body"
         name: "operation"
-        description: "The operation data"
+        description: "The NegotiationMessage data"
         required: true
         schema:
           $ref: "#/definitions/NegotiationMessage"
       responses:
         200:
-          description: "Negotiation request received, decision provided"
+          description: "NegotiationResponse indicating that request was received and\
+            \ a decision provided."
           schema:
             $ref: "#/definitions/NegotiationResponse"
         400:
