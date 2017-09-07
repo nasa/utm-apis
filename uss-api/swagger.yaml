@@ -36,9 +36,19 @@ info:
     url: "https://ti.arc.nasa.gov/opensource/nosa/"
 host: "uss.defined.url"
 basePath: "/uss"
+tags:
+- name: "A. Required Endpoints"
+- name: "B. Connections"
+  description: "USS sends and receives position reports on an async connection.  The\
+    \ schema is described in the Data Types section.\n"
+- name: "C. Data Types"
+  description: "Psuedo endpoints used for the documentation of the data schema"
 schemes:
 - "https"
 - "wss"
+security:
+- ussapi_security:
+  - "utm.nasa.gov_read.min_data"
 paths:
   /constraints:
     post:
@@ -60,6 +70,10 @@ paths:
           description: "Constraint data received."
           schema:
             $ref: "#/definitions/UTMRestResponse"
+      security:
+      - ussapi_security:
+        - "utm.nasa.gov_read.constraint"
+        - "utm.nasa.gov_write.constraint"
   /utm_messages:
     post:
       tags:
@@ -81,16 +95,19 @@ paths:
           description: "Message data received."
           schema:
             $ref: "#/definitions/UTMRestResponse"
+      security:
+      - ussapi_security:
+        - "utm.nasa.gov_read.message"
+        - "utm.nasa.gov_write.message"
   /uss:
     post:
       tags:
       - "A. Required Endpoints"
-      summary: "Allow USS Discovery Service to send data"
+      summary: "Share USS Instance data"
       description: "As per the USS Discovery Service specification, this endpoint\
         \ is for receiving messages about the USS Network from the USS Discovery Service.\
         \  For example, when a new USS Instance is registered, that announcement would\
         \ come to this endpoint."
-      operationId: "postUSSDiscoveryMessage"
       consumes:
       - "application/json"
       parameters:
@@ -105,6 +122,10 @@ paths:
           description: "USS Instance data received."
           schema:
             $ref: "#/definitions/UTMRestResponse"
+      security:
+      - ussapi_security:
+        - "utm.nasa.gov_read.operation"
+        - "utm.nasa.gov_write.operation"
   /negotiations:
     post:
       tags:
@@ -268,6 +289,39 @@ paths:
             \ and retry."
         429:
           description: "Too many recent requests from you. Wait to make further queries."
+  /schema/Position:
+    get:
+      tags:
+      - "C. Data Types"
+      summary: "Position schema"
+      description: "Illustrates UAS position report.\n\nNote that if you are viewing\
+        \ this in a SwaggerUI, the \"try it out\" feature will not work since this\
+        \ is not a RESTful endpoint.\n"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Position"
+securityDefinitions:
+  ussapi_security:
+    type: "oauth2"
+    tokenUrl: "https://thisserver.com/oauth/token"
+    flow: "password"
+    scopes:
+      utm.nasa.gov_write.operation: "update own USS Instance data"
+      utm.nasa.gov_read.operation: "read USS Instances"
+      utm.nasa.gov_write.message: "update UTM messages"
+      utm.nasa.gov_read.message: "read UTM messages"
+      utm.nasa.gov_read.constraint: "read UTM constraints"
+      utm.nasa.gov_write.constraint: "write UTM constraints. Constraints are owned\
+        \ by FIMS."
+      utm.nasa.gov_read.sdsp: "read data from UTM Supplemental Data Service Providers"
+      utm.nasa.gov_write.sdsp: "update own data in UTM Supplemental Data Service Providers"
+      utm.nasa.gov_read.min_data: "read data which has been mimized for example, by\
+        \ redacting some properties"
 definitions:
   NegotiationResponse:
     type: "object"
