@@ -60,8 +60,8 @@ paths:
       produces:
         - application/json
       responses:
-        201:
-          description: Operation Plan request received.
+        200:
+          description: OK
           schema:
             $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Version' 
             
@@ -276,11 +276,11 @@ paths:
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 
-  /schema/AlertMessage:
+  /schema/UTMMessage:
     get:
       tags:
         - C. Data Types
-      summary: Alert Message schema
+      summary: UTM Message schema
       description: |
         Illustrates the FIMS Alert Message. FIMS may send out Alert Messages from time to time. This endpoint is not intended for use.
 
@@ -312,7 +312,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/ConstraintMessage'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 
