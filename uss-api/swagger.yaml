@@ -294,7 +294,7 @@ paths:
     get:
       tags:
       - "C. Data Types"
-      summary: "Position schema"
+      summary: "UAS Position (telemetry) data"
       description: "Illustrates UAS position report.\n\nNote that if you are viewing\
         \ this in a SwaggerUI, the \"try it out\" feature will not work since this\
         \ is not a RESTful endpoint.\n"
@@ -306,6 +306,86 @@ paths:
           description: "OK"
           schema:
             $ref: "#/definitions/Position"
+  /schema/Operation:
+    get:
+      tags:
+      - "C. Data Types"
+      summary: "Operation data"
+      description: "Illustrates an Operation.\n\nNote that if you are viewing this\
+        \ in a SwaggerUI, the \"try it out\" feature will not work since this is not\
+        \ a RESTful endpoint.\n"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Operation"
+  /schema/NegotiationMessage:
+    get:
+      tags:
+      - "C. Data Types"
+      summary: "Message that is part of a negotiation protocol"
+      description: "Illustrates an NegotiationMessage.\n\nNote that if you are viewing\
+        \ this in a SwaggerUI, the \"try it out\" feature will not work since this\
+        \ is not a RESTful endpoint.\n"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/NegotiationMessage"
+  /schema/UssInstance:
+    get:
+      tags:
+      - "C. Data Types"
+      summary: "A USS's area of operation"
+      description: "Illustrates an UssInstance.\n\nNote that if you are viewing this\
+        \ in a SwaggerUI, the \"try it out\" feature will not work since this is not\
+        \ a RESTful endpoint.\n"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/UssInstance"
+  /schema/UTMMessage:
+    get:
+      tags:
+      - "C. Data Types"
+      summary: "A message such as an alert."
+      description: "Illustrates a UTMMessage.\n\nNote that if you are viewing this\
+        \ in a SwaggerUI, the \"try it out\" feature will not work since this is not\
+        \ a RESTful endpoint.\n"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/UTMMessage"
+  /schema/ConstraintMessage:
+    get:
+      tags:
+      - "C. Data Types"
+      summary: "A message such as an alert."
+      description: "Illustrates a ConstraintMessage.\n\nNote that if you are viewing\
+        \ this in a SwaggerUI, the \"try it out\" feature will not work since this\
+        \ is not a RESTful endpoint.\n"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/ConstraintMessage"
 securityDefinitions:
   ussapi_security:
     type: "oauth2"
