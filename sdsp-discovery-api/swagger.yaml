@@ -51,11 +51,13 @@ tags:
     description: |
       The primary RESTful endpoints for using the SDSP Discovery service.
       
+# https://swagger.io/docs/specification/authentication/oauth2/
+# clientCredentials – Client Credentials flow (is called application in OpenAPI 2.0)      
 securityDefinitions:
   sds_discovery_security:
     type: oauth2
     tokenUrl: https://thisserver.com/oauth/token
-    flow: password
+    flow: application
     scopes:
       'utm.nasa.gov_read.sdsp' : read all SDS Discovery data
       'utm.nasa.gov_write.sdsp' : modify SDS data that you own
