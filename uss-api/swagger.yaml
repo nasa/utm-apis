@@ -280,7 +280,7 @@ paths:
         schema:
           $ref: "#/definitions/Operation"
       responses:
-        200:
+        201:
           description: "Updates to USS Instance received. Response includes requested\
             \ data."
           schema:
