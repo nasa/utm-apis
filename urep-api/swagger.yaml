@@ -16,6 +16,9 @@ tags:
   description: "Non-REST endpoints for asynchronous communications with UREP."
 schemes:
 - "https"
+security:
+- urep_security:
+  - "utm.nasa.gov_read.sdsp"
 paths:
   /ureps:
     get:
@@ -127,12 +130,8 @@ paths:
             $ref: "#/definitions/UTMRestResponse"
         403:
           description: "Forbidden"
-          schema:
-            $ref: "#/definitions/UTMRestResponse"
         404:
           description: "Not Found"
-          schema:
-            $ref: "#/definitions/UTMRestResponse"
     post:
       tags:
       - "A. Required Endpoints"
@@ -161,15 +160,11 @@ paths:
             $ref: "#/definitions/UTMRestResponse"
         403:
           description: "Forbidden"
-          schema:
-            $ref: "#/definitions/UTMRestResponse"
         404:
           description: "Not Found"
-          schema:
-            $ref: "#/definitions/UTMRestResponse"
       security:
-      - password:
-        - "USS"
+      - urep_security:
+        - "utm.nasa.gov_write.sdsp"
   /ureps/{id}:
     get:
       tags:
@@ -209,12 +204,8 @@ paths:
             $ref: "#/definitions/UTMRestResponse"
         403:
           description: "Forbidden"
-          schema:
-            $ref: "#/definitions/UTMRestResponse"
         404:
           description: "Not Found"
-          schema:
-            $ref: "#/definitions/UTMRestResponse"
   /urepstream:
     get:
       tags:
@@ -228,12 +219,13 @@ paths:
           description: "A RESTful call was made to this endpoint but this is not a\
             \ REST endpoint. Do not use this endpoint for REST calls."
 securityDefinitions:
-  password:
+  urep_security:
     type: "oauth2"
-    tokenUrl: "https://<host>/fimsAuthServer/oauth/token"
-    flow: "password"
+    tokenUrl: "https://thisserver.com/oauth/token"
+    flow: "application"
     scopes:
-      USS: "A USS can read and write UREPs"
+      utm.nasa.gov_read.sdsp: "read all UREP data"
+      utm.nasa.gov_write.sdsp: "Subject can read, create, and udpate UREP data."
 definitions:
   Urep:
     type: "object"
