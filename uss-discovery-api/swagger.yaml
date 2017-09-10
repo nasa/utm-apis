@@ -49,6 +49,24 @@ tags:
 schemes:
 - "https"
 - "wss"
+
+
+# https://swagger.io/docs/specification/authentication/oauth2/
+# clientCredentials flow is called application in OpenAPI 2.0
+securityDefinitions:
+  uss_discovery_security:
+    type: oauth2
+    tokenUrl: https://thisserver.com/oauth/token
+    flow: application
+    scopes:
+      'utm.nasa.gov_read.sdsp' : read all USS Discovery data
+      'utm.nasa.gov_write.sdsp' : create and modify USS Discovery data that you own
+
+security:
+  - uss_discovery_security:
+    - 'utm.nasa.gov_read.sdsp'
+      
+      
 paths:
   /uss:
     get:
@@ -130,10 +148,7 @@ paths:
             $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         429:
           description: "Too many recent requests from you. Wait to make further queries."
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
-      security:
-      - password: []
+      
     post:
       tags:
       - "A. Required Endpoints"
@@ -145,6 +160,9 @@ paths:
       - "application/json"
       produces:
       - "application/json"
+      security:
+        - uss_discovery_security:
+          - 'utm.nasa.gov_write.sdsp'
       parameters:
       - in: "body"
         name: "uss_instance"
@@ -158,20 +176,14 @@ paths:
           schema:
             $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         400:
-          description: "Bad request. Typically validation error. Fix your request\
-            \ and retry."
+          description: "Bad request. Typically validation error. Fix your request and retry."
           schema:
             $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         403:
           description: "Invalid ID supplied.  Fix authorization and retry."
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         429:
           description: "Too many recent requests from you. Wait to make further submissions."
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
-      security:
-      - password: []
+
   /uss/{id}:
     get:
       tags:
@@ -207,10 +219,7 @@ paths:
             $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         429:
           description: "Too many recent requests from you. Wait to make further queries."
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
-      security:
-      - password: []
+ 
     put:
       tags:
       - "A. Required Endpoints"
@@ -221,6 +230,9 @@ paths:
       - "application/json"
       produces:
       - "application/json"
+      security:
+        - uss_discovery_security:
+          - 'utm.nasa.gov_write.sdsp'
       parameters:
       - name: "id"
         in: "path"
@@ -237,10 +249,10 @@ paths:
         schema:
           $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
       responses:
-        200:
-          description: "Successful data request. Response includes requested data."
+        201:
+          description: "Successful data request."
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
@@ -248,10 +260,7 @@ paths:
             $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         429:
           description: "Too many recent requests from you. Wait to make further queries."
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
-      security:
-      - password: []
+          
   /topic/ussUpdates:
     get:
       tags:
@@ -273,6 +282,7 @@ paths:
         410:
           description: "A RESTful call was made to this endpoint but is not a REST\
             \ endpoint. Do not use this endpoint for REST calls."
+            
   /schema/UssInstance:
     get:
       tags:
@@ -311,12 +321,6 @@ paths:
         410:
           description: "A RESTful call was made to this endpoint but is not a REST\
             \ endpoint. Do not use this endpoint for REST calls."
-securityDefinitions:
-  password:
-    type: "oauth2"
-    tokenUrl: "https://<<host>>/fimsAuthServer/oauth/token"
-    flow: "password"
-    scopes:
-      USS: "A USS can read and write"
+
 
 x-azure-api-id: "sh-1469571953760"
