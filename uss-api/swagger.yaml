@@ -73,7 +73,6 @@ paths:
       security:
       - ussapi_security:
         - "utm.nasa.gov_read.constraint"
-        - "utm.nasa.gov_write.constraint"
   /utm_messages:
     post:
       tags:
@@ -97,7 +96,6 @@ paths:
             $ref: "#/definitions/UTMRestResponse"
       security:
       - ussapi_security:
-        - "utm.nasa.gov_read.message"
         - "utm.nasa.gov_write.message"
   /uss:
     post:
@@ -124,7 +122,6 @@ paths:
             $ref: "#/definitions/UTMRestResponse"
       security:
       - ussapi_security:
-        - "utm.nasa.gov_read.operation"
         - "utm.nasa.gov_write.operation"
   /negotiations:
     post:
@@ -157,6 +154,9 @@ paths:
           description: "Problem with submitted data"
           schema:
             $ref: "#/definitions/UTMRestResponse"
+      security:
+      - ussapi_security:
+        - "utm.nasa.gov_write.message"
   /operations:
     get:
       tags:
@@ -227,6 +227,9 @@ paths:
             \ and retry."
         429:
           description: "Too many recent requests from you. Wait to make further queries."
+      security:
+      - ussapi_security:
+        - "utm.nasa.gov_read.operation"
     post:
       tags:
       - "A. Required Endpoints"
@@ -259,6 +262,9 @@ paths:
             \ and retry."
         429:
           description: "Too many recent requests from you. Wait to make further submissions."
+      security:
+      - ussapi_security:
+        - "utm.nasa.gov_write.operation"
     put:
       tags:
       - "A. Required Endpoints"
@@ -290,6 +296,9 @@ paths:
             \ and retry."
         429:
           description: "Too many recent requests from you. Wait to make further queries."
+      security:
+      - ussapi_security:
+        - "utm.nasa.gov_write.operation"
   /schema/Position:
     get:
       tags:
@@ -390,19 +399,19 @@ securityDefinitions:
   ussapi_security:
     type: "oauth2"
     tokenUrl: "https://thisserver.com/oauth/token"
-    flow: "password"
+    flow: "application"
     scopes:
-      utm.nasa.gov_write.operation: "update own USS Instance data"
-      utm.nasa.gov_read.operation: "read USS Instances"
-      utm.nasa.gov_write.message: "update UTM messages"
-      utm.nasa.gov_read.message: "read UTM messages"
-      utm.nasa.gov_read.constraint: "read UTM constraints"
-      utm.nasa.gov_write.constraint: "write UTM constraints. Constraints are owned\
-        \ by FIMS."
-      utm.nasa.gov_read.sdsp: "read data from UTM Supplemental Data Service Providers"
-      utm.nasa.gov_write.sdsp: "update own data in UTM Supplemental Data Service Providers"
-      utm.nasa.gov_read.min_data: "read data which has been mimized for example, by\
-        \ redacting some properties"
+      utm.nasa.gov_read.constraint: "Subject can read UTM constraint data"
+      utm.nasa.gov_read.min_data: "Subject can read data which has been minimized\
+        \ for example, by redacting some properties"
+      utm.nasa.gov_write.operation: "Subject can read, create, and update operational\
+        \ data such as USS Instance data"
+      utm.nasa.gov_read.operation: "Subject can read operational data such as USS\
+        \ Instance data"
+      utm.nasa.gov_write.message: "Subject can read, create, and update message data\
+        \ such as UTM Message and Negotiations"
+      utm.nasa.gov_read.message: "Subject can read message data such as UTM Message\
+        \ and Negotiations"
 definitions:
   NegotiationResponse:
     type: "object"
