@@ -72,7 +72,7 @@ paths:
             $ref: "#/definitions/UTMRestResponse"
       security:
       - ussapi_security:
-        - "utm.nasa.gov_read.constraint"
+        - "utm.nasa.gov_write.constraint"
   /utm_messages:
     post:
       tags:
@@ -265,6 +265,7 @@ paths:
       security:
       - ussapi_security:
         - "utm.nasa.gov_write.operation"
+        - "utm.nasa.gov_write.publicsafety"
     put:
       tags:
       - "A. Required Endpoints"
@@ -299,6 +300,7 @@ paths:
       security:
       - ussapi_security:
         - "utm.nasa.gov_write.operation"
+        - "utm.nasa.gov_write.publicsafety"
   /positions:
     get:
       tags:
@@ -420,6 +422,8 @@ securityDefinitions:
     flow: "application"
     scopes:
       utm.nasa.gov_read.constraint: "Subject can read UTM constraint data"
+      utm.nasa.gov_write.constraint: "Subject can read, create, and update UTM constraint\
+        \ data. This means that the Subject can define areas that restrict other operations."
       utm.nasa.gov_read.min_data: "Subject can read data which has been minimized\
         \ for example, by redacting some properties"
       utm.nasa.gov_write.operation: "Subject can read, create, and update operational\
@@ -430,6 +434,8 @@ securityDefinitions:
         \ such as UTM Message and Negotiations"
       utm.nasa.gov_read.message: "Subject can read message data such as UTM Message\
         \ and Negotiations"
+      utm.nasa.gov_write.publicsafety: "Subject can read, create, and update operations\
+        \ that are designated public safety operations."
 definitions:
   NegotiationResponse:
     type: "object"
