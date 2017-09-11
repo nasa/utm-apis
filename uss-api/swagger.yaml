@@ -304,7 +304,11 @@ paths:
       tags:
       - "B. Connections"
       summary: "Websocket connection for position data"
-      description: "TODO: description"
+      description: "Non RESTful endpoint that allows for Position events reported\
+        \ by another USS Instance.  When connecting to this Websocket endpoint, the\
+        \ consumer must emit an \\'authentication\\' event containing the OAuth2 token\
+        \ as described in parameters. Once authenticated, the consumer will receive\
+        \ \\'Position\\' events as they are received by USS instances.\n"
       produces:
       - "application/json"
       parameters: []
