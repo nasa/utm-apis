@@ -314,7 +314,7 @@ paths:
       parameters: []
       responses:
         200:
-          description: "TODO: description"
+          description: "A Position report event"
           schema:
             $ref: "#/definitions/Position"
   /schema/Position:
