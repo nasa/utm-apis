@@ -299,6 +299,20 @@ paths:
       security:
       - ussapi_security:
         - "utm.nasa.gov_write.operation"
+  /positions:
+    get:
+      tags:
+      - "B. Connections"
+      summary: "Websocket connection for position data"
+      description: "TODO: description"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "TODO: description"
+          schema:
+            $ref: "#/definitions/Position"
   /schema/Position:
     get:
       tags:
