@@ -146,10 +146,8 @@ paths:
           $ref: "#/definitions/NegotiationMessage"
       responses:
         200:
-          description: "NegotiationResponse indicating that request was received and\
-            \ a decision provided."
           schema:
-            $ref: "#/definitions/NegotiationResponse"
+            $ref: "#/definitions/UTMRestResponse"
         400:
           description: "Problem with submitted data"
           schema:
@@ -437,23 +435,6 @@ securityDefinitions:
       utm.nasa.gov_write.publicsafety: "Subject can read, create, and update operations\
         \ that are designated public safety operations."
 definitions:
-  NegotiationResponse:
-    type: "object"
-    properties:
-      requested_gufi:
-        type: "string"
-        format: "uuid"
-      response:
-        type: "string"
-        enum:
-        - "GRANTED"
-        - "REFUSED"
-      reason_for_refusal:
-        type: "string"
-        enum:
-        - "A"
-        - "B"
-        - "C"
   ConstraintMessage:
     properties:
       message_id:
