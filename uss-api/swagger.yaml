@@ -49,6 +49,7 @@ schemes:
 security:
 - ussapi_security:
   - "utm.nasa.gov_read.min_data"
+  - "utm.nasa.gov_all.all"
 paths:
   /constraints:
     post:
@@ -146,6 +147,7 @@ paths:
           $ref: "#/definitions/NegotiationMessage"
       responses:
         200:
+          description: "OK"
           schema:
             $ref: "#/definitions/UTMRestResponse"
         400:
@@ -434,6 +436,9 @@ securityDefinitions:
         \ and Negotiations"
       utm.nasa.gov_write.publicsafety: "Subject can read, create, and update operations\
         \ that are designated public safety operations."
+      utm.nasa.gov_all.all: "Subject can read, create, and udpate data throughout\
+        \ UTM. Used sparingly, if ever. Goes against priciple of least privelege,\
+        \ but may be necessary in some cases."
 definitions:
   ConstraintMessage:
     properties:
