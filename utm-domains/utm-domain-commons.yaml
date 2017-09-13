@@ -854,7 +854,7 @@ definitions:
       uss_instance_callback_base_url:
         type: string
         format: url
-        description: A URL used by other UTM components (primarily USS Discovery Service and other USSs) to send messages to the USS Instance's USS API. This URL may be unique to the USS Instance or may be shared by other USS Instances created by this USS.  URLs that are common to multiple USS Instances will receive only one copy of each message because the sender will send only one.
+        description: A URL used by other UTM components (primarily USS Discovery Service and other USSs) to send messages to the USS Instance's USS API. This URL may be unique to the USS Instance or may be shared by other USS Instances created by this USS.  URLs that are common to multiple USS Instances will receive only one copy of each message because the sender will send only once.
       uss_informational_url:
         type: string
         format: url
