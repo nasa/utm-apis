@@ -43,8 +43,7 @@ paths:
         '501':
           description: Not Implemented
           schema:
-            $ref: '#/definitions/Version'
-    
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
   /token:
     post:
       tags:
@@ -56,7 +55,7 @@ paths:
       produces:
         - application/json
       description: >
-        This endpoint is required as per RFC 6749.  A POST to this endpoint acts as a request for an access token. This endpoint is protected using TLS client authentication. 
+        This endpoint is required as per RFC 6749.  A POST to this endpoint acts as a request for an access token. 
       parameters:
         - name: grant_type
           in: formData
@@ -403,16 +402,3 @@ definitions:
       # TODO: This is not the right way to describe our claims.  needs fixing.  It's like we really want to be returning the YAML/JSON model schema itself, not an instance of it as is implied by this definition.
       jwt_claims:
         $ref: '#/definitions/JwtClaimsSet'
-          
-  Version:
-    type: object
-    properties:
-      version:
-        type: string
-        description: Version number for the API
-      title:
-        type: string
-        description: Title of the API
-      documentation:
-        type: string
-        description: URL for API Documentation
