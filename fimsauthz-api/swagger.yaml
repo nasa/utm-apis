@@ -295,7 +295,7 @@ definitions:
         description: >-
           The "jti" (JWT ID) claim provides a unique identifier for the JWT. For this server, this is satisfied by the use of a UUID.
       
-      scope: # These should match 'commons' scopes.  Can that be done?
+      scope:
         type: array
         items:
           $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/scope'
@@ -334,7 +334,7 @@ definitions:
         items:
           type: string
         description: >-
-          JSON array containing a list of the OAuth 2.0 "response_type" values that this authorization server supports. These values are required for responses from calls to the authorization endpoint, thus this array may be empty if no grant flows use the authorization endpoint. (definitions in RFC 7591)
+          JSON array containing a list of the OAuth 2.0 "response_type" values that this authorization server supports. These values are required for responses from calls to the authorization endpoint, thus this array may be empty if no grant flows use the authorization endpoint, thus this server returns an empty array. (definitions in RFC 7591)
 # Currently no response modes supported, return empty array
       response_modes_supported:
         type: array
@@ -349,21 +349,18 @@ definitions:
           type: string
         description: >-
           JSON array containing a list of the OAuth 2.0 grant type values that this authorization server supports. (definitions in RFC 7591)
-# The value we want is not defined in the specs. Will likely be an array with
-# a single value.  Something like tls_client_auth.
       token_endpoint_auth_methods_supported:
         type: array
         items:
           type: string
         description: >-
-          JSON array containing a list of client authentication methods supported by this token endpoint.  Client authentication method values are used in the "token_endpoint_auth_method" parameter defined in Section 2 of [RFC7591].  If omitted, the default is "client_secret_basic" -- the HTTP Basic Authentication Scheme specified in Section 2.3.1 of OAuth 2.0 [RFC6749].
-#      token_endpoint_auth_signing_alg_values_supported:
-#        type: array
-#        items:
-#          type: string
-#        description: : >-
-#          JSON array containing a list of the JWS signing algorithms ("alg" values) supported by the token endpoint for the signature on the JWT [JWT] used to authenticate the client at the token endpoint for the "private_key_jwt" and "client_secret_jwt" authentication methods.  Servers SHOULD support "RS256".  The value "none" MUST NOT be used.
-  
+          JSON array containing a list of client authentication methods supported by this token endpoint.  Client authentication method values are used in the "token_endpoint_auth_method" parameter defined in Section 2 of [RFC7591].  If omitted, the default is "client_secret_basic" -- the HTTP Basic Authentication Scheme specified in Section 2.3.1 of OAuth 2.0 [RFC6749]. FIMS-Authz will only support private_key_jwt.
+      token_endpoint_auth_signing_alg_values_supported:
+        type: array
+        items:
+          type: string
+        description: >-
+          JSON array containing a list of the JWS signing algorithms (alg values) supported by the token endpoint for the signature on the JWT [JWT] used to authenticate the client at the token endpoint for the "private_key_jwt" and "client_secret_jwt" authentication methods.  Servers SHOULD support "RS256". The value "none" MUST NOT be used.
       service_documentation:
         type: string
         format: url
