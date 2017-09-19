@@ -10,6 +10,7 @@ externalDocs:
 host: tmiserver.arc.nasa.gov
 schemes:
  - https
+ 
 basePath: /fimsAuthServer
 securityDefinitions:
   application:
@@ -18,16 +19,16 @@ securityDefinitions:
     tokenUrl: http://thisserver.com/oauth/token
     flow: application
     scopes:
-      Baseline_USS: A Baseline USS that can perform the set of essential USS requests
-      PublicSafety_USS: A USS with the capability to manaage public safety operations
-      Operations_FIMS: For FIMS to perform baseline FIMS requests
+      'utm.nasa.gov_read.constraint': Subject can read UTM constraint data
+      'utm.nasa.gov_write.constraint': Subject can read, create, and update UTM constraint data. This means that the Subject can define areas that restrict other operations.  
+      'utm.nasa.gov_read.min_data': Subject can read data which has been minimized for example, by redacting some properties
+      'utm.nasa.gov_write.operation': Subject can read, create, and update operational data such as USS Instance data
+      'utm.nasa.gov_read.operation': Subject can read operational data such as USS Instance data
+      'utm.nasa.gov_write.message': Subject can read, create, and update message data such as UTM Message and Negotiations
+      'utm.nasa.gov_read.message': Subject can read message data such as UTM Message and Negotiations
+      'utm.nasa.gov_write.publicsafety': Subject can read, create, and update operations that are designated public safety operations. 
+      'utm.nasa.gov_all.all': Subject can read, create, and udpate data throughout UTM. Used sparingly, if ever. Goes against priciple of least privelege, but may be necessary in some cases. 
 
-# Here we apply the security flow called 'password' globally to all the opeartions in the spec.
-# This security scheme is defined above in the 'securityDefinitions' section.
-# Global security can be overriden an operation level as seen in the example below
-security:
-  - application:
-    - Baseline_USS
 
 paths:
 
