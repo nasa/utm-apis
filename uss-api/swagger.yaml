@@ -220,8 +220,6 @@ paths:
       responses:
         200:
           description: "Successful data request. Response includes requested data."
-          schema:
-            $ref: "#/definitions/Operation"
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
@@ -325,8 +323,6 @@ paths:
       responses:
         200:
           description: "A Position report event"
-          schema:
-            $ref: "#/definitions/Position"
   /schema/Position:
     get:
       tags:
@@ -1167,6 +1163,12 @@ definitions:
           \ 4 specification."
         minLength: 36
         maxLength: 36
+      uss_instance_id:
+        type: "string"
+        format: "uuid"
+        description: "Identiy of the USS Instance hosting this operation."
+        minLength: 36
+        maxLength: 36
       submit_time:
         type: "string"
         format: "date-time"
@@ -1268,8 +1270,6 @@ definitions:
           4. NONCORMING\n  See USS Specifcation for requirements to transition to\
           \ this state.\n5. ROGUE\n  See USS Specifcation for requirements to transition\
           \ to this state.\n"
-        minLength: 5
-        maxLength: 13
         enum:
         - "ACCEPTED"
         - "ACTIVATED"
