@@ -71,6 +71,12 @@ definitions:
         format: uuid
         maxLength: 36
         minLength: 36
+      uss_instance_id:
+        description: "Identiy of the USS Instance hosting this operation."
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
       submit_time:
         description: >-
           Time the operation submission was received by USS. Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ. Seconds may have up to millisecond accuracy (three positions after decimal).  The 'Z' implies UTC times and is the only timezone accepted.
@@ -164,8 +170,6 @@ definitions:
         - CLOSED
         - NONCONFORMING
         - ROGUE
-        maxLength: 13
-        minLength: 5
       controller_location:
         # description: "The planned position of the UAS Controller during the operation. Assumed to be a static location."
         $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Point'

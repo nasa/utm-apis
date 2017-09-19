@@ -1,4 +1,4 @@
----
+-----
 swagger: "2.0"
 info:
   description: "RestAPI and Message definitions from USS-nasa to UAS Operator Interface"
