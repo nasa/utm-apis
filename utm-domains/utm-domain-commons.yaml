@@ -71,6 +71,7 @@ definitions:
         format: uuid
         maxLength: 36
         minLength: 36
+        example: "00000000-0000-0000-0000-000000000000"
       uss_instance_id:
         description: "Identiy of the USS Instance hosting this operation."
         type: string
