@@ -67,49 +67,13 @@ paths:
           schema:
             $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Version' 
             
-  /operations:
-    post:
-      tags:
-        - A. Required Endpoints
-      summary: Submit an operation to FIMS
-      security:
-        - fims_ops_security:
-          - 'utm.nasa.gov_write.operation'
-      operationId: postOperation
-      description: Allows for submission of an operation plan to FIMS.
-
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: operation
-          description: |  #moving everything down a like to test
-              Operational plan to add
-          required: true
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Operation'
-      responses:
-        201:
-          description: Operation Plan request received.
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
-        400:
-          description: "Bad request. Typically validation error. Fix your request and retry."
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
-        403:
-          description: "Invalid ID supplied.  Fix authorization and retry."
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
-
+  
   /operations/{gufi}:
     put:
       tags:
         - A. Required Endpoints
       summary: Modify an operation
-      description: Allows for modifying of an operation plan in FIMS.
+      description: Allows for creation or modifying of an operation plan in FIMS. Needs full definition for updates
       operationId: updateOperation
       consumes:
         - application/json
@@ -145,7 +109,7 @@ paths:
           schema:
             $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         404:
-          description: "Operations not found."
+          description: "Broken link. Check request URL"
           schema:
             $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
 
