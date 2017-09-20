@@ -220,6 +220,10 @@ paths:
       responses:
         200:
           description: "Successful data request. Response includes requested data."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Operation"
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
@@ -323,6 +327,10 @@ paths:
       responses:
         200:
           description: "A Position report event"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Position"
   /schema/Position:
     get:
       tags:
@@ -835,6 +843,9 @@ definitions:
         - "Point"
       coordinates:
         type: "array"
+        example:
+        - 0.0
+        - 0.0
         items:
           type: "number"
           format: "double"
@@ -849,6 +860,7 @@ definitions:
       contingency_id:
         type: "number"
         format: "integer"
+        example: 1.0
         description: "A positive integer unique amongst the set of Contingencies for\
           \ this operation. The integers may be ordered by some scheme, but this is\
           \ not required."
@@ -1159,6 +1171,7 @@ definitions:
       gufi:
         type: "string"
         format: "uuid"
+        example: "00000000-0000-0000-0000-000000000000"
         description: "Created and assigned by originating USS. Validated as UUID version\
           \ 4 specification."
         minLength: 36
@@ -1166,6 +1179,7 @@ definitions:
       uss_instance_id:
         type: "string"
         format: "uuid"
+        example: "00000000-0000-0000-0000-000000000000"
         description: "Identiy of the USS Instance hosting this operation."
         minLength: 36
         maxLength: 36
@@ -1216,6 +1230,7 @@ definitions:
       airspace_authorization:
         type: "string"
         format: "uuid"
+        example: "00000000-0000-0000-0000-000000000000"
         description: "TBD"
         minLength: 36
         maxLength: 36
