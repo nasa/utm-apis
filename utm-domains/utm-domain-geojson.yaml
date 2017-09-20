@@ -59,6 +59,7 @@ definitions:
         items:
           type: number
           format: double
+      
     
   LineString:
     type: object
