@@ -7,7 +7,7 @@ info:
   version: "v1"
   title: "Flight Information Management System (FIMS) Authorization (Authz) Server"
 host: "tmiserver.arc.nasa.gov"
-basePath: "/fimsAuthServer"
+basePath: "/fimsAuthServer/oauth"
 schemes:
 - "https"
 paths:
@@ -51,7 +51,7 @@ paths:
         - "client_credentials"
       - name: "scope"
         in: "formData"
-        description: "dfs"
+        description: "list of requested oauth2 scopes"
         required: true
         type: "string"
         enum:
