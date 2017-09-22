@@ -168,7 +168,7 @@ paths:
 securityDefinitions:
   application:
     type: "oauth2"
-    tokenUrl: "http://thisserver.com/oauth/token"
+    tokenUrl: "https://thisserver.com/oauth/token"
     flow: "application"
     scopes:
       utm.nasa.gov_read.constraint: "Subject can read UTM constraint data"
