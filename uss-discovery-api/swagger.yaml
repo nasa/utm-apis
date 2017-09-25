@@ -251,9 +251,7 @@ paths:
       responses:
         501:
           description: "Not implemented"
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
-       
+         
           
   /topic/ussUpdates:
     get:
