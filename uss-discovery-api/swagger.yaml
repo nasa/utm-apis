@@ -249,17 +249,11 @@ paths:
         schema:
           $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
       responses:
-        201:
-          description: "Successful data request."
+        501:
+          description: "Not implemented"
           schema:
             $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
-        400:
-          description: "Bad request. Typically validation error. Fix your request\
-            \ and retry."
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
-        429:
-          description: "Too many recent requests from you. Wait to make further queries."
+       
           
   /topic/ussUpdates:
     get:
