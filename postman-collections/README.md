@@ -1,4 +1,3 @@
-
 # Smoke Tests
 
 Postman collections are provided with their credentials stripped.  Edit each collection to add the 
