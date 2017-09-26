@@ -42,9 +42,7 @@ basePath: "/ussdisc"
 tags:
 - name: "A. Required Endpoints"
   description: "The primary RESTful endpoints for sharing USS Instance data."
-- name: "B. Subscription Points"
-  description: "Non-REST endpoints for asynchronous communications with FIMS"
-- name: "C. Data Types"
+- name: "B. Data Types"
   description: "Psuedo endpoints used for the documentation of data schema"
 schemes:
 - "https"
@@ -252,33 +250,10 @@ paths:
         501:
           description: "Not implemented"
          
-          
-  /topic/ussUpdates:
-    get:
-      tags:
-      - "B. Subscription Points"
-      summary: "Subscription point for receiving USS Instance updates"
-      description: "Stakeholders should subscribe to this topic to receive updates\
-        \ on USS Instances. Data will be produced on this topic whenever:\n\n  1.\
-        \ A new, valid USS Instance is submitted.\n  2. There is an update to a USS\
-        \ Instance.\n  \nData will not be produced on this topic when a USS Instance\
-        \ ends according to its originally submited time_available_end value.\n\n\
-        See the schema information describing UssInstance included within this document\
-        \ to understand the data that will be received via this queue.\n\nNote that\
-        \ if you are viewing this in a SwaggerUI, the \"try it out\" feature will\
-        \ not work since this is not a RESTful endpoint.\n"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        410:
-          description: "A RESTful call was made to this endpoint but is not a REST\
-            \ endpoint. Do not use this endpoint for REST calls."
-            
   /schema/UssInstance:
     get:
       tags:
-      - "C. Data Types"
+      - "B. Data Types"
       summary: "Instance schema"
       description: "Illustrates a USS Instance in JSON. This endpoint is not intended\
         \ for use.\n\nNote that if you are viewing this in a SwaggerUI, the \"try\
@@ -297,7 +272,7 @@ paths:
   /schema/Polygon:
     get:
       tags:
-      - "C. Data Types"
+      - "B. Data Types"
       summary: "Polygon schema"
       description: "Illustrates a Polygon in JSON. This endpoint is not intended for\
         \ use.\n\nNote that if you are viewing this in a SwaggerUI, the \"try it out\"\
