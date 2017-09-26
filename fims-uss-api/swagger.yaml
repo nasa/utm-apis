@@ -1,7 +1,7 @@
 ---
 swagger: "2.0"
 info:
-  description: "This API describes the RESTful interface from a UAS Service Supplier (USS) to the Flight."
+  description: "This API describes the RESTful interface from a UAS Service Supplier (USS) to FIMS. Note that FIMS uses a webhook pattern to sends messages and other data such as constraints to USS's by POSTING to the USS API. Also, FIMS subscribes to USS Discovery to learn about the USS Network."
   version: "v2"
   title: "UTM Research Platform, FIMS-USS Interface"
   contact:
@@ -24,14 +24,9 @@ schemes:
 - wss
 tags: # Have to add 'A' 'B' etc since ordering isn't respected in SwaggerUI.
 - name: A. Required Endpoints
-  description: Primary RESTful endpoints for operators accessing FIMS
-  externalDocs:
-    url: "https://tmiserver.arc.nasa.gov/fims/api/"
-    description: NASA FIMS server generated from this API specification.
-- name: B. Connections and Webhooks
-  description: |
-    FIMS sends Alerts and other notifications to USS's using the USS API (webhooks pattern). Also, FIMS subscribes to USS Discovery to learn about the USS Network.
-
+  description:  RESTful endpoints for USS access to FIMS
+- name: B. Version and Health
+  description: Get information about this server.
 - name: C. Data Types
   description: Psuedo endpoints used for the documentation of the data schema
 
@@ -56,7 +51,7 @@ paths:
   /api:
     get:
       tags:
-        - D. Version and Health
+        - B. Version and Health
       summary: get server info.  Can be used to check health
       security: []
       produces:
