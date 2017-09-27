@@ -81,7 +81,8 @@ paths:
     get:
       tags:
       - "A. Required Endpoints"
-      summary: "Check a token"
+      summary: "Check a token.This is the RFC 7662 required endpoint which is not\
+        \ implemented yet. The current implementation is named /check_token.\n"
       operationId: "tokenIntrospection"
       consumes:
       - "application/x-www-form-urlencoded"
@@ -118,6 +119,18 @@ paths:
           description: "OK"
           schema:
             $ref: "#/definitions/IntrospectionResponse"
+  /check_token:
+    get:
+      tags:
+      - "A. Required Endpoints"
+      summary: "Current name for the RFC 7662 /introspect implementation.\n"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/IntrospectionResponse"
+      deprecated: true
   /revoke:
     post:
       tags:
