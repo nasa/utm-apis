@@ -222,7 +222,7 @@ paths:
       tags:
       - "A. Required Endpoints"
       summary: "Submit updates to an existing USS Instance"
-      description: "Allows for USS operators to update an previous USS Instance submission."
+      description: "Allows for USS operators to update an previous USS Instance submission. Needs full model info"
       operationId: "putUSS"
       consumes:
       - "application/json"
@@ -247,8 +247,10 @@ paths:
         schema:
           $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
       responses:
-        501:
-          description: "Not implemented"
+         200:
+          description: "Successful data request. Response includes requested data."
+          schema:
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
          
   /schema/UssInstance:
     get:
