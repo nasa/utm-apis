@@ -181,7 +181,10 @@ paths:
         name: "operation"
         description: "Operational plan with the following properties:\n  1. Contains\
           \ a valid id.\n  2. time_available_end value that is in the future.\n  3.\
-          \ No date-time fields that are in the past are modified.\n"
+          \ No date-time fields that are in the past are modified.\n  4. For both\
+          \ POST and PUT the full model (all required properties) must be submitted.\
+          \  This is needed in the case of a late-coming USS getting notified of this\
+          \ operation for the first time.\n"
         required: true
         schema:
           $ref: "#/definitions/Operation"
