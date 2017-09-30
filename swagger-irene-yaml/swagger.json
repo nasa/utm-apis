@@ -63,11 +63,14 @@ paths:
           description: "OK"
           schema:
             $ref: "#/definitions/TokenResponse"
+      security:
+      - authenticate_using_client_credentials: []
   /token_key:
     get:
       tags:
       - "A. Required Endpoints"
-      summary: "Get the OAuth server public key required for checking token signatures."
+      summary: "Get the OAuth server public key required for checking token signatures.\
+        \ Not currently implemented."
       operationId: "getServerTokenKey"
       produces:
       - "application/json"
@@ -82,7 +85,7 @@ paths:
       tags:
       - "A. Required Endpoints"
       summary: "Check a token.This is the RFC 7662 required endpoint which is not\
-        \ implemented yet. The current implementation is named /check_token.\n"
+        \ implemented yet. The current implementation is named /check_token. \n"
       operationId: "tokenIntrospection"
       consumes:
       - "application/x-www-form-urlencoded"
@@ -135,7 +138,7 @@ paths:
     post:
       tags:
       - "A. Required Endpoints"
-      summary: "Post a token revocation request"
+      summary: "Post a token revocation request. Not currently implemented."
       operationId: "postRevocationRequest"
       consumes:
       - "application/x-www-form-urlencoded"
@@ -168,7 +171,7 @@ paths:
     get:
       tags:
       - "A. Required Endpoints"
-      summary: "Get API Info"
+      summary: "Get API Info. Not currently implemented."
       operationId: "getApiInfos"
       produces:
       - "application/json"
@@ -178,6 +181,20 @@ paths:
           description: "OK"
           schema:
             $ref: "#/definitions/Metadata"
+  /api:
+    get:
+      tags:
+      - "B. Version and Health"
+      summary: "get server info.  Can be used to check health."
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Version"
+      security: []
 securityDefinitions:
   application:
     type: "oauth2"
@@ -199,9 +216,11 @@ securityDefinitions:
         \ and Negotiations"
       utm.nasa.gov_write.publicsafety: "Subject can read, create, and update operations\
         \ that are designated public safety operations."
-      utm.nasa.gov_all.all: "Subject can read, create, and udpate data throughout\
-        \ UTM. Used sparingly, if ever. Goes against priciple of least privelege,\
-        \ but may be necessary in some cases."
+  authenticate_using_client_credentials:
+    description: "FIMS Authorization Server implments the RFC-6749 Client Credentials\
+      \ flow.  Version 17.09 of the server authenticates the client using the HTTP\
+      \ Authorization header with the Basic keyword and the oauth2 client secret."
+    type: "basic"
 definitions:
   TokenResponse:
     type: "object"
@@ -443,6 +462,23 @@ definitions:
       http_status_code: 201
       message: "Resource created."
       resource: "/resource/683c0e9e-49dc-44ce-82de-a5723b1f6965"
+  Version:
+    type: "object"
+    properties:
+      title:
+        type: "string"
+        description: "Title of the API"
+      version:
+        type: "string"
+        description: "Version number for the API"
+      build_time:
+        type: "string"
+        description: "Time of the latest build"
+      api_docs:
+        type: "array"
+        description: "URL(s) for API Documentation"
+        items:
+          type: "string"
   scope:
     type: "string"
     description: "The set of scopes used in UTM OAuth 2.0 implementation. Scopes take\
