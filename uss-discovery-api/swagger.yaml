@@ -138,7 +138,9 @@ paths:
         200:
           description: "Successful data request. Response includes requested data."
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
+            type: array
+            items:
+              $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
