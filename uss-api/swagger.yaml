@@ -157,52 +157,6 @@ paths:
       security:
       - ussapi_security:
         - "utm.nasa.gov_write.message"
-  /operations/{gufi}:
-    put:
-      tags:
-      - "A. Required Endpoints"
-      summary: "Submit new Operation, or update a previously submitted Operation."
-      description: "Allows for other USSs to add or update an operational plan."
-      operationId: "putOp"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "gufi"
-        in: "path"
-        description: "Operation ID"
-        required: true
-        type: "string"
-        maxLength: 36
-        minLength: 36
-        format: "uuid"
-      - in: "body"
-        name: "operation"
-        description: "Operational plan with the following properties:\n  1. Contains\
-          \ a valid id.\n  2. time_available_end value that is in the future.\n  3.\
-          \ No date-time fields that are in the past are modified.\n  4. For both\
-          \ POST and PUT the full model (all required properties) must be submitted.\
-          \  This is needed in the case of a late-coming USS getting notified of this\
-          \ operation for the first time.\n"
-        required: true
-        schema:
-          $ref: "#/definitions/Operation"
-      responses:
-        201:
-          description: "Updates to USS Instance received. Response includes requested\
-            \ data."
-          schema:
-            $ref: "#/definitions/UTMRestResponse"
-        400:
-          description: "Bad request. Typically validation error. Fix your request\
-            \ and retry."
-        429:
-          description: "Too many recent requests from you. Wait to make further queries."
-      security:
-      - ussapi_security:
-        - "utm.nasa.gov_write.operation"
-        - "utm.nasa.gov_write.publicsafety"
   /operations:
     get:
       tags:
@@ -278,6 +232,77 @@ paths:
       security:
       - ussapi_security:
         - "utm.nasa.gov_read.operation"
+    post:
+      tags:
+      - "A. Required Endpoints"
+      summary: "Allow other USSs to submit their UAS Operations."
+      description: "A POST to the operations endpoint allows for sharing of operational\
+        \ data between USSs.  This is the primary mechanism by which USSs become aware\
+        \ of each others' UAS operations.<br/><br/>\nA USS is required to share operation\
+        \ data with other USSs that may have interacting UAS Operations.  This potential\
+        \ interaction is known through the data provided via the USS Service Discovery\
+        \ mechanism (see https://app.swaggerhub.com/apis/utm/ussdiscovery/v2)."
+      operationId: "postOp"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "operation"
+        description: "The operation data"
+        required: true
+        schema:
+          $ref: "#/definitions/Operation"
+      responses:
+        201:
+          description: "Operation data received."
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        400:
+          description: "Bad request. Typically validation error. Fix your request\
+            \ and retry."
+        429:
+          description: "Too many recent requests from you. Wait to make further submissions."
+      security:
+      - ussapi_security:
+        - "utm.nasa.gov_write.operation"
+        - "utm.nasa.gov_write.publicsafety"
+    put:
+      tags:
+      - "A. Required Endpoints"
+      summary: "Submit updates to a previously communicated UAS Operation."
+      description: "Allows for other USSs to update a previous plan submission."
+      operationId: "putOp"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "operation"
+        description: "Operational plan with the following properties:\n  1. Contains\
+          \ a valid uss_operation_id.\n  2. time_available_end value that is in the\
+          \ future.\n  3. No date-time fields that are in the past are modified.\n\
+          \  4. Other rules for a USS Operation POST are satisfied.\n"
+        required: true
+        schema:
+          $ref: "#/definitions/Operation"
+      responses:
+        201:
+          description: "Updates to USS Instance received. Response includes requested\
+            \ data."
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        400:
+          description: "Bad request. Typically validation error. Fix your request\
+            \ and retry."
+        429:
+          description: "Too many recent requests from you. Wait to make further queries."
+      security:
+      - ussapi_security:
+        - "utm.nasa.gov_write.operation"
+        - "utm.nasa.gov_write.publicsafety"
   /positions/{gufi}:
     get:
       tags:
@@ -554,7 +579,6 @@ definitions:
       message_id:
         type: "string"
         format: "uuid"
-        example: "00000000-0000-0000-0000-000000000000"
         description: "A UUID assigned to this message by the originator"
         minLength: 36
         maxLength: 36
@@ -572,7 +596,6 @@ definitions:
       gufi:
         type: "string"
         format: "uuid"
-        example: "00000000-0000-0000-0000-000000000000"
         description: "The GUFI for the operation referenced in this message."
         minLength: 36
         maxLength: 36
@@ -630,7 +653,6 @@ definitions:
       prev_message_id:
         type: "string"
         format: "uuid"
-        example: "00000000-0000-0000-0000-000000000000"
         description: "A message_id of a previously sent message that has relevance\
           \ or context for this message. Example might be \"CONTINGENCY_PLAN_CANCELLED\"\
           \ referencing the previous \"CONTINGENCY_PLAN_INITIATED\" message."
@@ -1168,8 +1190,7 @@ definitions:
         description: "Time the operation submission was received by USS. Uses the\
           \ ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ. Seconds\
           \ may have up to millisecond accuracy (three positions after decimal). \
-          \ The 'Z' implies UTC times and is the only timezone accepted. This value\
-          \ is generally set by the server upon receipt of new data."
+          \ The 'Z' implies UTC times and is the only timezone accepted."
       decision_time:
         type: "string"
         format: "date-time"
