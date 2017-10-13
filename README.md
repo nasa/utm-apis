@@ -4,7 +4,7 @@ This repository contains the collection of OpenAPI specification APIs within the
 
 Each directory contains files related to a single API.  Within each directory there is an additional README that provides further insight into that API.
 
-## Some References
+## References
 
 - [UTM Home Page](https://utm.arc.nasa.gov/)
 - [UTM Publications](https://utm.arc.nasa.gov/documents.shtml)
