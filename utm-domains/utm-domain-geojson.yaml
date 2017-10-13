@@ -37,6 +37,7 @@
 #issmith1 test whether collaborator can push to Git via API Key
 #jlrios: "Point2d" rendering, renamed as "Position" to align with GeoJSON spec.
 #jlrios: flattened by removing Geometry to improve codegen, simplify schema
+#issmith: debug integrations
 
 definitions:
           
