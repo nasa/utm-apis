@@ -52,7 +52,7 @@ paths:
       - name: "scope"
         in: "formData"
         description: "list of requested oauth2 scopes"
-        required: true
+        required: false
         type: "string"
         enum:
         - "scope1"
