@@ -42,8 +42,6 @@ basePath: "/ussdisc"
 tags:
 - name: "A. Required Endpoints"
   description: "The primary RESTful endpoints for sharing USS Instance data."
-- name: "B. Data Types"
-  description: "Psuedo endpoints used for the documentation of data schema"
 schemes:
 - "https"
 - "wss"
@@ -250,45 +248,3 @@ paths:
           description: "Successful data request. Response includes requested data."
           schema:
             $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
-         
-  /schema/UssInstance:
-    get:
-      tags:
-      - "B. Data Types"
-      summary: "Instance schema"
-      description: "Illustrates a USS Instance in JSON. This endpoint is not intended\
-        \ for use.\n\nNote that if you are viewing this in a SwaggerUI, the \"try\
-        \ it out\" feature will not work since this is not a RESTful endpoint.\n"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
-        410:
-          description: "A RESTful call was made to this endpoint but is not a REST\
-            \ endpoint. Do not use this endpoint for REST calls."
-  /schema/Polygon:
-    get:
-      tags:
-      - "B. Data Types"
-      summary: "Polygon schema"
-      description: "Illustrates a Polygon in JSON. This endpoint is not intended for\
-        \ use.\n\nNote that if you are viewing this in a SwaggerUI, the \"try it out\"\
-        \ feature will not work since this is not a RESTful endpoint.\n"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
-        410:
-          description: "A RESTful call was made to this endpoint but is not a REST\
-            \ endpoint. Do not use this endpoint for REST calls."
-
-
-x-azure-api-id: "sh-1469571953760"
