@@ -662,8 +662,7 @@ definitions:
         minLength: 36
         example: "00000000-0000-0000-0000-000000000000"
       metadata:
-        type: string
-        description: Reserved field.
+        $ref: 'https://api.swaggerhub.com/domains/utm/metadata/v1#/definitions/EventMetadata'
       free_text:
         description: >-
           Any additional information. Note that this is for human consumption. All time critical elements should be captured in the other data fields for easier consumption by other automated systems.
