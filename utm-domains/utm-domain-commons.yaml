@@ -815,7 +815,7 @@ definitions:
       - time_available_begin
       - time_available_end
       - coverage_area
-      - uss_instance_discovery_callback_url
+      - uss_base_callback_url
     properties:
       uss_instance_id:
         description: >-
@@ -866,10 +866,10 @@ definitions:
         type: string
         format: phone
         description: An optional contact number for the USS.
-      uss_instance_discovery_callback_url:
+      uss_base_callback_url:
         type: string
         format: url
-        description: A URL used by the USS Discovery Service to send messages to the USS Instance as defined further in the USS API defined elsewhere (link to documentation to be provided later in this document).  This URL may be unique to the USS Instance or may be shared by other USS Instances created by this USS.  URLs that are common to multiple USS Instances will receive only one copy of each message.
+        description: A base URL used by the USS Discovery Service and other USS Instances to callback to the USS Instance as defined further in the USS API defined elsewhere (link to documentation to be provided later in this document).  This URL may be unique to the USS Instance or may be shared by other USS Instances created by this USS.  URLs that are common to multiple USS Instances will receive only one callback.
       uss_informational_url:
         type: string
         format: url
