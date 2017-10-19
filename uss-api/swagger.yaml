@@ -41,8 +41,6 @@ tags:
 - name: "B. Connections"
   description: "USS sends and receives position reports on an async connection.  The\
     \ schema is described in the Data Types section.\n"
-- name: "C. Data Types"
-  description: "Psuedo endpoints used for the documentation of the data schema"
 schemes:
 - "https"
 - "wss"
@@ -152,8 +150,6 @@ paths:
             $ref: "#/definitions/UTMRestResponse"
         400:
           description: "Problem with submitted data"
-          schema:
-            $ref: "#/definitions/UTMRestResponse"
       security:
       - ussapi_security:
         - "utm.nasa.gov_write.message"
@@ -290,8 +286,7 @@ paths:
           $ref: "#/definitions/Operation"
       responses:
         201:
-          description: "Updates to USS Instance received. Response includes requested\
-            \ data."
+          description: "OK"
           schema:
             $ref: "#/definitions/UTMRestResponse"
         400:
@@ -331,102 +326,6 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/Position"
-  /schema/Position:
-    get:
-      tags:
-      - "C. Data Types"
-      summary: "UAS Position (telemetry) data"
-      description: "Illustrates UAS position report.\n\nNote that if you are viewing\
-        \ this in a SwaggerUI, the \"try it out\" feature will not work since this\
-        \ is not a RESTful endpoint.\n"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/Position"
-  /schema/Operation:
-    get:
-      tags:
-      - "C. Data Types"
-      summary: "Operation data"
-      description: "Illustrates an Operation.\n\nNote that if you are viewing this\
-        \ in a SwaggerUI, the \"try it out\" feature will not work since this is not\
-        \ a RESTful endpoint.\n"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/Operation"
-  /schema/NegotiationMessage:
-    get:
-      tags:
-      - "C. Data Types"
-      summary: "Message that is part of a negotiation protocol"
-      description: "Illustrates an NegotiationMessage.\n\nNote that if you are viewing\
-        \ this in a SwaggerUI, the \"try it out\" feature will not work since this\
-        \ is not a RESTful endpoint.\n"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/NegotiationMessage"
-  /schema/UssInstance:
-    get:
-      tags:
-      - "C. Data Types"
-      summary: "A USS's area of operation"
-      description: "Illustrates an UssInstance.\n\nNote that if you are viewing this\
-        \ in a SwaggerUI, the \"try it out\" feature will not work since this is not\
-        \ a RESTful endpoint.\n"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/UssInstance"
-  /schema/UTMMessage:
-    get:
-      tags:
-      - "C. Data Types"
-      summary: "A message such as an alert."
-      description: "Illustrates a UTMMessage.\n\nNote that if you are viewing this\
-        \ in a SwaggerUI, the \"try it out\" feature will not work since this is not\
-        \ a RESTful endpoint.\n"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/UTMMessage"
-  /schema/ConstraintMessage:
-    get:
-      tags:
-      - "C. Data Types"
-      summary: "A message such as an alert."
-      description: "Illustrates a ConstraintMessage.\n\nNote that if you are viewing\
-        \ this in a SwaggerUI, the \"try it out\" feature will not work since this\
-        \ is not a RESTful endpoint.\n"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/ConstraintMessage"
 securityDefinitions:
   ussapi_security:
     type: "oauth2"
@@ -501,8 +400,7 @@ definitions:
         description: "The maximum altitude of the constraint. Must be greater than\
           \ min_altitude."
       metadata:
-        type: "string"
-        description: "Reserved field."
+        $ref: "#/definitions/EventMetadata"
       reason:
         type: "string"
         description: "The reason for the constraint. Meant for human consumption."
@@ -554,6 +452,73 @@ definitions:
     externalDocs:
       url: "https://tools.ietf.org/html/rfc7946#section-3.1.6"
     description: "GeoJSon Polygon. Positions all 2D."
+  EventMetadata:
+    type: "object"
+    required:
+    - "call_sign"
+    - "data_collection"
+    - "event_id"
+    - "location"
+    - "setting"
+    - "source"
+    - "test_card"
+    - "test_type"
+    properties:
+      data_collection:
+        type: "boolean"
+        description: "If true this data is intended for Data Collection"
+      test_card:
+        type: "string"
+        description: "The name or number of the test card."
+        minLength: 1
+      call_sign:
+        type: "string"
+        description: "Expected values: a call sign, test card role, or flight ID that\
+          \ links this operation to a particular test card flight. As an example,\
+          \ in our TCL2 demo, \"GCS3\" could have been used here. For multiple flights\
+          \ emanating from one location on a test card, this data element could include\
+          \ further information to link the operation to the test card flight, such\
+          \ as GCS1A.\n"
+        minLength: 1
+      test_type:
+        type: "string"
+        description: "Test type"
+        enum:
+        - "ground"
+        - "flight"
+      source:
+        type: "string"
+        description: "Hardware-in-the-loop (HWITL) flights refer to ground or airborne\
+          \ flights. Software-in-the loop (SWITL) flights would be used to tag simulated\
+          \ flights."
+        enum:
+        - "HWITL"
+        - "SWITL"
+      event_id:
+        type: "string"
+        description: "A string tag indicating which event this operation is associated.\
+          \ Will be used to select a set of rules for validation."
+        minLength: 1
+      location:
+        type: "string"
+        description: "Name of the testing location, such as NV, Moffett, Crows Landing,\
+          \ etc."
+        minLength: 1
+      setting:
+        type: "string"
+        description: "Test setting"
+        enum:
+        - "lab"
+        - "field"
+    example:
+      data_collection: true
+      test_card: "TC3"
+      call_sign: "GCS1"
+      test_type: "flight"
+      source: "HWITL"
+      event_id: "NC3"
+      location: "AK"
+      setting: "field"
   UTMRestResponse:
     type: "object"
     properties:
@@ -579,6 +544,7 @@ definitions:
       message_id:
         type: "string"
         format: "uuid"
+        example: "00000000-0000-0000-0000-000000000000"
         description: "A UUID assigned to this message by the originator"
         minLength: 36
         maxLength: 36
@@ -596,6 +562,7 @@ definitions:
       gufi:
         type: "string"
         format: "uuid"
+        example: "00000000-0000-0000-0000-000000000000"
         description: "The GUFI for the operation referenced in this message."
         minLength: 36
         maxLength: 36
@@ -653,14 +620,14 @@ definitions:
       prev_message_id:
         type: "string"
         format: "uuid"
+        example: "00000000-0000-0000-0000-000000000000"
         description: "A message_id of a previously sent message that has relevance\
           \ or context for this message. Example might be \"CONTINGENCY_PLAN_CANCELLED\"\
           \ referencing the previous \"CONTINGENCY_PLAN_INITIATED\" message."
         minLength: 36
         maxLength: 36
       metadata:
-        type: "string"
-        description: "Reserved field."
+        $ref: "#/definitions/EventMetadata"
       free_text:
         type: "string"
         description: "Any additional information. Note that this is for human consumption.\
@@ -860,7 +827,7 @@ definitions:
       contingency_id:
         type: "number"
         format: "integer"
-        example: 1.0
+        example: 1
         description: "A positive integer unique amongst the set of Contingencies for\
           \ this operation. The integers may be ordered by some scheme, but this is\
           \ not required."
@@ -1162,6 +1129,7 @@ definitions:
     type: "object"
     required:
     - "controller_location"
+    - "faa_rule"
     - "gufi"
     - "operation_volumes"
     - "primary_contact_name"
@@ -1190,7 +1158,8 @@ definitions:
         description: "Time the operation submission was received by USS. Uses the\
           \ ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ. Seconds\
           \ may have up to millisecond accuracy (three positions after decimal). \
-          \ The 'Z' implies UTC times and is the only timezone accepted."
+          \ The 'Z' implies UTC times and is the only timezone accepted. This value\
+          \ is generally set by the server upon receipt of new data."
       decision_time:
         type: "string"
         format: "date-time"
@@ -1311,6 +1280,7 @@ definitions:
           \  Submission of 101E would be required if operation is within 5 statute\
           \ miles of an airport. Optional otherwise.\n\n4. OTHER\n  Placeholder for\
           \ other types of operations."
+        minLength: 1
         enum:
         - "PART_107"
         - "PART_107X"
@@ -1326,8 +1296,7 @@ definitions:
         items:
           $ref: "#/definitions/OperationVolume"
       metadata:
-        type: "string"
-        description: "Reserved field."
+        $ref: "#/definitions/EventMetadata"
   PriorityElements:
     type: "object"
     required:
