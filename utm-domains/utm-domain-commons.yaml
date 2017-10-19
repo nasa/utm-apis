@@ -65,6 +65,7 @@ definitions:
     required:
     - gufi
     - registration
+    - faa_rule
     - primary_contact_name
     - primary_contact_phone
     - controller_location
@@ -205,6 +206,7 @@ definitions:
           4. OTHER
             Placeholder for other types of operations.
         type: string
+        minLength: 1
         enum:
         - PART_107
         - PART_107X
@@ -221,8 +223,7 @@ definitions:
         items:
           $ref: "#/definitions/OperationVolume"
       metadata:
-        type: string
-        description: Reserved field.
+        $ref: 'https://api.swaggerhub.com/domains/utm/metadata/v1#/definitions/EventMetadata'
     
   PriorityElements:
     description: >-
@@ -719,8 +720,7 @@ definitions:
         type: number
         format: double
       metadata:
-        description: Reserved field.
-        type: string
+        $ref: 'https://api.swaggerhub.com/domains/utm/metadata/v1#/definitions/EventMetadata'
       reason:
         description: "The reason for the constraint. Meant for human consumption."
         type: string
