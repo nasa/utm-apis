@@ -22,6 +22,11 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
+info:
+  description: "UTM geogrpahy model (swagger domain)"
+  version: 'v1'
+  title: UTM Geography Model
+  
 #
 #Edits by joseph.rios@nasa.gov:
 #
