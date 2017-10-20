@@ -39,8 +39,8 @@ basePath: "/uss"
 tags:
 - name: "A. Required Endpoints"
 - name: "B. Connections"
-  description: "USS sends and receives position reports on an async connection.  The\
-    \ schema is described in the Data Types section.\n"
+  description: "USS publishes position reports on this Websocket  connection. The\
+    \ http scheme should be 'wss'.\n"
 schemes:
 - "https"
 - "wss"
@@ -90,7 +90,7 @@ paths:
           $ref: "#/definitions/UTMMessage"
       responses:
         201:
-          description: "Message data received."
+          description: "Message data received. "
           schema:
             $ref: "#/definitions/UTMRestResponse"
       security:
@@ -954,7 +954,7 @@ definitions:
     - "coverage_area"
     - "time_available_begin"
     - "time_available_end"
-    - "uss_instance_discovery_callback_url"
+    - "uss_base_callback_url"
     properties:
       uss_instance_id:
         type: "string"
@@ -999,15 +999,15 @@ definitions:
         type: "string"
         format: "phone"
         description: "An optional contact number for the USS."
-      uss_instance_discovery_callback_url:
+      uss_base_callback_url:
         type: "string"
         format: "url"
-        description: "A URL used by the USS Discovery Service to send messages to\
-          \ the USS Instance as defined further in the USS API defined elsewhere (link\
-          \ to documentation to be provided later in this document).  This URL may\
-          \ be unique to the USS Instance or may be shared by other USS Instances\
-          \ created by this USS.  URLs that are common to multiple USS Instances will\
-          \ receive only one copy of each message."
+        description: "A base URL used by the USS Discovery Service and other USS Instances\
+          \ to callback to the USS Instance as defined further in the USS API defined\
+          \ elsewhere (link to documentation to be provided later in this document).\
+          \  This URL may be unique to the USS Instance or may be shared by other\
+          \ USS Instances created by this USS.  URLs that are common to multiple USS\
+          \ Instances will receive only one callback."
       uss_informational_url:
         type: "string"
         format: "url"
