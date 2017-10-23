@@ -460,7 +460,7 @@ definitions:
         description: Number of satellites used in calculating the altitude_gps_wgs84_ft.
         minimum: 0
         exclusiveMinimum: false
-      enroute_position_id:
+      enroute_positions_id:
         type: string
         format: uuid
         description: Each position will be assigned a UUIDv4 by the USS
