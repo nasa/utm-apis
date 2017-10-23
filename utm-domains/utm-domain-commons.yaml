@@ -39,13 +39,13 @@ definitions:
       In relation to a UTMMessage, the severities may be interpreted as follows.
       
       1. **EMERGENCY**
-        There is an **immediate** impact to the safety of other air operations, the safety of people, or the safety of structures on the groud. Actions to mitigate required by other operations.
+        There is an **immediate** impact to the safety of other air operations, the safety of people, or the safety of structures on the ground. Actions to mitigate required by other operations.
       2. **ALERT**
-        There may be an impact to the safety of other air operations, the safety of people, or the safety of structures on the groud. Actions to mitigate required by other operations.
+        There may be an impact to the safety of other air operations, the safety of people, or the safety of structures on the ground. Actions to mitigate required by other operations.
       3. **CRITICAL**
         Without mitigations by the affected operation, the situation may rise to an emergency in the near future.
       4. **WARNING**
-        There is a contained issue that may result in the loss of aircraft. No immediate or likley effect to other operations, people on the ground, or structures.
+        There is a contained issue that may result in the loss of aircraft. No immediate or likely effect to other operations, people on the ground, or structures.
       5. **NOTICE**
         This issue is provided for situational awareness. Planning by operators and USSs may be affected.
       6. **INFORMATIONAL**
@@ -79,7 +79,7 @@ definitions:
         minLength: 36
         example: "00000000-0000-0000-0000-000000000000"
       uss_instance_id:
-        description: "Identiy of the USS Instance hosting this operation."
+        description: "Identity of the USS Instance hosting this operation."
         type: string
         format: uuid
         maxLength: 36
@@ -117,7 +117,7 @@ definitions:
         default: "NOT PROVIDED"
         maxLength: 1000
       registration:
-        description: "The registration ID of the vehicle flying this operation. This registration value is provided to operators by a vehicle registrar. Validated as a non-null string. Array due to possiblity of multi-vehicle operation."
+        description: "The registration ID of the vehicle flying this operation. This registration value is provided to operators by a vehicle registrar. Validated as a non-null string. Array due to possibility of multi-vehicle operation."
         type: array
         items:
           type: string
@@ -168,10 +168,10 @@ definitions:
             This operation is active. The transition from ACCEPTED to ACTIVATED is not an announced transition. The transition is implied based on the submitted start time of the operation (i.e. the effective_time_begin of the first OperationVolume). Note that an ACTIVATED operation is not necessarily airborne, but is assumed to be "using" the OperationVolumes that it has announced.
           3. CLOSED
             This operation is closed. It is not airborne and will not become airborne again. If the UAS and the crew will fly again, it would need to be as a new operation. A USS may announce the closure of any operation, but is not required to announce unless the operation was ROGUE or NONCOFORMING.
-          4. NONCORMING
-            See USS Specifcation for requirements to transition to this state.
+          4. NONCONFORMING
+            See USS Specification for requirements to transition to this state.
           5. ROGUE
-            See USS Specifcation for requirements to transition to this state.
+            See USS Specification for requirements to transition to this state.
         type: string
         enum:
         - ACCEPTED
@@ -318,7 +318,7 @@ definitions:
         type: array
         items:
           description: >-
-            A cause that necessitates a contingency response. In planning an operation, this array of values represents the various causes that may necessitate the provided contingency_repsonse.
+            A cause that necessitates a contingency response. In planning an operation, this array of values represents the various causes that may necessitate the provided contingency repsonse.
           
             1. LOST_C2_UPLINK
               The operation has lost command or control uplink to the vehicle.
@@ -337,7 +337,7 @@ definitions:
             8. SOFTWARE_PROBLEM
               The vehicle or some component of the required platform ground equipment is experiencing a software problem.
             9. ENVIRONMENTAL
-              There are conditions in the environment necessitating initiation of a contingency response. Generally this will be weather realted phenonmena.
+              There are conditions in the environment necessitating initiation of a contingency response. Generally this will be weather related phenonmena.
             10. SECURITY
               There is a security incident interrupting this operation.
             11. TRAFFIC
@@ -347,7 +347,7 @@ definitions:
             13. OTHER
               Some cause not captured in any other category.
             14. ANY
-              This category should only be used wihtin an operation plan when a particular contingency response is appropriate for any contingency cause.
+              This category should only be used within an operation plan when a particular contingency response is appropriate for any contingency cause.
           type: string
           enum:
           - LOST_C2_UPLINK
@@ -428,6 +428,7 @@ definitions:
   Position:
     type: object
     required:
+    - enroute_positions_id
     - altitude_gps_wgs84_ft
     - altitude_num_gps_satellites
     - gufi
@@ -459,7 +460,7 @@ definitions:
         description: Number of satellites used in calculating the altitude_gps_wgs84_ft.
         minimum: 0
         exclusiveMinimum: false
-      enroute_positions_id:
+      enroute_position_id:
         type: string
         format: uuid
         description: Each position will be assigned a UUIDv4 by the USS
@@ -479,7 +480,7 @@ definitions:
           GPS.
         minimum: 0.0
       location:
-        # description: "A description of the 2D location.  A Point geojson."
+        # description: "A description of the 2D location.  A Point GeoJSON."
         $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Point'
       time_measured:
         description: >-
@@ -625,9 +626,9 @@ definitions:
           4. OPERATION_ROGUE
             This operation has entered the ROGUE state. Must be sent to LUN anytime operation transitions to ROGUE state. Must be sent with severity ALERT.
           5. OPERATION_CONFORMING
-            This operation was previously in the NON-CONFORMING state and has transitioned back to the ACTIVE state
+            This operation was previously in the NONCONFORMING state and has transitioned back to the ACTIVE state
           6. OPERATION_CLOSED
-            This operation has entered the terminal CLOSED state. The operation will not again be active or in flight. This message is not required if the operation is transitioned to the CLOSED state from the ACTIVE state, but may be provided at the USSs discretion. This message is required when the operation transitioned from any state other than the ACTIVE state to teh CLOSED state. If transitioning an operation from ACCEPTED to CLOSED, this message must have a severity of NOTICE. If transitioning from NON-COFORMING or ROGUE, this message must have a severity of ALERT.
+            This operation has entered the terminal CLOSED state. The operation will not again be active or in flight. This message is not required if the operation is transitioned to the CLOSED state from the ACTIVE state, but may be provided at the USS's discretion. This message is required when the operation transitioned from any state other than the ACTIVE state to the CLOSED state. If transitioning an operation from ACCEPTED to CLOSED, this message must have a severity of NOTICE. If transitioning from NON-COFORMING or ROGUE, this message must have a severity of ALERT.
           7. CONTINGENCY_PLAN_INITIATED
             Description TBD.
           8. CONTINGENCY_PLAN_CANCELLED
@@ -673,6 +674,9 @@ definitions:
   ConstraintMessage:
     description: |
      An element defined by spatial and temporal bounds that affects UAS operations by limiting access to that 4D bounded volume.
+    required: 
+     - message_id
+     - type
     properties:
       message_id:
         description: A UUID assigned to this message by the originator
@@ -812,6 +816,7 @@ definitions:
       provided by the USS or the types of UAS operations that are supported by
       this USS Instance.
     required:
+      - uss_instance_id
       - time_available_begin
       - time_available_end
       - coverage_area
@@ -976,7 +981,7 @@ parameters:
     name: sort
     in: query
     description: >-
-      A valid field name to use for sorting records. If multiple fields are provided, the sorting is based on the ordered priorty of that list.
+      A valid field name to use for sorting records. If multiple fields are provided, the sorting is based on the ordered priority of that list.
     required: false
     default: time_submitted
     type: string
@@ -984,7 +989,7 @@ parameters:
     name: sort_increasing
     in: query
     description: >-
-      For optional use with the 'sort' parameter. If 'sort' is not provided, then 'sort_increasing' will be ignored. Boolean value.  If multiple fields are provided in the 'sort' paramenter, this boolean value will apply to all of them.
+      For optional use with the 'sort' parameter. If 'sort' is not provided, then 'sort_increasing' will be ignored. Boolean value.  If multiple fields are provided in the 'sort' parameter, this boolean value will apply to all of them.
     required: false
     default: true
     type: boolean
