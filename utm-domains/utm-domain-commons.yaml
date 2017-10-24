@@ -167,7 +167,7 @@ definitions:
           2. ACTIVATED
             This operation is active. The transition from ACCEPTED to ACTIVATED is not an announced transition. The transition is implied based on the submitted start time of the operation (i.e. the effective_time_begin of the first OperationVolume). Note that an ACTIVATED operation is not necessarily airborne, but is assumed to be "using" the OperationVolumes that it has announced.
           3. CLOSED
-            This operation is closed. It is not airborne and will not become airborne again. If the UAS and the crew will fly again, it would need to be as a new operation. A USS may announce the closure of any operation, but is not required to announce unless the operation was ROGUE or NONCOFORMING.
+            This operation is closed. It is not airborne and will not become airborne again. If the UAS and the crew will fly again, it would need to be as a new operation. A USS may announce the closure of any operation, but is not required to announce unless the operation was ROGUE or NONCONFORMING.
           4. NONCONFORMING
             See USS Specification for requirements to transition to this state.
           5. ROGUE
@@ -318,7 +318,7 @@ definitions:
         type: array
         items:
           description: >-
-            A cause that necessitates a contingency response. In planning an operation, this array of values represents the various causes that may necessitate the provided contingency repsonse.
+            A cause that necessitates a contingency response. In planning an operation, this array of values represents the various causes that may necessitate the provided contingency response.
           
             1. LOST_C2_UPLINK
               The operation has lost command or control uplink to the vehicle.
@@ -337,7 +337,7 @@ definitions:
             8. SOFTWARE_PROBLEM
               The vehicle or some component of the required platform ground equipment is experiencing a software problem.
             9. ENVIRONMENTAL
-              There are conditions in the environment necessitating initiation of a contingency response. Generally this will be weather related phenonmena.
+              There are conditions in the environment necessitating initiation of a contingency response. Generally these will be weather-related phenomena.
             10. SECURITY
               There is a security incident interrupting this operation.
             11. TRAFFIC
@@ -628,7 +628,7 @@ definitions:
           5. OPERATION_CONFORMING
             This operation was previously in the NONCONFORMING state and has transitioned back to the ACTIVE state
           6. OPERATION_CLOSED
-            This operation has entered the terminal CLOSED state. The operation will not again be active or in flight. This message is not required if the operation is transitioned to the CLOSED state from the ACTIVE state, but may be provided at the USS's discretion. This message is required when the operation transitioned from any state other than the ACTIVE state to the CLOSED state. If transitioning an operation from ACCEPTED to CLOSED, this message must have a severity of NOTICE. If transitioning from NON-COFORMING or ROGUE, this message must have a severity of ALERT.
+            This operation has entered the terminal CLOSED state. The operation will not again be active or in flight. This message is not required if the operation is transitioned to the CLOSED state from the ACTIVE state, but may be provided at the USS's discretion. This message is required when the operation transitioned from any state other than the ACTIVE state to the CLOSED state. If transitioning an operation from ACCEPTED to CLOSED, this message must have a severity of NOTICE. If transitioning from NONCONFORMING or ROGUE, this message must have a severity of ALERT.
           7. CONTINGENCY_PLAN_INITIATED
             Description TBD.
           8. CONTINGENCY_PLAN_CANCELLED
