@@ -66,8 +66,8 @@ paths:
     put:
       tags:
         - A. Required Endpoints
-      summary: Modify an operation
-      description: Allows for creation or modifying of an operation plan in FIMS. Needs full definition for updates
+      summary: Add or modify an operation
+      description: Allows for creation or modifying of an operation plan in FIMS. For updating, submit the full set of properties of the Operation model.
       operationId: updateOperation
       consumes:
         - application/json
@@ -109,6 +109,7 @@ paths:
 
   /positions:
     post:
+      deprecated: true
       tags:
         - A. Required Endpoints
       summary: Submit position report
