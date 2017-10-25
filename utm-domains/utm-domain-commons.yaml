@@ -192,7 +192,6 @@ definitions:
         items:
           $ref: '#/definitions/ContingencyPlan'
       faa_rule:
-        default: PART_107
         description: >-
           1. PART_107
             The operation follows FAA rule 107. Submission of such operations is mandatory
