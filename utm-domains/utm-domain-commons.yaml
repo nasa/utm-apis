@@ -206,7 +206,6 @@ definitions:
           4. OTHER
             Placeholder for other types of operations.
         type: string
-        minLength: 1
         enum:
         - PART_107
         - PART_107X
