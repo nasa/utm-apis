@@ -66,6 +66,7 @@ definitions:
     - gufi
     - registration
     - faa_rule
+    - state
     - primary_contact_name
     - primary_contact_phone
     - controller_location
