@@ -209,29 +209,49 @@ definitions:
     type: object
     properties:
       access_token:
-        $ref: '#/definitions/JwsCompactSerialization'
+        type: string
+        format: JwsCompactSerialization
+        description: "see definitions/JwsCompactSerialization in this spec"
+      scope:
+        type: string
+        description: "white space separated list of scopes"
       token_type: 
         type: string
         enum:
         - "bearer"
-# Would like to remove this from the response since it open possbility of contradicting the 'exp' value in the token itself.
-#      expires_in:
-#        type: number
-#        format: integer
+      expires_in:
+      # Would like to remove this from the response since it open possbility of contradicting the 'exp' value in the token itself.
+        type: number
+        format: integer
+        description: "see definitions/JwtClaimsSet.exp property in this spec"
+
+      sub:
+        type: string
+        description: "see definitions/JwtClaimsSet in this spec"
       jti:
         type: string
         format: uuid
-# Would like to remove this from response for same reason as 'expires_in'.
-#      scope:
-#        type: string
-        
-        
-
-            
+        description: "see definitions/JwtClaimsSet in this spec"
+      iss:
+        type: string
+        description: "see definitions/JwtClaimsSet in this spec"
+      nbf:
+        type: number
+        description: "see definitions/JwtClaimsSet in this spec"
+    example: 
+      access_token: tokenstring
+      token_type: bearer
+      expires_in: 3599
+      scope: utm.nasa.gov_write.operation utm.nasa.gov_read.operation
+      sub: nasaUSS
+      nbf: 1509470774
+      iss: fims.arc.nasa.gov/fimsAuthServer
+      jti: 4d4c1a63-0959-48cc-885a-3648fd582db7
+      
   
   JwsCompactSerialization:
     description: >-
-      The token provided by the FIMS Authorization Server is a JWS representing a JWT.  The token is actually a JWS Compact Serialization string as described in RFC 7515.  For clarity of documentation, we represent the pre-serialized components here as a JSON schema.  This may be problematic when using automated tools to validate the schema using this file as input.
+      The token provided by the FIMS Authorization Server is a JWS representing a JWT.  The token is actually a JWS Compact Serialization string as described in RFC 7515.  For clarity of documentation, we represent the pre-serialized components here as a JSON schema. 
     type: object
     properties:
       jose_header:
