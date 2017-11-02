@@ -35,7 +35,7 @@ info:
   license:
     name: "NASA Open Source Agreement"
     url: "https://ti.arc.nasa.gov/opensource/nosa/"
-host: "tmiserver.arc.nasa.gov"
+host: "utmbeta.arc.nasa.gov"
 basePath: "/fims"
 tags:
 - name: "A. Required Endpoints"
@@ -66,9 +66,9 @@ paths:
     put:
       tags:
       - "A. Required Endpoints"
-      summary: "Modify an operation"
+      summary: "Add or modify an operation"
       description: "Allows for creation or modifying of an operation plan in FIMS.\
-        \ Needs full definition for updates"
+        \ For updating, submit the full set of properties of the Operation model."
       operationId: "updateOperation"
       consumes:
       - "application/json"
@@ -135,6 +135,7 @@ paths:
       security:
       - fims_ops_security:
         - "utm.nasa.gov_write.operation"
+      deprecated: true
   /utm_messages:
     post:
       tags:
@@ -324,6 +325,7 @@ definitions:
     - "primary_contact_name"
     - "primary_contact_phone"
     - "registration"
+    - "state"
     properties:
       gufi:
         type: "string"
@@ -337,7 +339,7 @@ definitions:
         type: "string"
         format: "uuid"
         example: "00000000-0000-0000-0000-000000000000"
-        description: "Identiy of the USS Instance hosting this operation."
+        description: "Identity of the USS Instance hosting this operation."
         minLength: 36
         maxLength: 36
       submit_time:
@@ -380,7 +382,7 @@ definitions:
         type: "array"
         description: "The registration ID of the vehicle flying this operation. This\
           \ registration value is provided to operators by a vehicle registrar. Validated\
-          \ as a non-null string. Array due to possiblity of multi-vehicle operation."
+          \ as a non-null string. Array due to possibility of multi-vehicle operation."
         items:
           type: "string"
           maxLength: 1000
@@ -439,10 +441,10 @@ definitions:
           \  This operation is closed. It is not airborne and will not become airborne\
           \ again. If the UAS and the crew will fly again, it would need to be as\
           \ a new operation. A USS may announce the closure of any operation, but\
-          \ is not required to announce unless the operation was ROGUE or NONCOFORMING.\n\
-          4. NONCORMING\n  See USS Specifcation for requirements to transition to\
-          \ this state.\n5. ROGUE\n  See USS Specifcation for requirements to transition\
-          \ to this state.\n"
+          \ is not required to announce unless the operation was ROGUE or NONCONFORMING.\n\
+          4. NONCONFORMING\n  See USS Specification for requirements to transition\
+          \ to this state.\n5. ROGUE\n  See USS Specification for requirements to\
+          \ transition to this state.\n"
         enum:
         - "ACCEPTED"
         - "ACTIVATED"
@@ -469,13 +471,11 @@ definitions:
           \  Submission of 101E would be required if operation is within 5 statute\
           \ miles of an airport. Optional otherwise.\n\n4. OTHER\n  Placeholder for\
           \ other types of operations."
-        minLength: 1
         enum:
         - "PART_107"
         - "PART_107X"
         - "PART_101E"
         - "OTHER"
-        default: "PART_107"
       priority_elements:
         $ref: "#/definitions/PriorityElements"
       operation_volumes:
@@ -526,7 +526,7 @@ definitions:
           type: "string"
           description: "A cause that necessitates a contingency response. In planning\
             \ an operation, this array of values represents the various causes that\
-            \ may necessitate the provided contingency_repsonse.\n1. LOST_C2_UPLINK\n\
+            \ may necessitate the provided contingency response.\n1. LOST_C2_UPLINK\n\
             \  The operation has lost command or control uplink to the vehicle.\n\
             2. LOST_C2_DOWNLINK\n  The operation has lost downlinks from the vehicle.\n\
             3. LOST_NAV\n  The vehicle no longer has sufficient navigation sources.\n\
@@ -539,13 +539,13 @@ definitions:
             \ response.\n8. SOFTWARE_PROBLEM\n  The vehicle or some component of the\
             \ required platform ground equipment is experiencing a software problem.\n\
             9. ENVIRONMENTAL\n  There are conditions in the environment necessitating\
-            \ initiation of a contingency response. Generally this will be weather\
-            \ realted phenonmena.\n10. SECURITY\n  There is a security incident interrupting\
+            \ initiation of a contingency response. Generally these will be weather-related\
+            \ phenomena.\n10. SECURITY\n  There is a security incident interrupting\
             \ this operation.\n11. TRAFFIC\n  The density or type of air traffic near\
             \ the vehicle necessitated a contingency response.\n12. LOST_USS\n  The\
             \ operation has lost at least some portion of expected USS services.\n\
             13. OTHER\n  Some cause not captured in any other category.\n14. ANY\n\
-            \  This category should only be used wihtin an operation plan when a particular\
+            \  This category should only be used within an operation plan when a particular\
             \ contingency response is appropriate for any contingency cause."
           enum:
           - "LOST_C2_UPLINK"
@@ -667,13 +667,13 @@ definitions:
       **EMERGENCY > ALERT > CRITICAL > WARNING > NOTICE > INFORMATIONAL**\nIn relation\
       \ to a UTMMessage, the severities may be interpreted as follows.\n1. **EMERGENCY**\n\
       \  There is an **immediate** impact to the safety of other air operations, the\
-      \ safety of people, or the safety of structures on the groud. Actions to mitigate\
+      \ safety of people, or the safety of structures on the ground. Actions to mitigate\
       \ required by other operations.\n2. **ALERT**\n  There may be an impact to the\
       \ safety of other air operations, the safety of people, or the safety of structures\
-      \ on the groud. Actions to mitigate required by other operations.\n3. **CRITICAL**\n\
+      \ on the ground. Actions to mitigate required by other operations.\n3. **CRITICAL**\n\
       \  Without mitigations by the affected operation, the situation may rise to\
       \ an emergency in the near future.\n4. **WARNING**\n  There is a contained issue\
-      \ that may result in the loss of aircraft. No immediate or likley effect to\
+      \ that may result in the loss of aircraft. No immediate or likely effect to\
       \ other operations, people on the ground, or structures.\n5. **NOTICE**\n  This\
       \ issue is provided for situational awareness. Planning by operators and USSs\
       \ may be affected.\n6. **INFORMATIONAL**\n  This issue is provided for situational\
@@ -854,6 +854,7 @@ definitions:
     required:
     - "altitude_gps_wgs84_ft"
     - "altitude_num_gps_satellites"
+    - "enroute_positions_id"
     - "gufi"
     - "hdop_gps"
     - "location"
@@ -1044,15 +1045,15 @@ definitions:
           \ transitions to this state. Must be sent with severity CRITICAL.\n4. OPERATION_ROGUE\n\
           \  This operation has entered the ROGUE state. Must be sent to LUN anytime\
           \ operation transitions to ROGUE state. Must be sent with severity ALERT.\n\
-          5. OPERATION_CONFORMING\n  This operation was previously in the NON-CONFORMING\
+          5. OPERATION_CONFORMING\n  This operation was previously in the NONCONFORMING\
           \ state and has transitioned back to the ACTIVE state\n6. OPERATION_CLOSED\n\
           \  This operation has entered the terminal CLOSED state. The operation will\
           \ not again be active or in flight. This message is not required if the\
           \ operation is transitioned to the CLOSED state from the ACTIVE state, but\
-          \ may be provided at the USSs discretion. This message is required when\
+          \ may be provided at the USS's discretion. This message is required when\
           \ the operation transitioned from any state other than the ACTIVE state\
-          \ to teh CLOSED state. If transitioning an operation from ACCEPTED to CLOSED,\
-          \ this message must have a severity of NOTICE. If transitioning from NON-COFORMING\
+          \ to the CLOSED state. If transitioning an operation from ACCEPTED to CLOSED,\
+          \ this message must have a severity of NOTICE. If transitioning from NONCONFORMING\
           \ or ROGUE, this message must have a severity of ALERT.\n7. CONTINGENCY_PLAN_INITIATED\n\
           \  Description TBD.\n8. CONTINGENCY_PLAN_CANCELLED\n  Description TBD.\n\
           9. POSITION_REPORT_REQUESTED\n  Description TBD.\n10. OTHER_SEE_FREE_TEXT\n\
@@ -1112,6 +1113,9 @@ definitions:
       url: "https://tools.ietf.org/html/rfc7946#section-3.1.4"
     description: "GeoJSon LineString. Positions all 2D."
   ConstraintMessage:
+    required:
+    - "message_id"
+    - "type"
     properties:
       message_id:
         type: "string"
