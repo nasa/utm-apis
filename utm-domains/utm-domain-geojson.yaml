@@ -76,12 +76,14 @@ definitions:
     properties:
       type:
         description: |
-          The type of Geometry. In this case, must be 'LineString' per GeoJSON spec.
+          The type of Geometry. In this case, must be 'LineString' per GeoJSON spec. LineString can have 4 to 30 points.
         type: string
         enum: 
         - LineString
       coordinates:
         type: array
+        maxItems: 30
+        minItems: 4
         items:
           type: array
           maxItems: 2
@@ -98,7 +100,7 @@ definitions:
     properties:
       type:
         description: |
-          The type of Geometry. In this case, must be 'Polygon' per GeoJSON spec.
+          The type of Geometry. In this case, must be 'Polygon' per GeoJSON spec.  Note that the "coordinates" member is validatd to be be an array of size one.
         type: string
         enum: 
         - Polygon
@@ -108,8 +110,8 @@ definitions:
           type: array
           items:
             type: array
-            maxItems: 2
-            minItems: 2
+            maxItems: 1
+            minItems: 1
             items:
               type: number
               format: double
