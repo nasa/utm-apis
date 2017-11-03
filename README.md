@@ -48,17 +48,16 @@ and java8's OffsetDateTime class for date-time using this language-specific conf
 }
 
 ````````
-## Sandbox vs. Swaggerhub versions
+## Sandbox and Swaggerhub-github versions
 
-Swaggerhub's master branch is generally ahead of our sandbox.
 
-The swaggerspec's github is branched by version.
+utm-apis repo's master branch is tagged with a release tag.  The same tag is applied to the UTM Sandbox deployment. 
+For example the v17.10 sandbox was generated from github branch/tag swagger17.10.
 
-For example the v17.11 sandbox was generated from github branch tcl3_v17.11 which has base 0afb8139643610b0743d9d436b1feb341b935e73.
+Swaggerhub's master branch can sometimes be ahead of our sandbox.
 
-If you checkout this branch locally you can point to tcl3_v17.11 for codegen or browsing.
-The github top level README is now updated with notes for codegen'ing from a local
-clone by release tag, as well as options for viewing local swagger specs.
+For codegen you can point back in history to the release tag.  You can also clone the utm-apis to your build machine, and view local specs, as below.
+
 
 
 ### Local Viewing
@@ -81,6 +80,7 @@ all domain references are resolved.  (Because the refs point to master/HEAD. Thi
 `````````
 CODEGEN=./lib/swagger-codegen-cli-2.2.3.jar
 GENERATE="java  -Dmodels -DmodelDocs=false -DapiDocs=false -jar $CODEGEN generate  -l spring --config config.json"
+RLSTAG="v17.11.01"
 
-$GENERATE -i ./uss-api/swagger-resolved.yaml  #where input is a local file
+$GENERATE -i https://raw.githubusercontent.com/nasa/utm-apis/${RLSTAG}/uss-api/swagger.yaml
 ```````
