@@ -1,2 +1,2 @@
-# Swagger JSON
-This is a swagger JSON built by the [swagger-codegen](https://github.com/swagger-api/swagger-codegen) project.
+### Public Saftey - a USS Role
+![alt text](https://raw.githubusercontent.com/nasa/utm-apis/master/public-safety-uss/images/vehid.png "Logo Title")

@@ -1162,7 +1162,6 @@ definitions:
     type: "object"
     required:
     - "controller_location"
-    - "faa_rule"
     - "gufi"
     - "operation_volumes"
     - "primary_contact_name"
@@ -1191,8 +1190,7 @@ definitions:
         description: "Time the operation submission was received by USS. Uses the\
           \ ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ. Seconds\
           \ may have up to millisecond accuracy (three positions after decimal). \
-          \ The 'Z' implies UTC times and is the only timezone accepted. This value\
-          \ is generally set by the server upon receipt of new data."
+          \ The 'Z' implies UTC times and is the only timezone accepted."
       decision_time:
         type: "string"
         format: "date-time"

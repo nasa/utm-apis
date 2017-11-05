@@ -1,4 +1,4 @@
----
+-----
 swagger: "2.0"
 info:
   description: "RestAPI and Message definitions from USS-nasa to UAS Operator Interface"
@@ -21,6 +21,7 @@ tags:
   description: "Subscribe to notifications and position reports"
 schemes:
 - "https"
+- "wss"
 paths:
   /airports:
     get:
@@ -1408,7 +1409,11 @@ paths:
       - "Subscription Points"
       summary: "Receive position updates"
       description: "The connection URL is wss://{host}/uss/stream/position\n"
-      parameters: []
+      parameters:
+      - name: "gufi"
+        in: "query"
+        description: "GUFI of the operation whose position needs to be streamed"
+        required: false
       responses:
         410:
           description: "WRONG_PROTOCOL - A RESTful call was made to this endpoint\

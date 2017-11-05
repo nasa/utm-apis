@@ -10,17 +10,20 @@ info:
 host: "utmalpha.arc.nasa.gov"
 basePath: "/urep"
 tags:
-- name: "A. SDSP Endpoints"
-  description: "NEED SOME TEXT HERE."
+- name: "A. Required Endpoints"
+  description: "An implementer of this SDSP implements these."
 - name: "B. Subscription Points"
   description: "Non-REST endpoints for asynchronous communications with UREP."
 schemes:
 - "https"
+security:
+- urep_security:
+  - "utm.nasa.gov_read.sdsp"
 paths:
   /ureps:
     get:
       tags:
-      - "Restful Endpoints"
+      - "A. Required Endpoints"
       summary: "Get UREPs"
       operationId: "getUrepsUsingGET"
       consumes:
@@ -124,18 +127,14 @@ paths:
         401:
           description: "Unauthorized"
           schema:
-            $ref: "#/definitions/UrepRestResponse"
+            $ref: "#/definitions/UTMRestResponse"
         403:
           description: "Forbidden"
-          schema:
-            $ref: "#/definitions/UrepRestResponse"
         404:
           description: "Not Found"
-          schema:
-            $ref: "#/definitions/UrepRestResponse"
     post:
       tags:
-      - "Restful Endpoints"
+      - "A. Required Endpoints"
       summary: "Add UREP"
       operationId: "addUrepUsingPOST"
       consumes:
@@ -154,26 +153,22 @@ paths:
         201:
           description: "Created"
           schema:
-            $ref: "#/definitions/UrepRestResponse"
+            $ref: "#/definitions/UTMRestResponse"
         401:
           description: "Unauthorized"
           schema:
-            $ref: "#/definitions/UrepRestResponse"
+            $ref: "#/definitions/UTMRestResponse"
         403:
           description: "Forbidden"
-          schema:
-            $ref: "#/definitions/UrepRestResponse"
         404:
           description: "Not Found"
-          schema:
-            $ref: "#/definitions/UrepRestResponse"
       security:
-      - password:
-        - "USS"
+      - urep_security:
+        - "utm.nasa.gov_write.sdsp"
   /ureps/{id}:
     get:
       tags:
-      - "Restful Endpoints"
+      - "A. Required Endpoints"
       summary: "Get UREPs by ID"
       operationId: "getUrepsForIDUsingGET"
       consumes:
@@ -206,27 +201,11 @@ paths:
         401:
           description: "Unauthorized"
           schema:
-            $ref: "#/definitions/UrepRestResponse"
+            $ref: "#/definitions/UTMRestResponse"
         403:
           description: "Forbidden"
-          schema:
-            $ref: "#/definitions/UrepRestResponse"
         404:
           description: "Not Found"
-          schema:
-            $ref: "#/definitions/UrepRestResponse"
-  /api:
-    get:
-      tags:
-      - "Restful Endpoints"
-      summary: "Get API Info"
-      operationId: "getApiInfo"
-      parameters: []
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/Version"
   /urepstream:
     get:
       tags:
@@ -240,12 +219,13 @@ paths:
           description: "A RESTful call was made to this endpoint but this is not a\
             \ REST endpoint. Do not use this endpoint for REST calls."
 securityDefinitions:
-  password:
+  urep_security:
     type: "oauth2"
-    tokenUrl: "https://<host>/fimsAuthServer/oauth/token"
-    flow: "password"
+    tokenUrl: "https://thisserver.com/oauth/token"
+    flow: "application"
     scopes:
-      USS: "A USS can read and write UREPs"
+      utm.nasa.gov_read.sdsp: "read all UREP data"
+      utm.nasa.gov_write.sdsp: "Subject can read, create, and udpate UREP data."
 definitions:
   Urep:
     type: "object"
@@ -517,38 +497,38 @@ definitions:
         - "BALLOON"
         - "LARGE_MANNED_FIXED_WING"
         - "OTHER"
+  UTMRestResponse:
+    type: "object"
+    properties:
+      http_status_code:
+        type: "integer"
+      message:
+        type: "string"
+      resource:
+        type: "string"
+    example:
+      http_status_code: 201
+      message: "Resource created."
+      resource: "/resource/683c0e9e-49dc-44ce-82de-a5723b1f6965"
   Point:
     type: "object"
-    required:
-    - "coordinates"
     properties:
+      type:
+        type: "string"
+        description: "The type of Geometry. In this case, must be 'Point' per GeoJSON\
+          \ spec.\n"
+        enum:
+        - "Point"
       coordinates:
         type: "array"
-        description: "Pairs of longitude-latitude values. If a third element is provided\
-          \ for altitude, it is silently ignored."
         items:
           type: "number"
           format: "double"
-          description: "Must be exactly two numbers representing long and lat, respectively."
-      type:
-        type: "string"
-  Version:
-    type: "object"
-    properties:
-      version:
-        type: "string"
-        description: "Version number for the API"
-      title:
-        type: "string"
-        description: "Title of the API"
-      documentation:
-        type: "string"
-        description: "URL for API Documentation"
-  UrepRestResponse:
-    type: "object"
-    properties:
-      message:
-        type: "string"
+        maxItems: 2
+        minItems: 2
+    externalDocs:
+      url: "https://tools.ietf.org/html/rfc7946#section-3.1.2"
+    description: "GeoJSon Point, limited to 2D."
 responses:
   WRONG_PROTOCOL:
     description: "A RESTful call was made to this endpoint but this is not a REST\
