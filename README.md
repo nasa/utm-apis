@@ -13,6 +13,7 @@ Each directory contains files related to a single API.  Within each directory th
 
 ## Sandbox and Swaggerhub-github versions
 
+utm-apis release branch is SWAGGERHUB and the master branch is our development branch.  You will generally find the master branch to be ahead of the Sandbox.  The tags in our SWAGGERHUB branch correspond with our sandbox releases.
 
 utm-apis repo's master branch is tagged with a release tag.  The same tag is applied to the UTM Sandbox deployment. 
 For example the v17.10 sandbox was generated from github branch/tag swagger17.10.
