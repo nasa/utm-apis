@@ -11,6 +11,30 @@ Each directory contains files related to a single API.  Within each directory th
 - [UTM Swaggerhub](https://app.swaggerhub.com/organizations/utm)
 
 
+## Sandbox and Swaggerhub-github versions
+
+
+utm-apis repo's master branch is tagged with a release tag.  The same tag is applied to the UTM Sandbox deployment. 
+For example the v17.10 sandbox was generated from github branch/tag swagger17.10.
+
+Swaggerhub's master branch can sometimes be ahead of our sandbox.
+
+For codegen you can point back in history to the release tag.  You can also clone the utm-apis to your build machine, and view local specs, as below.
+
+
+
+## Viewing Local Spec files
+
+You have choices to edit/view local swagger files. IMO option 1 is better for viewing all files.  A local swagger editor is good if you want rendering. 
+
+1. Use a text editor that supports YAML such as Sublime Text 2.
+
+2. Install local [Swagger Editor](https://swagger.io/swagger-editor/)
+
+
+3. Bring up an online swagger editor and copy entire file contents into your browser
+
+
 ## Codegen 
 
 You can generate code from OpenAPI Specifications (swagger).  
@@ -48,32 +72,8 @@ and java8's OffsetDateTime class for date-time using this language-specific conf
 }
 
 ````````
-## Sandbox vs. Swaggerhub versions
 
-Swaggerhub's master branch is generally ahead of our sandbox.
-
-The swaggerspec's github is branched by version.
-
-For example the v17.11 sandbox was generated from github branch tcl3_v17.11 which has base 0afb8139643610b0743d9d436b1feb341b935e73.
-
-If you checkout this branch locally you can point to tcl3_v17.11 for codegen or browsing.
-The github top level README is now updated with notes for codegen'ing from a local
-clone by release tag, as well as options for viewing local swagger specs.
-
-
-### Local Viewing
-
-You have choices to edit/view local swagger files. IMO option 1 is better for viewing all files.  A local swagger editor is good if you want rendering. 
-
-1. Use a text editor that supports YAML such as Sublime Text 2.
-
-2. Install local [Swagger Editor](https://swagger.io/swagger-editor/)
-
-
-3. Bring up an online swagger editor and copy entire file contents into your browser
-
-
-## Codegen by verison
+### Pulling a back-version of Swagger Spec
 
 To codegen from local swagger specs, the local files need to be "resolved"  whereby
 all domain references are resolved.  (Because the refs point to master/HEAD. This will result in mixed versions. 
@@ -81,6 +81,7 @@ all domain references are resolved.  (Because the refs point to master/HEAD. Thi
 `````````
 CODEGEN=./lib/swagger-codegen-cli-2.2.3.jar
 GENERATE="java  -Dmodels -DmodelDocs=false -DapiDocs=false -jar $CODEGEN generate  -l spring --config config.json"
+RLSTAG="v17.11."
 
-$GENERATE -i ./uss-api/swagger-resolved.yaml  #where input is a local file
+$GENERATE -i https://raw.githubusercontent.com/nasa/utm-apis/${RLSTAG}/uss-api/swagger.yaml
 ```````

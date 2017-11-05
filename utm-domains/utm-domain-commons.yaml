@@ -5,6 +5,11 @@
 
 ## joseph.rios@nasa.gov
 
+info:
+  description: "UTM models (swagger domain)"
+  version: 'v1'
+  title: UTM models
+  
 definitions:
   scope:
     description: >-
@@ -34,13 +39,13 @@ definitions:
       In relation to a UTMMessage, the severities may be interpreted as follows.
       
       1. **EMERGENCY**
-        There is an **immediate** impact to the safety of other air operations, the safety of people, or the safety of structures on the groud. Actions to mitigate required by other operations.
+        There is an **immediate** impact to the safety of other air operations, the safety of people, or the safety of structures on the ground. Actions to mitigate required by other operations.
       2. **ALERT**
-        There may be an impact to the safety of other air operations, the safety of people, or the safety of structures on the groud. Actions to mitigate required by other operations.
+        There may be an impact to the safety of other air operations, the safety of people, or the safety of structures on the ground. Actions to mitigate required by other operations.
       3. **CRITICAL**
         Without mitigations by the affected operation, the situation may rise to an emergency in the near future.
       4. **WARNING**
-        There is a contained issue that may result in the loss of aircraft. No immediate or likley effect to other operations, people on the ground, or structures.
+        There is a contained issue that may result in the loss of aircraft. No immediate or likely effect to other operations, people on the ground, or structures.
       5. **NOTICE**
         This issue is provided for situational awareness. Planning by operators and USSs may be affected.
       6. **INFORMATIONAL**
@@ -60,6 +65,8 @@ definitions:
     required:
     - gufi
     - registration
+    - faa_rule
+    - state
     - primary_contact_name
     - primary_contact_phone
     - controller_location
@@ -73,14 +80,15 @@ definitions:
         minLength: 36
         example: "00000000-0000-0000-0000-000000000000"
       uss_instance_id:
-        description: "Identiy of the USS Instance hosting this operation."
+        description: "Identity of the USS Instance hosting this operation."
         type: string
         format: uuid
         maxLength: 36
         minLength: 36
+        example: "00000000-0000-0000-0000-000000000000"
       submit_time:
         description: >-
-          Time the operation submission was received by USS. Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ. Seconds may have up to millisecond accuracy (three positions after decimal).  The 'Z' implies UTC times and is the only timezone accepted.
+          Time the operation submission was received by USS. Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ. Seconds may have up to millisecond accuracy (three positions after decimal).  The 'Z' implies UTC times and is the only timezone accepted. This value is generally set by the server upon receipt of new data.
         type: string
         format: date-time
         minLength: 20
@@ -110,7 +118,7 @@ definitions:
         default: "NOT PROVIDED"
         maxLength: 1000
       registration:
-        description: "The registration ID of the vehicle flying this operation. This registration value is provided to operators by a vehicle registrar. Validated as a non-null string. Array due to possiblity of multi-vehicle operation."
+        description: "The registration ID of the vehicle flying this operation. This registration value is provided to operators by a vehicle registrar. Validated as a non-null string. Array due to possibility of multi-vehicle operation."
         type: array
         items:
           type: string
@@ -122,6 +130,7 @@ definitions:
         format: uuid
         maxLength: 36
         minLength: 36
+        example: "00000000-0000-0000-0000-000000000000"
       flight_number:
         description: "Optional. For use by USS for identification purposes."
         type: string
@@ -159,11 +168,11 @@ definitions:
           2. ACTIVATED
             This operation is active. The transition from ACCEPTED to ACTIVATED is not an announced transition. The transition is implied based on the submitted start time of the operation (i.e. the effective_time_begin of the first OperationVolume). Note that an ACTIVATED operation is not necessarily airborne, but is assumed to be "using" the OperationVolumes that it has announced.
           3. CLOSED
-            This operation is closed. It is not airborne and will not become airborne again. If the UAS and the crew will fly again, it would need to be as a new operation. A USS may announce the closure of any operation, but is not required to announce unless the operation was ROGUE or NONCOFORMING.
-          4. NONCORMING
-            See USS Specifcation for requirements to transition to this state.
+            This operation is closed. It is not airborne and will not become airborne again. If the UAS and the crew will fly again, it would need to be as a new operation. A USS may announce the closure of any operation, but is not required to announce unless the operation was ROGUE or NONCONFORMING.
+          4. NONCONFORMING
+            See USS Specification for requirements to transition to this state.
           5. ROGUE
-            See USS Specifcation for requirements to transition to this state.
+            See USS Specification for requirements to transition to this state.
         type: string
         enum:
         - ACCEPTED
@@ -184,7 +193,6 @@ definitions:
         items:
           $ref: '#/definitions/ContingencyPlan'
       faa_rule:
-        default: PART_107
         description: >-
           1. PART_107
             The operation follows FAA rule 107. Submission of such operations is mandatory
@@ -214,8 +222,7 @@ definitions:
         items:
           $ref: "#/definitions/OperationVolume"
       metadata:
-        type: string
-        description: Reserved field.
+        $ref: 'https://api.swaggerhub.com/domains/utm/metadata/v1#/definitions/EventMetadata'
     
   PriorityElements:
     description: >-
@@ -305,11 +312,12 @@ definitions:
         format: integer
         minimum: 1
         maximum: 1000 # for sanity checking input   
+        example: 1
       contingency_cause:
         type: array
         items:
           description: >-
-            A cause that necessitates a contingency response. In planning an operation, this array of values represents the various causes that may necessitate the provided contingency_repsonse.
+            A cause that necessitates a contingency response. In planning an operation, this array of values represents the various causes that may necessitate the provided contingency response.
           
             1. LOST_C2_UPLINK
               The operation has lost command or control uplink to the vehicle.
@@ -328,7 +336,7 @@ definitions:
             8. SOFTWARE_PROBLEM
               The vehicle or some component of the required platform ground equipment is experiencing a software problem.
             9. ENVIRONMENTAL
-              There are conditions in the environment necessitating initiation of a contingency response. Generally this will be weather realted phenonmena.
+              There are conditions in the environment necessitating initiation of a contingency response. Generally these will be weather-related phenomena.
             10. SECURITY
               There is a security incident interrupting this operation.
             11. TRAFFIC
@@ -338,7 +346,7 @@ definitions:
             13. OTHER
               Some cause not captured in any other category.
             14. ANY
-              This category should only be used wihtin an operation plan when a particular contingency response is appropriate for any contingency cause.
+              This category should only be used within an operation plan when a particular contingency response is appropriate for any contingency cause.
           type: string
           enum:
           - LOST_C2_UPLINK
@@ -419,6 +427,7 @@ definitions:
   Position:
     type: object
     required:
+    - enroute_positions_id
     - altitude_gps_wgs84_ft
     - altitude_num_gps_satellites
     - gufi
@@ -470,7 +479,7 @@ definitions:
           GPS.
         minimum: 0.0
       location:
-        # description: "A description of the 2D location.  A Point geojson."
+        # description: "A description of the 2D location.  A Point GeoJSON."
         $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Point'
       time_measured:
         description: >-
@@ -572,6 +581,7 @@ definitions:
         format: uuid
         maxLength: 36
         minLength: 36
+        example: "00000000-0000-0000-0000-000000000000"
       origin:
         description: >-
           The user or process that generated this message
@@ -592,6 +602,7 @@ definitions:
         format: uuid
         maxLength: 36
         minLength: 36
+        example: "00000000-0000-0000-0000-000000000000"
       sent_time:
         description: >-
           Time the message was generated by the origin.  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy (three positions after decimal).  The 'Z' implies UTC times and is the only timezone accepted."
@@ -614,9 +625,9 @@ definitions:
           4. OPERATION_ROGUE
             This operation has entered the ROGUE state. Must be sent to LUN anytime operation transitions to ROGUE state. Must be sent with severity ALERT.
           5. OPERATION_CONFORMING
-            This operation was previously in the NON-CONFORMING state and has transitioned back to the ACTIVE state
+            This operation was previously in the NONCONFORMING state and has transitioned back to the ACTIVE state
           6. OPERATION_CLOSED
-            This operation has entered the terminal CLOSED state. The operation will not again be active or in flight. This message is not required if the operation is transitioned to the CLOSED state from the ACTIVE state, but may be provided at the USSs discretion. This message is required when the operation transitioned from any state other than the ACTIVE state to teh CLOSED state. If transitioning an operation from ACCEPTED to CLOSED, this message must have a severity of NOTICE. If transitioning from NON-COFORMING or ROGUE, this message must have a severity of ALERT.
+            This operation has entered the terminal CLOSED state. The operation will not again be active or in flight. This message is not required if the operation is transitioned to the CLOSED state from the ACTIVE state, but may be provided at the USS's discretion. This message is required when the operation transitioned from any state other than the ACTIVE state to the CLOSED state. If transitioning an operation from ACCEPTED to CLOSED, this message must have a severity of NOTICE. If transitioning from NONCONFORMING or ROGUE, this message must have a severity of ALERT.
           7. CONTINGENCY_PLAN_INITIATED
             Description TBD.
           8. CONTINGENCY_PLAN_CANCELLED
@@ -650,9 +661,9 @@ definitions:
         format: uuid
         maxLength: 36
         minLength: 36
+        example: "00000000-0000-0000-0000-000000000000"
       metadata:
-        type: string
-        description: Reserved field.
+        $ref: 'https://api.swaggerhub.com/domains/utm/metadata/v1#/definitions/EventMetadata'
       free_text:
         description: >-
           Any additional information. Note that this is for human consumption. All time critical elements should be captured in the other data fields for easier consumption by other automated systems.
@@ -662,6 +673,9 @@ definitions:
   ConstraintMessage:
     description: |
      An element defined by spatial and temporal bounds that affects UAS operations by limiting access to that 4D bounded volume.
+    required: 
+     - message_id
+     - type
     properties:
       message_id:
         description: A UUID assigned to this message by the originator
@@ -709,8 +723,7 @@ definitions:
         type: number
         format: double
       metadata:
-        description: Reserved field.
-        type: string
+        $ref: 'https://api.swaggerhub.com/domains/utm/metadata/v1#/definitions/EventMetadata'
       reason:
         description: "The reason for the constraint. Meant for human consumption."
         type: string
@@ -802,10 +815,11 @@ definitions:
       provided by the USS or the types of UAS operations that are supported by
       this USS Instance.
     required:
+      - uss_instance_id
       - time_available_begin
       - time_available_end
       - coverage_area
-      - uss_instance_discovery_callback_url
+      - uss_base_callback_url
     properties:
       uss_instance_id:
         description: >-
@@ -856,10 +870,23 @@ definitions:
         type: string
         format: phone
         description: An optional contact number for the USS.
-      uss_instance_discovery_callback_url:
+      uss_base_callback_url:
         type: string
         format: url
-        description: A URL used by the USS Discovery Service to send messages to the USS Instance as defined further in the USS API defined elsewhere (link to documentation to be provided later in this document).  This URL may be unique to the USS Instance or may be shared by other USS Instances created by this USS.  URLs that are common to multiple USS Instances will receive only one copy of each message.
+        description: >-
+          A base URL used by the USS Discovery Service and other USS Instances to callback to the USS Instance. 
+          
+          
+          USS Discovery will append "/uss" to the base URL in order to POST a new uss_instance to the USS Instance. It will also do the same to test the URL when it first receives a uss_instance.
+          
+          
+          USS Instances and other clients/services will append "/operations" to the base URL in order to share operations. Similarly with "/utm_messages", "/negotiations", etc.
+          
+          
+          The base URL will also be used in obtaining the websocket for position sharing.
+          
+          
+          This URL may be unique to the USS Instance or may be shared by other USS Instances created by the same USS.  URLs that are common to multiple USS Instances will receive only one callback.
       uss_informational_url:
         type: string
         format: url
@@ -966,7 +993,7 @@ parameters:
     name: sort
     in: query
     description: >-
-      A valid field name to use for sorting records. If multiple fields are provided, the sorting is based on the ordered priorty of that list.
+      A valid field name to use for sorting records. If multiple fields are provided, the sorting is based on the ordered priority of that list.
     required: false
     default: time_submitted
     type: string
@@ -974,7 +1001,7 @@ parameters:
     name: sort_increasing
     in: query
     description: >-
-      For optional use with the 'sort' parameter. If 'sort' is not provided, then 'sort_increasing' will be ignored. Boolean value.  If multiple fields are provided in the 'sort' paramenter, this boolean value will apply to all of them.
+      For optional use with the 'sort' parameter. If 'sort' is not provided, then 'sort_increasing' will be ignored. Boolean value.  If multiple fields are provided in the 'sort' parameter, this boolean value will apply to all of them.
     required: false
     default: true
     type: boolean

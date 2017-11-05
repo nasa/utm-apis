@@ -17,7 +17,8 @@ info:
 
     B. Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT''S USE OF THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT''S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT''S SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL TERMINATION OF THIS AGREEMENT.
 
-host: "tmiserver.arc.nasa.gov"
+host: "utmbeta.arc.nasa.gov"
+
 basePath: "/fims"
 schemes:
 - https
@@ -41,7 +42,6 @@ securityDefinitions:
       'utm.nasa.gov_read.operation': Subject can read operational data such as operation plans and position reports
       'utm.nasa.gov_write.message': Subject can read, create, and update UTM message data
       'utm.nasa.gov_read.message': Subject can read UTM message data
-    
     
 responses:
   WRONG_PROTOCOL:
@@ -67,8 +67,8 @@ paths:
     put:
       tags:
         - A. Required Endpoints
-      summary: Modify an operation
-      description: Allows for creation or modifying of an operation plan in FIMS. Needs full definition for updates
+      summary: Add or modify an operation
+      description: Allows for creation or modifying of an operation plan in FIMS. For updating, submit the full set of properties of the Operation model.
       operationId: updateOperation
       consumes:
         - application/json
@@ -110,6 +110,7 @@ paths:
 
   /positions:
     post:
+      deprecated: true
       tags:
         - A. Required Endpoints
       summary: Submit position report

@@ -10,13 +10,13 @@ externalDocs:
 host: tmiserver.arc.nasa.gov
 schemes:
  - https
- 
-basePath: /fimsAuthServer
+
+basePath: /fimsAuthServer/oauth
 securityDefinitions:
   application:
     type: oauth2
     # Should be updated to the Token URL of your OAuth provider.
-    tokenUrl: http://thisserver.com/oauth/token
+    tokenUrl: https://thisserver.com/oauth/token
     flow: application
     scopes:
       'utm.nasa.gov_read.constraint': Subject can read UTM constraint data
@@ -27,8 +27,9 @@ securityDefinitions:
       'utm.nasa.gov_write.message': Subject can read, create, and update message data such as UTM Message and Negotiations
       'utm.nasa.gov_read.message': Subject can read message data such as UTM Message and Negotiations
       'utm.nasa.gov_write.publicsafety': Subject can read, create, and update operations that are designated public safety operations. 
-      'utm.nasa.gov_all.all': Subject can read, create, and udpate data throughout UTM. Used sparingly, if ever. Goes against priciple of least privelege, but may be necessary in some cases. 
-
+  authenticate_using_client_credentials:
+    type: basic
+    description: FIMS Authorization Server implments the RFC-6749 Client Credentials flow.  Version 17.09 of the server authenticates the client using the HTTP Authorization header with the Basic keyword and the oauth2 client secret.
 
 paths:
 
@@ -49,12 +50,14 @@ paths:
     post:
       tags:
         - 'A. Required Endpoints'
-      summary: Obtain an access token.
+      summary: Obtain an access token. 
       operationId: obtainAccessToken
       consumes:
         - application/x-www-form-urlencoded
       produces:
         - application/json
+      security:
+        - authenticate_using_client_credentials: []
       description: >
         This endpoint is required as per RFC 6749.  A POST to this endpoint acts as a request for an access token. 
       parameters:
@@ -67,11 +70,10 @@ paths:
           - client_credentials
         - name: scope
           in: formData
-          description: dfs
-          required: true
+          description: list of requested oauth2 scopes
           type: string
           enum:
-          - scope1 # These should match the "commons" scopes value. Can that be done? 
+          - scope1 # These should match one of securityDefinitions scopes value in this spec
           - scope2 # See https://github.com/OAI/OpenAPI-Specification/issues/300
           - scope3 # Maybe solved in v3.0 OpenAPI spec, maybe stuck until then.
       responses:
@@ -87,9 +89,8 @@ paths:
     get:
       tags:
         - 'A. Required Endpoints'
-      summary: Get the OAuth server public key required for checking token signatures.
+      summary: Get the OAuth server public key required for checking token signatures. Not currently implemented.
       operationId: getServerTokenKey
-      # I'm not clear what Spring produces. JSON? Just a string? What is correct here?
       produces:
         - application/json
       responses:
@@ -99,13 +100,12 @@ paths:
           schema:
             $ref: '#/definitions/TokenKeyResponse'
       
-  # This is just a stub indicating we need this endpoint. See RFC 7662
-  # I think that Spring may be calling this "/oauth/check_token"? Prefer the RFC defn.
   /introspect:
     get:
       tags:
         - 'A. Required Endpoints'
-      summary: Check a token
+      summary: |
+        Check a token.This is the RFC 7662 required endpoint which is not implemented yet. The current implementation is named /check_token. 
       operationId: tokenIntrospection
       consumes:
         - application/x-www-form-urlencoded
@@ -133,12 +133,25 @@ paths:
           schema:
             $ref: '#/definitions/IntrospectionResponse'          
   
+  /check_token:
+    get:
+      deprecated: true
+      tags:
+        - 'A. Required Endpoints'
+      summary: |
+        Current name for the RFC 7662 /introspect implementation.
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/IntrospectionResponse'   
+            
   # Needs work.  See RFC 7009
   /revoke:
     post:
       tags:
         - 'A. Required Endpoints'
-      summary: Post a token revocation request
+      summary: Post a token revocation request. Not currently implemented.
       operationId: postRevocationRequest
       consumes:
         - application/x-www-form-urlencoded
@@ -164,12 +177,11 @@ paths:
         '400':
           description: Bad request
   
-  # Is authn required on this endpoint?        
   /oauth-authorization-server:
     get:
       tags:
         - 'A. Required Endpoints'
-      summary: Get API Info
+      summary: Get API Info. Not currently implemented.
       operationId: getApiInfos
       produces:
         - application/json
@@ -178,36 +190,68 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Metadata'
-        
+  /api:
+    get:
+      tags:
+        - B. Version and Health
+      summary: get server info.  Can be used to check health.
+      security: []
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Version'      
 
 definitions:
   TokenResponse:
     type: object
     properties:
       access_token:
-        $ref: '#/definitions/JwsCompactSerialization'
+        type: string
+        format: JwsCompactSerialization
+        description: "see definitions/JwsCompactSerialization in this spec"
+      scope:
+        type: string
+        description: "white space separated list of scopes"
       token_type: 
         type: string
         enum:
         - "bearer"
-# Would like to remove this from the response since it open possbility of contradicting the 'exp' value in the token itself.
-#      expires_in:
-#        type: number
-#        format: integer
+      expires_in:
+      # Would like to remove this from the response since it open possbility of contradicting the 'exp' value in the token itself.
+        type: number
+        format: integer
+        description: "see definitions/JwtClaimsSet.exp property in this spec"
+
+      sub:
+        type: string
+        description: "see definitions/JwtClaimsSet in this spec"
       jti:
         type: string
         format: uuid
-# Would like to remove this from response for same reason as 'expires_in'.
-#      scope:
-#        type: string
-        
-        
-
-            
+        description: "see definitions/JwtClaimsSet in this spec"
+      iss:
+        type: string
+        description: "see definitions/JwtClaimsSet in this spec"
+      nbf:
+        type: number
+        description: "see definitions/JwtClaimsSet in this spec"
+    example: 
+      access_token: tokenstring
+      token_type: bearer
+      expires_in: 3599
+      scope: utm.nasa.gov_write.operation utm.nasa.gov_read.operation
+      sub: nasaUSS
+      nbf: 1509470774
+      iss: fims.arc.nasa.gov/fimsAuthServer
+      jti: 4d4c1a63-0959-48cc-885a-3648fd582db7
+      
   
   JwsCompactSerialization:
     description: >-
-      The token provided by the FIMS Authorization Server is a JWS representing a JWT.  The token is actually a JWS Compact Serialization string as described in RFC 7515.  For clarity of documentation, we represent the pre-serialized components here as a JSON schema.  This may be problematic when using automated tools to validate the schema using this file as input.
+      The token provided by the FIMS Authorization Server is a JWS representing a JWT.  The token is actually a JWS Compact Serialization string as described in RFC 7515.  For clarity of documentation, we represent the pre-serialized components here as a JSON schema. 
     type: object
     properties:
       jose_header:
