@@ -61,7 +61,7 @@ securityDefinitions:
 security:
   - uss_discovery_security:
     - 'utm.nasa.gov_read.sdsp'
-      
+     
       
 paths:
   /uss:
@@ -82,26 +82,59 @@ paths:
           \ Default will be all fields. "
         required: false
         type: "string"
-      - name: "q"
+      - name: "uss_name"
         in: "query"
-        description: "Query with specific criteria.  <br/><br/>\n<b>example usage:</b>\
-          \ .../api/v1/uss?q=uss_name eq NUSS, time_available_begin gte 2016-10-02T00:00:00Z,\
-          \ coverage_area contains POINT (-122.056455 37.414336) <br/><br/>\nA series\
-          \ of binary operators and operands.  <br/>\nThe lefthand side operands are\
-          \ the field names.  <br/>\nThe righthand side operands are constants of\
-          \ the corresponding type. <br/>\nThe allowed operators are dependent on\
-          \ the operand types.  <br/>\nFor geometric RHS, the input should be OGC\
-          \ well-known text (http://en.wikipedia.org/wiki/Well-known_text), limited\
-          \ to point, linestring, and polygon types.  <br/>\nWe also allow the non-standard\
-          \ bounding box as a geometric RHS. This is of the form BBOX(lower_left_long\
-          \ lower_left_lat, upper_right_lon upper_right_lat).  <br/>\nString-typed\
-          \ operands may use `eq`, `contains`, and `not`.  <br/>\nNumeric-typed and\
-          \ time operands may use `eq`, `lt`, `lte`, `gt`, `gte`, and `not`. <br/>\n\
-          Geometric-types operands may use `intersects`, `contains`, and `within`.\
-          \ <br/>\nIf multiple criteria are specified, they are considered as an *AND*\
-          \ operation. <br/>\n"
         required: false
+        description: "Returns uss_instances with a particular uss_name."
         type: "string"
+        maxLength: 100
+      - name: "before"
+        in: "query"
+        required: false
+        description: "Returns uss_instances active during and before the given time i.e., time_available_begin < before. Example: 2017-08-20T14:11:56.118Z"
+        type: "string"
+        format: "date-time"
+        minLength: 20
+        maxLength: 25
+      - name: "after"
+        in: "query"
+        required: false
+        description: "Returns uss_instances active during and after the given time i.e., time_available_end > before. Example:2017-08-20T14:11:56.118Z"
+        type: "string"
+        format: "date-time"
+        minLength: 20
+        maxLength: 25
+      - name: "contains_point"
+        in: "query"
+        required: false
+        description: "Returns uss_instances containing the given Point. The coordinates are comma delimited. Example: -121.2204,36.6684"
+        type: "array"
+        maxItems: 2
+        minItems: 2
+        items:
+           type: number
+           format: double
+      - name: "contains_bbox"
+        in: "query"
+        required: false
+        description: "Returns uss_instances containing the given Bbox. The coordinates are comma delimited. Example: -121.3193,36.6089,-121.2204,36.6684"
+        type: "array"
+        maxItems: 4
+        minItems: 4
+        items:
+               type: number
+               format: double
+      - name: "intersects_bbox"
+        in: "query"
+        required: false
+        description: "Returns uss_instances intersecting the given Bbox. The coordinates are comma delimited. Example: -121.1133,36.5317,-121.0941,36.6530"
+        type: "array"
+        maxItems: 4
+        minItems: 4
+        items:
+                type: number
+                format: double
+
       - name: "sort"
         in: "query"
         description: "A valid field name to use for sorting records. If multiple fields\
