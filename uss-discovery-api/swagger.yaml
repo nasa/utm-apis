@@ -62,7 +62,7 @@ security:
   - uss_discovery_security:
     - 'utm.nasa.gov_read.sdsp'
      
-      
+    
 paths:
   /uss:
     get:
@@ -81,7 +81,9 @@ paths:
         description: "The specific subset of fields to return. Comma separated list.\
           \ Default will be all fields. "
         required: false
-        type: "string"
+        type: "array"
+        items:
+            type: "string"
       - name: "uss_name"
         in: "query"
         required: false
