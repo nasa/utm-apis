@@ -1,340 +1,1384 @@
-{
-  "swagger" : "2.0",
-  "info" : {
-    "description" : "This API describes the minimum interface that a USS must implement to  be part of the USS Network.  This API allows for communication of data  between USS Instances and from FIMS to a USS regarding new USS Instances.",
-    "version" : "v1",
-    "title" : "USS Required API",
-    "termsOfService" : "\nA. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT ANY WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER, CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE. FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE, AND DISTRIBUTES IT \"AS IS.\"\n\nB. Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT''S USE OF THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT''S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT''S SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL TERMINATION OF THIS AGREEMENT.\n",
-    "contact" : {
-      "name" : "NASA Ames Research Center, Aviation Systems Division",
-      "url" : "https://utm.arc.nasa.gov/",
-      "email" : "joseph.rios@nasa.gov"
-    },
-    "license" : {
-      "name" : "NASA Open Source Agreement",
-      "url" : "https://ti.arc.nasa.gov/opensource/nosa/"
-    }
-  },
-  "host" : "uss.defined.url",
-  "basePath" : "/uss",
-  "tags" : [ {
-    "name" : "A. Required Endpoints"
-  }, {
-    "name" : "B. Connections",
-    "description" : "USS publishes position reports on this Websocket  connection. The URI scheme should be 'wss'.\n"
-  } ],
-  "schemes" : [ "https", "wss" ],
-  "security" : [ {
-    "ussapi_security" : [ "utm.nasa.gov_read.min_data" ]
-  } ],
-  "paths" : {
-    "/constraints" : {
-      "post" : {
-        "tags" : [ "A. Required Endpoints" ],
-        "summary" : "Allow constraints to be submitted from authorized entities.",
-        "operationId" : "postConstraint",
-        "consumes" : [ "application/json" ],
-        "parameters" : [ {
-          "in" : "body",
-          "name" : "message",
-          "description" : "The message being sent",
-          "required" : true,
-          "schema" : {
-            "$ref" : "https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/ConstraintMessage"
-          }
-        } ],
-        "responses" : {
-          "201" : {
-            "description" : "Constraint data received. ",
-            "schema" : {
-              "$ref" : "https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse"
-            }
-          }
-        },
-        "security" : [ {
-          "ussapi_security" : [ "utm.nasa.gov_write.constraint", "utm.nasa.gov_all.all" ]
-        } ]
-      }
-    },
-    "/utm_messages" : {
-      "post" : {
-        "tags" : [ "A. Required Endpoints" ],
-        "summary" : "Allow other authorized entities to send a message to this USS.",
-        "description" : "Allows another USS or FIMS to POST a message to this USS.",
-        "operationId" : "postUtmMessage",
-        "consumes" : [ "application/json" ],
-        "parameters" : [ {
-          "in" : "body",
-          "name" : "message",
-          "description" : "The message being sent",
-          "required" : true,
-          "schema" : {
-            "$ref" : "https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMMessage"
-          }
-        } ],
-        "responses" : {
-          "201" : {
-            "description" : "Message data received.",
-            "schema" : {
-              "$ref" : "https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse"
-            }
-          }
-        },
-        "security" : [ {
-          "ussapi_security" : [ "utm.nasa.gov_write.message" ]
-        } ]
-      }
-    },
-    "/uss" : {
-      "post" : {
-        "tags" : [ "A. Required Endpoints" ],
-        "summary" : "Share USS Instance data",
-        "description" : "As per the USS Discovery Service specification, this endpoint is for receiving messages about the USS Network from the USS Discovery Service.  For example, when a new USS Instance is registered, that announcement would come to this endpoint.",
-        "consumes" : [ "application/json" ],
-        "parameters" : [ {
-          "in" : "body",
-          "name" : "message",
-          "description" : "The USS Instance information being sent",
-          "required" : true,
-          "schema" : {
-            "$ref" : "https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance"
-          }
-        } ],
-        "responses" : {
-          "201" : {
-            "description" : "USS Instance data received.",
-            "schema" : {
-              "$ref" : "https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse"
-            }
-          }
-        },
-        "security" : [ {
-          "ussapi_security" : [ "utm.nasa.gov_write.operation" ]
-        } ]
-      }
-    },
-    "/negotiations" : {
-      "post" : {
-        "tags" : [ "A. Required Endpoints" ],
-        "summary" : "Allow other USSs to submit a negotiation request",
-        "description" : "A POST to the negotiations endpoint is interpretted as a request for alteration in an existing operation managed by the receiving USS.  The requesting USS supplies a GUFI that references the operation that may be altered if the request is granted by the receiving USS.",
-        "operationId" : "postNegotiation",
-        "consumes" : [ "application/json" ],
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "in" : "body",
-          "name" : "operation",
-          "description" : "The NegotiationMessage data",
-          "required" : true,
-          "schema" : {
-            "$ref" : "https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/NegotiationMessage"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "schema" : {
-              "$ref" : "https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse"
-            }
-          },
-          "400" : {
-            "description" : "Problem with submitted data"
-          }
-        },
-        "security" : [ {
-          "ussapi_security" : [ "utm.nasa.gov_write.message" ]
-        } ]
-      }
-    },
-    "/operations" : {
-      "get" : {
-        "tags" : [ "A. Required Endpoints" ],
-        "summary" : "Request information regarding Operations",
-        "description" : "Allows querying for Operation data.",
-        "operationId" : "getOps",
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "fields",
-          "in" : "query",
-          "description" : "The specific subset of fields to return. Comma separated list. Default will be all fields when this parameter is not provided in the query. Duplicate field names not allowed and server may reject query if duplicates are provided. If field names are provided that are not part of the request model, the server may either reject the query or ignore the improper fields. Maximum 20 field values supported. If more than 20 fields are required, then this parameter should not be used so that all fields are returned.",
-          "required" : false,
-          "type" : "array",
-          "items" : {
-            "type" : "string"
-          },
-          "collectionFormat" : "csv",
-          "maxItems" : 20,
-          "minItems" : 1,
-          "uniqueItems" : true
-        }, {
-          "name" : "sort",
-          "in" : "query",
-          "description" : "A valid field name to use for sorting records. If multiple fields are provided, the sorting is based on the ordered priorty of that list.",
-          "required" : false,
-          "type" : "string",
-          "default" : "time_submitted"
-        }, {
-          "name" : "sort_increasing",
-          "in" : "query",
-          "description" : "For optional use with the 'sort' parameter. If 'sort' is not provided, then 'sort_increasing' will be ignored. Boolean value.  If multiple fields are provided in the 'sort' paramenter, this boolean value will apply to all of them.",
-          "required" : false,
-          "type" : "boolean",
-          "default" : true
-        }, {
-          "name" : "limit",
-          "in" : "query",
-          "description" : "The maximum number or records to return.",
-          "required" : false,
-          "type" : "integer",
-          "default" : 10,
-          "maximum" : 100,
-          "minimum" : 1,
-          "format" : "int32"
-        }, {
-          "name" : "offset",
-          "in" : "query",
-          "description" : "The index from which to begin the list of returned records.",
-          "required" : false,
-          "type" : "integer",
-          "default" : 0,
-          "format" : "int32"
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Successful data request. Response includes requested data.",
-            "schema" : {
-              "type" : "array",
-              "items" : {
-                "$ref" : "https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Operation"
-              }
-            }
-          },
-          "400" : {
-            "description" : "Bad request. Typically validation error. Fix your request and retry."
-          },
-          "429" : {
-            "description" : "Too many recent requests from you. Wait to make further queries."
-          }
-        },
-        "security" : [ {
-          "ussapi_security" : [ "utm.nasa.gov_read.operation" ]
-        } ]
-      },
-      "post" : {
-        "tags" : [ "A. Required Endpoints" ],
-        "summary" : "Allow other USSs to submit their UAS Operations.",
-        "description" : "A POST to the operations endpoint allows for sharing of operational data between USSs.  This is the primary mechanism by which USSs become aware of each others' UAS operations.<br/><br/>\nA USS is required to share operation data with other USSs that may have interacting UAS Operations.  This potential interaction is known through the data provided via the USS Service Discovery mechanism (see https://app.swaggerhub.com/apis/utm/ussdiscovery/v2).",
-        "operationId" : "postOp",
-        "consumes" : [ "application/json" ],
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "in" : "body",
-          "name" : "operation",
-          "description" : "The operation data",
-          "required" : true,
-          "schema" : {
-            "$ref" : "https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Operation"
-          }
-        } ],
-        "responses" : {
-          "201" : {
-            "description" : "Operation data received.",
-            "schema" : {
-              "$ref" : "https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse"
-            }
-          },
-          "400" : {
-            "description" : "Bad request. Typically validation error. Fix your request and retry."
-          },
-          "429" : {
-            "description" : "Too many recent requests from you. Wait to make further submissions."
-          }
-        },
-        "security" : [ {
-          "ussapi_security" : [ "utm.nasa.gov_write.operation", "utm.nasa.gov_write.publicsafety" ]
-        } ]
-      },
-      "put" : {
-        "tags" : [ "A. Required Endpoints" ],
-        "summary" : "Submit updates to a previously communicated UAS Operation.",
-        "description" : "Allows for other USSs to update a previous plan submission.",
-        "operationId" : "putOp",
-        "consumes" : [ "application/json" ],
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "in" : "body",
-          "name" : "operation",
-          "description" : "Operational plan with the following properties:\n  1. Contains a valid uss_operation_id.\n  2. time_available_end value that is in the future.\n  3. No date-time fields that are in the past are modified.\n  4. Other rules for a USS Operation POST are satisfied.\n",
-          "required" : true,
-          "schema" : {
-            "$ref" : "https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Operation"
-          }
-        } ],
-        "responses" : {
-          "201" : {
-            "description" : "OK",
-            "schema" : {
-              "$ref" : "https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse"
-            }
-          },
-          "400" : {
-            "description" : "Bad request. Typically validation error. Fix your request and retry."
-          },
-          "429" : {
-            "description" : "Too many recent requests from you. Wait to make further queries."
-          }
-        },
-        "security" : [ {
-          "ussapi_security" : [ "utm.nasa.gov_write.operation", "utm.nasa.gov_write.publicsafety" ]
-        } ]
-      }
-    },
-    "/positions/{gufi}" : {
-      "get" : {
-        "tags" : [ "B. Connections" ],
-        "summary" : "Websocket connection for position data",
-        "description" : "Non RESTful endpoint that allows for Position events reported by another USS Instance.  When connecting to this Websocket endpoint, the consumer must emit an \\'authentication\\' event containing the OAuth2 token as described in parameters. Once authenticated, the consumer will receive \\'Position\\' events as they are received by USS instances.\n",
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "gufi",
-          "in" : "path",
-          "description" : "filter by operation ID",
-          "required" : true,
-          "type" : "string",
-          "maxLength" : 36,
-          "minLength" : 36,
-          "format" : "uuid"
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "A Position report event",
-            "schema" : {
-              "type" : "array",
-              "items" : {
-                "$ref" : "https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Position"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "securityDefinitions" : {
-    "ussapi_security" : {
-      "type" : "oauth2",
-      "tokenUrl" : "https://thisserver.com/oauth/token",
-      "flow" : "application",
-      "scopes" : {
-        "utm.nasa.gov_read.constraint" : "Subject can read UTM constraint data",
-        "utm.nasa.gov_write.constraint" : "Subject can read, create, and update UTM constraint data. This means that the Subject can define areas that restrict other operations.",
-        "utm.nasa.gov_read.min_data" : "Subject can read data which has been minimized for example, by redacting some properties",
-        "utm.nasa.gov_write.operation" : "Subject can read, create, and update operational data such as USS Instance data",
-        "utm.nasa.gov_read.operation" : "Subject can read operational data such as USS Instance data",
-        "utm.nasa.gov_write.message" : "Subject can read, create, and update message data such as UTM Message and Negotiations",
-        "utm.nasa.gov_read.message" : "Subject can read message data such as UTM Message and Negotiations",
-        "utm.nasa.gov_write.publicsafety" : "Subject can read, create, and update operations that are designated public safety operations.",
-        "utm.nasa.gov_all.all" : "Subject can read, create, and udpate data throughout UTM. Used sparingly, if ever. Goes against priciple of least privelege, but may be necessary in some cases."
-      }
-    }
-  }
-}
+---
+swagger: "2.0"
+info:
+  description: "This API describes the minimum interface that a USS must implement\
+    \ to  be part of the USS Network.  This API allows for communication of data \
+    \ between USS Instances and from FIMS to a USS regarding new USS Instances."
+  version: "v1"
+  title: "USS Required API"
+  termsOfService: "\nA. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT\
+    \ ANY WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,\
+    \ BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL CONFORM TO SPECIFICATIONS,\
+    \ ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,\
+    \ OR FREEDOM FROM INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE\
+    \ ERROR FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM TO\
+    \ THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER, CONSTITUTE AN\
+    \ ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT OF ANY RESULTS, RESULTING\
+    \ DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY OTHER APPLICATIONS RESULTING FROM\
+    \ USE OF THE SUBJECT SOFTWARE. FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES\
+    \ AND LIABILITIES REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,\
+    \ AND DISTRIBUTES IT \"AS IS.\"\n\nB. Waiver and Indemnity: RECIPIENT AGREES TO\
+    \ WAIVE ANY AND ALL CLAIMS AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS\
+    \ AND SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT''S USE OF THE\
+    \ SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES\
+    \ ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING\
+    \ FROM, RECIPIENT''S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY AND\
+    \ HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS,\
+    \ AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT''S\
+    \ SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL TERMINATION\
+    \ OF THIS AGREEMENT.\n"
+  contact:
+    name: "NASA Ames Research Center, Aviation Systems Division"
+    url: "https://utm.arc.nasa.gov/"
+    email: "joseph.rios@nasa.gov"
+  license:
+    name: "NASA Open Source Agreement"
+    url: "https://ti.arc.nasa.gov/opensource/nosa/"
+host: "uss.defined.url"
+basePath: "/uss"
+tags:
+- name: "A. Required Endpoints"
+- name: "B. Connections"
+  description: "USS publishes position reports on this Websocket  connection. The\
+    \ http scheme should be 'wss'.\n"
+schemes:
+- "https"
+- "wss"
+security:
+- ussapi_security:
+  - "utm.nasa.gov_read.min_data"
+paths:
+  /constraints:
+    post:
+      tags:
+      - "A. Required Endpoints"
+      summary: "Allow constraints to be submitted from authorized entities."
+      operationId: "postConstraint"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "message"
+        description: "The message being sent"
+        required: true
+        schema:
+          $ref: "#/definitions/ConstraintMessage"
+      responses:
+        201:
+          description: "Constraint data received."
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+      security:
+      - ussapi_security:
+        - "utm.nasa.gov_write.constraint"
+        - "utm.nasa.gov_all.all"
+  /utm_messages:
+    post:
+      tags:
+      - "A. Required Endpoints"
+      summary: "Allow other authorized entities to send a message to this USS."
+      description: "Allows another USS or FIMS to POST a message to this USS."
+      operationId: "postUtmMessage"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "message"
+        description: "The message being sent"
+        required: true
+        schema:
+          $ref: "#/definitions/UTMMessage"
+      responses:
+        201:
+          description: "Message data received."
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+      security:
+      - ussapi_security:
+        - "utm.nasa.gov_write.message"
+  /uss:
+    post:
+      tags:
+      - "A. Required Endpoints"
+      summary: "Share USS Instance data"
+      description: "As per the USS Discovery Service specification, this endpoint\
+        \ is for receiving messages about the USS Network from the USS Discovery Service.\
+        \  For example, when a new USS Instance is registered, that announcement would\
+        \ come to this endpoint."
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "message"
+        description: "The USS Instance information being sent"
+        required: true
+        schema:
+          $ref: "#/definitions/UssInstance"
+      responses:
+        201:
+          description: "USS Instance data received."
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+      security:
+      - ussapi_security:
+        - "utm.nasa.gov_write.operation"
+  /negotiations:
+    post:
+      tags:
+      - "A. Required Endpoints"
+      summary: "Allow other USSs to submit a negotiation request"
+      description: "A POST to the negotiations endpoint is interpretted as a request\
+        \ for alteration in an existing operation managed by the receiving USS.  The\
+        \ requesting USS supplies a GUFI that references the operation that may be\
+        \ altered if the request is granted by the receiving USS."
+      operationId: "postNegotiation"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "operation"
+        description: "The NegotiationMessage data"
+        required: true
+        schema:
+          $ref: "#/definitions/NegotiationMessage"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        400:
+          description: "Problem with submitted data"
+      security:
+      - ussapi_security:
+        - "utm.nasa.gov_write.message"
+  /operations:
+    get:
+      tags:
+      - "A. Required Endpoints"
+      summary: "Request information regarding Operations"
+      description: "Allows querying for Operation data."
+      operationId: "getOps"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "fields"
+        in: "query"
+        description: "The specific subset of fields to return. Comma separated list.\
+          \ Default will be all fields when this parameter is not provided in the\
+          \ query. Duplicate field names not allowed and server may reject query if\
+          \ duplicates are provided. If field names are provided that are not part\
+          \ of the request model, the server may either reject the query or ignore\
+          \ the improper fields. Maximum 20 field values supported. If more than 20\
+          \ fields are required, then this parameter should not be used so that all\
+          \ fields are returned."
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "csv"
+        maxItems: 20
+        minItems: 1
+        uniqueItems: true
+      - name: "sort"
+        in: "query"
+        description: "A valid field name to use for sorting records. If multiple fields\
+          \ are provided, the sorting is based on the ordered priorty of that list."
+        required: false
+        type: "string"
+        default: "time_submitted"
+      - name: "sort_increasing"
+        in: "query"
+        description: "For optional use with the 'sort' parameter. If 'sort' is not\
+          \ provided, then 'sort_increasing' will be ignored. Boolean value.  If multiple\
+          \ fields are provided in the 'sort' paramenter, this boolean value will\
+          \ apply to all of them."
+        required: false
+        type: "boolean"
+        default: true
+      - name: "limit"
+        in: "query"
+        description: "The maximum number or records to return."
+        required: false
+        type: "integer"
+        default: 10
+        maximum: 100
+        minimum: 1
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "The index from which to begin the list of returned records."
+        required: false
+        type: "integer"
+        default: 0
+        format: "int32"
+      responses:
+        200:
+          description: "Successful data request. Response includes requested data."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Operation"
+        400:
+          description: "Bad request. Typically validation error. Fix your request\
+            \ and retry."
+        429:
+          description: "Too many recent requests from you. Wait to make further queries."
+      security:
+      - ussapi_security:
+        - "utm.nasa.gov_read.operation"
+    post:
+      tags:
+      - "A. Required Endpoints"
+      summary: "Allow other USSs to submit their UAS Operations."
+      description: "A POST to the operations endpoint allows for sharing of operational\
+        \ data between USSs.  This is the primary mechanism by which USSs become aware\
+        \ of each others' UAS operations.<br/><br/>\nA USS is required to share operation\
+        \ data with other USSs that may have interacting UAS Operations.  This potential\
+        \ interaction is known through the data provided via the USS Service Discovery\
+        \ mechanism (see https://app.swaggerhub.com/apis/utm/ussdiscovery/v2)."
+      operationId: "postOp"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "operation"
+        description: "The operation data"
+        required: true
+        schema:
+          $ref: "#/definitions/Operation"
+      responses:
+        201:
+          description: "Operation data received."
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        400:
+          description: "Bad request. Typically validation error. Fix your request\
+            \ and retry."
+        429:
+          description: "Too many recent requests from you. Wait to make further submissions."
+      security:
+      - ussapi_security:
+        - "utm.nasa.gov_write.operation"
+        - "utm.nasa.gov_write.publicsafety"
+    put:
+      tags:
+      - "A. Required Endpoints"
+      summary: "Submit updates to a previously communicated UAS Operation."
+      description: "Allows for other USSs to update a previous plan submission."
+      operationId: "putOp"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "operation"
+        description: "Operational plan with the following properties:\n  1. Contains\
+          \ a valid uss_operation_id.\n  2. time_available_end value that is in the\
+          \ future.\n  3. No date-time fields that are in the past are modified.\n\
+          \  4. Other rules for a USS Operation POST are satisfied.\n"
+        required: true
+        schema:
+          $ref: "#/definitions/Operation"
+      responses:
+        201:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        400:
+          description: "Bad request. Typically validation error. Fix your request\
+            \ and retry."
+        429:
+          description: "Too many recent requests from you. Wait to make further queries."
+      security:
+      - ussapi_security:
+        - "utm.nasa.gov_write.operation"
+        - "utm.nasa.gov_write.publicsafety"
+  /positions/{gufi}:
+    get:
+      tags:
+      - "B. Connections"
+      summary: "Websocket connection for position data"
+      description: "Non RESTful endpoint that allows for Position events reported\
+        \ by another USS Instance.  When connecting to this Websocket endpoint, the\
+        \ consumer must emit an \\'authentication\\' event containing the OAuth2 token\
+        \ as described in parameters. Once authenticated, the consumer will receive\
+        \ \\'Position\\' events as they are received by USS instances.\n"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "gufi"
+        in: "path"
+        description: "filter by operation ID"
+        required: true
+        type: "string"
+        maxLength: 36
+        minLength: 36
+        format: "uuid"
+      responses:
+        200:
+          description: "A Position report event"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Position"
+securityDefinitions:
+  ussapi_security:
+    type: "oauth2"
+    tokenUrl: "https://thisserver.com/oauth/token"
+    flow: "application"
+    scopes:
+      utm.nasa.gov_read.constraint: "Subject can read UTM constraint data"
+      utm.nasa.gov_write.constraint: "Subject can read, create, and update UTM constraint\
+        \ data. This means that the Subject can define areas that restrict other operations."
+      utm.nasa.gov_read.min_data: "Subject can read data which has been minimized\
+        \ for example, by redacting some properties"
+      utm.nasa.gov_write.operation: "Subject can read, create, and update operational\
+        \ data such as USS Instance data"
+      utm.nasa.gov_read.operation: "Subject can read operational data such as USS\
+        \ Instance data"
+      utm.nasa.gov_write.message: "Subject can read, create, and update message data\
+        \ such as UTM Message and Negotiations"
+      utm.nasa.gov_read.message: "Subject can read message data such as UTM Message\
+        \ and Negotiations"
+      utm.nasa.gov_write.publicsafety: "Subject can read, create, and update operations\
+        \ that are designated public safety operations."
+      utm.nasa.gov_all.all: "Subject can read, create, and udpate data throughout\
+        \ UTM. Used sparingly, if ever. Goes against priciple of least privelege,\
+        \ but may be necessary in some cases."
+definitions:
+  ConstraintMessage:
+    properties:
+      message_id:
+        type: "string"
+        format: "uuid"
+        description: "A UUID assigned to this message by the originator"
+        minLength: 36
+        maxLength: 36
+      origin:
+        type: "string"
+        description: "The user or process that generated this message"
+        enum:
+        - "FIMS"
+        - "USS"
+      originator_id:
+        type: "string"
+        description: "A name identifying the originator of this message."
+        maxLength: 100
+      type:
+        type: "string"
+        enum:
+        - "WEATHER"
+        - "ATC"
+        - "SECURITY"
+        - "SAFETY"
+        - "MUNICIPALITY"
+        - "OTHER"
+      constraint_geography:
+        $ref: "#/definitions/Polygon"
+      begin_time:
+        type: "string"
+        format: "date-time"
+        description: "The time that the constraint begins. Null or no value implies\
+          \ -infinity begin time."
+      end_time:
+        type: "string"
+        format: "date-time"
+        description: "The time that the constraint ends. Null or no value implies\
+          \ on-going constraint."
+      min_altitude:
+        type: "number"
+        format: "double"
+        description: "The minimum altitude of the constraint. Must be less than max_altitude."
+      max_altitude:
+        type: "number"
+        format: "double"
+        description: "The maximum altitude of the constraint. Must be greater than\
+          \ min_altitude."
+      metadata:
+        $ref: "#/definitions/EventMetadata"
+      reason:
+        type: "string"
+        description: "The reason for the constraint. Meant for human consumption."
+        maxLength: 1000
+    description: "An element defined by spatial and temporal bounds that affects UAS\
+      \ operations by limiting access to that 4D bounded volume.\n"
+    example:
+      gufi: "*"
+      category: "ConstraintMessage"
+      origin: "FIMS"
+      free_text: "Constraint added."
+      sent_time: "2016-11-29T01:16:41.727Z"
+      constraint_geography:
+        type: "Polygon"
+        coordinates:
+        - - - -122.062176579
+            - 37.40968041145
+          - - -122.05187056889
+            - 37.41786527236
+          - - -122.03732647634
+            - 37.41786440108
+          - - -122.062176579
+            - 37.40968041145
+      begin_time: "2016-11-29T01:16:41.727Z"
+      end_time: "2016-11-30T01:16:41.727Z"
+      min_altitude: 0.0
+      max_altitude: 400.0
+      reason: "A UA leaving defined volume"
+  Polygon:
+    type: "object"
+    properties:
+      type:
+        type: "string"
+        description: "The type of Geometry. In this case, must be 'Polygon' per GeoJSON\
+          \ spec.\n"
+        enum:
+        - "Polygon"
+      coordinates:
+        type: "array"
+        items:
+          type: "array"
+          items:
+            type: "array"
+            items:
+              type: "number"
+              format: "double"
+            maxItems: 2
+            minItems: 2
+    externalDocs:
+      url: "https://tools.ietf.org/html/rfc7946#section-3.1.6"
+    description: "GeoJSon Polygon. Positions all 2D."
+  EventMetadata:
+    type: "object"
+    required:
+    - "call_sign"
+    - "data_collection"
+    - "event_id"
+    - "location"
+    - "setting"
+    - "source"
+    - "test_card"
+    - "test_type"
+    properties:
+      data_collection:
+        type: "boolean"
+        description: "If true this data is intended for Data Collection"
+      test_card:
+        type: "string"
+        description: "The name or number of the test card."
+        minLength: 1
+      call_sign:
+        type: "string"
+        description: "Expected values: a call sign, test card role, or flight ID that\
+          \ links this operation to a particular test card flight. As an example,\
+          \ in our TCL2 demo, \"GCS3\" could have been used here. For multiple flights\
+          \ emanating from one location on a test card, this data element could include\
+          \ further information to link the operation to the test card flight, such\
+          \ as GCS1A.\n"
+        minLength: 1
+      test_type:
+        type: "string"
+        description: "Test type"
+        enum:
+        - "ground"
+        - "flight"
+      source:
+        type: "string"
+        description: "Hardware-in-the-loop (HWITL) flights refer to ground or airborne\
+          \ flights. Software-in-the loop (SWITL) flights would be used to tag simulated\
+          \ flights."
+        enum:
+        - "HWITL"
+        - "SWITL"
+      event_id:
+        type: "string"
+        description: "A string tag indicating which event this operation is associated.\
+          \ Will be used to select a set of rules for validation."
+        minLength: 1
+      location:
+        type: "string"
+        description: "Name of the testing location, such as NV, Moffett, Crows Landing,\
+          \ etc."
+        minLength: 1
+      setting:
+        type: "string"
+        description: "Test setting"
+        enum:
+        - "lab"
+        - "field"
+    example:
+      data_collection: true
+      test_card: "TC3"
+      call_sign: "GCS1"
+      test_type: "flight"
+      source: "HWITL"
+      event_id: "NC3"
+      location: "AK"
+      setting: "field"
+  UTMRestResponse:
+    type: "object"
+    properties:
+      http_status_code:
+        type: "integer"
+      message:
+        type: "string"
+      resource:
+        type: "string"
+    example:
+      http_status_code: 201
+      message: "Resource created."
+      resource: "/resource/683c0e9e-49dc-44ce-82de-a5723b1f6965"
+  UTMMessage:
+    type: "object"
+    required:
+    - "message_id"
+    - "origin"
+    - "originator_id"
+    - "sent_time"
+    - "severity"
+    properties:
+      message_id:
+        type: "string"
+        format: "uuid"
+        example: "00000000-0000-0000-0000-000000000000"
+        description: "A UUID assigned to this message by the originator"
+        minLength: 36
+        maxLength: 36
+      origin:
+        type: "string"
+        description: "The user or process that generated this message"
+        enum:
+        - "FIMS"
+        - "USS"
+        - "OTHER"
+      originator_id:
+        type: "string"
+        description: "A name identifying the originator of this message."
+        maxLength: 100
+      gufi:
+        type: "string"
+        format: "uuid"
+        example: "00000000-0000-0000-0000-000000000000"
+        description: "The GUFI for the operation referenced in this message."
+        minLength: 36
+        maxLength: 36
+      sent_time:
+        type: "string"
+        format: "date-time"
+        example: "2015-08-20T14:11:57.345Z"
+        description: "Time the message was generated by the origin.  Uses the ISO\
+          \ 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds\
+          \ may have up to millisecond accuracy (three positions after decimal). \
+          \ The 'Z' implies UTC times and is the only timezone accepted.\""
+      severity:
+        $ref: "#/definitions/severity"
+      alert_type:
+        type: "string"
+        description: "The type of alert message. An enum to constrain messages and\
+          \ allow better interoperability. Required with \"CRITICAL\" or higher severity,\
+          \ may be ignored by receiver otherwise.\n1. UNPLANNED_LANDING\n  This operation\
+          \ had to land earlier than expected and/or at a location other than was\
+          \ originally planned.\n2. UNCONTROLLED_LANDING\n  This operation had an\
+          \ uncontrolled landing either at the originally planned landing location\
+          \ or another location.\n3. OPERATION_NONCONFORMING\n  This operation has\
+          \ entered the NONCONFORMING state. Must be sent to LUN anytime operation\
+          \ transitions to this state. Must be sent with severity CRITICAL.\n4. OPERATION_ROGUE\n\
+          \  This operation has entered the ROGUE state. Must be sent to LUN anytime\
+          \ operation transitions to ROGUE state. Must be sent with severity ALERT.\n\
+          5. OPERATION_CONFORMING\n  This operation was previously in the NON-CONFORMING\
+          \ state and has transitioned back to the ACTIVE state\n6. OPERATION_CLOSED\n\
+          \  This operation has entered the terminal CLOSED state. The operation will\
+          \ not again be active or in flight. This message is not required if the\
+          \ operation is transitioned to the CLOSED state from the ACTIVE state, but\
+          \ may be provided at the USSs discretion. This message is required when\
+          \ the operation transitioned from any state other than the ACTIVE state\
+          \ to teh CLOSED state. If transitioning an operation from ACCEPTED to CLOSED,\
+          \ this message must have a severity of NOTICE. If transitioning from NON-COFORMING\
+          \ or ROGUE, this message must have a severity of ALERT.\n7. CONTINGENCY_PLAN_INITIATED\n\
+          \  Description TBD.\n8. CONTINGENCY_PLAN_CANCELLED\n  Description TBD.\n\
+          9. POSITION_REPORT_REQUESTED\n  Description TBD.\n10. OTHER_SEE_FREE_TEXT\n\
+          \  Description TBD."
+        enum:
+        - "UNPLANNED_LANDING"
+        - "UNCONTROLLED_LANDING"
+        - "OPERATION_NONCONFORMING"
+        - "OPERATION_ROGUE"
+        - "OPERATION_CONFORMING"
+        - "OPERATION_CLOSED"
+        - "CONTINGENCY_PLAN_INITIATED"
+        - "CONTINGENCY_PLAN_CANCELLED"
+        - "POSITION_REPORT_REQUESTED"
+        - "OTHER_SEE_FREE_TEXT"
+      last_known_position:
+        $ref: "#/definitions/Position"
+      contingency:
+        $ref: "#/definitions/ContingencyPlan"
+      prev_message_id:
+        type: "string"
+        format: "uuid"
+        example: "00000000-0000-0000-0000-000000000000"
+        description: "A message_id of a previously sent message that has relevance\
+          \ or context for this message. Example might be \"CONTINGENCY_PLAN_CANCELLED\"\
+          \ referencing the previous \"CONTINGENCY_PLAN_INITIATED\" message."
+        minLength: 36
+        maxLength: 36
+      metadata:
+        $ref: "#/definitions/EventMetadata"
+      free_text:
+        type: "string"
+        description: "Any additional information. Note that this is for human consumption.\
+          \ All time critical elements should be captured in the other data fields\
+          \ for easier consumption by other automated systems."
+        maxLength: 1000
+    description: "A message. Used to make other stakeholders aware about an issue."
+  severity:
+    type: "string"
+    description: "The severity level of a UTMMessage. This severity labeling may be\
+      \ used by other components within UTM as well.  The labels are ordered such\
+      \ that they may be given priority handling by software systems and human users.\n\
+      **EMERGENCY > ALERT > CRITICAL > WARNING > NOTICE > INFORMATIONAL**\nIn relation\
+      \ to a UTMMessage, the severities may be interpreted as follows.\n1. **EMERGENCY**\n\
+      \  There is an **immediate** impact to the safety of other air operations, the\
+      \ safety of people, or the safety of structures on the groud. Actions to mitigate\
+      \ required by other operations.\n2. **ALERT**\n  There may be an impact to the\
+      \ safety of other air operations, the safety of people, or the safety of structures\
+      \ on the groud. Actions to mitigate required by other operations.\n3. **CRITICAL**\n\
+      \  Without mitigations by the affected operation, the situation may rise to\
+      \ an emergency in the near future.\n4. **WARNING**\n  There is a contained issue\
+      \ that may result in the loss of aircraft. No immediate or likley effect to\
+      \ other operations, people on the ground, or structures.\n5. **NOTICE**\n  This\
+      \ issue is provided for situational awareness. Planning by operators and USSs\
+      \ may be affected.\n6. **INFORMATIONAL**\n  This issue is provided for situational\
+      \ awareness."
+    enum:
+    - "EMERGENCY"
+    - "ALERT"
+    - "CRITICAL"
+    - "WARNING"
+    - "NOTICE"
+    - "INFORMATIONAL"
+  Position:
+    type: "object"
+    required:
+    - "altitude_gps_wgs84_ft"
+    - "altitude_num_gps_satellites"
+    - "gufi"
+    - "hdop_gps"
+    - "location"
+    - "time_measured"
+    - "time_sent"
+    - "track_ground_speed_kn"
+    - "track_true_north_deg"
+    - "vdop_gps"
+    properties:
+      air_speed_source:
+        type: "string"
+        description: "Required if air_speed_track_kn is submitted. No requirements\
+          \ yet on the values here, but suggestions include ESTIMATED or MEASURED."
+        maxLength: 100
+      air_speed_track_kn:
+        type: "number"
+        format: "double"
+        description: "Air speed in relation to the direction of travel of the aircraft.\
+          \ Value may be negative."
+      altitude_gps_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The altitude as measured via a GPS device on the aircraft. Units\
+          \ in feet using the WGS84 reference system."
+      altitude_num_gps_satellites:
+        type: "integer"
+        format: "int32"
+        description: "Number of satellites used in calculating the altitude_gps_wgs84_ft."
+        minimum: 0
+        exclusiveMinimum: false
+      enroute_positions_id:
+        type: "string"
+        format: "uuid"
+        description: "Each position will be assigned a UUIDv4 by the USS"
+        minLength: 36
+        maxLength: 36
+      gufi:
+        type: "string"
+        format: "uuid"
+        description: "Each operation has an GUFI assigned upon submission. Required\
+          \ upon POSTing a new position. It is a JSON string, but conforms to the\
+          \ UUID version 4 specification"
+        minLength: 36
+        maxLength: 36
+      hdop_gps:
+        type: "number"
+        format: "double"
+        description: "The horizontal dilution of precision as provided by the onboard\
+          \ GPS."
+        minimum: 0.0
+      location:
+        $ref: "#/definitions/Point"
+      time_measured:
+        type: "string"
+        format: "date-time"
+        example: "2015-08-20T14:11:56.118Z"
+        description: "The time the position was measured. Likely the time provided\
+          \ with the GPS position reading.  Time must be before time received at FIMS\
+          \ based on FIMS system time.  Uses the ISO 8601 format conforming to pattern:\
+          \ YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy\
+          \ (three positions after decimal).  The 'Z' implies UTC times and is the\
+          \ only timezone accepted."
+      time_received:
+        type: "string"
+        format: "date-time"
+        example: "2015-08-20T14:11:57.345Z"
+        description: "Not required for submission, assigned by FIMS. The time the\
+          \ position was received by FIMS based on FIMS system time.  Uses the ISO\
+          \ 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds\
+          \ may have up to millisecond accuracy (three positions after decimal). \
+          \ The 'Z' implies UTC times and is the only timezone accepted."
+      time_sent:
+        type: "string"
+        format: "date-time"
+        example: "2015-08-20T14:11:57.968Z"
+        description: "The time the position was sent by the USS to FIMS as measured\
+          \ by USS system time.  Time must be before time received at FIMS based on\
+          \ FIMS system time.  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.\
+          \  Seconds may have up to millisecond accuracy (three positions after decimal).\
+          \  The 'Z' implies UTC times and is the only timezone accepted."
+      track_ground_speed_kn:
+        type: "number"
+        format: "double"
+        description: "Ground speed int the direction of travel. Value must be >= 0.0.\
+          \ In knots."
+        minimum: 0.0
+        exclusiveMinimum: false
+      track_magnetic_north_deg:
+        type: "number"
+        format: "double"
+        description: "The direction of travel relative to magnetic north in degrees.\
+          \ Value must be >= 0.0 and < 360.0."
+        minimum: 0.0
+        maximum: 360.0
+        exclusiveMinimum: false
+        exclusiveMaximum: true
+      track_true_north_deg:
+        type: "number"
+        format: "double"
+        description: "The direction of travel relative to true north in degrees. Value\
+          \ must be >= 0.0 and < 360.0."
+        minimum: 0.0
+        maximum: 360.0
+        exclusiveMinimum: false
+        exclusiveMaximum: true
+      user_id:
+        type: "string"
+        description: "Not required for submission. This field is populated based on\
+          \ the provided credentials in the HTTPS header."
+      vdop_gps:
+        type: "number"
+        format: "double"
+        description: "The vertical dilultion of precision as provided by the onboard\
+          \ GPS."
+        minimum: 0.0
+    example:
+      altitude_gps_wgs84_ft: 1111.111
+      altitude_num_gps_satellites: 22
+      air_speed_source: "MEASURED"
+      gufi: "00000000-0000-4444-8888-000000000000"
+      hdop_gps: 77.7
+      time_measured: "2016-10-04T09:15:40.727Z"
+      time_sent: "2016-10-04T09:15:40.727Z"
+      time_received: "2016-10-04T09:15:42.727Z"
+      track_ground_speed_kn: 33.33
+      track_true_north_deg: 235.027287562664
+      track_magnetic_north_deg: 237.123456789123
+      vdop_gps: 88.8
+      location:
+        type: "Point"
+        coordinates:
+        - -122.05635935068132
+        - 37.41436490284069
+  Point:
+    type: "object"
+    properties:
+      type:
+        type: "string"
+        description: "The type of Geometry. In this case, must be 'Point' per GeoJSON\
+          \ spec.\n"
+        enum:
+        - "Point"
+      coordinates:
+        type: "array"
+        example:
+        - 0.0
+        - 0.0
+        items:
+          type: "number"
+          format: "double"
+        maxItems: 2
+        minItems: 2
+    externalDocs:
+      url: "https://tools.ietf.org/html/rfc7946#section-3.1.2"
+    description: "GeoJSon Point, limited to 2D."
+  ContingencyPlan:
+    type: "object"
+    properties:
+      contingency_id:
+        type: "number"
+        format: "integer"
+        example: 1
+        description: "A positive integer unique amongst the set of Contingencies for\
+          \ this operation. The integers may be ordered by some scheme, but this is\
+          \ not required."
+        minimum: 1
+        maximum: 1000
+      contingency_cause:
+        type: "array"
+        items:
+          type: "string"
+          description: "A cause that necessitates a contingency response. In planning\
+            \ an operation, this array of values represents the various causes that\
+            \ may necessitate the provided contingency_repsonse.\n1. LOST_C2_UPLINK\n\
+            \  The operation has lost command or control uplink to the vehicle.\n\
+            2. LOST_C2_DOWNLINK\n  The operation has lost downlinks from the vehicle.\n\
+            3. LOST_NAV\n  The vehicle no longer has sufficient navigation sources.\n\
+            4. LOST_SAA\n  The vehicle's sense and avoid solution is no longer reliable.\n\
+            5. LOW_FUEL\n  The vehicle does not have enough power to complete its\
+            \ mission. Still enough fuel to safely land or potentially return to base.\n\
+            6. NO_FUEL\n  The vehicle is either completely without fuel or has only\
+            \ enough fuel to land immediately.\n7. MECHANICAL_PROBLEM \n  The vehicle\
+            \ is experiencing a mechanical problem necessitating initiation of a contingency\
+            \ response.\n8. SOFTWARE_PROBLEM\n  The vehicle or some component of the\
+            \ required platform ground equipment is experiencing a software problem.\n\
+            9. ENVIRONMENTAL\n  There are conditions in the environment necessitating\
+            \ initiation of a contingency response. Generally this will be weather\
+            \ realted phenonmena.\n10. SECURITY\n  There is a security incident interrupting\
+            \ this operation.\n11. TRAFFIC\n  The density or type of air traffic near\
+            \ the vehicle necessitated a contingency response.\n12. LOST_USS\n  The\
+            \ operation has lost at least some portion of expected USS services.\n\
+            13. OTHER\n  Some cause not captured in any other category.\n14. ANY\n\
+            \  This category should only be used wihtin an operation plan when a particular\
+            \ contingency response is appropriate for any contingency cause."
+          enum:
+          - "LOST_C2_UPLINK"
+          - "LOST_C2_DOWNLINK"
+          - "LOST_NAV"
+          - "LOST_SAA"
+          - "LOW_FUEL"
+          - "NO_FUEL"
+          - "MECHANICAL_PROBLEM"
+          - "SOFTWARE_PROBLEM"
+          - "ENVIRONMENTAL"
+          - "SECURITY"
+          - "TRAFFIC"
+          - "LOST_USS"
+          - "OTHER"
+          - "ANY"
+      contingency_response:
+        type: "string"
+        description: "The type of contingency response.\n1. LANDING\n  The operation\
+          \ will be landing by targeting the contingency_point.\n2. LOITERING\n  The\
+          \ operation will loiter at the contingency_point at the specified altitude\
+          \ with the noted loiter_radius_ft.\n3. RETURN_TO_BASE\n  The operation will\
+          \ return to base as specified by the contingency_point. The USS may issue\
+          \ an update to the operation plan to support this maneuver."
+        enum:
+        - "LANDING"
+        - "LOITERING"
+        - "RETURN_TO_BASE"
+      contingency_point:
+        $ref: "#/definitions/Point"
+      loiter_altitude_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The altitude for this contingency. Relevant and required for\
+          \ the LOITERING contingency_type, ignored for all other types. In WGS84\
+          \ reference system using feet as units."
+      loiter_radius_ft:
+        type: "number"
+        format: "double"
+        description: "The radius of airspace used in loitering for this contingency.\
+          \ Relevant and required for the LOITERING contingency_type, ignored for\
+          \ all other types. Using feet as units."
+      relative_preference:
+        type: "number"
+        format: "double"
+        description: "Optional numerical value that can be used in ranking the preference\
+          \ of this Contingency versus any other within the set of Contingency for\
+          \ this operation. This may be thought of as a ranking of the potential landing\
+          \ sites with all other factors being held equal, though dynamic conditions\
+          \ will likely play a role in adjusting this ranking in real time by the\
+          \ USS or Operator.  For example, one Contingency may be significantly further\
+          \ from the operation at a given time and, thus, would be less preferred\
+          \ than it might be otherwise. Further interpretation of this field is left\
+          \ to the operator and USS. "
+        minimum: 0.0
+      contingency_location_description:
+        type: "string"
+        description: "Optional description of the contingency location."
+        maxLength: 1000
+      relevant_operation_volumes:
+        type: "array"
+        description: "In the planning stage of an operation, this array may be populated\
+          \ with ordinals that correspond to the ordinal values supplied with each\
+          \ OperationVolume. This is an indicator that this particular ContingencyPlan\
+          \ is valid for use when the operation is active in any of the particular\
+          \ noted OperationVolumes."
+        items:
+          type: "integer"
+          format: "int32"
+      valid_time_begin:
+        type: "string"
+        format: "date-time"
+        example: "2015-08-20T14:31:56.118Z"
+        description: "Optional. Time that this location is expected to be first available.\
+          \ For example, if an operation begins at 1100, but this location is not\
+          \ available until 1105 at the earliest, then this field could indicate that\
+          \ fact. Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.\
+          \  Seconds may have up to millisecond accuracy (three positions after decimal).\
+          \  The 'Z' implies UTC times and is the only timezone accepted."
+      valid_time_end:
+        type: "string"
+        format: "date-time"
+        example: "2015-08-20T14:31:56.118Z"
+        description: "Optional. Time that this location is expected to become unavailable.\
+          \ For example, if an operation begins at 1100, but this location becomes\
+          \ closed for some reason at 1105, then this field could indicate that fact.\
+          \ Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.\
+          \  Seconds may have up to millisecond accuracy (three positions after decimal).\
+          \  The 'Z' implies UTC times and is the only timezone accepted."
+  UssInstance:
+    type: "object"
+    required:
+    - "coverage_area"
+    - "time_available_begin"
+    - "time_available_end"
+    - "uss_base_callback_url"
+    properties:
+      uss_instance_id:
+        type: "string"
+        format: "uuid"
+        description: "A unique USS Instance identifier, minted by the USS."
+      uss_name:
+        type: "string"
+        description: "The name of the entity providing UAS Support Services. Populated\
+          \ by the service discovery system based on credential information provided\
+          \ by the USS."
+      time_submitted:
+        type: "string"
+        format: "date-time"
+        description: "The time at which the submission of this USS Instance was received\
+          \ at this discovery service.  Only modifiable by discovery service."
+      time_available_begin:
+        type: "string"
+        format: "date-time"
+        description: "The time at which the USS will begin providing services for\
+          \ active UAS operations for this USS Instance.  Note that the USS may provide\
+          \ planning services prior to the time_available_begin depending on the policies\
+          \ of the USS."
+      time_available_end:
+        type: "string"
+        format: "date-time"
+        description: "The time at which the USS will cease providing services for\
+          \ active UAS operations for this USS Instance.  This means that there will\
+          \ not be any UAS operations airborne after this time that would be supported\
+          \ by this USS Instance."
+      coverage_area:
+        $ref: "#/definitions/Polygon"
+      time_last_modified:
+        type: "string"
+        format: "date-time"
+        description: "The last time there was an update to the data regarding this\
+          \ USS Instance. Only modifiable by discovery service."
+      contact_email:
+        type: "string"
+        format: "email"
+        description: "An optional contact email address for the USS."
+      contact_phone:
+        type: "string"
+        format: "phone"
+        description: "An optional contact number for the USS."
+      uss_base_callback_url:
+        type: "string"
+        format: "url"
+        description: "A base URL used by the USS Discovery Service and other USS Instances\
+          \ to callback to the USS Instance as defined further in the USS API defined\
+          \ elsewhere (link to documentation to be provided later in this document).\
+          \  This URL may be unique to the USS Instance or may be shared by other\
+          \ USS Instances created by this USS.  URLs that are common to multiple USS\
+          \ Instances will receive only one callback."
+      uss_informational_url:
+        type: "string"
+        format: "url"
+        description: "An optional website URL for the USS for human use."
+      uss_openapi_url:
+        type: "string"
+        format: "url"
+        description: "An optional URL for the USS to supply an OpenAPI specification\
+          \ of its UAS Operator interface."
+      uss_registration_url:
+        type: "string"
+        format: "url"
+        description: "An optional URL for UAS operators to register with this USS\
+          \ for services."
+      notes:
+        type: "string"
+        description: "Any additional free text that would aid consumers of the service\
+          \ discovery API in understanding this USS Instance."
+    description: "A contiguous area within which a USS has committed to providing\
+      \ services for UAS operations.  The specific level of services provided may\
+      \ be contained within the data provided from here in combination with data provided\
+      \ directly from the USS.  In the future, the information provided by this object\
+      \ may include more specific information about the services provided by the USS\
+      \ or the types of UAS operations that are supported by this USS Instance."
+    example:
+      uss_instance_id: "00000000-0000-4444-8888-FEEDDEADBEEF"
+      uss_name: "NUSS"
+      time_submitted: "2016-08-03T00:15:40.931Z"
+      time_available_begin: "2016-10-04T09:15:40Z"
+      time_available_end: "2016-11-04T13:20:42Z"
+      time_last_modified: "2016-08-04T17:31:01.253Z"
+      coverage_area:
+        type: "Polygon"
+        coordinates:
+        - - - -122.06382530000002
+            - 37.4090697
+          - - -122.05094253233
+            - 37.4193006277
+          - - -122.03276206976
+            - 37.41929920176
+          - - -122.06382530000002
+            - 37.4090697
+        - - - -122.062176579
+            - 37.40968041145
+          - - -122.05187056889
+            - 37.41786527236
+          - - -122.03732647634
+            - 37.41786440108
+          - - -122.062176579
+            - 37.40968041145
+      notes: "NUSS will only provide services for fixed-wing aircraft within this\
+        \ USS Instance volume."
+      uss_informational_url: "https://utm.arc.nasa.gov"
+      uss_openapi_url: "https://nuss.arc.nasa.gov/api"
+      uss_registration_url: "https://nuss.arc.nasa.gov/signup"
+      contact_email: "joseph.rios@nasa.gov"
+      contact_number: "650-555-5555"
+  NegotiationMessage:
+    properties:
+      message_id:
+        type: "string"
+        format: "uuid"
+        description: "A UUID assigned to this message by the originator"
+        minLength: 36
+        maxLength: 36
+      origin:
+        type: "string"
+        description: "The user or process that generated this message"
+        enum:
+        - "FIMS"
+        - "USS"
+      originator_id:
+        type: "string"
+        description: "A name identifying the originator of this message."
+        maxLength: 100
+      type:
+        type: "string"
+        enum:
+        - "INTERSECTING_OPERATION_NOTIFICATION"
+        - "REPLAN_BEGINNING_AS_SECONDARY_OPERATION"
+        - "REQUESTING_MANUAL_CLEARANCE"
+        - "MANUAL_CLEARANCE_GRANTED"
+        - "MANUAL_CLEARANCE_DENIED"
+        - "OTHER"
+      gufi_of_originator:
+        type: "string"
+        format: "uuid"
+        description: "The GUFI of the relevant operation of the originating USS. Note\
+          \ that the origin and receiver roles are strictly dependent on which USS\
+          \ is generating this message. May be empty in the case of ATC communication\
+          \ to USS via FIMS."
+        minLength: 36
+        maxLength: 36
+      gufi_of_receiver:
+        type: "string"
+        format: "uuid"
+        description: "The GUFI of the relevant operation of the receiving USS. May\
+          \ be empty in cases of communication with ATC via FIMS.\n"
+        minLength: 36
+        maxLength: 36
+      reference_message_ids:
+        type: "array"
+        description: "A set of UUIDs of any previous messages related to the same\
+          \ negotiation process. This field must not be empty when sending a message\
+          \ of type 'REPLAN_BEGINNING_AS_SECONDARY_OPERATION'.  This set of ids need\
+          \ not be complete. The goal is to have at least one id that can be used\
+          \ to link this message to the set of previous messages sent and received.\
+          \ The USS should make this list as complete as possible to aid the negotiation\
+          \ process."
+        items:
+          type: "string"
+          format: "uuid"
+          minLength: 36
+          maxLength: 36
+      free_text:
+        type: "string"
+        maxLength: 1000
+  Operation:
+    type: "object"
+    required:
+    - "controller_location"
+    - "faa_rule"
+    - "gufi"
+    - "operation_volumes"
+    - "primary_contact_name"
+    - "primary_contact_phone"
+    - "registration"
+    properties:
+      gufi:
+        type: "string"
+        format: "uuid"
+        example: "00000000-0000-0000-0000-000000000000"
+        description: "Created and assigned by originating USS. Validated as UUID version\
+          \ 4 specification."
+        minLength: 36
+        maxLength: 36
+      uss_instance_id:
+        type: "string"
+        format: "uuid"
+        example: "00000000-0000-0000-0000-000000000000"
+        description: "Identiy of the USS Instance hosting this operation."
+        minLength: 36
+        maxLength: 36
+      submit_time:
+        type: "string"
+        format: "date-time"
+        example: "2015-08-20T14:11:56.118Z"
+        description: "Time the operation submission was received by USS. Uses the\
+          \ ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ. Seconds\
+          \ may have up to millisecond accuracy (three positions after decimal). \
+          \ The 'Z' implies UTC times and is the only timezone accepted. This value\
+          \ is generally set by the server upon receipt of new data."
+      decision_time:
+        type: "string"
+        format: "date-time"
+        example: "2015-08-20T14:11:56.118Z"
+        description: "A timestamp set by the USS any time the state of the operation\
+          \ is updated, for example when the flight goes from ACCEPTED to ACTIVATED.\
+          \  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.\
+          \  Seconds may have up to millisecond accuracy (three positions after decimal).\
+          \  The 'Z' implies UTC times and is the only timezone accepted."
+      aircraft_comments:
+        type: "string"
+        description: "Informative text about the aircraft. Not used by the UTM System.\
+          \ Only for human stakeholders."
+        maxLength: 1000
+        default: "NOT PROVIDED"
+      flight_comments:
+        type: "string"
+        description: "Informative text about the operation. Not used by the UTM System.\
+          \ Only for human stakeholders."
+        maxLength: 1000
+        default: "NOT PROVIDED"
+      volumes_description:
+        type: "string"
+        description: "Informative text about the operational volumes. Not used by\
+          \ the UTM System. Only for human stakeholders."
+        maxLength: 1000
+        default: "NOT PROVIDED"
+      registration:
+        type: "array"
+        description: "The registration ID of the vehicle flying this operation. This\
+          \ registration value is provided to operators by a vehicle registrar. Validated\
+          \ as a non-null string. Array due to possiblity of multi-vehicle operation."
+        items:
+          type: "string"
+          maxLength: 1000
+        minItems: 1
+      airspace_authorization:
+        type: "string"
+        format: "uuid"
+        example: "00000000-0000-0000-0000-000000000000"
+        description: "TBD"
+        minLength: 36
+        maxLength: 36
+      flight_number:
+        type: "string"
+        description: "Optional. For use by USS for identification purposes."
+        maxLength: 100
+      user_id:
+        type: "string"
+        description: "This field is populated based on the provided credentials."
+      created_by:
+        type: "string"
+        description: "The user that created the operation."
+        maxLength: 100
+      primary_contact_name:
+        type: "string"
+        description: "Not currently checked for validity, but clients should endeavor\
+          \ to provide useful, appropriate information in these fields. These values\
+          \ should represent the contact that should be used in case of an issue with\
+          \ the operation before, during, or after that operation."
+        maxLength: 100
+      primary_contact_phone:
+        type: "string"
+        format: "phone"
+        maxLength: 100
+      primary_contact_email:
+        type: "string"
+        format: "email"
+        maxLength: 100
+      extra_contact_info:
+        type: "string"
+        description: "Any additional contact information that may be useful (hours\
+          \ of availability, fax number, communication limitations, etc.)."
+        maxLength: 1000
+        default: "NOT PROVIDED"
+      state:
+        type: "string"
+        description: "The current state of the operation.  Must be maintained by the\
+          \ USS. Some additional details in the USS Specification.\n\n1. ACCEPTED\n\
+          \  This operation has been deemed ACCEPTED by the supporting USS. This implies\
+          \ that the operation meets the requirements for operating in the airspace\
+          \ based on the type of operation submitted.\n2. ACTIVATED\n  This operation\
+          \ is active. The transition from ACCEPTED to ACTIVATED is not an announced\
+          \ transition. The transition is implied based on the submitted start time\
+          \ of the operation (i.e. the effective_time_begin of the first OperationVolume).\
+          \ Note that an ACTIVATED operation is not necessarily airborne, but is assumed\
+          \ to be \"using\" the OperationVolumes that it has announced.\n3. CLOSED\n\
+          \  This operation is closed. It is not airborne and will not become airborne\
+          \ again. If the UAS and the crew will fly again, it would need to be as\
+          \ a new operation. A USS may announce the closure of any operation, but\
+          \ is not required to announce unless the operation was ROGUE or NONCOFORMING.\n\
+          4. NONCORMING\n  See USS Specifcation for requirements to transition to\
+          \ this state.\n5. ROGUE\n  See USS Specifcation for requirements to transition\
+          \ to this state.\n"
+        enum:
+        - "ACCEPTED"
+        - "ACTIVATED"
+        - "CLOSED"
+        - "NONCONFORMING"
+        - "ROGUE"
+      controller_location:
+        $ref: "#/definitions/Point"
+      gcs_location:
+        $ref: "#/definitions/Point"
+      contingency_plans:
+        type: "array"
+        description: "An array of ContingencyPlans wherein this operation may land\
+          \ if needed/required during operation. Aids in planning and communication\
+          \ during the execution of a contingency."
+        items:
+          $ref: "#/definitions/ContingencyPlan"
+      faa_rule:
+        type: "string"
+        description: "1. PART_107\n  The operation follows FAA rule 107. Submission\
+          \ of such operations is mandatory\n\n2. PART_107X\n  In general, operations\
+          \ are 107X if they are doing something that would require a waiver under\
+          \ current 107 rules. Submission of such operations is mandatory.\n\n3. PART_101E\n\
+          \  Submission of 101E would be required if operation is within 5 statute\
+          \ miles of an airport. Optional otherwise.\n\n4. OTHER\n  Placeholder for\
+          \ other types of operations."
+        minLength: 1
+        enum:
+        - "PART_107"
+        - "PART_107X"
+        - "PART_101E"
+        - "OTHER"
+        default: "PART_107"
+      priority_elements:
+        $ref: "#/definitions/PriorityElements"
+      operation_volumes:
+        type: "array"
+        description: "The actual geographical information for the operation.  Maximum\
+          \ array length of 12 currently allowed."
+        items:
+          $ref: "#/definitions/OperationVolume"
+      metadata:
+        $ref: "#/definitions/EventMetadata"
+  PriorityElements:
+    type: "object"
+    required:
+    - "priority_level"
+    - "priority_status"
+    properties:
+      priority_level:
+        $ref: "#/definitions/severity"
+      priority_status:
+        type: "string"
+        description: "If a PUBLIC_SAFETY operation is POSTed to any endpoint, the\
+          \ correct scope will be required. Any USS may POST an INFLIGHT_EMERGENCY\
+          \ with non-priority scopes.  NONE should only be used to indicate that an\
+          \ operation that previously had a priority status now has no priority status."
+        enum:
+        - "NONE"
+        - "PUBLIC_SAFETY"
+        - "INFLIGHT_EMERGENCY"
+    description: "Data elements used to describe the status of priority operation.\
+      \ Nominal operations need not include these data.\npriority_level must take\
+      \ one of the four values EMERGENCY, ALERT, CRITICAL, or NOTICE.  NOTICE must\
+      \ only be used with a priority_status of NONE.  The other values should be used\
+      \ based on impact to other operations and safety of people and property on the\
+      \ ground."
+  OperationVolume:
+    type: "object"
+    required:
+    - "beyond_visual_line_of_sight"
+    - "effective_time_begin"
+    - "effective_time_end"
+    - "max_altitude_wgs84_ft"
+    - "min_altitude_wgs84_ft"
+    - "operation_geography"
+    - "ordinal"
+    properties:
+      ordinal:
+        type: "integer"
+        description: "This integer represents the ordering of the operation volume\
+          \ within the set of operation volumes. Need not be consecutive integers."
+      near_structure:
+        type: "boolean"
+        description: "Is this operation volume within 400' of a structure?"
+        default: false
+      effective_time_begin:
+        type: "string"
+        format: "date-time"
+        example: "2015-08-20T14:11:56.118Z"
+        description: "Earliest time the operation will use the operation volume. \
+          \ Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.\
+          \  Seconds may have up to millisecond accuracy (three positions after decimal).\
+          \  The 'Z' implies UTC times and is the only timezone accepted."
+      effective_time_end:
+        type: "string"
+        format: "date-time"
+        example: "2015-08-20T15:11:56.118Z"
+        description: "Latest time the operation will done with the operation volume.\
+          \ It must be greater than effective_time_begin.  Uses the ISO 8601 format\
+          \ conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up\
+          \ to millisecond accuracy (three positions after decimal).  The 'Z' implies\
+          \ UTC times and is the only timezone accepted."
+      actual_time_end:
+        type: "string"
+        format: "date-time"
+        example: "2015-08-20T14:31:56.118Z"
+        description: "Time that the operational volume was freed for use by other\
+          \ operations.  Should be populated and stored by the USS. Uses the ISO 8601\
+          \ format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have\
+          \ up to millisecond accuracy (three positions after decimal).  The 'Z' implies\
+          \ UTC times and is the only timezone accepted."
+      min_altitude_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The minimum altitude for this operation in this operation volume.\
+          \ In WGS84 reference system using feet as units."
+      max_altitude_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The maximum altitude for this operation in this operation volume.\
+          \ In WGS84 reference system using feet as units."
+      operation_geography:
+        $ref: "#/definitions/Polygon"
+      beyond_visual_line_of_sight:
+        type: "boolean"
+        description: "Describes whether the operation volume is beyond the visual\
+          \ line of sight of the RPIC."
