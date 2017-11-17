@@ -152,19 +152,19 @@ paths:
       security:
       - ussapi_security:
         - "utm.nasa.gov_write.message"
-  /positions/{gufi}:
+  /positions/{position_id}:
     put:
       tags: 
       - "A. Required Endpoints"
-      summary: "Share position information by operation ID."
-      description: "Providing position reports to others may allow other USSs to anticipate events.  The USS managing the operation has created the operational IDs."
+      summary: "Share position information."
+      description: "Providing position reports to others may allow other USSs to anticipate events.  The USS managing the operation has created the position ID."
       consumes:
         - application/json
       produces:
         - application/json
       parameters: 
        - in: path
-         name: gufi
+         name: position_id
          required: true
          type: string
          description: "Post by gufi"
@@ -267,7 +267,7 @@ paths:
         \ of each others' UAS operations.<br/><br/>\nA USS is required to share operation\
         \ data with other USSs that may have interacting UAS Operations.  This potential\
         \ interaction is known through the data provided via the USS Service Discovery\
-        \ mechanism (see https://app.swaggerhub.com/apis/utm/ussdiscovery/v2)."
+        \ mechanism (see https://app.swaggerhub.com/apis/utm/ussdiscovery/)."
       operationId: "postOp"
       consumes:
       - "application/json"
