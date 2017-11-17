@@ -189,7 +189,7 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/AuthMetadata'
+            $ref: '#/definitions/Metadata'
   /api:
     get:
       tags:
@@ -346,7 +346,7 @@ definitions:
           $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/scope'
 
         
-  AuthMetadata:
+  Metadata:
     type: object
     required:
       - issuer
