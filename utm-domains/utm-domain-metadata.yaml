@@ -1,0 +1,74 @@
+info:
+  description: "UTM metadata model used for events and other misc."
+  version: 'v1'
+  title: UTM Metadata
+
+definitions:
+
+  EventMetadata:
+    type: object
+    required: 
+      - data_collection
+      - test_card
+      - call_sign
+      - test_type
+      - source
+      - event_id
+      - location
+      - setting
+    properties: 
+      data_collection: 
+        description: "If true this data is intended for Data Collection"
+        type: boolean
+      test_card:
+        description: "The name or number of the test card."
+        minLength: 1
+        type: string
+      call_sign:
+        type: string
+        minLength: 1
+        description: |
+          Expected values: a call sign, test card role, or flight ID that links this operation to a particular test card flight. As an example, in our TCL2 demo, "GCS3" could have been used here. For multiple flights emanating from one location on a test card, this data element could include further information to link the operation to the test card flight, such as GCS1A.
+      test_type:
+        type: string
+        description: "Test type"
+        enum: 
+          - ground
+          - flight
+      source:
+        type: string
+        description: "Hardware-in-the-loop (HWITL) flights refer to ground or airborne flights. Software-in-the loop (SWITL) flights would be used to tag simulated flights."
+        enum: 
+          - HWITL
+          - SWITL
+      event_id:
+        type: string
+        description: "A string tag indicating which event this operation is associated. Will be used to select a set of rules for validation."
+        minLength: 1
+      location:
+        type: string
+        description: "Name of the testing location, such as NV, Moffett, Crows Landing, etc."
+        minLength: 1
+      setting:
+        type: string
+        description: "Test setting"
+        enum: 
+          - lab
+          - field
+      free_test:
+        type: string
+        description: "free text"
+      issue_handler:
+        type: string
+        format: email_address
+        description: "email address of author handling data quality issue"
+      
+    example:
+      data_collection: true
+      test_card: 'TC3'
+      call_sign: GCS1
+      test_type: flight
+      source: HWITL
+      event_id: NC3
+      location: AK
+      setting: field
