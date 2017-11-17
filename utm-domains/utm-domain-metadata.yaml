@@ -33,8 +33,8 @@ definitions:
         type: string
         description: "Test type"
         enum: 
-          - ground
-          - flight
+          - GROUND
+          - FLIGHT
       source:
         type: string
         description: "Hardware-in-the-loop (HWITL) flights refer to ground or airborne flights. Software-in-the loop (SWITL) flights would be used to tag simulated flights."
@@ -53,12 +53,12 @@ definitions:
         type: string
         description: "Test setting"
         enum: 
-          - lab
-          - field
+          - LAB
+          - FIELD
       free_test:
         type: string
         description: "free text"
-      issue_handler:
+      data_quality:
         type: string
         format: email_address
         description: "email address of author handling data quality issue"
@@ -67,8 +67,9 @@ definitions:
       data_collection: true
       test_card: 'TC3'
       call_sign: GCS1
-      test_type: flight
+      test_type: FLIGHT
       source: HWITL
       event_id: NC3
       location: AK
-      setting: field
+      setting: FIELD
+      data_quality: data_quality@nasa.gov
