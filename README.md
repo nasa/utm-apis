@@ -30,7 +30,7 @@ You have choices to edit/view local swagger files. IMO option 1 is better for vi
 
 1. Use a text editor that supports YAML such as Sublime Text 2.
 
-2. Install local [Swagger Editor](https://swagger.io/swagger-editor/)
+2. Install node.js local [Swagger Editor](https://swagger.io/swagger-editor/) and run using 'http-server swagger-editor'
 
 
 3. Bring up an online swagger editor and copy entire file contents into your browser

@@ -167,7 +167,7 @@ paths:
          name: position_id
          required: true
          type: string
-         description: "Post by gufi"
+         description: "PUT by position_id"
          
        - in: body
          name: position
@@ -181,8 +181,6 @@ paths:
             $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         400:
           description: "Bad request. Typically validation error. Fix and retry."
-        429:
-          description: "Too many recent requests from you. Wait to make further queries."
   /operations:
     get:
       tags:
@@ -286,25 +284,28 @@ paths:
           schema:
             $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         400:
-          description: "Bad request. Typically validation error. Fix your request\
-            \ and retry."
-        429:
-          description: "Too many recent requests from you. Wait to make further submissions."
+          description: "Bad request. Typically validation error. Fix your request and retry."
       security:
       - ussapi_security:
         - "utm.nasa.gov_write.operation"
         - "utm.nasa.gov_write.publicsafety"
+  /operations/{gufi}:
     put:
       tags:
       - "A. Required Endpoints"
-      summary: "Submit updates to a previously communicated UAS Operation."
-      description: "Allows for other USSs to update a previous plan submission."
+      summary: "Announce a new, or update an already announced operation."
+      description: "Announce an Operation to another USS, either initial Operation or an update to the Operation. The Operation's owner creates the ID."
       operationId: "putOp"
       consumes:
       - "application/json"
       produces:
       - "application/json"
       parameters:
+      - in: path
+        name: gufi
+        required: true
+        type: string
+        description: "PUT operation by gufi"
       - in: "body"
         name: "operation"
         description: "Operational plan with the following properties:\n  1. Contains\
@@ -322,8 +323,6 @@ paths:
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
-        429:
-          description: "Too many recent requests from you. Wait to make further queries."
       security:
       - ussapi_security:
         - "utm.nasa.gov_write.operation"
