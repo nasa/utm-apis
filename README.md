@@ -6,6 +6,7 @@ Each directory contains files related to a single API.  Within each directory th
 
 adding a line to see if I can MD 11/19/17 from home without firewalls blocking things
 adding a line to see if I can edit from carbon on 11/20/17
+adding a line to see if I can edit from marycomp on 11/20/17
 
 ## References
 
