@@ -4,9 +4,7 @@ info:
   description: "This API describes the RESTful interface to the USS discovery service\
     \ within the UTM System.  This service allows for authenticated USS operators\
     \ to submit information about their USS and for all stakeholders to query for\
-    \ a USS matching certain parameters. In addition, this document defines an asynchronous\
-    \ interface wherein each authenticated USS can be notifed of changes to information\
-    \ about other USSs."
+    \ a USS matching certain parameters."
   version: "v1"
   title: "UTM USS Service Discovery"
   termsOfService: "\nA. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT\
