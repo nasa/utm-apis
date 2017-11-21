@@ -4,6 +4,10 @@ This repository contains the collection of OpenAPI specification APIs within the
 
 Each directory contains files related to a single API.  Within each directory there is an additional README that provides further insight into that API.
 
+adding a line to see if I can MD 11/19/17 from home without firewalls blocking things
+adding a line to see if I can edit from carbon on 11/20/17
+adding a line to see if I can edit from marycomp on 11/20/17
+
 ## References
 
 - [UTM Home Page](https://utm.arc.nasa.gov/)
@@ -13,6 +17,7 @@ Each directory contains files related to a single API.  Within each directory th
 
 ## Sandbox and Swaggerhub-github versions
 
+utm-apis release branch is SWAGGERHUB and the master branch is our development branch.  You will generally find the master branch to be ahead of the Sandbox.  The tags in our SWAGGERHUB branch correspond with our sandbox releases.
 
 utm-apis repo's master branch is tagged with a release tag.  The same tag is applied to the UTM Sandbox deployment. 
 For example the v17.10 sandbox was generated from github branch/tag swagger17.10.
