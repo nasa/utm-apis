@@ -1,0 +1,60 @@
+swagger: '2.0'
+info:
+  version: 'v1'
+  title: Vehicle Identity
+  description: Validate the identity of a vehicle. Long term this authenticates the vehicle, and has access to Vehicle ID Authority Data.  For TCL3, validates that the vehicle ID was properly registered for the NASA event.
+ 
+paths:
+  /registration:
+    get:
+      tags:
+        - A. Vehicle
+      summary: "Returns registration status.  If registration status is OK returns registration data." 
+      security: []
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/VehicleRegistrationData'
+          
+          
+  /api:
+    get:
+      tags:
+        - B. Version and Health
+      summary: "get server info.  Can be used to check health"
+      security: []
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Version' 
+
+definitions:
+
+  VehicleRegistrationData:
+    type: object
+    properties:
+      make:
+        type: string
+      model:
+        type: string
+      uvin:
+        type: string
+        format: uuid
+      registration_status:
+          $ref: '#/definitions/VehicleRegistrationStatus'
+
+  
+  VehicleRegistrationStatus:
+        type: string
+        default: VEHICLE_ID_FAILED_AUTHENTICATION
+        enum:
+        - VEHICLE_ID_FAILED_AUTHENTICATION
+        - VEHICLE_ID_REGISTERED
+        - VEHICLE_IS_NOT_REGISTERED
+        - VEHICLE_IS_AUTHENTICATED_AND_REGISTERED
