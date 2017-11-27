@@ -77,7 +77,6 @@ and java8's OffsetDateTime class for date-time using this language-specific conf
 }
 
 ````````
-
 ### Pulling a back-version of Swagger Spec
 
 To codegen from local swagger specs, the local files need to be "resolved"  whereby
