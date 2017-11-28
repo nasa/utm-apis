@@ -2,7 +2,6 @@
 
 ## This document contains definitions, path items, parameters, and responses that 
 ## are common across APIs. 
-
 ## joseph.rios@nasa.gov
 
 info:
@@ -79,6 +78,12 @@ definitions:
         maxLength: 36
         minLength: 36
         example: "00000000-0000-0000-0000-000000000000"
+      uss_name:
+        description: "Identity of the USS.  The maximum and minimum character length is based on a usable domain name, and considering the maximum in RFC-1035"
+        type: string
+        maxLength: 250
+        minLength: 10
+        example: "utmbeta.arc.nasa.gov"
       uss_instance_id:
         description: "Identity of the USS Instance hosting this operation."
         type: string
@@ -190,6 +195,8 @@ definitions:
         description: >-
           An array of ContingencyPlans wherein this operation may land if needed/required during operation. Aids in planning and communication during the execution of a contingency.
         type: array
+        maxItems: 12
+        minItems: 1
         items:
           $ref: '#/definitions/ContingencyPlan'
       faa_rule:
@@ -832,6 +839,7 @@ definitions:
           the service discovery system based on credential information provided
           by the USS.
         type: string
+        minLength: 1
       time_submitted:
         type: string
         format: date-time
@@ -903,6 +911,8 @@ definitions:
         description: >-
           An optional URL for UAS operators to register with this USS for
           services.
+      metadata:
+        $ref: 'https://api.swaggerhub.com/domains/utm/metadata/v1#/definitions/EventMetadata'
       notes:
         type: string
         description: >-
