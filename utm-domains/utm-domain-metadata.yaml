@@ -4,7 +4,6 @@ info:
   title: UTM Metadata
 
 definitions:
-
   EventMetadata:
     type: object
     required: 
@@ -55,7 +54,7 @@ definitions:
         enum: 
           - LAB
           - FIELD
-      free_test:
+      free_text:
         type: string
         description: "free text"
       data_quality:
