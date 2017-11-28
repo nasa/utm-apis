@@ -82,7 +82,7 @@ definitions:
         description: "Identity of the USS.  The maximum and minimum character length is based on a usable domain name, and considering the maximum in RFC-1035"
         type: string
         maxLength: 250
-        minLength: 10
+        minLength: 1
         example: "utmbeta.arc.nasa.gov"
       uss_instance_id:
         description: "Identity of the USS Instance hosting this operation."
