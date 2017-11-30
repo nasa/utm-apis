@@ -1,0 +1,133 @@
+' Project      : NASA UTM
+' Author       : Joseph Rios, joseph.l.rios@nasa.gov
+' First version: 30 Aug 2017
+
+@startuml
+!include ../utm_fims_arch_seq_style.puml
+
+participant "Operator" as P
+participant "USS A" as A
+participant "USS B" as B
+participant "FIMS" as F
+
+title USS Contingency Management for a Single Operation\n\
+VERSION_STAMP
+
+note over A,B
+    Assume these are two intersecting
+    USS Instances and are, thus, in
+    each others' Local USS Network.
+    Recall, FIMS is in all instances'
+    LUNs.
+end note
+
+autonumber
+P->A: In-flight emergency\nindicated
+A-->P: Acknowledged
+
+note over A,P
+    The communication process
+    between operator and USS is
+    not specified, but it must
+    support USS requirements
+    within UTM.
+
+    Here, somehow the USS and
+    operator concur on a
+    contingency plan. It could be
+    one of the plans provided
+    with the original Operation
+    or a new one that satisfies
+    the situation.
+
+    The operator and USS are
+    expected to have an interface
+    that allows for the appropriate
+    data exchanges to support the
+    USS and UTM requirements.
+end note
+
+
+
+loop while contingency needed
+
+
+    par notify all in LUN of ContingencyPlan
+        A->B: UTMMessage CONTINGENCY_PLAN_INITIATED\nPOST to \utm_messages
+        activate B
+        B-->A: Ack via HTTP 200
+        deactivate B
+    else
+        A->F: UTMMessage CONTINGENCY_PLAN_INITIATED\nPOST to \utm_messages
+        activate F
+        F-->A: Ack via HTTP 200
+        deactivate F
+    end ' notify all in LUN
+
+
+    A->A: Determine if updated\nOperation plan needed
+
+    alt new Operation plan needed
+
+        par notify all in LUN of Operation update
+            A->B: Operation PUT to \operations\{gufi}
+            activate B
+            B-->A: Ack via HTTP 200
+            deactivate B
+        else
+            A->F: Operation PUT to \operations\{gufi}
+            activate F
+            F-->A: Ack via HTTP 200
+            deactivate F
+        end ' notify all in LUN
+    end ' new Operation plan needed
+
+end ' while new contingency needed
+
+alt op still flying and there was a ContingencyPlan announced
+    par notify all in LUN of ContingencyPlan state
+         A->B: UTMMessage CONTINGENCY_PLAN_CANCELLED\nPOST to \utm_messages
+         activate B
+         B-->A: Ack via HTTP 200
+         deactivate B
+    else
+         A->F: UTMMessage CONTINGENCY_PLAN_CANCELLED\nPOST to \utm_messages
+         activate F
+         F-->A: Ack via HTTP 200
+         deactivate F
+    end ' notify all in LUN
+
+    note over A, F
+        At this point, the operation should be following the
+        nominal requirements/rules of the UTM System. For
+        example, if an operation plan update is required due
+        to change in plan volumes or plan state, those
+        procedures would be followed from now forward. Adding
+        those details to this diagrams further complicates it.
+    end note
+end ' operation still flying
+
+note over A
+    Typically a USS is not strictly
+    required to send a CLOSED message.
+    However, in the case that
+    contingency plans were executed, we
+    may decide it is a reasonable
+    requirement for situational
+    awareness to do so.
+end note
+
+par notify all in LUN of CLOSED
+    A->B: UTMMessage OPERATION_CLOSED\nPOST to \utm_messages
+    activate B
+    B-->A: Ack via HTTP 200
+    deactivate B
+else
+    A->F: UTMMessage OPERATION_CLOSED\nPOST to \utm_messages
+    activate F
+    F-->A: Ack via HTTP 200
+    deactivate F
+end ' notify all in LUN
+
+
+@enduml

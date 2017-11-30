@@ -1,0 +1,41 @@
+' Project      : NASA UTM
+' Author       : Joseph Rios, joseph.l.rios@nasa.gov
+' First version: 19 May 2017
+
+@startuml
+!include ../utm_fims_arch_seq_style.puml
+
+participant USS as U
+participant Operator as O
+participant "Other Component" as C
+participant "USS-Discovery" as FD
+
+
+title USS Data Request\n\
+VERSION_STAMP
+
+
+U -> FD : request USS Instance data
+activate FD
+FD -> FD: process request
+note right of FD #EEEE00
+    note there is no
+    auth required for
+    basic data request
+end note
+FD --> U : HTTP 200 with data
+deactivate FD
+
+O -> FD : request USS Instance data
+activate FD
+FD -> FD: process request
+FD --> O : HTTP 200 with data
+deactivate FD
+
+C -> FD : request USS Instance data
+activate FD
+FD -> FD: process request
+FD --> C : HTTP 200 with data
+deactivate FD
+
+@enduml

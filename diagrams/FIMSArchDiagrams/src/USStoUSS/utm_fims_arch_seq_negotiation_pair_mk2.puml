@@ -1,0 +1,82 @@
+' Project      : NASA UTM
+' Author       : Joseph Rios, joseph.l.rios@nasa.gov
+' First version: 31 Aug 2017
+
+@startuml
+!include ../utm_fims_arch_seq_style.puml
+
+participant "USS A" as A
+participant "USS B" as B
+
+title USS Negotiation for Strategic Deconfliction, Mark II\n\
+VERSION_STAMP
+
+box "LUN"
+    participant A
+    participant B
+end box
+
+' Submit first operatino B to A
+B->A: Operation POST to \operations
+activate A
+A-->B: Ack via HTTP 200
+deactivate A
+
+
+A->A: Plan operation,\nnotice intersection\nwith USS B operation.
+
+A->B: New operation POST to \operations
+activate B
+B-->A: Ack via HTTP 200
+deactivate B
+
+par both USSs send NegotiationMessage
+   A->B: POST NegotiationMessage\nINTERSECTING_OPERATION_NOTIFICATION\n to \\negotiations
+   activate B
+   B-->A: Ack via HTTP 200
+   deactivate B
+else
+   B->B: Recognize intersection\n of operations
+   B->A: POST NegotiationMessage\nINTERSECTING_OPERATION_NOTIFICATION\n to \\negotiations
+   activate A
+   A-->B:  Ack via HTTP 200
+   deactivate A
+end ' notify all in LUN
+
+
+par both USSs determine who makes first change
+   A->A: Determine primary\nand secondary\noperations
+else
+   B->B: Determine primary\nand secondary\noperations
+end ' notify all in LUN
+
+note over B,A
+
+    Assume A is mutually found to be primary operation
+    so B has to make first change.
+
+endnote
+
+A->A: Proceed with operation\nknowing USS B will\ndeconflict
+B->A: POST NegotiationMessage\nREPLAN_BEGINNING_AS_SECONDARY_OPERATION\n to \\negotiations
+activate A
+A-->B: Ack via HTTP 200
+deactivate A
+
+B->B: Calculate new plan\nthat eliminates\nintersection ensuring\noperator acceptance
+
+note right
+    Note that even if B's
+    operation had commenced,
+    USS B and its supported
+    operator are still responsbile
+    as the secondary operation to
+    deconflict with A's operation.
+end note
+B->A: Updated operation PUT to \operations
+activate A
+A-->B: Ack via HTTP 200
+deactivate A
+
+
+@enduml

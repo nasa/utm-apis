@@ -1,0 +1,38 @@
+@startuml
+!include ../utm_fims_arch_seq_style.puml
+
+actor USS as U
+
+participant "FIMS-Ops-Controller" as FOC
+participant "FIMS-Authz" as FA
+participant "FIMS-Ops-Proposals" as FOP
+participant "FIMS-Ops-Messenger" as FOM
+
+U -> FOM: subscribe to my topic
+U -> FOC: submit Operation\nvia HTTPS POST
+activate FOC
+FOC -> FA: check auth
+
+activate FA
+FA -> FA: check
+FA -> FOC: auth OK
+deactivate FA
+
+FOC -> FOC: validate JSON input
+FOC -> U: HTTP 202
+FOC -> FOP: check submission
+deactivate FOC
+
+activate FOP
+FOP -> FOP: check
+FOP -> FOM: result of check
+deactivate FOP
+
+activate FOM
+FOM -> FOM: create messages
+FOM -> FOM: identify addressees
+FOM -> U: "operation thumbs up" to topic
+deactivate FOM
+
+
+@enduml

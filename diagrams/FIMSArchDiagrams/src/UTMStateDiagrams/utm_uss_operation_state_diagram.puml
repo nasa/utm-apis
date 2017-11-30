@@ -1,0 +1,36 @@
+' Project      : NASA UTM
+' Author       : Joseph Rios, joseph.l.rios@nasa.gov
+' First version: 24 Aug 2017
+
+@startuml
+!include ../utm_fims_arch_seq_style.puml
+
+title Operation State as Maintained by USS\n\
+VERSION_STAMP
+
+ACCEPTED: -> ACTIVATED: auto transition based\n         on first OpVol start time
+ACCEPTED: -> CLOSED: USS closes operation\n         prior to commencement
+
+ACTIVATED: -> NONCONFORMING: operation not\n      meeting its requirements
+ACTIVATED: -> ROGUE: operation too far\n       out of compliance
+ACTIVATED: -> CLOSED: operation is closed
+
+NONCONFORMING: -> ROGUE: operation too far\n       out of compliance
+NONCONFORMING: -> ACTIVATED: back in compliance
+NONCONFORMING: -> CLOSED: operation is closed
+
+ROGUE: -> CLOSED: operation is closed
+
+[*] --> ACCEPTED
+ACCEPTED --> ACTIVATED
+ACCEPTED --> CLOSED
+ACTIVATED --> CLOSED
+ACTIVATED --> NONCONFORMING
+ACTIVATED --> ROGUE
+NONCONFORMING --> ROGUE
+NONCONFORMING --> CLOSED
+NONCONFORMING --> ACTIVATED
+ROGUE --> CLOSED
+CLOSED --> [*]
+
+@enduml

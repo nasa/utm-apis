@@ -1,0 +1,17 @@
+@startuml
+!include ../utm_fims_arch_seq_style.puml
+
+actor USS as U
+participant "FIMS" as F
+
+U -> F: submit Operation\nvia HTTPS POST
+activate F
+F -> F: check auth
+F -> F: validate JSON input
+F -> U: HTTP 202
+F -> F: check submission
+F -> U: operation thumbs up
+deactivate F
+
+
+@enduml

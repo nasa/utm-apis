@@ -1,0 +1,12 @@
+' Project      : NASA UTM
+' Author       : Joseph Rios, joseph.l.rios@nasa.gov
+' First version: 19 May 2017
+
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam defaultFontName Courier
+skinparam backgroundColor transparent
+
+!define VERSION_STAMP %date['v'yyyyMMdd]%
+@enduml
