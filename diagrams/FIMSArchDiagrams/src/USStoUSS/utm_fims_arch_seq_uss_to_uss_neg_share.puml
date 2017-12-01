@@ -1,0 +1,42 @@
+' Project      : NASA UTM
+' Author       : Joseph Rios, joseph.l.rios@nasa.gov
+' First version: 19 May 2017
+
+@startuml
+!include ../utm_fims_arch_seq_style.puml
+
+participant "USS A" as O
+participant "USS B" as U
+participant "FIMS" as F
+
+title USS to USS Negotiation: Share Volume\n\
+VERSION_STAMP
+
+autonumber
+
+O->U: Request for ops within\nspecific geography
+activate U
+U-->O: Reply with requested data:\nHTTP 200
+deactivate U
+
+O->O: Internal Processing
+
+note right of O #aqua
+    USS A wants to use airspace
+    that intersects a known USS
+    B operation.
+
+    USS A will "negotiate" by
+    sending a request to share
+    a volume of airspace for
+    4 minutes.
+end note
+
+O->U: Negotiation request
+activate U
+U->U: process request
+U-->O: Accept negotiation request\nHTTP 200
+deactivate U
+
+O<->F: Regular plan submission flow
+@enduml

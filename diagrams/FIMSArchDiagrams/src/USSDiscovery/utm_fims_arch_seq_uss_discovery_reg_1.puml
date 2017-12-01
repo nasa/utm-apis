@@ -1,0 +1,49 @@
+' Project      : NASA UTM
+' Author       : Joseph Rios, joseph.l.rios@nasa.gov
+' First version: 19 May 2017
+
+@startuml
+!include ../utm_fims_arch_seq_style.puml
+
+participant "USS A Instance" as O
+participant "USS B" as U
+participant "USS B Instance" as B
+
+participant "USS-Discovery" as FD
+
+title USS Registration with Notification\n\
+VERSION_STAMP
+
+
+note over O
+    assume in this
+    diagram that
+    this instance has
+    been created and
+    registered
+    previously by
+    USS A
+end note
+
+autonumber
+
+|||
+ref over U, FD : USS Discovery Registration
+|||
+
+FD ->>FD : prepare notifications\nof new registration
+
+activate FD
+FD ->> O: notify of new registration\nvia POST
+note left FD
+    Note that USS B Instance will
+    receive two notification POSTs:
+    one during the "USS Discovery
+    Registration" sequence, and
+    one when that sequence is
+    successful.
+end note
+FD ->> B: notify of new registration\nvia POST
+deactivate FD
+
+@enduml

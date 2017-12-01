@@ -1,0 +1,28 @@
+' Project      : NASA UTM
+' Author       : Joseph Rios, joseph.l.rios@nasa.gov
+' First version: 19 May 2017
+
+@startuml
+!include ../utm_fims_arch_seq_style.puml
+
+
+participant "USS or USS Instance" as U
+participant "FIMS-Authz" as FA
+
+title USS Request of Access Token\n\
+VERSION_STAMP
+
+autonumber
+
+group Secure Communications via TLS 1.2
+
+U->FA: Request token via \\token endpoint\nwith "grant_type=client_credentials"\nand appropriate "scope" values\nrequest is a JWS signed with UTM key
+activate U
+FA->FA: Check signature to \nobtain/validate USS identity
+FA->FA: Check scopes appropriate\nfor identity roles
+FA->U: Issue access_token as JWS,\nsigned with UTM CA credentials
+deactivate U
+end
+
+
+@enduml
