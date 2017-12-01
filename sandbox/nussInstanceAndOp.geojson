@@ -8,40 +8,6 @@
                  "coordinates": [
                                  [
                                   [
-                                   -103.011,
-                                   47.5
-                                   ],
-                                  [
-                                   -103.333,
-                                   47.5
-                                   ],
-                                  [
-                                   -103.333,
-                                   48
-                                   ],
-                                  [
-                                   -103.011,
-                                   48
-                                   ],
-                                  [
-                                   -103.011,
-                                   47.5
-                                   ]
-                                  ]
-                                 ]
-                 },
-                 "properties": {
-                 "name": "nuss coverage area2",
-                 "uss_instance_id": "a456"
-                 }
-                 },
-                 {
-                 "type": "Feature",
-                 "geometry": {
-                 "type": "Polygon",
-                 "coordinates": [
-                                 [
-                                  [
                                    -103,
                                    47.5
                                    ],
