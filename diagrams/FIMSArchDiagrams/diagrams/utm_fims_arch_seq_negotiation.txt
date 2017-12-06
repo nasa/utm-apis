@@ -1,0 +1,96 @@
+                    ,-----.                                  ,-----.                              
+                    |USS A|                                  |USS B|                              
+                    `--+--'                                  `--+--'                              
+                       ----.                                    |                                 
+                           | Plan operation,                    |                                 
+                       <---' notice intersection                |                                 
+                             with existing USS B                |                                 
+                             operation.                         |                                 
+                                                                |                                 
+                       |                                        |                                 
+                       |  New operation POST to \operations    ,-.                                
+                       |-------------------------------------> |X|                                
+                       |                                       |X|                                
+                       |          Ack via HTTP 200             |X|                                
+                       |<- - - - - - - - - - - - - - - - - - - |X|                                
+                       |                                       `-'                                
+                       |                                        |                                 
+          ______________________________________________________________________________________  
+          ! PAR  /  both USSs send NegotiationMessage           |                               ! 
+          !_____/      |                                        |                               ! 
+          !            | POST NegotiationMessage               ,-.                              ! 
+          !            | INTERSECTING_OPERATION_NOTIFICATION   |X|                              ! 
+          !            |  to \negotiations                     |X|                              ! 
+          !            |-------------------------------------> |X|                              ! 
+          !            |                                       |X|                              ! 
+          !            |          Ack via HTTP 200             |X|                              ! 
+          !            |<- - - - - - - - - - - - - - - - - - - |X|                              ! 
+          !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~! 
+          !            |                                        |                               ! 
+          !            |                                        ----.                           ! 
+          !            |                                            | Recognize intersection    ! 
+          !            |                                        <---'  of operations            ! 
+          !            |                                                                        ! 
+          !            |                                        |                               ! 
+          !           ,-.  POST NegotiationMessage              |                               ! 
+          !           |X|  INTERSECTING_OPERATION_NOTIFICATION  |                               ! 
+          !           |X|   to \negotiations                    |                               ! 
+          !           |X| <-------------------------------------|                               ! 
+          !           |X|                                       |                               ! 
+          !           |X|           Ack via HTTP 200            |                               ! 
+          !           |X|  - - - - - - - - - - - - - - - - - - >|                               ! 
+          !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~! 
+                       |                                        |                                 
+                       |                                        |                                 
+          _________________________________________________________________________________       
+          ! PAR  /  both USSs determine who makes first change  |                          !      
+          !_____/      |                                        |                          !      
+          !            ----.                                    |                          !      
+          !                | Determine primary                  |                          !      
+          !            <---' and secondary                      |                          !      
+          !                  operations                         |                          !      
+          !                                                     |                          !      
+          !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~!      
+          !            |                                        |                          !      
+          !            |                                        ----.                      !      
+          !            |                                            | Determine primary    !      
+          !            |                                        <---' and secondary        !      
+          !            |                                              operations           !      
+          !            |                                                                   !      
+          !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~!      
+                       |                                        |                                 
+                 ,--------------------------------------------------!.                            
+                 |                                                  |_\                           
+                 |Assume A is mutually found to be primary operation  |                           
+                 |so B has to make first change.                      |                           
+                 |                                                    |                           
+                 `----------------------------------------------------'                           
+                      ,-.POST NegotiationMessage                |                                 
+                      |X|REPLAN_BEGINNING_AS_SECONDARY_OPERATION|                                 
+                      |X| to \negotiations                      |                                 
+                      |X| <-------------------------------------|                                 
+                      |X|                                       |                                 
+                      |X|           Ack via HTTP 200            |                                 
+                      |X|  - - - - - - - - - - - - - - - - - - >|                                 
+                      `-'                                       |                                 
+                       |                                        ----.                             
+                       |                                            | Calculate new plan          
+                       |                                        <---' that minimizes intersection 
+                       |                                              ensuring operator acceptance
+                       |                                                                          
+                       |                                        |                                 
+                      ,-. Updated operation POST to \operations |                                 
+                      |X| <-------------------------------------|                                 
+                      |X|                                       |                                 
+                      |X|           Ack via HTTP 200            |                                 
+                      |X|  - - - - - - - - - - - - - - - - - - >|                                 
+                      `-'                                       |                                 
+                   ,----------------------------------------------!.                              
+                   |                                              |_\                             
+                   |At this point, both operations again check for  |                             
+                   |intersection. The negotiation continues until   |                             
+                   |the documented stopping criteria.               |                             
+                   |                                                |                             
+                   `------------------------------------------------'                             
+                    |USS A|                                  |USS B|                              
+                    `-----'                                  `-----'                              

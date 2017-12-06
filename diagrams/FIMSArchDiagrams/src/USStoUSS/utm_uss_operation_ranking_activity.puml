@@ -1,0 +1,35 @@
+@startuml
+
+start
+:check equal priority;
+If "my priority relative to other priority" then
+    --> [higher] "my operation is primary"
+else
+    --> [equal] "check who previously altered"
+    if (who altered) then
+        :(me) "my operation is primary";
+    else
+        --> [no one] "check BLVOS"
+            If "which ops are BVLOS"
+                --> [only me] "my operation is primary"
+            else
+                --> [both/neither] "check schedule length"
+                    If "my operation less time"
+                        --> [Yes] "my operation is primary"
+                    else
+                        --> [no] "my operation is secondary"
+                    Endif
+            else
+                --> [only other] "my operation is secondary"
+            Endif
+    else
+        --> [other op] "my operation is secondary"
+    endif
+
+else
+--> [lower] "my operation is secondary"
+Endif
+-->(*)
+
+stop
+@enduml
