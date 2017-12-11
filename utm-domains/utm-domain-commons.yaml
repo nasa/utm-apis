@@ -491,9 +491,9 @@ definitions:
       time_measured:
         description: >-
           The time the position was measured. Likely the time provided with the
-          GPS position reading.  Time measured must be before the destination's time received, based
-          on USS system time.  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ. 
-          Note that time_measured, time_sent and time_received are describing a server to server
+          GPS position reading. Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ. 
+          Note that time_measured is likely provided by GPS position readout whereas
+          time_sent and time_received are describing a server to server
           data exchange, not the vehicle to USS data exchange.  For example, the source would be a USS
           and the destination would be FIMS or another USS.
         type: string
@@ -506,7 +506,8 @@ definitions:
           Not required for submission; assigned by the destination server. The time the position
           was received by the server based on USS system time.  Uses the ISO 8601 format conforming 
           to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  
-          Note that time_measured, time_sent and time_received are describing a server to server
+          Note that time_measured is likely provided by GPS position readout whereas
+          time_sent and time_received are describing a server to server
           data exchange, not the vehicle to USS data exchange.  For example, the source would be a USS
           and the destination would be FIMS or another USS.
         type: string
@@ -519,7 +520,8 @@ definitions:
           The time the position was sent by the USS as measured by USS
           system time.  Time sent must be before time received at the destination server, and based on USS
           system time.  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  
-          Note that time_measured, time_sent and time_received are describing a server to server
+          Note that time_measured is likely provided by GPS position readout whereas
+          time_sent and time_received are describing a server to server
           data exchange, not the vehicle to USS data exchange.  For example, the source would be a USS
           and the destination would be FIMS or another USS.
         type: string
