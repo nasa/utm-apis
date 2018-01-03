@@ -557,7 +557,10 @@ definitions:
       enroute_positions_id:
         type: string
         format: uuid
-        description: Each position will be assigned a UUIDv4 by the USS
+        description: >-
+          Each position will be assigned a UUIDv4 by the USS managing the
+          referenced operation.  Any system recieving this position object MUST
+          NOT modify this identifier.
         maxLength: 36
         minLength: 36
       gufi:
@@ -647,6 +650,15 @@ definitions:
         description: >-
           Not required for submission. This field is populated based on the
           provided credentials in the HTTPS header.
+      uss_instance_id:
+        description: >-
+          A USS instance_id value for the USS instance managing this operation. 
+          UUIDv4.
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        example: 00000000-0000-0000-0000-000000000000
       vdop_gps:
         type: number
         format: double
