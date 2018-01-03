@@ -677,6 +677,7 @@ definitions:
       - originator_id
       - sent_time
       - severity
+      - message_type
     type: object
     description: >-
       A UTM message. Used to make other stakeholders aware about an issue.  The
