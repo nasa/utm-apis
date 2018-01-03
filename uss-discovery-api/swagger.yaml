@@ -218,8 +218,6 @@ paths:
       summary: "Request information regarding a single USS Instance"
       description: "Allows for querying for USS Instances."
       operationId: "getUSS"
-      consumes:
-      - "application/json"
       produces:
       - "application/json"
       parameters:
