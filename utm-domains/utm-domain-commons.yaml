@@ -1,42 +1,40 @@
-### UAS Traffic Management (UTM) API Domain elements
-
-## This document contains definitions, path items, parameters, and responses that 
-## are common across APIs. 
-## joseph.rios@nasa.gov
-
 info:
-  description: "UTM models (swagger domain)"
-  version: 'v1'
+  description: UTM models (swagger domain)
+  version: v1
   title: UTM models
-  
 definitions:
   scope:
     description: >-
-      The set of scopes used in UTM OAuth 2.0 implementation. Scopes take the form of <namespace>_<operation>.<object> where "operation" is the type of permission (read/write, etc.) and "object" is the type of thing the action is performed upon. A "write" action should be assumed to all read access to the subject as well as writing. The namespace may aid in deconfliction and clarity of scopes. Terms conform to INCITS 359.
+      The set of scopes used in UTM OAuth 2.0 implementation. Scopes take the
+      form of <namespace>_<operation>.<object> where "operation" is the type of
+      permission (read/write, etc.) and "object" is the type of thing the action
+      is performed upon. A "write" action should be assumed to all read access
+      to the subject as well as writing. The namespace may aid in deconfliction
+      and clarity of scopes. Terms conform to INCITS 359.
     type: string
     enum:
-    - utm.nasa.gov_write.operation
-    - utm.nasa.gov_read.operation
-    - utm.nasa.gov_write.message
-    - utm.nasa.gov_read.message
-    - utm.nasa.gov_write.publicsafety
-    - utm.nasa.gov_read.publicsafety
-    - utm.nasa.gov_write.constraint
-    - utm.nasa.gov_read.constraint
-    - utm.nasa.gov_read.sdsp
-    - utm.nasa.gov_write.sdsp
-    - utm.nasa.gov_all.all
-    - utm.nasa.gov_read.min_data
-  
-  # Labels taken from RFC 5424
+      - utm.nasa.gov_write.operation
+      - utm.nasa.gov_read.operation
+      - utm.nasa.gov_write.message
+      - utm.nasa.gov_read.message
+      - utm.nasa.gov_write.publicsafety
+      - utm.nasa.gov_read.publicsafety
+      - utm.nasa.gov_write.constraint
+      - utm.nasa.gov_read.constraint
+      - utm.nasa.gov_read.sdsp
+      - utm.nasa.gov_write.sdsp
+      - utm.nasa.gov_all.all
+      - utm.nasa.gov_read.min_data
   severity:
     description: >-
-      The severity level of a UTMMessage. This severity labeling may be used by other components within UTM as well.  The labels are ordered such that they may be given priority handling by software systems and human users.
-      
+      The severity level of a UTMMessage. This severity labeling may be used by
+      other components within UTM as well.  The labels are ordered such that
+      they may be given priority handling by software systems and human users.
+
       **EMERGENCY > ALERT > CRITICAL > WARNING > NOTICE > INFORMATIONAL**
-      
+
       In relation to a UTMMessage, the severities may be interpreted as follows.
-      
+
       1. **EMERGENCY**
         There is an **immediate** impact to the safety of other air operations, the safety of people, or the safety of structures on the ground. Actions to mitigate required by other operations.
       2. **ALERT**
@@ -49,106 +47,131 @@ definitions:
         This issue is provided for situational awareness. Planning by operators and USSs may be affected.
       6. **INFORMATIONAL**
         This issue is provided for situational awareness.
-      
     type: string
     enum:
-    - EMERGENCY      
-    - ALERT          
-    - CRITICAL       
-    - WARNING         
-    - NOTICE         
-    - INFORMATIONAL  
-  
+      - EMERGENCY
+      - ALERT
+      - CRITICAL
+      - WARNING
+      - NOTICE
+      - INFORMATIONAL
   Operation:
     type: object
     required:
-    - gufi
-    - registration
-    - faa_rule
-    - state
-    - primary_contact_name
-    - primary_contact_phone
-    - controller_location
-    - operation_volumes
+      - gufi
+      - registration
+      - faa_rule
+      - state
+      - primary_contact_name
+      - primary_contact_phone
+      - controller_location
+      - operation_volumes
     properties:
       gufi:
-        description: "Created and assigned by originating USS. Validated as UUID version 4 specification."
+        description: >-
+          Created and assigned by originating USS. Validated as UUID version 4
+          specification.
         type: string
         format: uuid
         maxLength: 36
         minLength: 36
-        example: "00000000-0000-0000-0000-000000000000"
+        example: 00000000-0000-0000-0000-000000000000
       uss_name:
-        description: "Identity of the USS.  The maximum and minimum character length is based on a usable domain name, and considering the maximum in RFC-1035"
+        description: >-
+          Identity of the USS.  The maximum and minimum character length is
+          based on a usable domain name, and considering the maximum in RFC-1035
         type: string
         maxLength: 250
         minLength: 1
-        example: "utmbeta.arc.nasa.gov"
+        example: utmbeta.arc.nasa.gov
       uss_instance_id:
-        description: "Identity of the USS Instance hosting this operation."
+        description: Identity of the USS Instance hosting this operation.
         type: string
         format: uuid
         maxLength: 36
         minLength: 36
-        example: "00000000-0000-0000-0000-000000000000"
+        example: 00000000-0000-0000-0000-000000000000
       submit_time:
         description: >-
-          Time the operation submission was received by USS. Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ. Seconds may have up to millisecond accuracy (three positions after decimal).  The 'Z' implies UTC times and is the only timezone accepted. This value is generally set by the server upon receipt of new data.
+          Time the operation submission was received by USS. Uses the ISO 8601
+          format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ. Seconds may
+          have up to millisecond accuracy (three positions after decimal).  The
+          'Z' implies UTC times and is the only timezone accepted. This value is
+          generally set by the server upon receipt of new data.
         type: string
         format: date-time
         minLength: 20
         maxLength: 25
-        example: "2015-08-20T14:11:56.118Z"
+        example: '2015-08-20T14:11:56.118Z'
       decision_time:
         description: >-
-          A timestamp set by the USS any time the state of the operation is updated, for example when the flight goes from ACCEPTED to ACTIVATED.  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy (three positions after decimal).  The 'Z' implies UTC times and is the only timezone accepted.
+          A timestamp set by the USS any time the state of the operation is
+          updated, for example when the flight goes from ACCEPTED to ACTIVATED. 
+          Uses the ISO 8601 format conforming to pattern:
+          YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy
+          (three positions after decimal).  The 'Z' implies UTC times and is the
+          only timezone accepted.
         type: string
         format: date-time
         minLength: 20
         maxLength: 25
-        example: "2015-08-20T14:11:56.118Z"
+        example: '2015-08-20T14:11:56.118Z'
       aircraft_comments:
-        description: "Informative text about the aircraft. Not used by the UTM System. Only for human stakeholders."
+        description: >-
+          Informative text about the aircraft. Not used by the UTM System. Only
+          for human stakeholders.
         type: string
-        default: "NOT PROVIDED"
+        default: NOT PROVIDED
         maxLength: 1000
       flight_comments:
-        description: "Informative text about the operation. Not used by the UTM System. Only for human stakeholders."
+        description: >-
+          Informative text about the operation. Not used by the UTM System. Only
+          for human stakeholders.
         type: string
-        default: "NOT PROVIDED"
+        default: NOT PROVIDED
         maxLength: 1000
       volumes_description:
-        description: "Informative text about the operational volumes. Not used by the UTM System. Only for human stakeholders."
+        description: >-
+          Informative text about the operational volumes. Not used by the UTM
+          System. Only for human stakeholders.
         type: string
-        default: "NOT PROVIDED"
+        default: NOT PROVIDED
         maxLength: 1000
       registration:
-        description: "The registration ID of the vehicle flying this operation. This registration value is provided to operators by a vehicle registrar. Validated as a non-null string. Array due to possibility of multi-vehicle operation."
+        description: >-
+          The registration ID of the vehicle flying this operation. This
+          registration value is provided to operators by a vehicle registrar.
+          Validated as a non-null string. Array due to possibility of
+          multi-vehicle operation.
         type: array
         items:
           type: string
           maxLength: 1000
-        minItems: 1  
+        minItems: 1
       airspace_authorization:
         description: TBD
         type: string
         format: uuid
         maxLength: 36
         minLength: 36
-        example: "00000000-0000-0000-0000-000000000000"
+        example: 00000000-0000-0000-0000-000000000000
       flight_number:
-        description: "Optional. For use by USS for identification purposes."
+        description: Optional. For use by USS for identification purposes.
         type: string
         maxLength: 100
       user_id:
-        description: "This field is populated based on the provided credentials."
+        description: This field is populated based on the provided credentials.
         type: string
       created_by:
-        description: "The user that created the operation."
+        description: The user that created the operation.
         type: string
         maxLength: 100
       primary_contact_name:
-        description: "Not currently checked for validity, but clients should endeavor to provide useful, appropriate information in these fields. These values should represent the contact that should be used in case of an issue with the operation before, during, or after that operation."
+        description: >-
+          Not currently checked for validity, but clients should endeavor to
+          provide useful, appropriate information in these fields. These values
+          should represent the contact that should be used in case of an issue
+          with the operation before, during, or after that operation.
         type: string
         maxLength: 100
       primary_contact_phone:
@@ -160,14 +183,18 @@ definitions:
         format: email
         maxLength: 100
       extra_contact_info:
-        description: "Any additional contact information that may be useful (hours of availability, fax number, communication limitations, etc.)."
+        description: >-
+          Any additional contact information that may be useful (hours of
+          availability, fax number, communication limitations, etc.).
         type: string
-        default: "NOT PROVIDED"
+        default: NOT PROVIDED
         maxLength: 1000
       state:
-        description: |
-          The current state of the operation.  Must be maintained by the USS. Some additional details in the USS Specification.
-          
+        description: >
+          The current state of the operation.  Must be maintained by the USS.
+          Some additional details in the USS Specification.
+
+
           1. ACCEPTED
             This operation has been deemed ACCEPTED by the supporting USS. This implies that the operation meets the requirements for operating in the airspace based on the type of operation submitted.
           2. ACTIVATED
@@ -180,27 +207,27 @@ definitions:
             See USS Specification for requirements to transition to this state.
         type: string
         enum:
-        - ACCEPTED
-        - ACTIVATED
-        - CLOSED
-        - NONCONFORMING
-        - ROGUE
+          - ACCEPTED
+          - ACTIVATED
+          - CLOSED
+          - NONCONFORMING
+          - ROGUE
       controller_location:
-        # description: "The planned position of the UAS Controller during the operation. Assumed to be a static location."
         $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Point'
       gcs_location:
-        # description: "If not submitted, the UTM System will assume the GCS is co-located with the UAS Controller.  Assumed to be a static location. May assist USS in determining LOS"
         $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Point'
       contingency_plans:
         description: >-
-          An array of ContingencyPlans wherein this operation may land if needed/required during operation. Aids in planning and communication during the execution of a contingency.
+          An array of ContingencyPlans wherein this operation may land if
+          needed/required during operation. Aids in planning and communication
+          during the execution of a contingency.
         type: array
         maxItems: 12
         minItems: 1
         items:
           $ref: '#/definitions/ContingencyPlan'
       faa_rule:
-        description: >-
+        description: |-
           1. PART_107
             The operation follows FAA rule 107. Submission of such operations is mandatory
 
@@ -214,118 +241,149 @@ definitions:
             Placeholder for other types of operations.
         type: string
         enum:
-        - PART_107
-        - PART_107X
-        - PART_101E
-        - OTHER
+          - PART_107
+          - PART_107X
+          - PART_101E
+          - OTHER
       priority_elements:
         $ref: '#/definitions/PriorityElements'
-
       operation_volumes:
-        description: "The actual geographical information for the operation.  Maximum array length of 12 currently allowed."
+        description: >-
+          The actual geographical information for the operation.  Maximum array
+          length of 12 currently allowed.
         type: array
         maxLength: 12
         minLength: 1
         items:
-          $ref: "#/definitions/OperationVolume"
+          $ref: '#/definitions/OperationVolume'
       metadata:
-        $ref: 'https://api.swaggerhub.com/domains/utm/metadata/v1#/definitions/EventMetadata'
-    
+        $ref: >-
+          https://api.swaggerhub.com/domains/utm/metadata/v1#/definitions/EventMetadata
   PriorityElements:
     description: >-
-      Data elements used to describe the status of priority operation. Nominal operations need not include these data.
-      
-      priority_level must take one of the four values EMERGENCY, ALERT, CRITICAL, or NOTICE.  NOTICE must only be used with a priority_status of NONE.  The other values should be used based on impact to other operations and safety of people and property on the ground.
+      Data elements used to describe the status of priority operation. Nominal
+      operations need not include these data.
+
+      priority_level must take one of the four values EMERGENCY, ALERT,
+      CRITICAL, or NOTICE.  NOTICE must only be used with a priority_status of
+      NONE.  The other values should be used based on impact to other operations
+      and safety of people and property on the ground.
     type: object
     required:
-    - priority_level
-    - priority_status
+      - priority_level
+      - priority_status
     properties:
       priority_level:
-        $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/severity'
+        $ref: >-
+          https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/severity
       priority_status:
         type: string
-        description: If a PUBLIC_SAFETY operation is POSTed to any endpoint, the correct scope will be required. Any USS may POST an INFLIGHT_EMERGENCY with non-priority scopes.  NONE should only be used to indicate that an operation that previously had a priority status now has no priority status.
+        description: >-
+          If a PUBLIC_SAFETY operation is POSTed to any endpoint, the correct
+          scope will be required. Any USS may POST an INFLIGHT_EMERGENCY with
+          non-priority scopes.  NONE should only be used to indicate that an
+          operation that previously had a priority status now has no priority
+          status.
         enum:
-        - NONE
-        - PUBLIC_SAFETY
-        - INFLIGHT_EMERGENCY
-      
-
+          - NONE
+          - PUBLIC_SAFETY
+          - INFLIGHT_EMERGENCY
   OperationVolume:
     type: object
     required:
-    - ordinal
-    - effective_time_begin
-    - effective_time_end
-    - min_altitude_wgs84_ft
-    - max_altitude_wgs84_ft
-    - operation_geography
-    - beyond_visual_line_of_sight
+      - ordinal
+      - effective_time_begin
+      - effective_time_end
+      - min_altitude_wgs84_ft
+      - max_altitude_wgs84_ft
+      - operation_geography
+      - beyond_visual_line_of_sight
     properties:
       ordinal:
-        description: "This integer represents the ordering of the operation volume within the set of operation volumes. Need not be consecutive integers."
+        description: >-
+          This integer represents the ordering of the operation volume within
+          the set of operation volumes. Need not be consecutive integers.
         type: integer
       near_structure:
-        description: "Is this operation volume within 400' of a structure?"
+        description: Is this operation volume within 400' of a structure?
         type: boolean
         default: false
       effective_time_begin:
         description: >-
-          Earliest time the operation will use the operation volume.  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy (three positions after decimal).  The 'Z' implies UTC times and is the only timezone accepted.
+          Earliest time the operation will use the operation volume.  Uses the
+          ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ. 
+          Seconds may have up to millisecond accuracy (three positions after
+          decimal).  The 'Z' implies UTC times and is the only timezone
+          accepted.
         type: string
         format: date-time
         minLength: 20
         maxLength: 25
-        example: "2015-08-20T14:11:56.118Z"
+        example: '2015-08-20T14:11:56.118Z'
       effective_time_end:
         description: >-
-          Latest time the operation will done with the operation volume. It must be greater than effective_time_begin.  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy (three positions after decimal).  The 'Z' implies UTC times and is the only timezone accepted.
+          Latest time the operation will done with the operation volume. It must
+          be greater than effective_time_begin.  Uses the ISO 8601 format
+          conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up
+          to millisecond accuracy (three positions after decimal).  The 'Z'
+          implies UTC times and is the only timezone accepted.
         type: string
         format: date-time
         minLength: 20
         maxLength: 25
-        example: "2015-08-20T15:11:56.118Z"
+        example: '2015-08-20T15:11:56.118Z'
       actual_time_end:
         description: >-
-          Time that the operational volume was freed for use by other operations.  Should be populated and stored by the USS. Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy (three positions after decimal).  The 'Z' implies UTC times and is the only timezone accepted.
+          Time that the operational volume was freed for use by other
+          operations.  Should be populated and stored by the USS. Uses the ISO
+          8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds
+          may have up to millisecond accuracy (three positions after decimal). 
+          The 'Z' implies UTC times and is the only timezone accepted.
         type: string
         format: date-time
         minLength: 20
         maxLength: 25
-        example: "2015-08-20T14:31:56.118Z"
+        example: '2015-08-20T14:31:56.118Z'
       min_altitude_wgs84_ft:
-        description: "The minimum altitude for this operation in this operation volume. In WGS84 reference system using feet as units."
+        description: >-
+          The minimum altitude for this operation in this operation volume. In
+          WGS84 reference system using feet as units.
         type: number
         format: double
       max_altitude_wgs84_ft:
-        description: "The maximum altitude for this operation in this operation volume. In WGS84 reference system using feet as units."
+        description: >-
+          The maximum altitude for this operation in this operation volume. In
+          WGS84 reference system using feet as units.
         type: number
         format: double
       operation_geography:
-        # description: "A description of the operational area.  This should be the area within which the operation will remain."
         $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Polygon'
       beyond_visual_line_of_sight:
-        description: "Describes whether the operation volume is beyond the visual line of sight of the RPIC."
+        description: >-
+          Describes whether the operation volume is beyond the visual line of
+          sight of the RPIC.
         type: boolean
-
   ContingencyPlan:
     type: object
     properties:
       contingency_id:
         description: >-
-          A positive integer unique amongst the set of Contingencies for this operation. The integers may be ordered by some scheme, but this is not required.
+          A positive integer unique amongst the set of Contingencies for this
+          operation. The integers may be ordered by some scheme, but this is not
+          required.
         type: number
         format: integer
         minimum: 1
-        maximum: 1000 # for sanity checking input   
+        maximum: 1000
         example: 1
       contingency_cause:
         type: array
         items:
           description: >-
-            A cause that necessitates a contingency response. In planning an operation, this array of values represents the various causes that may necessitate the provided contingency response.
-          
+            A cause that necessitates a contingency response. In planning an
+            operation, this array of values represents the various causes that
+            may necessitate the provided contingency response.
+
             1. LOST_C2_UPLINK
               The operation has lost command or control uplink to the vehicle.
             2. LOST_C2_DOWNLINK
@@ -356,24 +414,23 @@ definitions:
               This category should only be used within an operation plan when a particular contingency response is appropriate for any contingency cause.
           type: string
           enum:
-          - LOST_C2_UPLINK
-          - LOST_C2_DOWNLINK
-          - LOST_NAV
-          - LOST_SAA
-          - LOW_FUEL
-          - NO_FUEL
-          - MECHANICAL_PROBLEM
-          - SOFTWARE_PROBLEM
-          - ENVIRONMENTAL
-          - SECURITY
-          - TRAFFIC
-          - LOST_USS
-          - OTHER
-          - ANY
+            - LOST_C2_UPLINK
+            - LOST_C2_DOWNLINK
+            - LOST_NAV
+            - LOST_SAA
+            - LOW_FUEL
+            - NO_FUEL
+            - MECHANICAL_PROBLEM
+            - SOFTWARE_PROBLEM
+            - ENVIRONMENTAL
+            - SECURITY
+            - TRAFFIC
+            - LOST_USS
+            - OTHER
+            - ANY
       contingency_response:
-        description: >-
+        description: |-
           The type of contingency response.
-          
           1. LANDING
             The operation will be landing by targeting the contingency_point.
           2. LOITERING
@@ -382,84 +439,115 @@ definitions:
             The operation will return to base as specified by the contingency_point. The USS may issue an update to the operation plan to support this maneuver.
         type: string
         enum:
-        - LANDING
-        - LOITERING
-        - RETURN_TO_BASE
+          - LANDING
+          - LOITERING
+          - RETURN_TO_BASE
       contingency_point:
-        # description: "Specific point for this contingency location. May be supplemented by other fields for altitude, etc."
         $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Point'
       loiter_altitude_wgs84_ft:
-        description: "The altitude for this contingency. Relevant and required for the LOITERING contingency_type, ignored for all other types. In WGS84 reference system using feet as units."
+        description: >-
+          The altitude for this contingency. Relevant and required for the
+          LOITERING contingency_type, ignored for all other types. In WGS84
+          reference system using feet as units.
         type: number
         format: double
       loiter_radius_ft:
-        description: "The radius of airspace used in loitering for this contingency. Relevant and required for the LOITERING contingency_type, ignored for all other types. Using feet as units."
+        description: >-
+          The radius of airspace used in loitering for this contingency.
+          Relevant and required for the LOITERING contingency_type, ignored for
+          all other types. Using feet as units.
         type: number
         format: double
       relative_preference:
         description: >-
-          Optional numerical value that can be used in ranking the preference of this Contingency versus any other within the set of Contingency for this operation. This may be thought of as a ranking of the potential landing sites with all other factors being held equal, though dynamic conditions will likely play a role in adjusting this ranking in real time by the USS or Operator.  For example, one Contingency may be significantly further from the operation at a given time and, thus, would be less preferred than it might be otherwise. Further interpretation of this field is left to the operator and USS. 
+          Optional numerical value that can be used in ranking the preference of
+          this Contingency versus any other within the set of Contingency for
+          this operation. This may be thought of as a ranking of the potential
+          landing sites with all other factors being held equal, though dynamic
+          conditions will likely play a role in adjusting this ranking in real
+          time by the USS or Operator.  For example, one Contingency may be
+          significantly further from the operation at a given time and, thus,
+          would be less preferred than it might be otherwise. Further
+          interpretation of this field is left to the operator and USS. 
         type: number
         format: double
-        minimum: 0.0
+        minimum: 0
       contingency_location_description:
-        description: >-
-          Optional description of the contingency location.
+        description: Optional description of the contingency location.
         type: string
         maxLength: 1000
       relevant_operation_volumes:
         description: >-
-          In the planning stage of an operation, this array may be populated with ordinals that correspond to the ordinal values supplied with each OperationVolume. This is an indicator that this particular ContingencyPlan is valid for use when the operation is active in any of the particular noted OperationVolumes.
+          In the planning stage of an operation, this array may be populated
+          with ordinals that correspond to the ordinal values supplied with each
+          OperationVolume. This is an indicator that this particular
+          ContingencyPlan is valid for use when the operation is active in any
+          of the particular noted OperationVolumes.
         type: array
         items:
           type: integer
           format: int32
       valid_time_begin:
         description: >-
-          Optional. Time that this location is expected to be first available. For example, if an operation begins at 1100, but this location is not available until 1105 at the earliest, then this field could indicate that fact. Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy (three positions after decimal).  The 'Z' implies UTC times and is the only timezone accepted.
+          Optional. Time that this location is expected to be first available.
+          For example, if an operation begins at 1100, but this location is not
+          available until 1105 at the earliest, then this field could indicate
+          that fact. Uses the ISO 8601 format conforming to pattern:
+          YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy
+          (three positions after decimal).  The 'Z' implies UTC times and is the
+          only timezone accepted.
         type: string
         format: date-time
         minLength: 20
         maxLength: 25
-        example: "2015-08-20T14:31:56.118Z"
+        example: '2015-08-20T14:31:56.118Z'
       valid_time_end:
         description: >-
-          Optional. Time that this location is expected to become unavailable. For example, if an operation begins at 1100, but this location becomes closed for some reason at 1105, then this field could indicate that fact. Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy (three positions after decimal).  The 'Z' implies UTC times and is the only timezone accepted.
+          Optional. Time that this location is expected to become unavailable.
+          For example, if an operation begins at 1100, but this location becomes
+          closed for some reason at 1105, then this field could indicate that
+          fact. Uses the ISO 8601 format conforming to pattern:
+          YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy
+          (three positions after decimal).  The 'Z' implies UTC times and is the
+          only timezone accepted.
         type: string
         format: date-time
         minLength: 20
         maxLength: 25
-        example: "2015-08-20T14:31:56.118Z"
-  
+        example: '2015-08-20T14:31:56.118Z'
   Position:
     type: object
     required:
-    - enroute_positions_id
-    - altitude_gps_wgs84_ft
-    - altitude_num_gps_satellites
-    - gufi
-    - hdop_gps
-    - location
-    - time_measured
-    - time_sent
-    - track_ground_speed_kn
-    - track_true_north_deg
-    - vdop_gps
+      - enroute_positions_id
+      - altitude_gps_wgs84_ft
+      - altitude_num_gps_satellites
+      - gufi
+      - hdop_gps
+      - location
+      - time_measured
+      - time_sent
+      - track_ground_speed_kn
+      - track_true_north_deg
+      - vdop_gps
     properties:
       air_speed_source:
         type: string
-        description: Required if air_speed_track_kn is submitted. No requirements yet on the values here, but suggestions include ESTIMATED or MEASURED.
+        description: >-
+          Required if air_speed_track_kn is submitted. No requirements yet on
+          the values here, but suggestions include ESTIMATED or MEASURED.
         maxLength: 100
       air_speed_track_kn:
         type: number
         format: double
-        description: Air speed in relation to the direction of travel of the aircraft.
+        description: >-
+          Air speed in relation to the direction of travel of the aircraft.
           Value may be negative.
       altitude_gps_wgs84_ft:
         type: number
         format: double
-        description: The altitude as measured via a GPS device on the aircraft. Units
-          in feet using the WGS84 reference system.
+        description: >-
+          The altitude as measured via a GPS device on the aircraft. Units in
+          feet using the WGS84 reference system.
       altitude_num_gps_satellites:
         type: integer
         format: int32
@@ -475,154 +563,182 @@ definitions:
       gufi:
         type: string
         format: uuid
-        description: Each operation has an GUFI assigned upon submission. Required upon
-          POSTing a new position. It is a JSON string, but conforms to the UUID version 4 specification
+        description: >-
+          Each operation has an GUFI assigned upon submission. Required upon
+          POSTing a new position. It is a JSON string, but conforms to the UUID
+          version 4 specification
         maxLength: 36
         minLength: 36
       hdop_gps:
         type: number
         format: double
-        description: The horizontal dilution of precision as provided by the onboard
-          GPS.
-        minimum: 0.0
+        description: The horizontal dilution of precision as provided by the onboard GPS.
+        minimum: 0
       location:
-        # description: "A description of the 2D location.  A Point GeoJSON."
         $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Point'
       time_measured:
         description: >-
           The time the position was measured. Likely the time provided with the
           GPS position reading.  Time must be before time received at FIMS based
-          on FIMS system time.  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy (three positions after decimal).  The 'Z' implies UTC times and is the only timezone accepted.
+          on FIMS system time.  Uses the ISO 8601 format conforming to pattern:
+          YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy
+          (three positions after decimal).  The 'Z' implies UTC times and is the
+          only timezone accepted.
         type: string
         format: date-time
         minLength: 20
         maxLength: 25
-        example: "2015-08-20T14:11:56.118Z"
+        example: '2015-08-20T14:11:56.118Z'
       time_received:
         description: >-
           Not required for submission, assigned by FIMS. The time the position
-          was received by FIMS based on FIMS system time.  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy (three positions after decimal).  The 'Z' implies UTC times and is the only timezone accepted.
+          was received by FIMS based on FIMS system time.  Uses the ISO 8601
+          format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may
+          have up to millisecond accuracy (three positions after decimal).  The
+          'Z' implies UTC times and is the only timezone accepted.
         type: string
         format: date-time
         minLength: 20
         maxLength: 25
-        example: "2015-08-20T14:11:57.345Z"
+        example: '2015-08-20T14:11:57.345Z'
       time_sent:
         description: >-
           The time the position was sent by the USS to FIMS as measured by USS
           system time.  Time must be before time received at FIMS based on FIMS
-          system time.  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy (three positions after decimal).  The 'Z' implies UTC times and is the only timezone accepted.
+          system time.  Uses the ISO 8601 format conforming to pattern:
+          YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy
+          (three positions after decimal).  The 'Z' implies UTC times and is the
+          only timezone accepted.
         type: string
         format: date-time
         minLength: 20
         maxLength: 25
-        example: "2015-08-20T14:11:57.968Z"
+        example: '2015-08-20T14:11:57.968Z'
       track_ground_speed_kn:
         type: number
         format: double
-        description: Ground speed int the direction of travel. Value must be >= 0.0.
-          In knots.
-        minimum: 0.0
+        description: >-
+          Ground speed int the direction of travel. Value must be >= 0.0. In
+          knots.
+        minimum: 0
         exclusiveMinimum: false
       track_magnetic_north_deg:
         type: number
         format: double
-        description: The direction of travel relative to magnetic north in degrees.
-          Value must be >= 0.0 and < 360.0.
-        minimum: 0.0
+        description: >-
+          The direction of travel relative to magnetic north in degrees. Value
+          must be >= 0.0 and < 360.0.
+        minimum: 0
         exclusiveMinimum: false
-        maximum: 360.0
+        maximum: 360
         exclusiveMaximum: true
       track_true_north_deg:
         type: number
         format: double
-        description: The direction of travel relative to true north in degrees. Value
-          must be >= 0.0 and < 360.0.
-        minimum: 0.0
+        description: >-
+          The direction of travel relative to true north in degrees. Value must
+          be >= 0.0 and < 360.0.
+        minimum: 0
         exclusiveMinimum: false
-        maximum: 360.0
+        maximum: 360
         exclusiveMaximum: true
       user_id:
         type: string
-        description: Not required for submission. This field is populated based on the
+        description: >-
+          Not required for submission. This field is populated based on the
           provided credentials in the HTTPS header.
       vdop_gps:
         type: number
         format: double
-        description: The vertical dilultion of precision as provided by the onboard
-          GPS.
-        minimum: 0.0
+        description: The vertical dilultion of precision as provided by the onboard GPS.
+        minimum: 0
     example:
       altitude_gps_wgs84_ft: 1111.111
       altitude_num_gps_satellites: 22
-      air_speed_source: "MEASURED"
-      gufi: "00000000-0000-4444-8888-000000000000"
+      air_speed_source: MEASURED
+      gufi: 00000000-0000-4444-8888-000000000000
       hdop_gps: 77.7
-      time_measured: "2016-10-04T09:15:40.727Z"
-      time_sent: "2016-10-04T09:15:40.727Z"
-      time_received: "2016-10-04T09:15:42.727Z"
+      time_measured: '2016-10-04T09:15:40.727Z'
+      time_sent: '2016-10-04T09:15:40.727Z'
+      time_received: '2016-10-04T09:15:42.727Z'
       track_ground_speed_kn: 33.33
       track_true_north_deg: 235.027287562664
       track_magnetic_north_deg: 237.123456789123
       vdop_gps: 88.8
       location:
-        type: "Point"
+        type: Point
         coordinates:
-        - -122.05635935068132
-        - 37.41436490284069
-  
+          - -122.05635935068132
+          - 37.41436490284069
   UTMMessage:
-    required: 
-    - message_id
-    - origin
-    - originator_id
-    - sent_time
-    - severity
+    required:
+      - message_id
+      - origin
+      - originator_id
+      - sent_time
+      - severity
     type: object
     description: >-
-      A message. Used to make other stakeholders aware about an issue.
+      A UTM message. Used to make other stakeholders aware about an issue.  The
+      noted required fields are required for all UTMMessages, however there are
+      fields that are contextually required depending on the type of message.
+      Please see the descriptions provided with each field.
     properties:
       message_id:
-        description: A UUID assigned to this message by the originator
+        description: A UUIDv4 assigned to this message by the originator.
         type: string
         format: uuid
         maxLength: 36
         minLength: 36
-        example: "00000000-0000-0000-0000-000000000000"
+        example: 00000000-0000-0000-0000-000000000000
       origin:
-        description: >-
-          The user or process that generated this message
+        description: The user or process that generated this message.
         type: string
         enum:
-        - FIMS
-        - USS
-        - OTHER
+          - FIMS
+          - USS
+          - OTHER
       originator_id:
         description: >-
-          A name identifying the originator of this message.
+          A name identifying the originator of this message. If a USS is the
+          originator, then this field MUST be the uss_id as known by the
+          authorization server.
         type: string
         maxLength: 100
-      gufi:
+      originator_uss_instance_id:
         description: >-
-          The GUFI for the operation referenced in this message.
+          A USS instance_id value of the originator of this message.  This aids
+          with certain requests such as position report requests.  UUIDv4.
         type: string
         format: uuid
         maxLength: 36
         minLength: 36
-        example: "00000000-0000-0000-0000-000000000000"
+        example: 00000000-0000-0000-0000-000000000000
+      gufi:
+        description: The GUFI for the operation referenced in this message.  UUIDv4.
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        example: 00000000-0000-0000-0000-000000000000
       sent_time:
         description: >-
-          Time the message was generated by the origin.  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy (three positions after decimal).  The 'Z' implies UTC times and is the only timezone accepted."
+          Time the message was generated by the origin.  Uses the ISO 8601
+          format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may
+          have up to millisecond accuracy (three positions after decimal).  The
+          'Z' implies UTC times and is the only timezone accepted."
         type: string
         format: date-time
         maxLength: 100
-        example: "2015-08-20T14:11:57.345Z"
+        example: '2015-08-20T14:11:57.345Z'
       severity:
-        $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/severity'
-      alert_type:
+        $ref: >-
+          https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/severity
+      message_type:
         description: >-
-          The type of alert message. An enum to constrain messages and allow better interoperability. Required with "CRITICAL" or higher severity, may be ignored by receiver otherwise.
-          
+          The type of message. An enum to constrain messages and allow better
+          interoperability. Required with "CRITICAL" or higher severity.
+
           1. UNPLANNED_LANDING
             This operation had to land earlier than expected and/or at a location other than was originally planned.
           2. UNCONTROLLED_LANDING
@@ -639,53 +755,59 @@ definitions:
             Description TBD.
           8. CONTINGENCY_PLAN_CANCELLED
             Description TBD.
-          9. POSITION_REPORT_REQUESTED
-            Description TBD.
-          10. OTHER_SEE_FREE_TEXT
-            Description TBD.
+          9. PERIODIC_POSITION_REPORTS_START
+            The requestor wants position reports provided for the operation referenced in the 'gufi' field of this request. Thus, 'gufi' is a *required* field when using this message_type.  Reports MUST be provided as per the USS Specification.
+          10. PERIODIC_POSITION_REPORTS_END
+            The requestor wants previously requested position reports to end. 'gufi' is a *required* field when using this message_type.  If this message is received without a corresponding PERIODIC_POSITION_REPORTS_START, the message response is TBD (200, 400, 401, 404, etc.)
+          11. OTHER_SEE_FREE_TEXT
+            Messages that do not fit any of the otherwise defined categories. Should be used sparingly or with additional out-of-band description.
         type: string
         enum:
-        - UNPLANNED_LANDING
-        - UNCONTROLLED_LANDING
-        - OPERATION_NONCONFORMING
-        - OPERATION_ROGUE
-        - OPERATION_CONFORMING
-        - OPERATION_CLOSED
-        - CONTINGENCY_PLAN_INITIATED
-        - CONTINGENCY_PLAN_CANCELLED
-        - POSITION_REPORT_REQUESTED
-        - OTHER_SEE_FREE_TEXT 
+          - UNPLANNED_LANDING
+          - UNCONTROLLED_LANDING
+          - OPERATION_NONCONFORMING
+          - OPERATION_ROGUE
+          - OPERATION_CONFORMING
+          - OPERATION_CLOSED
+          - CONTINGENCY_PLAN_INITIATED
+          - CONTINGENCY_PLAN_CANCELLED
+          - PERIODIC_POSITION_REPORTS_START
+          - PERIODIC_POSITION_REPORTS_END
+          - OTHER_SEE_FREE_TEXT
       last_known_position:
-        # Last known position of the operation.  The Position model has time incorporated, together with other relevant data.
-        $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Position'
+        $ref: >-
+          https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Position
       contingency:
-        # Required if this is a CONTINGENCY_PLAN_INITIATED message.
-        $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/ContingencyPlan'
+        $ref: >-
+          https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/ContingencyPlan
       prev_message_id:
         description: >-
-          A message_id of a previously sent message that has relevance or context for this message. Example might be "CONTINGENCY_PLAN_CANCELLED" referencing the previous "CONTINGENCY_PLAN_INITIATED" message.
+          A message_id of a previously sent message that has relevance or
+          context for this message. Example might be
+          "CONTINGENCY_PLAN_CANCELLED" referencing the previous
+          "CONTINGENCY_PLAN_INITIATED" message. UUIDv4.
         type: string
         format: uuid
         maxLength: 36
         minLength: 36
-        example: "00000000-0000-0000-0000-000000000000"
-      metadata:
-        $ref: 'https://api.swaggerhub.com/domains/utm/metadata/v1#/definitions/EventMetadata'
+        example: 00000000-0000-0000-0000-000000000000
       free_text:
         description: >-
-          Any additional information. Note that this is for human consumption. All time critical elements should be captured in the other data fields for easier consumption by other automated systems.
+          Any additional information. Note that this is for human consumption.
+          All time critical elements should be captured in the other data fields
+          for easier consumption by other automated systems.
         type: string
         maxLength: 1000
-        
   ConstraintMessage:
-    description: |
-     An element defined by spatial and temporal bounds that affects UAS operations by limiting access to that 4D bounded volume.
-    required: 
-     - message_id
-     - type
+    description: >
+      An element defined by spatial and temporal bounds that affects UAS
+      operations by limiting access to that 4D bounded volume.
+    required:
+      - message_id
+      - type
     properties:
       message_id:
-        description: A UUID assigned to this message by the originator
+        description: A UUIDv4 assigned to this message by the originator
         type: string
         format: uuid
         maxLength: 36
@@ -694,73 +816,92 @@ definitions:
         description: The user or process that generated this message
         type: string
         enum:
-        - FIMS
-        - USS
+          - FIMS
+          - USS
       originator_id:
-        description: A name identifying the originator of this message.
+        description: >-
+          A name identifying the originator of this message. If a USS is the
+          originator, then this field MUST be the uss_id as known by the
+          authorization server.
         type: string
         maxLength: 100
+      originator_uss_instance_id:
+        description: A USS instance_id value of the originator of this message.  UUIDv4.
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        example: 00000000-0000-0000-0000-000000000000
       type:
         type: string
         enum:
-        - WEATHER
-        - ATC
-        - SECURITY
-        - SAFETY
-        - MUNICIPALITY
-        - OTHER
+          - WEATHER
+          - ATC
+          - SECURITY
+          - SAFETY
+          - MUNICIPALITY
+          - OTHER
       constraint_geography:
-        $ref: "https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Polygon"
+        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Polygon'
       begin_time:
-        description: "The time that the constraint begins. Null or no value implies -infinity begin time."
+        description: >-
+          The time that the constraint begins. Null or no value implies
+          -infinity begin time.
         type: string
         format: date-time
         maxLength: 100
       end_time:
-        description: "The time that the constraint ends. Null or no value implies on-going constraint."
+        description: >-
+          The time that the constraint ends. Null or no value implies on-going
+          constraint.
         type: string
         format: date-time
         maxLength: 100
       min_altitude:
-        description: "The minimum altitude of the constraint. Must be less than max_altitude."
+        description: >-
+          The minimum altitude of the constraint. Must be less than
+          max_altitude.
         type: number
         format: double
       max_altitude:
-        description: "The maximum altitude of the constraint. Must be greater than min_altitude."
+        description: >-
+          The maximum altitude of the constraint. Must be greater than
+          min_altitude.
         type: number
         format: double
       metadata:
-        $ref: 'https://api.swaggerhub.com/domains/utm/metadata/v1#/definitions/EventMetadata'
+        $ref: >-
+          https://api.swaggerhub.com/domains/utm/metadata/v1#/definitions/EventMetadata
       reason:
-        description: "The reason for the constraint. Meant for human consumption."
+        description: The reason for the constraint. Meant for human consumption.
         type: string
-        maxLength: 1000      
+        maxLength: 1000
     example:
-      gufi: "*"
-      category: "ConstraintMessage"
-      origin: "FIMS"
-      free_text: "Constraint added."
-      sent_time: "2016-11-29T01:16:41.727Z"
+      gufi: '*'
+      category: ConstraintMessage
+      origin: FIMS
+      free_text: Constraint added.
+      sent_time: '2016-11-29T01:16:41.727Z'
       constraint_geography:
         type: Polygon
-        coordinates: [
-          [
-            [-122.062176579,37.40968041145],
-            [-122.05187056889,37.41786527236],
-            [-122.03732647634,37.41786440108],
-            [-122.062176579,37.40968041145],
-          ]
-        ]
-      begin_time: "2016-11-29T01:16:41.727Z"
-      end_time: "2016-11-30T01:16:41.727Z"
-      min_altitude: 0.0
-      max_altitude: 400.0
-      reason: "A UA leaving defined volume"
-      
+        coordinates:
+          - - - -122.062176579
+              - 37.40968041145
+            - - -122.05187056889
+              - 37.41786527236
+            - - -122.03732647634
+              - 37.41786440108
+            - - -122.062176579
+              - 37.40968041145
+      begin_time: '2016-11-29T01:16:41.727Z'
+      end_time: '2016-11-30T01:16:41.727Z'
+      min_altitude: 0
+      max_altitude: 400
+      reason: A UA leaving defined volume
   NegotiationMessage:
     properties:
       message_id:
-        description: A UUID assigned to this message by the originator
+        description: A UUIDv4 assigned to this message by the originator
         type: string
         format: uuid
         maxLength: 36
@@ -769,8 +910,8 @@ definitions:
         description: The user or process that generated this message
         type: string
         enum:
-        - FIMS
-        - USS
+          - FIMS
+          - USS
       originator_id:
         description: A name identifying the originator of this message.
         type: string
@@ -778,29 +919,39 @@ definitions:
       type:
         type: string
         enum:
-        - INTERSECTING_OPERATION_NOTIFICATION
-        - REPLAN_BEGINNING_AS_SECONDARY_OPERATION
-        - REQUESTING_MANUAL_CLEARANCE
-        - MANUAL_CLEARANCE_GRANTED
-        - MANUAL_CLEARANCE_DENIED
-        - OTHER
+          - INTERSECTING_OPERATION_NOTIFICATION
+          - REPLAN_BEGINNING_AS_SECONDARY_OPERATION
+          - REQUESTING_MANUAL_CLEARANCE
+          - MANUAL_CLEARANCE_GRANTED
+          - MANUAL_CLEARANCE_DENIED
+          - OTHER
       gufi_of_originator:
         description: >-
-          The GUFI of the relevant operation of the originating USS. Note that the origin and receiver roles are strictly dependent on which USS is generating this message. May be empty in the case of ATC communication to USS via FIMS.
+          The GUFI of the relevant operation of the originating USS. Note that
+          the origin and receiver roles are strictly dependent on which USS is
+          generating this message. May be empty in the case of ATC communication
+          to USS via FIMS.
         type: string
         format: uuid
         maxLength: 36
         minLength: 36
       gufi_of_receiver:
-        description: |
-          The GUFI of the relevant operation of the receiving USS. May be empty in cases of communication with ATC via FIMS.
+        description: >
+          The GUFI of the relevant operation of the receiving USS. May be empty
+          in cases of communication with ATC via FIMS.
         type: string
         format: uuid
         maxLength: 36
         minLength: 36
       reference_message_ids:
         description: >-
-          A set of UUIDs of any previous messages related to the same negotiation process. This field must not be empty when sending a message of type 'REPLAN_BEGINNING_AS_SECONDARY_OPERATION'.  This set of ids need not be complete. The goal is to have at least one id that can be used to link this message to the set of previous messages sent and received. The USS should make this list as complete as possible to aid the negotiation process.
+          A set of UUIDs of any previous messages related to the same
+          negotiation process. This field must not be empty when sending a
+          message of type 'REPLAN_BEGINNING_AS_SECONDARY_OPERATION'.  This set
+          of ids need not be complete. The goal is to have at least one id that
+          can be used to link this message to the set of previous messages sent
+          and received. The USS should make this list as complete as possible to
+          aid the negotiation process.
         type: array
         items:
           type: string
@@ -810,7 +961,6 @@ definitions:
       free_text:
         type: string
         maxLength: 1000
-        
   UssInstance:
     type: object
     description: >-
@@ -829,8 +979,7 @@ definitions:
       - uss_base_callback_url
     properties:
       uss_instance_id:
-        description: >-
-          A unique USS Instance identifier, minted by the USS.
+        description: 'A unique USS Instance identifier, minted by the USS.'
         type: string
         format: uuid
       uss_name:
@@ -882,19 +1031,27 @@ definitions:
         type: string
         format: url
         description: >-
-          A base URL used by the USS Discovery Service and other USS Instances to callback to the USS Instance. 
-          
-          
-          USS Discovery will append "/uss" to the base URL in order to POST a new uss_instance to the USS Instance. It will also do the same to test the URL when it first receives a uss_instance.
-          
-          
-          USS Instances and other clients/services will append "/operations" to the base URL in order to share operations. Similarly with "/utm_messages", "/negotiations", etc.
-          
-          
-          The base URL will also be used in obtaining the websocket for position sharing.
-          
-          
-          This URL may be unique to the USS Instance or may be shared by other USS Instances created by the same USS.  URLs that are common to multiple USS Instances will receive only one callback.
+          A base URL used by the USS Discovery Service and other USS Instances
+          to callback to the USS Instance. 
+
+
+          USS Discovery will append "/uss" to the base URL in order to POST a
+          new uss_instance to the USS Instance. It will also do the same to test
+          the URL when it first receives a uss_instance.
+
+
+          USS Instances and other clients/services will append "/operations" to
+          the base URL in order to share operations. Similarly with
+          "/utm_messages", "/negotiations", etc.
+
+
+          The base URL will also be used in obtaining the websocket for position
+          sharing.
+
+
+          This URL may be unique to the USS Instance or may be shared by other
+          USS Instances created by the same USS.  URLs that are common to
+          multiple USS Instances will receive only one callback.
       uss_informational_url:
         type: string
         format: url
@@ -912,7 +1069,8 @@ definitions:
           An optional URL for UAS operators to register with this USS for
           services.
       metadata:
-        $ref: 'https://api.swaggerhub.com/domains/utm/metadata/v1#/definitions/EventMetadata'
+        $ref: >-
+          https://api.swaggerhub.com/domains/utm/metadata/v1#/definitions/EventMetadata
       notes:
         type: string
         description: >-
@@ -952,29 +1110,27 @@ definitions:
       uss_registration_url: 'https://nuss.arc.nasa.gov/signup'
       contact_email: joseph.rios@nasa.gov
       contact_number: 650-555-5555
-      
   Version:
     type: object
     properties:
       title:
         type: string
         description: Title of the API
-      version: 
+      version:
         type: string
         description: Version number for the API
       build_time:
         type: string
-        description: Time of the latest build 
+        description: Time of the latest build
       api_docs:
         type: array
         items:
           type: string
         description: URL(s) for API Documentation
-      
   UTMRestResponse:
     type: object
-    properties: 
-      http_status_code: 
+    properties:
+      http_status_code:
         type: integer
       message:
         type: string
@@ -982,15 +1138,21 @@ definitions:
         type: string
     example:
       http_status_code: 201
-      message: "Resource created."
-      resource: "/resource/683c0e9e-49dc-44ce-82de-a5723b1f6965"  
-
+      message: Resource created.
+      resource: /resource/683c0e9e-49dc-44ce-82de-a5723b1f6965
 parameters:
   fieldsParam:
     name: fields
     in: query
     description: >-
-      The specific subset of fields to return. Comma separated list. Default will be all fields when this parameter is not provided in the query. Duplicate field names not allowed and server may reject query if duplicates are provided. If field names are provided that are not part of the request model, the server may either reject the query or ignore the improper fields. Maximum 20 field values supported. If more than 20 fields are required, then this parameter should not be used so that all fields are returned.
+      The specific subset of fields to return. Comma separated list. Default
+      will be all fields when this parameter is not provided in the query.
+      Duplicate field names not allowed and server may reject query if
+      duplicates are provided. If field names are provided that are not part of
+      the request model, the server may either reject the query or ignore the
+      improper fields. Maximum 20 field values supported. If more than 20 fields
+      are required, then this parameter should not be used so that all fields
+      are returned.
     required: false
     type: array
     items:
@@ -1003,7 +1165,8 @@ parameters:
     name: sort
     in: query
     description: >-
-      A valid field name to use for sorting records. If multiple fields are provided, the sorting is based on the ordered priority of that list.
+      A valid field name to use for sorting records. If multiple fields are
+      provided, the sorting is based on the ordered priority of that list.
     required: false
     default: time_submitted
     type: string
@@ -1011,29 +1174,31 @@ parameters:
     name: sort_increasing
     in: query
     description: >-
-      For optional use with the 'sort' parameter. If 'sort' is not provided, then 'sort_increasing' will be ignored. Boolean value.  If multiple fields are provided in the 'sort' parameter, this boolean value will apply to all of them.
+      For optional use with the 'sort' parameter. If 'sort' is not provided,
+      then 'sort_increasing' will be ignored. Boolean value.  If multiple fields
+      are provided in the 'sort' parameter, this boolean value will apply to all
+      of them.
     required: false
     default: true
     type: boolean
   limitParam:
-      name: limit
-      in: query
-      description: The maximum number or records to return.
-      required: false
-      type: integer
-      default: 10
-      format: int32
-      maximum: 100
-      minimum: 1
+    name: limit
+    in: query
+    description: The maximum number or records to return.
+    required: false
+    type: integer
+    default: 10
+    format: int32
+    maximum: 100
+    minimum: 1
   offsetParam:
-      name: offset
-      in: query
-      description: The index from which to begin the list of returned records.
-      required: false
-      type: integer
-      default: 0
-      format: int32
-      
+    name: offset
+    in: query
+    description: The index from which to begin the list of returned records.
+    required: false
+    type: integer
+    default: 0
+    format: int32
 pathitems:
   getVersion:
     get:
@@ -1041,9 +1206,9 @@ pathitems:
       tags:
         - A. Required Endpoints
       security:
-         - security: []
+        - security: []
       responses:
-        200:
-          description: "Success"
+        '200':
+          description: Success
           schema:
             $ref: '#/definitions/Version'
