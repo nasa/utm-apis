@@ -59,13 +59,17 @@ definitions:
     type: object
     required:
       - gufi
-      - registration
+      - uas_registrations
+      - uss_name
+      - uss_instance_id
       - faa_rule
       - state
       - primary_contact_name
       - primary_contact_phone
       - controller_location
       - operation_volumes
+      - submit_time
+      - decision_time
     properties:
       gufi:
         description: >-
@@ -93,11 +97,13 @@ definitions:
         example: 00000000-0000-0000-0000-000000000000
       submit_time:
         description: >-
-          Time the operation submission was received by USS. Uses the ISO 8601
-          format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ. Seconds may
-          have up to millisecond accuracy (three positions after decimal).  The
-          'Z' implies UTC times and is the only timezone accepted. This value is
-          generally set by the server upon receipt of new data.
+          Time the operation submission was sent by the managing USS. Uses the
+          ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.
+          Seconds may have up to millisecond accuracy (three positions after
+          decimal).  The 'Z' implies UTC times and is the only timezone
+          accepted. This value is set by the USS managing this Operation upon
+          submitting the data to another server in the USS Network. This test
+          MUST be true: submit_time >= decision_time.
         type: string
         format: date-time
         minLength: 20
@@ -110,7 +116,8 @@ definitions:
           Uses the ISO 8601 format conforming to pattern:
           YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy
           (three positions after decimal).  The 'Z' implies UTC times and is the
-          only timezone accepted.
+          only timezone accepted. This field is set and maintained by the USS
+          managing the Operation and is communicated to other USSs.
         type: string
         format: date-time
         minLength: 20
@@ -137,17 +144,19 @@ definitions:
         type: string
         default: NOT PROVIDED
         maxLength: 1000
-      registration:
+      uas_registrations:
         description: >-
-          The registration ID of the vehicle flying this operation. This
-          registration value is provided to operators by a vehicle registrar.
-          Validated as a non-null string. Array due to possibility of
-          multi-vehicle operation.
+          The registration data for the vehicle(s) to be used in this Operation.
+          Note that this is an array to allow for future operations involving
+          multiple vehicles (e.g. 'swarms' or tandem inspections).  This array
+          MUST NOT be used as a list of potential vehicles for this Operation. 
+          If the vehicle data changes prior to an Operation, an update to the
+          plan may be submitted with the updated vehicle information.
         type: array
+        maxLength: 100
+        minLength: 1
         items:
-          type: string
-          maxLength: 1000
-        minItems: 1
+          $ref: '#/definitions/UasRegistration'
       airspace_authorization:
         description: TBD
         type: string
@@ -182,7 +191,7 @@ definitions:
         type: string
         format: email
         maxLength: 100
-      extra_contact_info:
+      additional_contact_info:
         description: >-
           Any additional contact information that may be useful (hours of
           availability, fax number, communication limitations, etc.).
@@ -298,6 +307,8 @@ definitions:
       - max_altitude_wgs84_ft
       - operation_geography
       - beyond_visual_line_of_sight
+      - over_land
+      - over_people
     properties:
       ordinal:
         description: >-
@@ -362,6 +373,15 @@ definitions:
         description: >-
           Describes whether the operation volume is beyond the visual line of
           sight of the RPIC.
+        type: boolean
+      over_land:
+        description: 'Describes whether any portion of this operation volume is over land. '
+        type: boolean
+      over_people:
+        description: >-
+          Describes whether any portion of this operation volume is planned to
+          occur at a time when people are likely to be present underneath the
+          operation volume.
         type: boolean
   ContingencyPlan:
     type: object
@@ -919,16 +939,17 @@ definitions:
         format: uuid
         maxLength: 36
         minLength: 36
-      origin:
-        description: The user or process that generated this message
-        type: string
-        enum:
-          - FIMS
-          - USS
-      originator_id:
+      origin_uss_name:
         description: A name identifying the originator of this message.
         type: string
         maxLength: 100
+      originator_uss_instance_id:
+        description: A USS instance_id value of the originator of this message.  UUIDv4.
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        example: 00000000-0000-0000-0000-000000000000
       type:
         type: string
         enum:
@@ -974,6 +995,29 @@ definitions:
       free_text:
         type: string
         maxLength: 1000
+  UasRegistration:
+    type: object
+    description: >-
+      A set of data describing the registration of the UAS that is to be used in
+      an Operation.
+    required:
+      - registration_id
+      - registration_location
+    properties:
+      registration_id:
+        description: >-
+          A unique registration identifier, minted by the registration authority
+          as a UUIDv4.
+        type: string
+        format: uuid
+      registration_location:
+        type: string
+        format: url
+        description: >-
+          An Internet-reachable URL for the registration authority. More details
+          to come, however, it is thought that this should be an endpoint
+          allowing an unauthenticated GET to obtain metadata about the
+          registrar.
   UssInstance:
     type: object
     description: >-
