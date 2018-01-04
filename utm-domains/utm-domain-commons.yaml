@@ -902,9 +902,6 @@ definitions:
           min_altitude.
         type: number
         format: double
-      metadata:
-        $ref: >-
-          https://api.swaggerhub.com/domains/utm/metadata/v1#/definitions/EventMetadata
       reason:
         description: The reason for the constraint. Meant for human consumption.
         type: string
