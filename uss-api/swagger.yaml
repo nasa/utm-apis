@@ -4,7 +4,7 @@ info:
   description: "This API describes the minimum interface that a USS must implement\
     \ to  be part of the USS Network.  This API allows for communication of data \
     \ between USS Instances and from FIMS to a USS regarding new USS Instances."
-  version: "v1"
+  version: "v3"
   title: "USS Required API"
   termsOfService: "\nA. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT\
     \ ANY WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,\
@@ -61,12 +61,12 @@ paths:
         description: "The message being sent"
         required: true
         schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/ConstraintMessage'
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/ConstraintMessage'
       responses:
         201:
           description: "Constraint data received. "
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
       security:
       - ussapi_security:
         - "utm.nasa.gov_write.constraint"
@@ -86,12 +86,12 @@ paths:
         description: "The message being sent"
         required: true
         schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMMessage'
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMMessage'
       responses:
         201:
           description: "Message data received."
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
       security:
       - ussapi_security:
         - "utm.nasa.gov_write.message"
@@ -112,12 +112,12 @@ paths:
         description: "The USS Instance information being sent"
         required: true
         schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UssInstance'
       responses:
         201:
           description: "USS Instance data received."
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
       security:
       - ussapi_security:
         - "utm.nasa.gov_write.operation"
@@ -141,12 +141,12 @@ paths:
         description: "The NegotiationMessage data"
         required: true
         schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/NegotiationMessage'
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/NegotiationMessage'
       responses:
         200:
           description: "OK"
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
         400:
           description: "Problem with submitted data"
       security:
@@ -173,12 +173,12 @@ paths:
          name: position
          required: true
          schema:
-              $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Position'
+              $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Position'
       responses:
         201:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
         400:
           description: "Bad request. Typically validation error. Fix and retry."
   /operations:
@@ -247,7 +247,7 @@ paths:
           schema:
             type: "array"
             items:
-              $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Operation'
+              $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation'
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
@@ -277,12 +277,12 @@ paths:
         description: "The operation data"
         required: true
         schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Operation'
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation'
       responses:
         201:
           description: "Operation data received."
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
         400:
           description: "Bad request. Typically validation error. Fix your request and retry."
       security:
@@ -313,12 +313,12 @@ paths:
           \  4. Other rules for a USS Operation POST are satisfied.\n"
         required: true
         schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Operation'
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation'
       responses:
         201:
           description: "OK"
           schema: 
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."

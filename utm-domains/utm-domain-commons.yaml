@@ -6,7 +6,7 @@
 
 info:
   description: "UTM models (swagger domain)"
-  version: 'v1'
+  version: 'v3'
   title: UTM models
   
 definitions:
@@ -187,10 +187,10 @@ definitions:
         - ROGUE
       controller_location:
         # description: "The planned position of the UAS Controller during the operation. Assumed to be a static location."
-        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Point'
+        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Point'
       gcs_location:
         # description: "If not submitted, the UTM System will assume the GCS is co-located with the UAS Controller.  Assumed to be a static location. May assist USS in determining LOS"
-        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Point'
+        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Point'
       contingency_plans:
         description: >-
           An array of ContingencyPlans wherein this operation may land if needed/required during operation. Aids in planning and communication during the execution of a contingency.
@@ -229,7 +229,7 @@ definitions:
         items:
           $ref: "#/definitions/OperationVolume"
       metadata:
-        $ref: 'https://api.swaggerhub.com/domains/utm/metadata/v1#/definitions/EventMetadata'
+        $ref: 'https://api.swaggerhub.com/domains/utm/metadata/v3#/definitions/EventMetadata'
     
   PriorityElements:
     description: >-
@@ -242,7 +242,7 @@ definitions:
     - priority_status
     properties:
       priority_level:
-        $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/severity'
+        $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/severity'
       priority_status:
         type: string
         description: If a PUBLIC_SAFETY operation is POSTed to any endpoint, the correct scope will be required. Any USS may POST an INFLIGHT_EMERGENCY with non-priority scopes.  NONE should only be used to indicate that an operation that previously had a priority status now has no priority status.
@@ -304,7 +304,7 @@ definitions:
         format: double
       operation_geography:
         # description: "A description of the operational area.  This should be the area within which the operation will remain."
-        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Polygon'
+        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Polygon'
       beyond_visual_line_of_sight:
         description: "Describes whether the operation volume is beyond the visual line of sight of the RPIC."
         type: boolean
@@ -387,7 +387,7 @@ definitions:
         - RETURN_TO_BASE
       contingency_point:
         # description: "Specific point for this contingency location. May be supplemented by other fields for altitude, etc."
-        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Point'
+        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Point'
       loiter_altitude_wgs84_ft:
         description: "The altitude for this contingency. Relevant and required for the LOITERING contingency_type, ignored for all other types. In WGS84 reference system using feet as units."
         type: number
@@ -487,7 +487,7 @@ definitions:
         minimum: 0.0
       location:
         # description: "A description of the 2D location.  A Point GeoJSON."
-        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Point'
+        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Point'
       time_measured:
         description: >-
           The time the position was measured. Likely the time provided with the
@@ -618,7 +618,7 @@ definitions:
         maxLength: 100
         example: "2015-08-20T14:11:57.345Z"
       severity:
-        $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/severity'
+        $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/severity'
       alert_type:
         description: >-
           The type of alert message. An enum to constrain messages and allow better interoperability. Required with "CRITICAL" or higher severity, may be ignored by receiver otherwise.
@@ -657,10 +657,10 @@ definitions:
         - OTHER_SEE_FREE_TEXT 
       last_known_position:
         # Last known position of the operation.  The Position model has time incorporated, together with other relevant data.
-        $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Position'
+        $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Position'
       contingency:
         # Required if this is a CONTINGENCY_PLAN_INITIATED message.
-        $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/ContingencyPlan'
+        $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/ContingencyPlan'
       prev_message_id:
         description: >-
           A message_id of a previously sent message that has relevance or context for this message. Example might be "CONTINGENCY_PLAN_CANCELLED" referencing the previous "CONTINGENCY_PLAN_INITIATED" message.
@@ -670,7 +670,7 @@ definitions:
         minLength: 36
         example: "00000000-0000-0000-0000-000000000000"
       metadata:
-        $ref: 'https://api.swaggerhub.com/domains/utm/metadata/v1#/definitions/EventMetadata'
+        $ref: 'https://api.swaggerhub.com/domains/utm/metadata/v3#/definitions/EventMetadata'
       free_text:
         description: >-
           Any additional information. Note that this is for human consumption. All time critical elements should be captured in the other data fields for easier consumption by other automated systems.
@@ -710,7 +710,7 @@ definitions:
         - MUNICIPALITY
         - OTHER
       constraint_geography:
-        $ref: "https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Polygon"
+        $ref: "https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Polygon"
       begin_time:
         description: "The time that the constraint begins. Null or no value implies -infinity begin time."
         type: string
@@ -730,7 +730,7 @@ definitions:
         type: number
         format: double
       metadata:
-        $ref: 'https://api.swaggerhub.com/domains/utm/metadata/v1#/definitions/EventMetadata'
+        $ref: 'https://api.swaggerhub.com/domains/utm/metadata/v3#/definitions/EventMetadata'
       reason:
         description: "The reason for the constraint. Meant for human consumption."
         type: string
@@ -863,7 +863,7 @@ definitions:
           any UAS operations airborne after this time that would be supported by
           this USS Instance.
       coverage_area:
-        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Polygon'
+        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Polygon'
       time_last_modified:
         type: string
         format: date-time
@@ -912,7 +912,7 @@ definitions:
           An optional URL for UAS operators to register with this USS for
           services.
       metadata:
-        $ref: 'https://api.swaggerhub.com/domains/utm/metadata/v1#/definitions/EventMetadata'
+        $ref: 'https://api.swaggerhub.com/domains/utm/metadata/v3#/definitions/EventMetadata'
       notes:
         type: string
         description: >-
