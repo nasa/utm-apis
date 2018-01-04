@@ -1,516 +1,353 @@
-swagger: '2.0'
+---
+swagger: "2.0"
 info:
-  description: >-
-    This API describes the minimum interface that a USS must implement to  be
-    part of the USS Network.  This API allows for communication of data  between
-    USS Instances and from FIMS to a USS regarding new USS Instances.
-  version: v3
-  title: USS Required API
-  termsOfService: >
-
-    A. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
-    WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,
-    BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL CONFORM TO
-    SPECIFICATIONS, ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
-    PARTICULAR PURPOSE, OR FREEDOM FROM INFRINGEMENT, ANY WARRANTY THAT THE
-    SUBJECT SOFTWARE WILL BE ERROR FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF
-    PROVIDED, WILL CONFORM TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN
-    ANY MANNER, CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR
-    RECIPIENT OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR
-    ANY OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE. FURTHER,
-    GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES REGARDING
-    THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE, AND DISTRIBUTES
-    IT "AS IS."
-
-
-    B. Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
-    AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS
-    WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT''S USE OF THE SUBJECT SOFTWARE
-    RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES ARISING
-    FROM SUCH USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING
-    FROM, RECIPIENT''S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY
-    AND HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
-    SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY
-    LAW. RECIPIENT''S SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE,
-    UNILATERAL TERMINATION OF THIS AGREEMENT.
+  description: "This API describes the minimum interface that a USS must implement\
+    \ to  be part of the USS Network.  This API allows for communication of data \
+    \ between USS Instances and from FIMS to a USS regarding new USS Instances."
+  version: "v3"
+  title: "USS Required API"
+  termsOfService: "\nA. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT\
+    \ ANY WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,\
+    \ BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL CONFORM TO SPECIFICATIONS,\
+    \ ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,\
+    \ OR FREEDOM FROM INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE\
+    \ ERROR FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM TO\
+    \ THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER, CONSTITUTE AN\
+    \ ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT OF ANY RESULTS, RESULTING\
+    \ DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY OTHER APPLICATIONS RESULTING FROM\
+    \ USE OF THE SUBJECT SOFTWARE. FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES\
+    \ AND LIABILITIES REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,\
+    \ AND DISTRIBUTES IT \"AS IS.\"\n\nB. Waiver and Indemnity: RECIPIENT AGREES TO\
+    \ WAIVE ANY AND ALL CLAIMS AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS\
+    \ AND SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT''S USE OF THE\
+    \ SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES\
+    \ ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING\
+    \ FROM, RECIPIENT''S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY AND\
+    \ HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS,\
+    \ AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT''S\
+    \ SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL TERMINATION\
+    \ OF THIS AGREEMENT.\n"
   contact:
-    name: 'NASA Ames Research Center, Aviation Systems Division'
-    url: 'https://utm.arc.nasa.gov/'
-    email: joseph.rios@nasa.gov
+    name: "NASA Ames Research Center, Aviation Systems Division"
+    url: "https://utm.arc.nasa.gov/"
+    email: "joseph.rios@nasa.gov"
   license:
-    name: NASA Open Source Agreement
-    url: 'https://ti.arc.nasa.gov/opensource/nosa/'
-host: uss.defined.url
-basePath: /uss
+    name: "NASA Open Source Agreement"
+    url: "https://ti.arc.nasa.gov/opensource/nosa/"
+host: "uss.defined.url"
+basePath: "/uss"
+# tags:
+# - name: "B. Event Specific Notes."
+#   description: "Event-specific information. Not part of USS Spec.\n"
 schemes:
-  - https
-  - wss
+- "https"
+- "wss"
+
 security:
-  - ussapi_security:
-      - utm.nasa.gov_read.min_data
+- ussapi_security:
+  - "utm.nasa.gov_read.min_data"
 paths:
   /constraints:
     post:
       tags:
-        - A. Required Endpoints
-      summary: Allow constraints to be submitted from authorized entities.
-      operationId: postConstraint
+      - "A. Required Endpoints"
+      summary: "Allow constraints to be submitted from authorized entities."
+      operationId: "postConstraint"
       consumes:
-        - application/json
+      - "application/json"
       parameters:
-        - in: body
-          name: message
-          description: The message being sent
-          required: true
-          schema:
-            $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/ConstraintMessage
+      - in: "body"
+        name: "message"
+        description: "The message being sent"
+        required: true
+        schema:
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/ConstraintMessage'
       responses:
-        '201':
-          description: 'Constraint data received. '
+        201:
+          description: "Constraint data received. "
           schema:
-            $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
       security:
-        - ussapi_security:
-            - utm.nasa.gov_write.constraint
-            - utm.nasa.gov_all.all
+      - ussapi_security:
+        - "utm.nasa.gov_write.constraint"
+        - "utm.nasa.gov_all.all"
   /utm_messages:
     post:
       tags:
-        - A. Required Endpoints
-      summary: Allow other authorized entities to send a message to this USS.
-      description: Allows another USS or FIMS to POST a message to this USS.
-      operationId: postUtmMessage
+      - "A. Required Endpoints"
+      summary: "Allow other authorized entities to send a message to this USS."
+      description: "Allows another USS or FIMS to POST a message to this USS."
+      operationId: "postUtmMessage"
       consumes:
-        - application/json
+      - "application/json"
       parameters:
-        - in: body
-          name: message
-          description: The message being sent
-          required: true
-          schema:
-            $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMMessage
+      - in: "body"
+        name: "message"
+        description: "The message being sent"
+        required: true
+        schema:
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMMessage'
       responses:
-        '201':
-          description: Message data received.
+        201:
+          description: "Message data received."
           schema:
-            $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
       security:
-        - ussapi_security:
-            - utm.nasa.gov_write.message
+      - ussapi_security:
+        - "utm.nasa.gov_write.message"
   /uss:
     post:
       tags:
-        - A. Required Endpoints
-      summary: Share USS Instance data
-      description: >-
-        As per the USS Discovery Service specification, this endpoint is for
-        receiving messages about the USS Network from the USS Discovery
-        Service.  For example, when a new USS Instance is registered, that
-        announcement would come to this endpoint.
+      - "A. Required Endpoints"
+      summary: "Share USS Instance data"
+      description: "As per the USS Discovery Service specification, this endpoint\
+        \ is for receiving messages about the USS Network from the USS Discovery Service.\
+        \  For example, when a new USS Instance is registered, that announcement would\
+        \ come to this endpoint."
       consumes:
-        - application/json
+      - "application/json"
       parameters:
-        - in: body
-          name: message
-          description: The USS Instance information being sent
-          required: true
-          schema:
-            $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UssInstance
+      - in: "body"
+        name: "message"
+        description: "The USS Instance information being sent"
+        required: true
+        schema:
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UssInstance'
       responses:
-        '201':
-          description: USS Instance data received.
+        201:
+          description: "USS Instance data received."
           schema:
-            $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
       security:
-        - ussapi_security:
-            - utm.nasa.gov_write.operation
+      - ussapi_security:
+        - "utm.nasa.gov_write.operation"
   /negotiations:
     post:
       tags:
-        - A. Required Endpoints
-      summary: Allow other USSs to submit a negotiation request
-      description: >-
-        A POST to the negotiations endpoint is interpretted as a request for
-        alteration in an existing operation managed by the receiving USS.  The
-        requesting USS supplies a GUFI that references the operation that may be
-        altered if the request is granted by the receiving USS.
-      operationId: postNegotiation
+      - "A. Required Endpoints"
+      summary: "Allow other USSs to submit a negotiation request"
+      description: "A POST to the negotiations endpoint is interpretted as a request\
+        \ for alteration in an existing operation managed by the receiving USS.  The\
+        \ requesting USS supplies a GUFI that references the operation that may be\
+        \ altered if the request is granted by the receiving USS."
+      operationId: "postNegotiation"
       consumes:
-        - application/json
+      - "application/json"
       produces:
-        - application/json
+      - "application/json"
       parameters:
-        - in: body
-          name: operation
-          description: The NegotiationMessage data
-          required: true
-          schema:
-            $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/NegotiationMessage
+      - in: "body"
+        name: "operation"
+        description: "The NegotiationMessage data"
+        required: true
+        schema:
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/NegotiationMessage'
       responses:
-        '200':
-          description: OK
+        200:
+          description: "OK"
           schema:
-            $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
-        '400':
-          description: Problem with submitted data
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
+        400:
+          description: "Problem with submitted data"
       security:
-        - ussapi_security:
-            - utm.nasa.gov_write.message
-  '/positions/{position_id}':
+      - ussapi_security:
+        - "utm.nasa.gov_write.message"
+  /positions/{position_id}:
     put:
-      tags:
-        - A. Required Endpoints
-      summary: Share position information.
-      description: >-
-        Providing position reports to others may allow other USSs to anticipate
-        events.  The USS managing the operation has created the position ID.
+      tags: 
+      - "A. Required Endpoints"
+      summary: "Share position information."
+      description: "Providing position reports to others may allow other USSs to anticipate events.  The USS managing the operation has created the position ID."
       consumes:
         - application/json
       produces:
         - application/json
-      parameters:
-        - in: path
-          name: position_id
-          required: true
-          type: string
-          description: PUT by position_id
-        - in: body
-          name: position
-          required: true
-          schema:
-            $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Position
+      parameters: 
+       - in: path
+         name: position_id
+         required: true
+         type: string
+         description: "PUT by position_id"
+         
+       - in: body
+         name: position
+         required: true
+         schema:
+              $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Position'
       responses:
-        '201':
+        201:
           description: OK
           schema:
-            $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
-        '400':
-          description: Bad request. Typically validation error. Fix and retry.
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
+        400:
+          description: "Bad request. Typically validation error. Fix and retry."
   /operations:
     get:
       tags:
-        - A. Required Endpoints
-      summary: Request information regarding Operations
-      description: Allows querying for Operation data.
-      operationId: getOps
+      - "A. Required Endpoints"
+      summary: "Request information regarding Operations"
+      description: "Allows querying for Operation data."
+      operationId: "getOps"
       produces:
-        - application/json
+      - "application/json"
       parameters:
-        - name: registration_id
-          in: query
-          description: >-
-            Return only results that match the registration_ids provided.  Only
-            operations that have not completed or have completed within the last
-            24 hours are required to be returned. If multiple IDs are provided,
-            they must be unique and separated by commas.
-          type: array
-          minItems: 1
-          maxItems: 5
-          uniqueItems: true
-          items:
-            type: string
-            format: uuid
-            minLength: 36
-            maxLength: 36
-          collectionFormat: csv
-        - name: submit_time
-          in: query
-          description: >-
-            A single date-time value that will be used to provide all operations
-            submitted AFTER that time.
-          type: string
-          format: date-time
-          minLength: 20
-          maxLength: 25
-          required: false
-        - name: state
-          in: query
-          description: >-
-            Return only operations that are in the states provided.  Comma
-            separated list of states.
-          type: array
-          minItems: 1
-          maxItems: 5
-          uniqueItems: true
-          items:
-            type: string
-            enum:
-              - ACCEPTED
-              - ACTIVATED
-              - CLOSED
-              - NONCONFORMING
-              - ROGUE
-            minLength: 6
-            maxLength: 13
-          collectionFormat: csv
-          required: false
-        - name: distance
-          in: query
-          description: >-
-            Distance from reference_point to find operations. Ignored if
-            reference_point is not provided.  Units are feet.  Returns all
-            operations that have any operation_volumes that interesect the 2D
-            circle defined by distance and reference_point.  Default value only
-            has meaning when reference_point parameter is provided.
-          type: integer
-          format: int32
-          maximum: 60762
-          minimum: 1
-          default: 300
-          required: false
-        - name: reference_point
-          in: query
-          description: >-
-            A single point used to find all operations within some distance from
-            that point. Returns all operations that have any operation_volumes
-            that interesect the 2D circle defined by distance and
-            reference_point.  When distance it excluded and reference_point is
-            included, use default value (300ft) for distance.
-
-            Described as a GeoJSON position.  The value is equivalent to what
-            would be seen in the "coordinates" field for a GeoJSON Point
-            object.  See https://tools.ietf.org/html/rfc7946#section-3.1.1 for
-            further reference.  Example would be reference_point=[-122.056364,
-            37.414371] (URL safe:
-            reference_point%3D%5B-122.056364%2C%2037.414371%5D). As per GeoJSON
-            spec, this is long-lat format in the WGS84 reference system.
-
-            MUST NOT include a third coordinate element, strictly 2D.
-          type: string
-          format: geojson-position
-          required: false
-        - name: fields
-          in: query
-          description: >-
-            The specific subset of fields to return. Comma separated list.
-            Default will be all fields when this parameter is not provided in
-            the query. Duplicate field names not allowed and server may reject
-            query if duplicates are provided. If field names are provided that
-            are not part of the request model, the server may either reject the
-            query or ignore the improper fields. Maximum 20 field values
-            supported. If more than 20 fields are required, then this parameter
-            should not be used so that all fields are returned.
-          required: false
-          type: array
-          items:
-            type: string
-          collectionFormat: csv
-          maxItems: 20
-          minItems: 1
-          uniqueItems: true
-        - name: sort
-          in: query
-          description: >-
-            A valid field name to use for sorting records. If multiple fields
-            are provided, the sorting is based on the ordered priorty of that
-            list.
-          required: false
-          type: string
-          default: time_submitted
-        - name: sort_increasing
-          in: query
-          description: >-
-            For optional use with the 'sort' parameter. If 'sort' is not
-            provided, then 'sort_increasing' will be ignored. Boolean value.  If
-            multiple fields are provided in the 'sort' parameter, this boolean
-            value will apply to all of them.
-          required: false
-          type: boolean
-          default: true
-        - name: limit
-          in: query
-          description: The maximum number or records to return.
-          required: false
-          type: integer
-          default: 10
-          maximum: 100
-          minimum: 1
-          format: int32
-        - name: offset
-          in: query
-          description: The index from which to begin the list of returned records.
-          required: false
-          type: integer
-          default: 0
-          minimum: 0
-          format: int32
+      - name: "fields"
+        in: "query"
+        description: "The specific subset of fields to return. Comma separated list.\
+          \ Default will be all fields when this parameter is not provided in the\
+          \ query. Duplicate field names not allowed and server may reject query if\
+          \ duplicates are provided. If field names are provided that are not part\
+          \ of the request model, the server may either reject the query or ignore\
+          \ the improper fields. Maximum 20 field values supported. If more than 20\
+          \ fields are required, then this parameter should not be used so that all\
+          \ fields are returned."
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "csv"
+        maxItems: 20
+        minItems: 1
+        uniqueItems: true
+      - name: "sort"
+        in: "query"
+        description: "A valid field name to use for sorting records. If multiple fields\
+          \ are provided, the sorting is based on the ordered priorty of that list."
+        required: false
+        type: "string"
+        default: "time_submitted"
+      - name: "sort_increasing"
+        in: "query"
+        description: "For optional use with the 'sort' parameter. If 'sort' is not\
+          \ provided, then 'sort_increasing' will be ignored. Boolean value.  If multiple\
+          \ fields are provided in the 'sort' paramenter, this boolean value will\
+          \ apply to all of them."
+        required: false
+        type: "boolean"
+        default: true
+      - name: "limit"
+        in: "query"
+        description: "The maximum number or records to return."
+        required: false
+        type: "integer"
+        default: 10
+        maximum: 100
+        minimum: 1
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "The index from which to begin the list of returned records."
+        required: false
+        type: "integer"
+        default: 0
+        format: "int32"
       responses:
-        '200':
-          description: Successful data request. Response includes requested data.
+        200:
+          description: "Successful data request. Response includes requested data."
           schema:
-            type: array
+            type: "array"
             items:
-              $ref: >-
-                https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation
-        '400':
-          description: Bad request. Typically validation error. Fix your request and retry.
-        '401':
-          description: Invalid or missing access_token.
-        '429':
-          description: Too many recent requests from you. Wait to make further queries.
+              $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation'
+        400:
+          description: "Bad request. Typically validation error. Fix your request\
+            \ and retry."
+        429:
+          description: "Too many recent requests from you. Wait to make further queries."
       security:
-        - ussapi_security:
-            - utm.nasa.gov_read.operation
+      - ussapi_security:
+        - "utm.nasa.gov_read.operation"
     post:
-      deprecated: true
       tags:
-        - A. Required Endpoints
-      summary: Allow other USSs to submit their UAS Operations.
-      description: >-
-        A POST to the operations endpoint allows for sharing of operational data
-        between USSs.  This is the primary mechanism by which USSs become aware
-        of each others' UAS operations.<br/><br/>
-
-        A USS is required to share operation data with other USSs that may have
-        interacting UAS Operations.  This potential interaction is known through
-        the data provided via the USS Service Discovery mechanism (see
-        https://app.swaggerhub.com/apis/utm/ussdiscovery/).
-      operationId: postOp
+      - "A. Required Endpoints"
+      summary: "Allow other USSs to submit their UAS Operations."
+      description: "A POST to the operations endpoint allows for sharing of operational\
+        \ data between USSs.  This is the primary mechanism by which USSs become aware\
+        \ of each others' UAS operations.<br/><br/>\nA USS is required to share operation\
+        \ data with other USSs that may have interacting UAS Operations.  This potential\
+        \ interaction is known through the data provided via the USS Service Discovery\
+        \ mechanism (see https://app.swaggerhub.com/apis/utm/ussdiscovery/)."
+      operationId: "postOp"
       consumes:
-        - application/json
+      - "application/json"
       produces:
-        - application/json
+      - "application/json"
       parameters:
-        - in: body
-          name: operation
-          description: The operation data
-          required: true
-          schema:
-            $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation
+      - in: "body"
+        name: "operation"
+        description: "The operation data"
+        required: true
+        schema:
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation'
       responses:
-        '201':
-          description: Operation data received.
+        201:
+          description: "Operation data received."
           schema:
-            $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
-        '400':
-          description: Bad request. Typically validation error. Fix your request and retry.
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
+        400:
+          description: "Bad request. Typically validation error. Fix your request and retry."
       security:
-        - ussapi_security:
-            - utm.nasa.gov_write.operation
-            - utm.nasa.gov_write.publicsafety
-  '/operations/{gufi}':
-    get:
-      tags:
-        - A. Required Endpoints
-      summary: Retrieve an operation by GUFI.
-      description: Retrieve an operation by GUFI.
-      operationId: getOpGufi
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: path
-          name: gufi
-          required: true
-          type: array
-          collectionFormat: csv
-          items:
-            type: string
-            format: uuid
-            minLength: 36
-            maxLength: 36
-          description: >-
-            GUFI of the operation being requested. May submit multiple separated
-            by commas. /operations/gufi1,gufi2,gufi3 for example.
-      responses:
-        '201':
-          description: OK
-          schema:
-            $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
-        '400':
-          description: Bad request. Typically validation error. Fix your request and retry.
-          schema:
-            $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
-        '401':
-          description: Invalid or missing access_token provided.
-          schema:
-            $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
-      security:
-        - ussapi_security:
-            - utm.nasa.gov_read.operation
+      - ussapi_security:
+        - "utm.nasa.gov_write.operation"
+        - "utm.nasa.gov_write.publicsafety"
+  /operations/{gufi}:
     put:
       tags:
-        - A. Required Endpoints
-      summary: 'Announce a new, or update an already announced operation.'
-      description: >-
-        Announce an Operation to another USS, either initial Operation or an
-        update to the Operation. The Operation's owner creates the ID.
-      operationId: putOp
+      - "A. Required Endpoints"
+      summary: "Announce a new, or update an already announced operation."
+      description: "Announce an Operation to another USS, either initial Operation or an update to the Operation. The Operation's owner creates the ID."
+      operationId: "putOp"
       consumes:
-        - application/json
+      - "application/json"
       produces:
-        - application/json
+      - "application/json"
       parameters:
-        - in: path
-          name: gufi
-          required: true
-          type: string
-          description: PUT operation by gufi
-        - in: body
-          name: operation
-          description: |
-            Operational plan with the following properties:
-              1. Contains a valid uss_operation_id.
-              2. time_available_end value that is in the future.
-              3. No date-time fields that are in the past are modified.
-              4. Other rules for a USS Operation POST are satisfied.
-          required: true
-          schema:
-            $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation
+      - in: path
+        name: gufi
+        required: true
+        type: string
+        description: "PUT operation by gufi"
+      - in: "body"
+        name: "operation"
+        description: "Operational plan with the following properties:\n  1. Contains a valid uss_operation_id.\n  2. time_available_end value that is in the\
+          \ future.\n  3. No date-time fields that are in the past are modified.\n\
+          \  4. Other rules for a USS Operation POST are satisfied.\n"
+        required: true
+        schema:
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation'
       responses:
-        '201':
-          description: OK
-          schema:
-            $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
-        '400':
-          description: Bad request. Typically validation error. Fix your request and retry.
+        201:
+          description: "OK"
+          schema: 
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
+        400:
+          description: "Bad request. Typically validation error. Fix your request\
+            \ and retry."
       security:
-        - ussapi_security:
-            - utm.nasa.gov_write.operation
-            - utm.nasa.gov_write.publicsafety
+      - ussapi_security:
+        - "utm.nasa.gov_write.operation"
+        - "utm.nasa.gov_write.publicsafety"
+
 securityDefinitions:
   ussapi_security:
-    type: oauth2
-    tokenUrl: 'https://thisserver.com/oauth/token'
-    flow: application
+    type: "oauth2"
+    tokenUrl: "https://thisserver.com/oauth/token"
+    flow: "application"
     scopes:
-      utm.nasa.gov_read.constraint: Subject can read UTM constraint data
-      utm.nasa.gov_write.constraint: >-
-        Subject can read, create, and update UTM constraint data. This means
-        that the Subject can define areas that restrict other operations.
-      utm.nasa.gov_read.min_data: >-
-        Subject can read data which has been minimized for example, by redacting
-        some properties
-      utm.nasa.gov_write.operation: >-
-        Subject can read, create, and update operational data such as USS
-        Instance data
-      utm.nasa.gov_read.operation: Subject can read operational data such as USS Instance data
-      utm.nasa.gov_write.message: >-
-        Subject can read, create, and update message data such as UTM Message
-        and Negotiations
-      utm.nasa.gov_read.message: Subject can read message data such as UTM Message and Negotiations
-      utm.nasa.gov_write.publicsafety: >-
-        Subject can read, create, and update operations that are designated
-        public safety operations.
-      utm.nasa.gov_all.all: >-
-        Subject can read, create, and udpate data throughout UTM. Used
-        sparingly, if ever. Goes against priciple of least privelege, but may be
-        necessary in some cases.
+      utm.nasa.gov_read.constraint: "Subject can read UTM constraint data"
+      utm.nasa.gov_write.constraint: "Subject can read, create, and update UTM constraint\
+        \ data. This means that the Subject can define areas that restrict other operations."
+      utm.nasa.gov_read.min_data: "Subject can read data which has been minimized\
+        \ for example, by redacting some properties"
+      utm.nasa.gov_write.operation: "Subject can read, create, and update operational\
+        \ data such as USS Instance data"
+      utm.nasa.gov_read.operation: "Subject can read operational data such as USS\
+        \ Instance data"
+      utm.nasa.gov_write.message: "Subject can read, create, and update message data\
+        \ such as UTM Message and Negotiations"
+      utm.nasa.gov_read.message: "Subject can read message data such as UTM Message\
+        \ and Negotiations"
+      utm.nasa.gov_write.publicsafety: "Subject can read, create, and update operations\
+        \ that are designated public safety operations."
+      utm.nasa.gov_all.all: "Subject can read, create, and udpate data throughout\
+        \ UTM. Used sparingly, if ever. Goes against priciple of least privelege,\
+        \ but may be necessary in some cases."
