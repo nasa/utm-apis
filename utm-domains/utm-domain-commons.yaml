@@ -1,6 +1,6 @@
 info:
   description: UTM models (swagger domain)
-  version: v1
+  version: v3
   title: UTM models
 definitions:
   scope:
@@ -36,7 +36,7 @@ definitions:
       In relation to a UTMMessage, the severities may be interpreted as follows.
 
       1. **EMERGENCY**
-        There is an **immediate** impact to the safety of other air operations, the safety of people, or the safety of structures on the ground. Actions to mitigate required by other operations.
+        There is an *immediate* impact to the safety of other air operations, the safety of people, or the safety of structures on the ground. Actions to mitigate required by other operations.
       2. **ALERT**
         There may be an impact to the safety of other air operations, the safety of people, or the safety of structures on the ground. Actions to mitigate required by other operations.
       3. **CRITICAL**
@@ -770,28 +770,29 @@ definitions:
       message_type:
         description: >-
           The type of message. An enum to constrain messages and allow better
-          interoperability. Required with "CRITICAL" or higher severity.
+          interoperability. Required with "CRITICAL" or higher severity. 'gufi'
+          field is required for all message_types except OTHER_SEE_FREE_TEXT.
 
           1. UNPLANNED_LANDING
-            This operation had to land earlier than expected and/or at a location other than was originally planned.
+            This operation had to land earlier than expected and/or at a location other than was originally planned. Must be sent with severity CRITICAL unless there is any damage other than to the UAS.
           2. UNCONTROLLED_LANDING
-            This operation had an uncontrolled landing either at the originally planned landing location or another location.
+            This operation had an uncontrolled landing either at the originally planned landing location or another location. Must be sent with severity CRITICAL unless there is any damage other than to the UAS.
           3. OPERATION_NONCONFORMING
-            This operation has entered the NONCONFORMING state. Must be sent to LUN anytime operation transitions to this state. Must be sent with severity CRITICAL.
+            This operation has entered the NONCONFORMING state. Must be sent to LUN anytime operation transitions to this state. Must be sent with severity ALERT if the operation is expected to intersect another operation plan or unauthorized airspace.  Must be sent with severity EMERGENCY if already intersecting another operation or if already entered unauthorized airspace. Otherwise, must be sent with severity CRITICAL.
           4. OPERATION_ROGUE
-            This operation has entered the ROGUE state. Must be sent to LUN anytime operation transitions to ROGUE state. Must be sent with severity ALERT.
+            This operation has entered the ROGUE state. Must be sent to LUN anytime operation transitions to ROGUE state. Must be sent with severity ALERT if no current or immediate intersection with another operation or unauthorized airspace. Must be sent with severity EMERGENCY is known to intersect with existing operation or unauthorized airspace.
           5. OPERATION_CONFORMING
-            This operation was previously in the NONCONFORMING state and has transitioned back to the ACTIVE state
+            This operation was previously in the NONCONFORMING state and has transitioned back to the ACTIVE state. 'gufi' field is required with this message_type.
           6. OPERATION_CLOSED
-            This operation has entered the terminal CLOSED state. The operation will not again be active or in flight. This message is not required if the operation is transitioned to the CLOSED state from the ACTIVE state, but may be provided at the USS's discretion. This message is required when the operation transitioned from any state other than the ACTIVE state to the CLOSED state. If transitioning an operation from ACCEPTED to CLOSED, this message must have a severity of NOTICE. If transitioning from NONCONFORMING or ROGUE, this message must have a severity of ALERT.
+            This operation has entered the terminal CLOSED state. The operation will not again be active or in flight. This message is not required if the operation is transitioned to the CLOSED state from the ACTIVE state, but may be provided at the USS's discretion. This message is required when the operation transitioned from any state other than the ACTIVE state to the CLOSED state. If transitioning an operation from ACCEPTED to CLOSED, this message must have a severity of NOTICE. If transitioning from NONCONFORMING or ROGUE, this message must have a severity of CRITICAL.
           7. CONTINGENCY_PLAN_INITIATED
             Description TBD.
           8. CONTINGENCY_PLAN_CANCELLED
             Description TBD.
           9. PERIODIC_POSITION_REPORTS_START
-            The requestor wants position reports provided for the operation referenced in the 'gufi' field of this request. Thus, 'gufi' is a *required* field when using this message_type.  Reports MUST be provided as per the USS Specification.
+            The requestor wants position reports provided for the operation referenced in the 'gufi' field of this request. Reports MUST be provided as per the USS Specification.
           10. PERIODIC_POSITION_REPORTS_END
-            The requestor wants previously requested position reports to end. 'gufi' is a *required* field when using this message_type.  If this message is received without a corresponding PERIODIC_POSITION_REPORTS_START, the message response is TBD (200, 400, 401, 404, etc.)
+            The requestor wants previously requested position reports to end. If this message is received without a corresponding PERIODIC_POSITION_REPORTS_START, the message response is TBD (200, 400, 401, 404, etc.)
           11. OTHER_SEE_FREE_TEXT
             Messages that do not fit any of the otherwise defined categories. Should be used sparingly or with additional out-of-band description.
         type: string
@@ -838,6 +839,8 @@ definitions:
     required:
       - message_id
       - type
+      - effective_time_begin
+      - effective_time_end
     properties:
       message_id:
         description: A UUIDv4 assigned to this message by the originator
@@ -876,20 +879,42 @@ definitions:
           - OTHER
       constraint_geography:
         $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Polygon'
-      begin_time:
+      effective_time_begin:
         description: >-
-          The time that the constraint begins. Null or no value implies
-          -infinity begin time.
+          The time that the constraint will begin to be in effect.  Uses the ISO
+          8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds
+          may have up to millisecond accuracy (three positions after decimal). 
+          The 'Z' implies UTC times and is the only timezone accepted.
         type: string
         format: date-time
-        maxLength: 100
-      end_time:
+        minLength: 20
+        maxLength: 25
+        example: '2015-08-20T14:11:56.118Z'
+      effective_time_end:
         description: >-
-          The time that the constraint ends. Null or no value implies on-going
-          constraint.
+          The time that the constraint will cease to be in effect..  Uses the
+          ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ. 
+          Seconds may have up to millisecond accuracy (three positions after
+          decimal).  The 'Z' implies UTC times and is the only timezone
+          accepted. 
         type: string
         format: date-time
-        maxLength: 100
+        minLength: 20
+        maxLength: 25
+        example: '2015-08-20T15:11:56.118Z'
+      actual_time_end:
+        description: >-
+          Time that the constaint actually ceased being in effect.  Uses the ISO
+          8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds
+          may have up to millisecond accuracy (three positions after decimal). 
+          The 'Z' implies UTC times and is the only timezone accepted.  This
+          value is likely used when a constraint ends early, but is not
+          required.
+        type: string
+        format: date-time
+        minLength: 20
+        maxLength: 25
+        example: '2015-08-20T14:31:56.118Z'
       min_altitude:
         description: >-
           The minimum altitude of the constraint. Must be less than
