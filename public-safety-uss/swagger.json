@@ -1,132 +1,133 @@
----
-swagger: "2.0"
+swagger: '2.0'
 info:
-  description: "A USS with the Public Safety role implements this API in addition\
-    \ to the base USS API."
-  version: "v1"
-  title: "Public Safety USS"
-  termsOfService: "\nA. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT\
-    \ ANY WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,\
-    \ BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL CONFORM TO SPECIFICATIONS,\
-    \ ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,\
-    \ OR FREEDOM FROM INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE\
-    \ ERROR FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM TO\
-    \ THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER, CONSTITUTE AN\
-    \ ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT OF ANY RESULTS, RESULTING\
-    \ DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY OTHER APPLICATIONS RESULTING FROM\
-    \ USE OF THE SUBJECT SOFTWARE. FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES\
-    \ AND LIABILITIES REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,\
-    \ AND DISTRIBUTES IT \"AS IS.\"\n\nB. Waiver and Indemnity: RECIPIENT AGREES TO\
-    \ WAIVE ANY AND ALL CLAIMS AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS\
-    \ AND SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT''S USE OF THE\
-    \ SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES\
-    \ ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING\
-    \ FROM, RECIPIENT''S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY AND\
-    \ HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS,\
-    \ AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT''S\
-    \ SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL TERMINATION\
-    \ OF THIS AGREEMENT.\n"
+  version: 'v3'
+  title: Public Safety USS
+  description: A USS with the Public Safety role implements this API in addition to the base USS API. 
   contact:
-    name: "NASA Ames Research Center, Aviation Systems Division"
-    url: "https://utm.arc.nasa.gov/"
-    email: "joseph.rios@nasa.gov"
+    name: 'NASA Ames Research Center, Aviation Systems Division'
+    url: 'https://utm.arc.nasa.gov/'
+    email: joseph.rios@nasa.gov
   license:
-    name: "NASA Open Source Agreement"
-    url: "https://ti.arc.nasa.gov/opensource/nosa/"
-host: "publicsafety.arc.nasa.gov"
-basePath: "/pubsafe"
+    name: NASA Open Source Agreement
+    url: 'https://ti.arc.nasa.gov/opensource/nosa/'
+  termsOfService: >
+
+    A. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+    WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,
+    BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL CONFORM TO
+    SPECIFICATIONS, ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+    PARTICULAR PURPOSE, OR FREEDOM FROM INFRINGEMENT, ANY WARRANTY THAT THE
+    SUBJECT SOFTWARE WILL BE ERROR FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF
+    PROVIDED, WILL CONFORM TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN
+    ANY MANNER, CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR
+    RECIPIENT OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR
+    ANY OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE. FURTHER,
+    GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES REGARDING
+    THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE, AND DISTRIBUTES
+    IT "AS IS."
+
+
+    B. Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+    AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS
+    WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT''S USE OF THE SUBJECT SOFTWARE
+    RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES ARISING
+    FROM SUCH USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING
+    FROM, RECIPIENT''S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY
+    AND HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+    SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY
+    LAW. RECIPIENT''S SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE,
+    UNILATERAL TERMINATION OF THIS AGREEMENT.
+host: publicsafety.arc.nasa.gov
+basePath: /pubsafe
 schemes:
-- "https"
+  - https
+
+securityDefinitions:
+  public_safety_oauth2:
+    type: oauth2
+    tokenUrl: https://thisserver/fimsAuthServer/oauth/token
+    flow: application
+    scopes:
+      'utm.nasa.gov_write.publicsafety': Subject can read, create, and update operations that are designated public safety operations.  
+
 security:
-- public_safety_oauth2:
-  - "utm.nasa.gov_write.publicsafety"
+  - public_safety_oauth2:
+    - 'utm.nasa.gov_write.publicsafety'
+    
 paths:
   /vehicles:
     get:
-      description: "Returns information on vehicle"
+      description: Returns information on vehicle
       parameters:
-      - name: "uvin"
-        in: "query"
-        description: "specifies the vehicle id"
-        required: false
-        type: "string"
-      - name: "lat"
-        in: "query"
-        description: "WGS-84 latitude"
-        required: false
-        type: "string"
-      - name: "lon"
-        in: "query"
-        description: "WGS-84 longitude"
-        required: false
-        type: "string"
-      - name: "alt"
-        in: "query"
-        description: "WGS-84 altitude"
-        required: false
-        type: "string"
-      - name: "time"
-        in: "query"
-        description: "UTC time"
-        required: false
-        type: "string"
+        - name: uvin
+          in: query
+          type: string
+          description: specifies the vehicle id
+        - name: lat
+          in: query
+          type: string
+          description: "WGS-84 latitude"
+        - name: lon
+          in: query
+          type: string
+          description: "WGS-84 longitude"
+        - name: alt
+          in: query
+          type: string
+          description: "WGS-84 altitude"
+        - name: time
+          in: query
+          type: string
+          description: "UTC time"
       responses:
         200:
-          description: "Successfully returned a list of one or more uvins"
+          description: Successfully returned a list of one or more uvins 
           schema:
-            type: "array"
+            type: array
             items:
-              $ref: "#/definitions/inline_response_200"
+              type: object
+              required:
+               - operator_name
+               - operator_tel
+              properties:
+                uvin:
+                  type: string
+                uss_name:
+                  type: string
+                uss_id: 
+                  type: string
+                  description: "instance id"
+                operator_name:
+                  type: string
+                operator_id: 
+                  type: string
+                operator_tel:
+                  type: string
+                operator_email: 
+                  type: string
+                vehicle_model: 
+                  type: string
+                vehicle_manufacturer:
+                  type: string
+                  
+                
+                  
         400:
-          description: "Invalid request"
+          description: Invalid request 
           schema:
-            $ref: "#/definitions/inline_response_400"
+            type: object
+            properties:   
+              message:
+                type: string
+
+            
   /tfr:
     post:
+      summary: Submit a new TFR
+      description: >-
+        A USS may submit new TFRs on behalf of public safety organizations. This endpoint allows a public safetry organization to submit the data related to a new TFR.
       tags:
-      - "Restful Endpoints"
-      summary: "Submit a new TFR"
-      description: "A USS may submit new TFRs on behalf of public safety organizations.\
-        \ This endpoint allows a public safetry organization to submit the data related\
-        \ to a new TFR."
-      parameters: []
+        - 'Restful Endpoints'
       responses:
         200:
-          description: "OK"
-securityDefinitions:
-  public_safety_oauth2:
-    type: "oauth2"
-    tokenUrl: "https://thisserver/fimsAuthServer/oauth/token"
-    flow: "application"
-    scopes:
-      utm.nasa.gov_write.publicsafety: "Subject can read, create, and update operations\
-        \ that are designated public safety operations."
-definitions:
-  inline_response_200:
-    required:
-    - "operator_name"
-    - "operator_tel"
-    properties:
-      uvin:
-        type: "string"
-      uss_name:
-        type: "string"
-      uss_id:
-        type: "string"
-        description: "instance id"
-      operator_name:
-        type: "string"
-      operator_id:
-        type: "string"
-      operator_tel:
-        type: "string"
-      operator_email:
-        type: "string"
-      vehicle_model:
-        type: "string"
-      vehicle_manufacturer:
-        type: "string"
-  inline_response_400:
-    properties:
-      message:
-        type: "string"
+          description: OK

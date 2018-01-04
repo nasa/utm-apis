@@ -1,11 +1,11 @@
 swagger: '2.0'
 info:
-  version: 'v1'
+  version: 'v3'
   title: Vehicle Identity
   description: Validate the identity of a vehicle. Long term this authenticates the vehicle, and has access to Vehicle ID Authority Data.  For TCL3, validates that the vehicle ID was properly registered for the NASA event.
  
 paths:
-  /registration:
+  /api/v1/uvins/:
     get:
       tags:
         - A. Vehicle
@@ -32,7 +32,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Version' 
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Version' 
 
 definitions:
 

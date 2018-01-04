@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: "v1"
+  version: "v3"
   title: Flight Information Management System (FIMS) Authorization (Authz) Server
   description: FIMS_Authz provides authorization services for FIMS and USS stakeholders within UTM.  FIMS_Authz is an OAuth 2.0 compliant server.  The endpoints and data exchnages provided by this server are based on open standards.
 externalDocs:
@@ -45,7 +45,7 @@ paths:
         '501':
           description: Not Implemented
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
   /token:
     post:
       tags:
@@ -202,7 +202,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Version'      
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Version'      
 
 definitions:
   TokenResponse:
@@ -343,7 +343,7 @@ definitions:
       scope:
         type: array
         items:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/scope'
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/scope'
 
         
   Metadata:
@@ -370,7 +370,7 @@ definitions:
       scopes_supported:
         type: array
         items:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/scope'
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/scope'
         description: >-
           JSON array containing a list of the OAuth 2.0 [RFC6749] "scope" values that this authorization server supports. Servers MAY choose not to advertise some supported scope values even when this parameter is used.
 # Currently no response types supported, return empty array
