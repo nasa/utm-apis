@@ -222,9 +222,9 @@ definitions:
           - NONCONFORMING
           - ROGUE
       controller_location:
-        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Point'
+        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Point'
       gcs_location:
-        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Point'
+        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Point'
       contingency_plans:
         description: >-
           An array of ContingencyPlans wherein this operation may land if
@@ -267,7 +267,7 @@ definitions:
           $ref: '#/definitions/OperationVolume'
       metadata:
         $ref: >-
-          https://api.swaggerhub.com/domains/utm/metadata/v1#/definitions/EventMetadata
+          https://api.swaggerhub.com/domains/utm/metadata/v3#/definitions/EventMetadata
   PriorityElements:
     description: >-
       Data elements used to describe the status of priority operation. Nominal
@@ -284,7 +284,7 @@ definitions:
     properties:
       priority_level:
         $ref: >-
-          https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/severity
+          https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/severity
       priority_status:
         type: string
         description: >-
@@ -368,7 +368,7 @@ definitions:
         type: number
         format: double
       operation_geography:
-        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Polygon'
+        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Polygon'
       beyond_visual_line_of_sight:
         description: >-
           Describes whether the operation volume is beyond the visual line of
@@ -463,7 +463,7 @@ definitions:
           - LOITERING
           - RETURN_TO_BASE
       contingency_point:
-        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Point'
+        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Point'
       loiter_altitude_wgs84_ft:
         description: >-
           The altitude for this contingency. Relevant and required for the
@@ -598,7 +598,7 @@ definitions:
         description: The horizontal dilution of precision as provided by the onboard GPS.
         minimum: 0
       location:
-        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Point'
+        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Point'
       time_measured:
         description: >-
           The time the position was measured. Likely the time provided with the
@@ -766,7 +766,7 @@ definitions:
         example: '2015-08-20T14:11:57.345Z'
       severity:
         $ref: >-
-          https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/severity
+          https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/severity
       message_type:
         description: >-
           The type of message. An enum to constrain messages and allow better
@@ -810,10 +810,10 @@ definitions:
           - OTHER_SEE_FREE_TEXT
       last_known_position:
         $ref: >-
-          https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Position
+          https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Position
       contingency:
         $ref: >-
-          https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/ContingencyPlan
+          https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/ContingencyPlan
       prev_message_id:
         description: >-
           A message_id of a previously sent message that has relevance or
@@ -878,7 +878,7 @@ definitions:
           - MUNICIPALITY
           - OTHER
       constraint_geography:
-        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Polygon'
+        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Polygon'
       effective_time_begin:
         description: >-
           The time that the constraint will begin to be in effect.  Uses the ISO
@@ -1091,7 +1091,7 @@ definitions:
           any UAS operations airborne after this time that would be supported by
           this USS Instance.
       coverage_area:
-        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Polygon'
+        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Polygon'
       time_last_modified:
         type: string
         format: date-time
@@ -1149,7 +1149,7 @@ definitions:
           services.
       metadata:
         $ref: >-
-          https://api.swaggerhub.com/domains/utm/metadata/v1#/definitions/EventMetadata
+          https://api.swaggerhub.com/domains/utm/metadata/v3#/definitions/EventMetadata
       notes:
         type: string
         description: >-
