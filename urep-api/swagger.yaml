@@ -5,7 +5,7 @@ info:
     \ (USS) to submit a UREP to the greater UAS Traffic Management (UTM) ecosystem.\
     \ This also allows USS to share UREPs amongst eachother, allowing for greater\
     \ operational awareness within the UTM ecosystem."
-  version: "v3"
+  version: "v1"
   title: "UAS Report (UREP) Service"
 host: "utmalpha.arc.nasa.gov"
 basePath: "/urep"

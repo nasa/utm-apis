@@ -5,7 +5,7 @@ info:
     \ within the UTM System.  This service allows for authenticated USS operators\
     \ to submit information about their USS and for all stakeholders to query for\
     \ a USS Instances matching certain parameters."
-  version: "v3"
+  version: "v1"
   title: "UTM USS Service Discovery"
   termsOfService: "\nA. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT\
     \ ANY WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,\
@@ -170,7 +170,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UssInstance'
+              $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
         400:
           description: "Bad request. Typically validation error. Fix your request and retry."
         429:
@@ -196,16 +196,16 @@ paths:
         description: "USS Instance plan to add"
         required: true
         schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UssInstance'
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
       responses:
         201:
           description: "USS Instance received."
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         400:
           description: "Bad request. Typically validation error. Fix your request and retry."
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         403:
           description: "Invalid ID supplied.  Fix authorization and retry."
         429:
@@ -236,12 +236,12 @@ paths:
         200:
           description: "Successful data request. Response includes requested data."
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UssInstance'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
         429:
           description: "Too many recent requests from you. Wait to make further queries."
  
@@ -272,9 +272,9 @@ paths:
           \  4. Other rules for a USS Instance POST are satisfied.\n"
         required: true
         schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UssInstance'
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
       responses:
          200:
           description: "Successful data request. Response includes requested data."
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UssInstance'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance'
