@@ -1,8 +1,7 @@
----
 swagger: "2.0"
 info:
   description: "This API describes the RESTful interface from a UAS Service Supplier (USS) to FIMS. Note that FIMS uses a webhook pattern to sends messages and other data such as constraints to USS's by POSTING to the USS API. Also, FIMS subscribes to USS Discovery to learn about the USS Network."
-  version: "v2"
+  version: "v3"
   title: "UTM Research Platform, FIMS-USS Interface"
   contact:
     name: NASA Ames Research Center, Aviation Systems Division
@@ -60,7 +59,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Version' 
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Version' 
             
   
   /operations/{gufi}:
@@ -89,24 +88,24 @@ paths:
         description: Operation updates
         required: true
         schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Operation'
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation'
       responses:
         200:
           description: "Operation updated."
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
         400:
           description: "Bad request. Typically validation error. Fix your request and retry."
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
         403:
           description: "Unauthorized user."
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
         404:
           description: "Broken link. Check request URL"
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
 
   /positions:
     post:
@@ -123,18 +122,18 @@ paths:
         201:
           description: "Position posted successfully."
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
         400:
           description: "Invalid message. Please fix and retry."
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
       parameters:
       - in: body
         name: position
         description: Position to submit
         required: true
         schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Position'
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Position'
   
   /utm_messages:
     post:
@@ -156,12 +155,12 @@ paths:
         description: "Message object being sent"
         required: true
         schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMMessage'
+          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMMessage'
       responses:
         201:
           description: "Returns message ID if received successfully."
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
         400:
           description: "Invalid message. Please fix and retry."
 
@@ -183,7 +182,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Operation'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 
@@ -202,7 +201,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Point'
+            $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Point'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 
@@ -222,7 +221,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/LineString'
+            $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/LineString'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 
@@ -241,7 +240,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Polygon'
+            $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Polygon'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 
@@ -261,7 +260,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMMessage'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMMessage'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 
@@ -281,7 +280,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/ConstraintMessage'
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/ConstraintMessage'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 

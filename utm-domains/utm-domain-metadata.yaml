@@ -1,6 +1,6 @@
 info:
   description: "UTM metadata model used for events and other misc."
-  version: 'v1'
+  version: "v3"
   title: UTM Metadata
 
 definitions:
