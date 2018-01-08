@@ -67,7 +67,22 @@ paths:
               https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/ConstraintMessage
       responses:
         '201':
-          description: 'Constraint data received. '
+          description: OK
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '400':
+          description: Bad request. Typically validation error. Fix your request and retry.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '401':
+          description: Invalid or missing access_token provided.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '429':
+          description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
               https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
