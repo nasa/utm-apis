@@ -76,7 +76,6 @@ definitions:
       - controller_location
       - operation_volumes
       - submit_time
-      - decision_time
     properties:
       gufi:
         description: >-
@@ -90,7 +89,8 @@ definitions:
       uss_name:
         description: >-
           Identity of the USS.  The maximum and minimum character length is
-          based on a usable domain name, and considering the maximum in RFC-1035
+          based on a usable domain name, and considering the maximum in
+          RFC-1035.
         type: string
         maxLength: 250
         minLength: 1
@@ -668,11 +668,15 @@ definitions:
         exclusiveMinimum: false
         maximum: 360
         exclusiveMaximum: true
-      user_id:
-        type: string
+      uss_name:
         description: >-
-          Not required for submission. This field is populated based on the
-          provided credentials in the HTTPS header.
+          The name of the entity providing UAS Support Services. Populated by
+          the service discovery system based on credential information provided
+          by the USS. The maximum and minimum character length is based on a
+          usable domain name, and considering the maximum in RFC-1035.
+        type: string
+        minLength: 1
+        maxLength: 250
       uss_instance_id:
         description: >-
           A USS instance_id value for the USS instance managing this operation. 
@@ -737,10 +741,13 @@ definitions:
       originator_id:
         description: >-
           A name identifying the originator of this message. If a USS is the
-          originator, then this field MUST be the uss_id as known by the
-          authorization server.
+          originator, then this field MUST be the uss_name as known by the
+          authorization server. The maximum and minimum character length is
+          based on a usable domain name, and considering the maximum in
+          RFC-1035.
         type: string
-        maxLength: 100
+        minLength: 1
+        maxLength: 250
       originator_uss_instance_id:
         description: >-
           A USS instance_id value of the originator of this message.  This aids
@@ -965,7 +972,12 @@ definitions:
         maxLength: 36
         minLength: 36
       origin_uss_name:
-        description: A name identifying the originator of this message.
+        description: >-
+          A name identifying the originator of this message. MUST be the
+          uss_name as known by the authorization server. The maximum and minimum
+          character length is based on a usable domain name, and considering the
+          maximum in RFC-1035. The maximum and minimum character length is based
+          on a usable domain name, and considering the maximum in RFC-1035.
         type: string
         maxLength: 100
       originator_uss_instance_id:
@@ -1068,9 +1080,12 @@ definitions:
         description: >-
           The name of the entity providing UAS Support Services. Populated by
           the service discovery system based on credential information provided
-          by the USS.
+          by the USS. MUST be the uss_name as known by the authorization server.
+          The maximum and minimum character length is based on a usable domain
+          name, and considering the maximum in RFC-1035.
         type: string
         minLength: 1
+        maxLength: 250
       time_submitted:
         type: string
         format: date-time
