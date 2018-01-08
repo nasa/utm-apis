@@ -109,18 +109,25 @@ definitions:
           Seconds may have up to millisecond accuracy (three positions after
           decimal).  The 'Z' implies UTC times and is the only timezone
           accepted. This value is set by the USS managing this Operation upon
-          submitting the data to another server in the USS Network. This test
-          MUST be true: submit_time >= decision_time.
+          submitting the initial data to another server in the USS Network. This
+          test MUST be true: submit_time <= last_lun_update_time.
         type: string
         format: date-time
         minLength: 20
         maxLength: 25
         example: '2015-08-20T14:11:56.118Z'
-      decision_time:
+      last_lun_update_time:
         description: >-
           A timestamp set by the USS any time the state of the operation is
-          updated, for example when the flight goes from ACCEPTED to ACTIVATED. 
-          Uses the ISO 8601 format conforming to pattern:
+          updated within the USS Network. An update may be minor or major, but
+          if/when te Operation is shared in the USS Network as a PUT to its LUN,
+          this field MUST reflect the time that update was provided.  When the
+          operation is submitted for the first time to the LUN, this value MUST
+          be equal to submit_time.  This value MUST be constant for each update.
+          This means that all USSs have the same value for
+          last_submitted_update_time even if, for example, one USS receives the
+          update later than others due to HTTP retrys or is provided as a GET
+          for this Operation.  Uses the ISO 8601 format conforming to pattern:
           YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy
           (three positions after decimal).  The 'Z' implies UTC times and is the
           only timezone accepted. This field is set and maintained by the USS
