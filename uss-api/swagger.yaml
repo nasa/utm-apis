@@ -50,10 +50,36 @@ security:
       - utm.nasa.gov_read.min_data
 paths:
   /constraints:
+    put:
+      tags:
+        - A. Required Endpoints
+      summary: Allow constraints to be submitted from authorized entities.
+      operationId: putConstraint
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: message
+          description: The message being sent
+          required: true
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/ConstraintMessage
+      responses:
+        '201':
+          description: 'Constraint data received. '
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+      security:
+        - ussapi_security:
+            - utm.nasa.gov_write.constraint
+            - utm.nasa.gov_all.all
     post:
       tags:
         - A. Required Endpoints
       summary: Allow constraints to be submitted from authorized entities.
+      deprecated: true
       operationId: postConstraint
       consumes:
         - application/json
@@ -64,22 +90,63 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/ConstraintMessage
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/ConstraintMessage
       responses:
         '201':
           description: 'Constraint data received. '
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
       security:
         - ussapi_security:
             - utm.nasa.gov_write.constraint
             - utm.nasa.gov_all.all
   /utm_messages:
+    put:
+      tags:
+        - A. Required Endpoints
+      summary: Allow other authorized entities to send a message to this USS.
+      description: Allows another USS or FIMS to POST a message to this USS.
+      operationId: putUtmMessage
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: message
+          description: The message being sent
+          required: true
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMMessage
+      responses:
+        '201':
+          description: OK
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '400':
+          description: Bad request. Typically validation error. Fix your request and retry.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '401':
+          description: Invalid or missing access_token provided.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '429':
+          description: Too many recent requests from you. Wait to make further queries.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+      security:
+        - ussapi_security:
+            - utm.nasa.gov_write.message
     post:
       tags:
         - A. Required Endpoints
       summary: Allow other authorized entities to send a message to this USS.
+      deprecated: true
       description: Allows another USS or FIMS to POST a message to this USS.
       operationId: postUtmMessage
       consumes:
@@ -91,21 +158,22 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMMessage
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMMessage
       responses:
         '201':
           description: Message data received.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
       security:
         - ussapi_security:
             - utm.nasa.gov_write.message
   /uss:
-    post:
+    put:
       tags:
         - A. Required Endpoints
       summary: Share USS Instance data
+      operationId: putUss
       description: >-
         As per the USS Discovery Service specification, this endpoint is for
         receiving messages about the USS Network from the USS Discovery
@@ -120,21 +188,124 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UssInstance
       responses:
         '201':
-          description: USS Instance data received.
+          description: OK
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '400':
+          description: Bad request. Typically validation error. Fix your request and retry.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '401':
+          description: Invalid or missing access_token provided.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '429':
+          description: Too many recent requests from you. Wait to make further queries.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+    post:
+      tags:
+        - A. Required Endpoints
+      summary: Share USS Instance data
+      deprecated: true
+      description: >-
+        As per the USS Discovery Service specification, this endpoint is for
+        receiving messages about the USS Network from the USS Discovery
+        Service.  For example, when a new USS Instance is registered, that
+        announcement would come to this endpoint.
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: message
+          description: The USS Instance information being sent
+          required: true
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UssInstance
+      responses:
+        '201':
+          description: OK
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '400':
+          description: Bad request. Typically validation error. Fix your request and retry.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '401':
+          description: Invalid or missing access_token provided.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '429':
+          description: Too many recent requests from you. Wait to make further queries.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
       security:
         - ussapi_security:
             - utm.nasa.gov_write.operation
   /negotiations:
+    put:
+      tags:
+        - A. Required Endpoints
+      summary: Allow other USSs to submit a negotiation request
+      operationId: putNegotiation
+      description: >-
+        A POST to the negotiations endpoint is interpretted as a request for
+        alteration in an existing operation managed by the receiving USS.  The
+        requesting USS supplies a GUFI that references the operation that may be
+        altered if the request is granted by the receiving USS.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: operation
+          description: The NegotiationMessage data
+          required: true
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/NegotiationMessage
+      responses:
+        '201':
+          description: OK
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '400':
+          description: Bad request. Typically validation error. Fix your request and retry.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '401':
+          description: Invalid or missing access_token provided.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '429':
+          description: Too many recent requests from you. Wait to make further queries.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+      security:
+        - ussapi_security:
+            - utm.nasa.gov_write.message
     post:
       tags:
         - A. Required Endpoints
       summary: Allow other USSs to submit a negotiation request
+      deprecated: true
       description: >-
         A POST to the negotiations endpoint is interpretted as a request for
         alteration in an existing operation managed by the receiving USS.  The
@@ -152,13 +323,13 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/NegotiationMessage
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/NegotiationMessage
       responses:
         '200':
           description: OK
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
         '400':
           description: Problem with submitted data
       security:
@@ -187,15 +358,28 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Position
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Position
       responses:
         '201':
           description: OK
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
         '400':
-          description: Bad request. Typically validation error. Fix and retry.
+          description: Bad request. Typically validation error. Fix your request and retry.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '401':
+          description: Invalid or missing access_token provided.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '429':
+          description: Too many recent requests from you. Wait to make further queries.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
   /operations:
     get:
       tags:
@@ -289,25 +473,6 @@ paths:
           type: string
           format: geojson-position
           required: false
-        - name: fields
-          in: query
-          description: >-
-            The specific subset of fields to return. Comma separated list.
-            Default will be all fields when this parameter is not provided in
-            the query. Duplicate field names not allowed and server may reject
-            query if duplicates are provided. If field names are provided that
-            are not part of the request model, the server may either reject the
-            query or ignore the improper fields. Maximum 20 field values
-            supported. If more than 20 fields are required, then this parameter
-            should not be used so that all fields are returned.
-          required: false
-          type: array
-          items:
-            type: string
-          collectionFormat: csv
-          maxItems: 20
-          minItems: 1
-          uniqueItems: true
         - name: sort
           in: query
           description: >-
@@ -351,13 +516,22 @@ paths:
             type: array
             items:
               $ref: >-
-                https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Operation
+                https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
         '401':
-          description: Invalid or missing access_token.
+          description: Invalid or missing access_token provided.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
       security:
         - ussapi_security:
             - utm.nasa.gov_read.operation
@@ -387,13 +561,13 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Operation
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation
       responses:
         '201':
           description: Operation data received.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
       security:
@@ -417,6 +591,8 @@ paths:
           required: true
           type: array
           collectionFormat: csv
+          minItems: 1
+          maxItems: 10
           items:
             type: string
             format: uuid
@@ -430,17 +606,17 @@ paths:
           description: OK
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
       security:
         - ussapi_security:
             - utm.nasa.gov_read.operation
@@ -473,13 +649,13 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Operation
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation
       responses:
         '201':
           description: OK
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
       security:
