@@ -1,6 +1,5 @@
 swagger: '2.0'
 info:
-<<<<<<< HEAD
   description: >-
     This API describes the minimum interface that a USS must implement to  be
     part of the USS Network.  This API allows for communication of data  between
@@ -34,34 +33,6 @@ info:
     SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY
     LAW. RECIPIENT''S SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE,
     UNILATERAL TERMINATION OF THIS AGREEMENT.
-=======
-  description: "This API describes the minimum interface that a USS must implement\
-    \ to  be part of the USS Network.  This API allows for communication of data \
-    \ between USS Instances and from FIMS to a USS regarding new USS Instances."
-  version: "v3"
-  title: "USS Required API"
-  termsOfService: "\nA. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT\
-    \ ANY WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,\
-    \ BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL CONFORM TO SPECIFICATIONS,\
-    \ ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,\
-    \ OR FREEDOM FROM INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE\
-    \ ERROR FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM TO\
-    \ THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER, CONSTITUTE AN\
-    \ ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT OF ANY RESULTS, RESULTING\
-    \ DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY OTHER APPLICATIONS RESULTING FROM\
-    \ USE OF THE SUBJECT SOFTWARE. FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES\
-    \ AND LIABILITIES REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,\
-    \ AND DISTRIBUTES IT \"AS IS.\"\n\nB. Waiver and Indemnity: RECIPIENT AGREES TO\
-    \ WAIVE ANY AND ALL CLAIMS AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS\
-    \ AND SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT''S USE OF THE\
-    \ SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES\
-    \ ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING\
-    \ FROM, RECIPIENT''S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY AND\
-    \ HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS,\
-    \ AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT''S\
-    \ SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL TERMINATION\
-    \ OF THIS AGREEMENT.\n"
->>>>>>> master
   contact:
     name: 'NASA Ames Research Center, Aviation Systems Division'
     url: 'https://utm.arc.nasa.gov/'
@@ -87,7 +58,6 @@ paths:
       consumes:
         - application/json
       parameters:
-<<<<<<< HEAD
         - in: body
           name: message
           description: The message being sent
@@ -95,24 +65,12 @@ paths:
           schema:
             $ref: >-
               https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/ConstraintMessage
-=======
-      - in: "body"
-        name: "message"
-        description: "The message being sent"
-        required: true
-        schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/ConstraintMessage'
->>>>>>> master
       responses:
         '201':
           description: 'Constraint data received. '
           schema:
-<<<<<<< HEAD
             $ref: >-
               https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse
-=======
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
->>>>>>> master
       security:
         - ussapi_security:
             - utm.nasa.gov_write.constraint
@@ -127,7 +85,6 @@ paths:
       consumes:
         - application/json
       parameters:
-<<<<<<< HEAD
         - in: body
           name: message
           description: The message being sent
@@ -135,24 +92,12 @@ paths:
           schema:
             $ref: >-
               https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMMessage
-=======
-      - in: "body"
-        name: "message"
-        description: "The message being sent"
-        required: true
-        schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMMessage'
->>>>>>> master
       responses:
         '201':
           description: Message data received.
           schema:
-<<<<<<< HEAD
             $ref: >-
               https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse
-=======
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
->>>>>>> master
       security:
         - ussapi_security:
             - utm.nasa.gov_write.message
@@ -169,7 +114,6 @@ paths:
       consumes:
         - application/json
       parameters:
-<<<<<<< HEAD
         - in: body
           name: message
           description: The USS Instance information being sent
@@ -177,24 +121,12 @@ paths:
           schema:
             $ref: >-
               https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UssInstance
-=======
-      - in: "body"
-        name: "message"
-        description: "The USS Instance information being sent"
-        required: true
-        schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UssInstance'
->>>>>>> master
       responses:
         '201':
           description: USS Instance data received.
           schema:
-<<<<<<< HEAD
             $ref: >-
               https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse
-=======
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
->>>>>>> master
       security:
         - ussapi_security:
             - utm.nasa.gov_write.operation
@@ -214,7 +146,6 @@ paths:
       produces:
         - application/json
       parameters:
-<<<<<<< HEAD
         - in: body
           name: operation
           description: The NegotiationMessage data
@@ -222,28 +153,14 @@ paths:
           schema:
             $ref: >-
               https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/NegotiationMessage
-=======
-      - in: "body"
-        name: "operation"
-        description: "The NegotiationMessage data"
-        required: true
-        schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/NegotiationMessage'
->>>>>>> master
       responses:
         '200':
           description: OK
           schema:
-<<<<<<< HEAD
             $ref: >-
               https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse
         '400':
           description: Problem with submitted data
-=======
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
-        400:
-          description: "Problem with submitted data"
->>>>>>> master
       security:
         - ussapi_security:
             - utm.nasa.gov_write.message
@@ -259,7 +176,6 @@ paths:
         - application/json
       produces:
         - application/json
-<<<<<<< HEAD
       parameters:
         - in: path
           name: position_id
@@ -272,34 +188,14 @@ paths:
           schema:
             $ref: >-
               https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Position
-=======
-      parameters: 
-       - in: path
-         name: position_id
-         required: true
-         type: string
-         description: "PUT by position_id"
-         
-       - in: body
-         name: position
-         required: true
-         schema:
-              $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Position'
->>>>>>> master
       responses:
         '201':
           description: OK
           schema:
-<<<<<<< HEAD
             $ref: >-
               https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse
         '400':
           description: Bad request. Typically validation error. Fix and retry.
-=======
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
-        400:
-          description: "Bad request. Typically validation error. Fix and retry."
->>>>>>> master
   /operations:
     get:
       tags:
@@ -454,7 +350,6 @@ paths:
           schema:
             type: array
             items:
-<<<<<<< HEAD
               $ref: >-
                 https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Operation
         '400':
@@ -463,14 +358,6 @@ paths:
           description: Invalid or missing access_token.
         '429':
           description: Too many recent requests from you. Wait to make further queries.
-=======
-              $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation'
-        400:
-          description: "Bad request. Typically validation error. Fix your request\
-            \ and retry."
-        429:
-          description: "Too many recent requests from you. Wait to make further queries."
->>>>>>> master
       security:
         - ussapi_security:
             - utm.nasa.gov_read.operation
@@ -494,7 +381,6 @@ paths:
       produces:
         - application/json
       parameters:
-<<<<<<< HEAD
         - in: body
           name: operation
           description: The operation data
@@ -502,28 +388,14 @@ paths:
           schema:
             $ref: >-
               https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Operation
-=======
-      - in: "body"
-        name: "operation"
-        description: "The operation data"
-        required: true
-        schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation'
->>>>>>> master
       responses:
         '201':
           description: Operation data received.
           schema:
-<<<<<<< HEAD
             $ref: >-
               https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
-=======
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
-        400:
-          description: "Bad request. Typically validation error. Fix your request and retry."
->>>>>>> master
       security:
         - ussapi_security:
             - utm.nasa.gov_write.operation
@@ -585,7 +457,6 @@ paths:
       produces:
         - application/json
       parameters:
-<<<<<<< HEAD
         - in: path
           name: gufi
           required: true
@@ -611,29 +482,6 @@ paths:
               https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
-=======
-      - in: path
-        name: gufi
-        required: true
-        type: string
-        description: "PUT operation by gufi"
-      - in: "body"
-        name: "operation"
-        description: "Operational plan with the following properties:\n  1. Contains a valid uss_operation_id.\n  2. time_available_end value that is in the\
-          \ future.\n  3. No date-time fields that are in the past are modified.\n\
-          \  4. Other rules for a USS Operation POST are satisfied.\n"
-        required: true
-        schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation'
-      responses:
-        201:
-          description: "OK"
-          schema: 
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
-        400:
-          description: "Bad request. Typically validation error. Fix your request\
-            \ and retry."
->>>>>>> master
       security:
         - ussapi_security:
             - utm.nasa.gov_write.operation
