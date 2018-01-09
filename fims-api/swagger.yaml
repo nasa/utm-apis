@@ -59,7 +59,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Version' 
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/Version' 
             
   
   /operations/{gufi}:
@@ -88,24 +88,24 @@ paths:
         description: Operation updates
         required: true
         schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation'
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/Operation'
       responses:
         200:
           description: "Operation updated."
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse'
         400:
           description: "Bad request. Typically validation error. Fix your request and retry."
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse'
         403:
           description: "Unauthorized user."
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse'
         404:
           description: "Broken link. Check request URL"
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse'
 
   /positions:
     post:
@@ -122,18 +122,18 @@ paths:
         201:
           description: "Position posted successfully."
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse'
         400:
           description: "Invalid message. Please fix and retry."
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse'
       parameters:
       - in: body
         name: position
         description: Position to submit
         required: true
         schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Position'
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/Position'
   
   /utm_messages:
     post:
@@ -155,12 +155,12 @@ paths:
         description: "Message object being sent"
         required: true
         schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMMessage'
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMMessage'
       responses:
         201:
           description: "Returns message ID if received successfully."
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse'
         400:
           description: "Invalid message. Please fix and retry."
 
@@ -182,7 +182,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/Operation'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 
@@ -260,7 +260,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMMessage'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMMessage'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 
@@ -280,7 +280,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/ConstraintMessage'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 

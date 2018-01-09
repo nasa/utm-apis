@@ -175,22 +175,22 @@ paths:
             type: array
             items:
               $ref: >-
-                https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UssInstance
+                https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UssInstance
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
     post:
       tags:
         - A. Required Endpoints
@@ -212,7 +212,7 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UssInstance
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UssInstance
       responses:
         '204':
           description: USS Instance received. No content returned.
@@ -220,7 +220,7 @@ paths:
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '403':
           description: Invalid ID supplied.  Fix authorization and retry.
         '429':
@@ -245,17 +245,17 @@ paths:
           description: Successful data request. Response includes requested data.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UssInstance
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UssInstance
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
     put:
@@ -290,7 +290,7 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UssInstance
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UssInstance
       responses:
         '204':
           description: USS Instance received. No content returned.
@@ -308,4 +308,4 @@ paths:
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse

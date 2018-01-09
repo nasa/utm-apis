@@ -93,11 +93,11 @@ paths:
         '201':
           description: Supplemental Data Service plan received.
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse'
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse'
         '403':
           description: Invalid ID supplied.  Fix authorization and retry.
         '429':

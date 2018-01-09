@@ -236,9 +236,9 @@ definitions:
           - NONCONFORMING
           - ROGUE
       controller_location:
-        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Point'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
       gcs_location:
-        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Point'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
       contingency_plans:
         description: >-
           An array of ContingencyPlans wherein this operation may land if
@@ -281,7 +281,7 @@ definitions:
           $ref: '#/definitions/OperationVolume'
       metadata:
         $ref: >-
-          https://api.swaggerhub.com/domains/utm/metadata/v3#/definitions/EventMetadata
+          https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-metadata.yaml#/definitions/EventMetadata
   PriorityElements:
     description: >-
       Data elements used to describe the status of priority operation. Nominal
@@ -380,7 +380,7 @@ definitions:
         type: number
         format: double
       operation_geography:
-        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Polygon'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       beyond_visual_line_of_sight:
         description: >-
           Describes whether the operation volume is beyond the visual line of
@@ -466,7 +466,7 @@ definitions:
           - LOITERING
           - RETURN_TO_BASE
       contingency_point:
-        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Point'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
       loiter_altitude_wgs84_ft:
         description: >-
           The altitude for this contingency. Relevant and required for the
@@ -601,7 +601,7 @@ definitions:
         description: The horizontal dilution of precision as provided by the onboard GPS.
         minimum: 0
       location:
-        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Point'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
       time_measured:
         description: >-
           The time the position was measured. Likely the time provided with the
@@ -888,7 +888,7 @@ definitions:
           - MUNICIPALITY
           - OTHER
       constraint_geography:
-        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Polygon'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       effective_time_begin:
         description: >-
           The time that the constraint will begin to be in effect.  Uses the ISO
@@ -1109,7 +1109,7 @@ definitions:
           any UAS operations airborne after this time that would be supported by
           this USS Instance.
       coverage_area:
-        $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Polygon'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       time_last_modified:
         type: string
         format: date-time

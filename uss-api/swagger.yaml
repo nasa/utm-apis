@@ -69,7 +69,7 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/ConstraintMessage
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
       responses:
         '204':
           description: Constraint data received. No content returned.
@@ -77,17 +77,17 @@ paths:
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
       security:
         - ussapi_security:
             - utm.nasa.gov_write.constraint
@@ -107,13 +107,13 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/ConstraintMessage
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
       responses:
         '201':
           description: 'Constraint data received. '
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
       security:
         - ussapi_security:
             - utm.nasa.gov_write.constraint
@@ -139,7 +139,7 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMMessage
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMMessage
       responses:
         '204':
           description: UTMMessage received. No content returned.
@@ -147,17 +147,17 @@ paths:
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
       security:
         - ussapi_security:
             - utm.nasa.gov_write.message
@@ -177,13 +177,13 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMMessage
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMMessage
       responses:
         '201':
           description: Message data received.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
       security:
         - ussapi_security:
             - utm.nasa.gov_write.message
@@ -212,7 +212,7 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UssInstance
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UssInstance
       responses:
         '204':
           description: USS Instance data received. No content returned.
@@ -220,17 +220,17 @@ paths:
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
     post:
       tags:
         - A. Required Endpoints
@@ -250,28 +250,28 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UssInstance
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UssInstance
       responses:
         '201':
           description: OK
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
       security:
         - ussapi_security:
             - utm.nasa.gov_write.operation
@@ -302,28 +302,28 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/NegotiationMessage
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/NegotiationMessage
       responses:
         '201':
           description: OK
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
       security:
         - ussapi_security:
             - utm.nasa.gov_write.message
@@ -349,13 +349,13 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/NegotiationMessage
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/NegotiationMessage
       responses:
         '200':
           description: OK
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '400':
           description: Problem with submitted data
       security:
@@ -384,28 +384,28 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Position
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/Position
       responses:
         '201':
           description: OK
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
   /operations:
     get:
       tags:
@@ -542,22 +542,22 @@ paths:
             type: array
             items:
               $ref: >-
-                https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation
+                https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/Operation
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
       security:
         - ussapi_security:
             - utm.nasa.gov_read.operation
@@ -587,13 +587,13 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/Operation
       responses:
         '201':
           description: Operation data received.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
       security:
@@ -632,17 +632,17 @@ paths:
           description: OK
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
       security:
         - ussapi_security:
             - utm.nasa.gov_read.operation
@@ -675,13 +675,13 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/Operation
       responses:
         '201':
           description: OK
           schema:
             $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
       security:
