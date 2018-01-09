@@ -73,6 +73,14 @@ paths:
       produces:
         - application/json
       parameters:
+        - name: "fields"
+          in: "query"
+          description: "The specific subset of fields to return. Comma separated list.\
+              \ Default will be all fields. "
+          required: false
+          type: "array"
+          items:
+              type: "string"
         - name: uss_name
           in: query
           required: false
