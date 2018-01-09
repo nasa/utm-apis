@@ -298,7 +298,7 @@ definitions:
     properties:
       priority_level:
         $ref: >-
-          https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/severity
+          https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/severity
       priority_status:
         type: string
         description: >-
@@ -776,7 +776,7 @@ definitions:
         example: '2015-08-20T14:11:57.345Z'
       severity:
         $ref: >-
-          https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/severity
+          https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/severity
       message_type:
         description: >-
           The type of message. An enum to constrain messages and allow better
@@ -820,10 +820,10 @@ definitions:
           - OTHER_SEE_FREE_TEXT
       last_known_position:
         $ref: >-
-          https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Position
+          https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/Position
       contingency:
         $ref: >-
-          https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/ContingencyPlan
+          https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/ContingencyPlan
       prev_message_id:
         description: >-
           A message_id of a previously sent message that has relevance or

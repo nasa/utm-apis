@@ -201,7 +201,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Point'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 
@@ -221,7 +221,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/LineString'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-geojson.yaml#/definitions/LineString'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 
@@ -240,7 +240,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Polygon'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 
