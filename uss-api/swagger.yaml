@@ -49,7 +49,7 @@ security:
   - ussapi_security:
       - utm.nasa.gov_read.min_data
 paths:
-  /constraints:
+  '/constraints/{message_id}':
     put:
       tags:
         - A. Required Endpoints
@@ -58,19 +58,21 @@ paths:
       consumes:
         - application/json
       parameters:
+        - in: path
+          name: message_id
+          required: true
+          type: string
+          description: PUT by message_id
         - in: body
-          name: message
-          description: The message being sent
+          name: constraint_message
+          description: The ConstraintMessage being sent
           required: true
           schema:
             $ref: >-
               https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/ConstraintMessage
       responses:
-        '201':
-          description: OK
-          schema:
-            $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '204':
+          description: Constraint data received. No content returned.
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
@@ -116,7 +118,7 @@ paths:
         - ussapi_security:
             - utm.nasa.gov_write.constraint
             - utm.nasa.gov_all.all
-  /utm_messages:
+  '/utm_messages/{message_id}':
     put:
       tags:
         - A. Required Endpoints
@@ -126,19 +128,21 @@ paths:
       consumes:
         - application/json
       parameters:
+        - in: path
+          name: message_id
+          required: true
+          type: string
+          description: PUT by message_id
         - in: body
-          name: message
-          description: The message being sent
+          name: utm_message
+          description: The UTMMessage being sent
           required: true
           schema:
             $ref: >-
               https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMMessage
       responses:
-        '201':
-          description: OK
-          schema:
-            $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '204':
+          description: UTMMessage received. No content returned.
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
@@ -183,7 +187,7 @@ paths:
       security:
         - ussapi_security:
             - utm.nasa.gov_write.message
-  /uss:
+  '/uss/{uss_instance_id}':
     put:
       tags:
         - A. Required Endpoints
@@ -197,19 +201,21 @@ paths:
       consumes:
         - application/json
       parameters:
+        - in: path
+          name: uss_instance_id
+          required: true
+          type: string
+          description: PUT by uss_instance_id
         - in: body
-          name: message
+          name: uss_instance
           description: The USS Instance information being sent
           required: true
           schema:
             $ref: >-
               https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UssInstance
       responses:
-        '201':
-          description: OK
-          schema:
-            $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '204':
+          description: USS Instance data received. No content returned.
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
@@ -269,7 +275,7 @@ paths:
       security:
         - ussapi_security:
             - utm.nasa.gov_write.operation
-  /negotiations:
+  '/negotiations/{message_id}':
     put:
       tags:
         - A. Required Endpoints
@@ -285,8 +291,13 @@ paths:
       produces:
         - application/json
       parameters:
+        - in: path
+          name: message_id
+          required: true
+          type: string
+          description: PUT by message_id
         - in: body
-          name: operation
+          name: negotiation_message
           description: The NegotiationMessage data
           required: true
           schema:
