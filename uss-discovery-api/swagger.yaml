@@ -73,15 +73,6 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: fields
-          in: query
-          description: >-
-            The specific subset of fields to return. Comma separated list.
-            Default will be all fields. 
-          required: false
-          type: array
-          items:
-            type: string
         - name: uss_name
           in: query
           required: false
@@ -187,8 +178,19 @@ paths:
                 https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UssInstance
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '401':
+          description: Invalid or missing access_token provided.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
     post:
       tags:
         - A. Required Endpoints
@@ -212,11 +214,8 @@ paths:
             $ref: >-
               https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UssInstance
       responses:
-        '201':
-          description: USS Instance received.
-          schema:
-            $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '204':
+          description: USS Instance received. No content returned.
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
@@ -249,6 +248,11 @@ paths:
               https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UssInstance
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
+          schema:
+            $ref: >-
+              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '401':
+          description: Invalid or missing access_token provided.
           schema:
             $ref: >-
               https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
@@ -288,11 +292,8 @@ paths:
             $ref: >-
               https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UssInstance
       responses:
-        '201':
-          description: OK
-          schema:
-            $ref: >-
-              https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse
+        '204':
+          description: USS Instance received. No content returned.
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
