@@ -199,40 +199,6 @@ paths:
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-    post:
-      tags:
-        - A. Required Endpoints
-      summary: Submit information regarding USS Instances
-      description: Allows for submission of USS Instances to the service discovery system.
-      operationId: postUSS
-      deprecated: true
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      security:
-        - uss_discovery_security:
-            - utm.nasa.gov_write.sdsp
-      parameters:
-        - in: body
-          name: uss_instance
-          description: USS Instance plan to add
-          required: true
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UssInstance
-      responses:
-        '204':
-          description: USS Instance received. No content returned.
-        '400':
-          description: Bad request. Typically validation error. Fix your request and retry.
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-        '403':
-          description: Invalid ID supplied.  Fix authorization and retry.
-        '429':
-          description: Too many recent requests from you. Wait to make further submissions.
   '/uss/{id}':
     get:
       tags:

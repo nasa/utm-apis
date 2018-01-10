@@ -92,37 +92,6 @@ paths:
         - ussapi_security:
             - utm.nasa.gov_write.constraint
             - utm.nasa.gov_all.all
-    post:
-      tags:
-        - A. Required Endpoints
-      summary: Allow constraints to be submitted from authorized entities.
-      deprecated: true
-      operationId: postConstraint
-      consumes:
-        - application/json
-      parameters:
-        - in: path
-          name: message_id
-          required: true
-          type: string
-          description: PUT by message_id
-        - in: body
-          name: message
-          description: The message being sent
-          required: true
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
-      responses:
-        '201':
-          description: 'Constraint data received. '
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-      security:
-        - ussapi_security:
-            - utm.nasa.gov_write.constraint
-            - utm.nasa.gov_all.all
   '/utm_messages/{message_id}':
     put:
       tags:
@@ -160,37 +129,6 @@ paths:
               https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-      security:
-        - ussapi_security:
-            - utm.nasa.gov_write.message
-    post:
-      tags:
-        - A. Required Endpoints
-      summary: Allow other authorized entities to send a message to this USS.
-      deprecated: true
-      description: Allows another USS or FIMS to POST a message to this USS.
-      operationId: postUtmMessage
-      consumes:
-        - application/json
-      parameters:
-        - in: path
-          name: message_id
-          required: true
-          type: string
-          description: PUT by message_id
-        - in: body
-          name: message
-          description: The message being sent
-          required: true
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMMessage
-      responses:
-        '201':
-          description: Message data received.
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
@@ -241,55 +179,6 @@ paths:
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-    post:
-      tags:
-        - A. Required Endpoints
-      summary: Share USS Instance data
-      deprecated: true
-      description: >-
-        As per the USS Discovery Service specification, this endpoint is for
-        receiving messages about the USS Network from the USS Discovery
-        Service.  For example, when a new USS Instance is registered, that
-        announcement would come to this endpoint.
-      consumes:
-        - application/json
-      parameters:
-        - in: path
-          name: uss_instance_id
-          required: true
-          type: string
-          description: PUT by uss_instance_id
-        - in: body
-          name: message
-          description: The USS Instance information being sent
-          required: true
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UssInstance
-      responses:
-        '201':
-          description: OK
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-        '400':
-          description: Bad request. Typically validation error. Fix your request and retry.
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-        '401':
-          description: Invalid or missing access_token provided.
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-        '429':
-          description: Too many recent requests from you. Wait to make further queries.
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-      security:
-        - ussapi_security:
-            - utm.nasa.gov_write.operation
   '/negotiations/{message_id}':
     put:
       tags:
@@ -336,45 +225,6 @@ paths:
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-      security:
-        - ussapi_security:
-            - utm.nasa.gov_write.message
-    post:
-      tags:
-        - A. Required Endpoints
-      summary: Allow other USSs to submit a negotiation request
-      deprecated: true
-      description: >-
-        A POST to the negotiations endpoint is interpretted as a request for
-        alteration in an existing operation managed by the receiving USS.  The
-        requesting USS supplies a GUFI that references the operation that may be
-        altered if the request is granted by the receiving USS.
-      operationId: postNegotiation
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: path
-          name: message_id
-          required: true
-          type: string
-          description: PUT by message_id
-        - in: body
-          name: operation
-          description: The NegotiationMessage data
-          required: true
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/NegotiationMessage
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-        '400':
-          description: Problem with submitted data
       security:
         - ussapi_security:
             - utm.nasa.gov_write.message
@@ -575,45 +425,6 @@ paths:
       security:
         - ussapi_security:
             - utm.nasa.gov_read.operation
-    post:
-      deprecated: true
-      tags:
-        - A. Required Endpoints
-      summary: Allow other USSs to submit their UAS Operations.
-      description: >-
-        A POST to the operations endpoint allows for sharing of operational data
-        between USSs.  This is the primary mechanism by which USSs become aware
-        of each others' UAS operations.<br/><br/>
-
-        A USS is required to share operation data with other USSs that may have
-        interacting UAS Operations.  This potential interaction is known through
-        the data provided via the USS Service Discovery mechanism (see
-        https://app.swaggerhub.com/apis/utm/ussdiscovery/).
-      operationId: postOp
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: operation
-          description: The operation data
-          required: true
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/Operation
-      responses:
-        '201':
-          description: Operation data received.
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-        '400':
-          description: Bad request. Typically validation error. Fix your request and retry.
-      security:
-        - ussapi_security:
-            - utm.nasa.gov_write.operation
-            - utm.nasa.gov_write.publicsafety
   '/operations/{gufi}':
     get:
       tags:
@@ -705,7 +516,7 @@ paths:
               https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '409':
           description: >-
-            Conflict. This USS Instance has an Operation that intersects. 
+            Conflict. This USS Instance has an Operation that intersects.
             'Resource' field in UTMRestResponse will contain list of GUFIs of length
             at least 1 indicating the conflicting Operation(s).
           schema:
