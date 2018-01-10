@@ -37,7 +37,7 @@ definitions:
         maxLength: 100
         type: string
       test_identifiers:
-        description: >-
+        description: >- 
           Specific tests ids supported by these data. These ids should map to
           specific tests as outlined in the overall event description. As
           an example, Event "TCL3_Demonstration" at a test site may have a
