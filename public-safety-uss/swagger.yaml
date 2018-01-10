@@ -49,7 +49,7 @@ security:
     - basicAuth: []
 
 paths:
-  /uas/{uvin}:
+  /uas/operation/{uvin}:
     get:
       description: Returns information on vehicle
       parameters:
@@ -100,9 +100,9 @@ paths:
               message:
                 type: string
                 
-  /uas:
+  /uas/operations:
     get:  
-      description: Returns all operations surrounding the point of reference 
+      description: Returns all operations around the point of reference 
       parameters:
         - name: "lat"
           in: "query"
@@ -127,6 +127,14 @@ paths:
           format: "double"
           description: "The altitude as measured via a GPS device on the aircraft. Units
           in feet using the WGS84 reference system"
+        - name: "time"
+          in: "query"
+          required: true
+          description: "Give me all the operations in this area as of this time"
+          type: "string"
+          format: "date-time"
+          minLength: 20
+          maxLength: 25
       
       responses:
         200:
@@ -178,6 +186,9 @@ definitions:
         maxLength: 36
         minLength: 36
         example: "00000000-0000-0000-0000-000000000000" 
+      operation_state:
+         type: string
+         example: "ROGUE"
       additional_details:
          type: string
          example: "Extra details"
