@@ -47,7 +47,7 @@ definitions:
         This issue is provided for situational awareness. Planning by operators and USSs may be affected.
       6. **INFORMATIONAL**
         This issue is provided for situational awareness.
-        
+
       Note that this approach leverages RFC 5424: "The Syslog Protocol." By
       taking this approach, there is the possibility of formalizing UTMMessaging
       with more elements of the RFC to allow for compatibility with other
@@ -163,7 +163,7 @@ definitions:
           The registration data for the vehicle(s) to be used in this Operation.
           Note that this is an array to allow for future operations involving
           multiple vehicles (e.g. 'swarms' or tandem inspections).  This array
-          MUST NOT be used as a list of potential vehicles for this Operation. 
+          MUST NOT be used as a list of potential vehicles for this Operation.
           If the vehicle data changes prior to an Operation, an update to the
           plan may be submitted with the updated vehicle information.
         type: array
@@ -334,7 +334,7 @@ definitions:
       effective_time_begin:
         description: >-
           Earliest time the operation will use the operation volume.  Uses the
-          ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ. 
+          ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.
           Seconds may have up to millisecond accuracy (three positions after
           decimal).  The 'Z' implies UTC times and is the only timezone
           accepted.
@@ -360,7 +360,7 @@ definitions:
           Time that the operational volume was freed for use by other
           operations.  Should be populated and stored by the USS. Uses the ISO
           8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds
-          may have up to millisecond accuracy (three positions after decimal). 
+          may have up to millisecond accuracy (three positions after decimal).
           The 'Z' implies UTC times and is the only timezone accepted.
         type: string
         format: date-time
@@ -419,7 +419,7 @@ definitions:
               The vehicle does not have enough power to complete its mission. Still enough fuel to safely land or potentially return to base.
             6. NO_FUEL
               The vehicle is either completely without fuel or has only enough fuel to land immediately.
-            7. MECHANICAL_PROBLEM 
+            7. MECHANICAL_PROBLEM
               The vehicle is experiencing a mechanical problem necessitating initiation of a contingency response.
             8. SOFTWARE_PROBLEM
               The vehicle or some component of the required platform ground equipment is experiencing a software problem.
@@ -491,7 +491,7 @@ definitions:
           time by the USS or Operator.  For example, one Contingency may be
           significantly further from the operation at a given time and, thus,
           would be less preferred than it might be otherwise. Further
-          interpretation of this field is left to the operator and USS. 
+          interpretation of this field is left to the operator and USS.
         type: number
         format: double
         minimum: 0
@@ -605,8 +605,8 @@ definitions:
       time_measured:
         description: >-
           The time the position was measured. Likely the time provided with the
-          GPS position reading.  Time must be before time received at FIMS based
-          on FIMS system time.  Uses the ISO 8601 format conforming to pattern:
+          GPS position reading.  time_measured < time_sent MUST be true.
+          Uses the ISO 8601 format conforming to pattern:
           YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy
           (three positions after decimal).  The 'Z' implies UTC times and is the
           only timezone accepted.
@@ -615,23 +615,11 @@ definitions:
         minLength: 20
         maxLength: 25
         example: '2015-08-20T14:11:56.118Z'
-      time_received:
-        description: >-
-          Not required for submission, assigned by FIMS. The time the position
-          was received by FIMS based on FIMS system time.  Uses the ISO 8601
-          format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may
-          have up to millisecond accuracy (three positions after decimal).  The
-          'Z' implies UTC times and is the only timezone accepted.
-        type: string
-        format: date-time
-        minLength: 20
-        maxLength: 25
-        example: '2015-08-20T14:11:57.345Z'
       time_sent:
         description: >-
-          The time the position was sent by the USS to FIMS as measured by USS
-          system time.  Time must be before time received at FIMS based on FIMS
-          system time.  Uses the ISO 8601 format conforming to pattern:
+          The time the position was sent by the USS as measured by that USS's
+          system time.  time_measured < time_sent MUST be true.
+          Uses the ISO 8601 format conforming to pattern:
           YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy
           (three positions after decimal).  The 'Z' implies UTC times and is the
           only timezone accepted.
@@ -679,7 +667,7 @@ definitions:
         maxLength: 250
       uss_instance_id:
         description: >-
-          A USS instance_id value for the USS instance managing this operation. 
+          A USS instance_id value for the USS instance managing this operation.
           UUIDv4.
         type: string
         format: uuid
@@ -893,7 +881,7 @@ definitions:
         description: >-
           The time that the constraint will begin to be in effect.  Uses the ISO
           8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds
-          may have up to millisecond accuracy (three positions after decimal). 
+          may have up to millisecond accuracy (three positions after decimal).
           The 'Z' implies UTC times and is the only timezone accepted.
         type: string
         format: date-time
@@ -903,10 +891,10 @@ definitions:
       effective_time_end:
         description: >-
           The time that the constraint will cease to be in effect..  Uses the
-          ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ. 
+          ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.
           Seconds may have up to millisecond accuracy (three positions after
           decimal).  The 'Z' implies UTC times and is the only timezone
-          accepted. 
+          accepted.
         type: string
         format: date-time
         minLength: 20
@@ -916,7 +904,7 @@ definitions:
         description: >-
           Time that the constaint actually ceased being in effect.  Uses the ISO
           8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds
-          may have up to millisecond accuracy (three positions after decimal). 
+          may have up to millisecond accuracy (three positions after decimal).
           The 'Z' implies UTC times and is the only timezone accepted.  This
           value is likely used when a constraint ends early, but is not
           required.
@@ -1129,7 +1117,7 @@ definitions:
         format: url
         description: >-
           A base URL used by the USS Discovery Service and other USS Instances
-          to callback to the USS Instance. 
+          to callback to the USS Instance.
 
 
           USS Discovery will append "/uss" to the base URL in order to POST a
