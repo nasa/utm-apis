@@ -101,6 +101,11 @@ paths:
       consumes:
         - application/json
       parameters:
+        - in: path
+          name: message_id
+          required: true
+          type: string
+          description: PUT by message_id
         - in: body
           name: message
           description: The message being sent
@@ -171,6 +176,11 @@ paths:
       consumes:
         - application/json
       parameters:
+        - in: path
+          name: message_id
+          required: true
+          type: string
+          description: PUT by message_id
         - in: body
           name: message
           description: The message being sent
@@ -244,6 +254,11 @@ paths:
       consumes:
         - application/json
       parameters:
+        - in: path
+          name: uss_instance_id
+          required: true
+          type: string
+          description: PUT by uss_instance_id
         - in: body
           name: message
           description: The USS Instance information being sent
@@ -343,6 +358,11 @@ paths:
       produces:
         - application/json
       parameters:
+        - in: path
+          name: message_id
+          required: true
+          type: string
+          description: PUT by message_id
         - in: body
           name: operation
           description: The NegotiationMessage data
