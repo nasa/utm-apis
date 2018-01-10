@@ -695,6 +695,27 @@ paths:
           description: Operation data received. No content returned.
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '401':
+          description: Invalid or missing access_token provided.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '409':
+          description: >-
+            Conflict. This USS Instance has an Operation that intersects. 
+            'Resource' field in UTMRestResponse will contain list of GUFIs of length
+            at least 1 indicating the conflicting Operation(s).
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '429':
+          description: Too many recent requests from you. Wait to make further queries.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
       security:
         - ussapi_security:
             - utm.nasa.gov_write.operation
