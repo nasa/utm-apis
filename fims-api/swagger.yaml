@@ -1,6 +1,10 @@
 swagger: "2.0"
 info:
-  description: "This API describes the RESTful interface from a UAS Service Supplier (USS) to FIMS. Note that FIMS uses a webhook pattern to sends messages and other data such as constraints to USS's by POSTING to the USS API. Also, FIMS subscribes to USS Discovery to learn about the USS Network."
+  description: >-
+    This API describes the RESTful interface from a UAS Service Supplier (USS)
+    to FIMS. FIMS subscribes to USS Discovery to learn about the USS Network.
+    FIMS implements the USS API where appropriate.  For endpoints from the USS
+    API that FIMS does not support, FIMS may return a 404.
   version: "v3"
   title: "UTM Research Platform, FIMS-USS Interface"
   contact:
@@ -24,7 +28,9 @@ schemes:
 - wss
 tags: # Have to add 'A' 'B' etc since ordering isn't respected in SwaggerUI.
 - name: A. Required Endpoints
-  description:  RESTful endpoints for USS access to FIMS
+  description: >-
+      Currently all of the required endpoints are equivalent to the USS API
+      endpoints. Refer to that API for details.
 - name: B. Version and Health
   description: Get information about this server.
 - name: C. Data Types
@@ -41,7 +47,7 @@ securityDefinitions:
       'utm.nasa.gov_read.operation': Subject can read operational data such as operation plans and position reports
       'utm.nasa.gov_write.message': Subject can read, create, and update UTM message data
       'utm.nasa.gov_read.message': Subject can read UTM message data
-    
+
 responses:
   WRONG_PROTOCOL:
     description: A RESTful call was made to this endpoint but this is not a REST endpoint. Do not use this endpoint for REST calls.
@@ -51,7 +57,9 @@ paths:
     get:
       tags:
         - B. Version and Health
-      summary: get server info.  Can be used to check health
+      summary: >-
+        Get server info including versions of supported APIs.  Can be used to
+        check health as a ping to this server to get an expected response.
       security: []
       produces:
         - application/json
@@ -59,9 +67,13 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/Version' 
-            
-  
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/Version'
+        '429':
+          description: Too many recent requests from you. Wait to make further queries.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+
   /operations/{gufi}:
     put:
       tags:
@@ -134,12 +146,13 @@ paths:
         required: true
         schema:
           $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/Position'
-  
+
   /utm_messages:
     post:
       tags:
       - "A. Required Endpoints"
       summary: "Submit alert to FIMS"
+      deprecated: true
       description: "Allows posting of a message to FIMS."
       operationId: "postMessage"
       consumes:
