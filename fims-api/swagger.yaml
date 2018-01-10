@@ -53,28 +53,6 @@ responses:
     description: A RESTful call was made to this endpoint but this is not a REST endpoint. Do not use this endpoint for REST calls.
 
 paths:
-  /api:
-    get:
-      tags:
-        - B. Version and Health
-      summary: >-
-        Get server info including versions of supported APIs.  Can be used to
-        check health as a ping to this server to get an expected response.
-      security: []
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/Version'
-        '429':
-          description: Too many recent requests from you. Wait to make further queries.
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-
-
   /schema/Operation:
     get:
       tags:
@@ -112,7 +90,6 @@ paths:
             $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
-
 
   /schema/LineString:
     get:
@@ -191,7 +168,3 @@ paths:
             $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
-
-
-
-x-azure-api-id: "sh-1469571953760"
