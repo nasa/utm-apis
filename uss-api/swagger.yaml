@@ -319,11 +319,8 @@ paths:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/NegotiationMessage
       responses:
-        '201':
-          description: OK
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '204':
+          description: NegotiationMessage received. No content returned.
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
@@ -406,11 +403,8 @@ paths:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/Position
       responses:
-        '201':
-          description: OK
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '204':
+          description: Position data recieved. No content returned.
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
@@ -697,11 +691,8 @@ paths:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/Operation
       responses:
-        '201':
-          description: OK
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/UTM-2925/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '204':
+          description: Operation data received. No content returned.
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
       security:
