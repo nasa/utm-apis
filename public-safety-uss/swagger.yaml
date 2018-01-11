@@ -95,10 +95,7 @@ paths:
         503:
           description: Service Unavailable 
           schema:
-            type: object
-            properties:   
-              message:
-                type: string
+            $ref: "https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse"
                 
   /uas/operations:
     get:  
