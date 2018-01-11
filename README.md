@@ -32,12 +32,13 @@ For codegen you can point back in history to the release tag.  You can also clon
 
 You have choices to edit/view local swagger files. IMO option 1 is better for viewing all files.  A local swagger editor is good if you want rendering. 
 
-1. Use a text editor that supports YAML such as Sublime Text 2.
+1. Use a text editor that supports YAML:
+  - Sublime Text 2 highlights YAML well
+  - [Atom](https://atom.io/) works well and has a [Swagger Lint Plugin](https://atom.io/packages/linter-swagger) that provides a good first cut at valid OpenAPI 2.0 correctness
 
 2. Install local [Swagger Editor](https://swagger.io/swagger-editor/)
 
-
-3. Bring up an online swagger editor and copy entire file contents into your browser
+3. Bring up an [online swagger editor](https://editor.swagger.io/) and copy or import the source swagger.
 
 
 ## Codegen 
