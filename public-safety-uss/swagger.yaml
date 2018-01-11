@@ -169,6 +169,12 @@ definitions:
         type: string
         format: phone
         maxLength: 100
+      n_number:
+        type: string
+        maxLength: 100
+      faa_registration-number:
+        type: string
+        maxLength: 100
       uss_name:
         type: string
         maxLength: 250
