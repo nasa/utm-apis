@@ -491,8 +491,11 @@ definitions:
       time_measured:
         description: >-
           The time the position was measured. Likely the time provided with the
-          GPS position reading.  Time must be before time received at FIMS based
-          on FIMS system time.  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy (three positions after decimal).  The 'Z' implies UTC times and is the only timezone accepted.
+          GPS position reading. Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ. 
+          Note that time_measured is likely provided by GPS position readout whereas
+          time_sent and time_received are describing a server to server
+          data exchange, not the vehicle to USS data exchange.  For example, the source would be a USS
+          and the destination would be FIMS or another USS.
         type: string
         format: date-time
         minLength: 20
@@ -500,8 +503,13 @@ definitions:
         example: "2015-08-20T14:11:56.118Z"
       time_received:
         description: >-
-          Not required for submission, assigned by FIMS. The time the position
-          was received by FIMS based on FIMS system time.  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy (three positions after decimal).  The 'Z' implies UTC times and is the only timezone accepted.
+          Not required for submission; assigned by the destination server. The time the position
+          was received by the server based on USS system time.  Uses the ISO 8601 format conforming 
+          to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  
+          Note that time_measured is likely provided by GPS position readout whereas
+          time_sent and time_received are describing a server to server
+          data exchange, not the vehicle to USS data exchange.  For example, the source would be a USS
+          and the destination would be FIMS or another USS.
         type: string
         format: date-time
         minLength: 20
@@ -509,9 +517,13 @@ definitions:
         example: "2015-08-20T14:11:57.345Z"
       time_sent:
         description: >-
-          The time the position was sent by the USS to FIMS as measured by USS
-          system time.  Time must be before time received at FIMS based on FIMS
-          system time.  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy (three positions after decimal).  The 'Z' implies UTC times and is the only timezone accepted.
+          The time the position was sent by the USS as measured by USS
+          system time.  Time sent must be before time received at the destination server, and based on USS
+          system time.  Uses the ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  
+          Note that time_measured is likely provided by GPS position readout whereas
+          time_sent and time_received are describing a server to server
+          data exchange, not the vehicle to USS data exchange.  For example, the source would be a USS
+          and the destination would be FIMS or another USS.
         type: string
         format: date-time
         minLength: 20
