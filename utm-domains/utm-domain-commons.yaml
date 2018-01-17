@@ -388,6 +388,8 @@ definitions:
         type: boolean
   ContingencyPlan:
     type: object
+    required:
+      - contingency_id
     properties:
       contingency_id:
         description: >-
