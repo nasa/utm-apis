@@ -72,8 +72,6 @@ definitions:
         enum:
           - GROUND
           - FLIGHT
-        maxLength: 6
-        minLength: 6
       source:
         type: string
         description: >-
@@ -84,8 +82,6 @@ definitions:
         enum:
           - HWITL
           - SWITL
-        maxLength: 5
-        minLength: 5
       location:
         type: string
         description: >-
