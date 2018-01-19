@@ -102,8 +102,6 @@ definitions:
         enum:
           - LAB
           - FIELD
-        maxLength: 5
-        minLength: 3
       free_text:
         type: string
         description: >-
