@@ -20,7 +20,7 @@ definitions:
         description: >-
           If true these data are intended for Data Collection. Essentially
           stating if particular data should be ignored during analysis. This
-          may be modified after subission in the case that there was an issue
+          may be modified after submission in the case that there was an issue
           during execution of the test/experiment that would invalidate the
           data that were collected.
         type: boolean

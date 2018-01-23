@@ -553,6 +553,8 @@ definitions:
       - time_sent
       - track_ground_speed_kn
       - track_true_north_deg
+      - uss_name
+      - uss_instance_id
       - vdop_gps
     properties:
       air_speed_source:
@@ -704,6 +706,7 @@ definitions:
       - message_id
       - origin
       - originator_id
+      - originator_uss_instance_id
       - sent_time
       - severity
       - message_type
@@ -770,7 +773,7 @@ definitions:
       message_type:
         description: >-
           The type of message. An enum to constrain messages and allow better
-          interoperability. Required with "CRITICAL" or higher severity. 'gufi'
+          interoperability. 'gufi'
           field is required for all message_types except OTHER_SEE_FREE_TEXT.
 
           1. UNPLANNED_LANDING
@@ -793,7 +796,9 @@ definitions:
             The requestor wants position reports provided for the operation referenced in the 'gufi' field of this request. Reports MUST be provided as per the USS Specification.
           10. PERIODIC_POSITION_REPORTS_END
             The requestor wants previously requested position reports to end. If this message is received without a corresponding PERIODIC_POSITION_REPORTS_START, the message response is TBD (200, 400, 401, 404, etc.)
-          11. OTHER_SEE_FREE_TEXT
+          11. UNAUTHORIZED_AIRSPACE_PROXIMITY
+          12. UNAUTHORIZED_AIRSPACE_ENTRY
+          13. OTHER_SEE_FREE_TEXT
             Messages that do not fit any of the otherwise defined categories. Should be used sparingly or with additional out-of-band description.
         type: string
         enum:
@@ -807,6 +812,8 @@ definitions:
           - CONTINGENCY_PLAN_CANCELLED
           - PERIODIC_POSITION_REPORTS_START
           - PERIODIC_POSITION_REPORTS_END
+          - UNAUTHORIZED_AIRSPACE_PROXIMITY
+          - UNAUTHORIZED_AIRSPACE_ENTRY
           - OTHER_SEE_FREE_TEXT
       last_known_position:
         $ref: >-
