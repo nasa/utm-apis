@@ -315,6 +315,7 @@ definitions:
     type: object
     required:
       - ordinal
+      - volume_type
       - effective_time_begin
       - effective_time_end
       - min_altitude_wgs84_ft
@@ -327,6 +328,14 @@ definitions:
           This integer represents the ordering of the operation volume within
           the set of operation volumes. Need not be consecutive integers.
         type: integer
+      volume_type:
+        description: >-
+            More description later.
+        type: string
+        enum:
+          - TBOV
+          - ABOV
+        default: ABOV
       near_structure:
         description: Is this operation volume within 400' of a structure?
         type: boolean
@@ -986,13 +995,6 @@ definitions:
         example: 00000000-0000-4444-8888-FEEDDEADBEEF
       type:
         type: string
-        enum:
-          - INTERSECTING_OPERATION_NOTIFICATION
-          - REPLAN_BEGINNING_AS_SECONDARY_OPERATION
-          - REQUESTING_MANUAL_CLEARANCE
-          - MANUAL_CLEARANCE_GRANTED
-          - MANUAL_CLEARANCE_DENIED
-          - OTHER
       gufi_of_originator:
         description: >-
           The GUFI of the relevant operation of the originating USS. Note that
