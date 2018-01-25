@@ -54,7 +54,6 @@ paths:
       tags:
         - A. Required Endpoints
       summary: Allow constraints to be submitted from authorized entities.
-      operationId: putConstraint
       consumes:
         - application/json
       parameters:
@@ -98,7 +97,6 @@ paths:
         - A. Required Endpoints
       summary: Allow other authorized entities to send a message to this USS.
       description: Allows another USS or FIMS to POST a message to this USS.
-      operationId: putUtmMessage
       consumes:
         - application/json
       parameters:
@@ -140,7 +138,6 @@ paths:
       tags:
         - A. Required Endpoints
       summary: Share USS Instance data
-      operationId: putUss
       description: >-
         As per the USS Discovery Service specification, this endpoint is for
         receiving messages about the USS Network from the USS Discovery
@@ -184,7 +181,6 @@ paths:
       tags:
         - A. Required Endpoints
       summary: Allow other USSs to submit a negotiation request
-      operationId: putNegotiation
       description: >-
         A POST to the negotiations endpoint is interpretted as a request for
         alteration in an existing operation managed by the receiving USS.  The
@@ -276,7 +272,6 @@ paths:
         - A. Required Endpoints
       summary: Request information regarding Operations
       description: Allows querying for Operation data.
-      operationId: getOps
       produces:
         - application/json
       parameters:
@@ -431,7 +426,6 @@ paths:
         - A. Required Endpoints
       summary: Retrieve an operation by GUFI.
       description: Retrieve an operation by GUFI.
-      operationId: getOpGufi
       consumes:
         - application/json
       produces:
@@ -478,7 +472,6 @@ paths:
       description: >-
         Announce an Operation to another USS, either initial Operation or an
         update to the Operation. The Operation's owner creates the ID.
-      operationId: putOp
       consumes:
         - application/json
       produces:

@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: "v1"
+  version: "v3"
   title: Flight Information Management System (FIMS) Authorization (Authz) Server
   description: FIMS_Authz provides authorization services for FIMS and USS stakeholders within UTM.  FIMS_Authz is an OAuth 2.0 compliant server.  The endpoints and data exchnages provided by this server are based on open standards.
 externalDocs:
@@ -20,13 +20,13 @@ securityDefinitions:
     flow: application
     scopes:
       'utm.nasa.gov_read.constraint': Subject can read UTM constraint data
-      'utm.nasa.gov_write.constraint': Subject can read, create, and update UTM constraint data. This means that the Subject can define areas that restrict other operations.  
+      'utm.nasa.gov_write.constraint': Subject can read, create, and update UTM constraint data. This means that the Subject can define areas that restrict other operations.
       'utm.nasa.gov_read.min_data': Subject can read data which has been minimized for example, by redacting some properties
       'utm.nasa.gov_write.operation': Subject can read, create, and update operational data such as USS Instance data
       'utm.nasa.gov_read.operation': Subject can read operational data such as USS Instance data
       'utm.nasa.gov_write.message': Subject can read, create, and update message data such as UTM Message and Negotiations
       'utm.nasa.gov_read.message': Subject can read message data such as UTM Message and Negotiations
-      'utm.nasa.gov_write.publicsafety': Subject can read, create, and update operations that are designated public safety operations. 
+      'utm.nasa.gov_write.publicsafety': Subject can read, create, and update operations that are designated public safety operations.
   authenticate_using_client_credentials:
     type: basic
     description: FIMS Authorization Server implments the RFC-6749 Client Credentials flow.  Version 17.09 of the server authenticates the client using the HTTP Authorization header with the Basic keyword and the oauth2 client secret.
@@ -38,7 +38,6 @@ paths:
       tags:
         - 'A. Required Endpoints'
       summary: Obtain an authorization grant (unsupported in UTM, but required by OAuth specification)
-      operationId: getAuthorizationGrant
       description: >
         This endpoint is required as per RFC 6749.  However since FIMS only supports the Client Credentials Grant flow, there is no use of this endpoint currently. It is defined in case there is an use case in the future that requires it. Currently returns 501 (Not implemented) on a GET.  POST not supported at all.
       responses:
@@ -50,8 +49,7 @@ paths:
     post:
       tags:
         - 'A. Required Endpoints'
-      summary: Obtain an access token. 
-      operationId: obtainAccessToken
+      summary: Obtain an access token.
       consumes:
         - application/x-www-form-urlencoded
       produces:
@@ -59,7 +57,7 @@ paths:
       security:
         - authenticate_using_client_credentials: []
       description: >
-        This endpoint is required as per RFC 6749.  A POST to this endpoint acts as a request for an access token. 
+        This endpoint is required as per RFC 6749.  A POST to this endpoint acts as a request for an access token.
       parameters:
         - name: grant_type
           in: formData
@@ -90,7 +88,6 @@ paths:
       tags:
         - 'A. Required Endpoints'
       summary: Get the OAuth server public key required for checking token signatures. Not currently implemented.
-      operationId: getServerTokenKey
       produces:
         - application/json
       responses:
@@ -99,14 +96,13 @@ paths:
           # TODO update ref to correct object when we have it defined.
           schema:
             $ref: '#/definitions/TokenKeyResponse'
-      
+
   /introspect:
     get:
       tags:
         - 'A. Required Endpoints'
       summary: |
-        Check a token.This is the RFC 7662 required endpoint which is not implemented yet. The current implementation is named /check_token. 
-      operationId: tokenIntrospection
+        Check a token.This is the RFC 7662 required endpoint which is not implemented yet. The current implementation is named /check_token.
       consumes:
         - application/x-www-form-urlencoded
       produces:
@@ -131,8 +127,8 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/IntrospectionResponse'          
-  
+            $ref: '#/definitions/IntrospectionResponse'
+
   /check_token:
     get:
       deprecated: true
@@ -144,15 +140,14 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/IntrospectionResponse'   
-            
+            $ref: '#/definitions/IntrospectionResponse'
+
   # Needs work.  See RFC 7009
   /revoke:
     post:
       tags:
         - 'A. Required Endpoints'
       summary: Post a token revocation request. Not currently implemented.
-      operationId: postRevocationRequest
       consumes:
         - application/x-www-form-urlencoded
       parameters:
@@ -176,13 +171,12 @@ paths:
           description: OK
         '400':
           description: Bad request
-  
+
   /oauth-authorization-server:
     get:
       tags:
         - 'A. Required Endpoints'
       summary: Get API Info. Not currently implemented.
-      operationId: getApiInfos
       produces:
         - application/json
       responses:
@@ -202,7 +196,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Version'      
+            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Version'
 
 definitions:
   TokenResponse:
@@ -215,7 +209,7 @@ definitions:
       scope:
         type: string
         description: "white space separated list of scopes"
-      token_type: 
+      token_type:
         type: string
         enum:
         - "bearer"
@@ -238,7 +232,7 @@ definitions:
       nbf:
         type: number
         description: "see definitions/JwtClaimsSet in this spec"
-    example: 
+    example:
       access_token: tokenstring
       token_type: bearer
       expires_in: 3599
@@ -247,11 +241,11 @@ definitions:
       nbf: 1509470774
       iss: fims.arc.nasa.gov/fimsAuthServer
       jti: 4d4c1a63-0959-48cc-885a-3648fd582db7
-      
-  
+
+
   JwsCompactSerialization:
     description: >-
-      The token provided by the FIMS Authorization Server is a JWS representing a JWT.  The token is actually a JWS Compact Serialization string as described in RFC 7515.  For clarity of documentation, we represent the pre-serialized components here as a JSON schema. 
+      The token provided by the FIMS Authorization Server is a JWS representing a JWT.  The token is actually a JWS Compact Serialization string as described in RFC 7515.  For clarity of documentation, we represent the pre-serialized components here as a JSON schema.
     type: object
     properties:
       jose_header:
@@ -262,7 +256,7 @@ definitions:
         type: string
         description: >-
           See RFC 7515 for details.
-  
+
   JoseHeader:
     type: object
     properties:
@@ -274,9 +268,9 @@ definitions:
         - JWT
         description: >-
           The FIMS Authorization Server only support 'JWT' (JSON Web Token) as the algorithm type.
-        
-      
-      
+
+
+
   # From Spring OAuth. Documentation sparse.
   TokenKeyResponse:
     type: object
@@ -291,8 +285,8 @@ definitions:
         type: string
         description: >-
           A key signed by the algorithm noted in 'alg' property.  The key is preceded by '-----BEGIN PUBLIC KEY-----\n' without the single quotes and appended with '\n-----END PUBLIC KEY-----' without the single quotes.
-        
-  
+
+
   # From RFC 7662
   IntrospectionResponse:
     type: object
@@ -303,7 +297,7 @@ definitions:
         type: boolean
         description: >-
           Boolean indicator of whether or not the presented token is currently active.  The specifics of a token's "active" state will vary depending on the implementation of the authorization server and the information it keeps about its tokens, but a "true" value return for the "active" property will generally indicate that a given token has been issued by this authorization server, has not been revoked by the resource owner, and is within its given time window of validity (e.g., after its issuance time and before its expiration time).  See Section 4 for information on implementation of such checks.
-    
+
   JwtClaimsSet:
     type: object
     properties:
@@ -339,13 +333,13 @@ definitions:
         format: uuid
         description: >-
           The "jti" (JWT ID) claim provides a unique identifier for the JWT. For this server, this is satisfied by the use of a UUID.
-      
+
       scope:
         type: array
         items:
           $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/scope'
 
-        
+
   Metadata:
     type: object
     required:
@@ -390,7 +384,7 @@ definitions:
 # Only grant type currently supported is "client_credentials"
       grant_types_supported:
         type: array
-        items: 
+        items:
           type: string
         description: >-
           JSON array containing a list of the OAuth 2.0 grant type values that this authorization server supports. (definitions in RFC 7591)
@@ -440,7 +434,7 @@ definitions:
           type: string
         description: >-
           JSON array containing a list of client authentication methods supported by this introspection endpoint.  The valid client authentication method values are those registered in the IANA "OAuth Token Endpoint Authentication Methods" registry [IANA.OAuth.Parameters] or those registered in the IANA "OAuth Access Token Types" registry [IANA.OAuth.Parameters].  (These values are and will remain distinct, due to Section 7.2.)
-      
+
       # TODO: This is not the right way to describe our claims.  needs fixing.  It's like we really want to be returning the YAML/JSON model schema itself, not an instance of it as is implied by this definition.
       jwt_claims:
         $ref: '#/definitions/JwtClaimsSet'

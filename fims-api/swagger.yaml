@@ -146,7 +146,6 @@ paths:
         Illustrates the FIMS Alert Message. FIMS may send out Alert Messages from time to time. This endpoint is not intended for use.
 
         Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint
-      operationId: alertMsgUsingGET
       produces:
         - application/json
       responses:
@@ -166,7 +165,6 @@ paths:
         Illustrates the FIMS Constraint Message. FIMS will send out a Constraint Message when a new constraint is put in place. This endpoint is not intended for use.
 
         Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint
-      operationId: constraintMsgUsingGET
       produces:
         - application/json
       responses:

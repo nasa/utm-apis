@@ -5,7 +5,7 @@ info:
     the UTM System.  This service allows for authenticated USS operators to
     submit information about their USS and for all stakeholders to query for a
     USS Instances matching certain parameters.
-  version: v1
+  version: v3
   title: UTM USS Service Discovery
   termsOfService: >
 
