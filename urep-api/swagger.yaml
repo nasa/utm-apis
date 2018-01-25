@@ -7,7 +7,7 @@ info:
     \ operational awareness within the UTM ecosystem."
   version: "v1"
   title: "UAS Report (UREP) Service"
-host: "utmalpha.arc.nasa.gov"
+host: sdsp.defined.url
 basePath: "/urep"
 tags:
 - name: "A. Required Endpoints"

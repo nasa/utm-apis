@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   version: 'v3'
   title: Public Safety USS
-  description: A USS with the Public Safety role implements this API in addition to the base USS API. 
+  description: A USS with the Public Safety role implements this API in addition to the base USS API.
   contact:
     name: 'NASA Ames Research Center, Aviation Systems Division'
     url: 'https://utm.arc.nasa.gov/'
@@ -37,7 +37,8 @@ info:
     SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY
     LAW. RECIPIENT''S SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE,
     UNILATERAL TERMINATION OF THIS AGREEMENT.
-host: publicsafety.arc.nasa.gov
+
+host: uss.defined.url
 basePath: /pubsafe
 schemes:
   - https
@@ -74,10 +75,10 @@ paths:
           maximum: 180.0
           minimum: -180.0
           format: "double"
-      
+
       responses:
         200:
-          description: "Successfully returned uvin and its associated operator information" 
+          description: "Successfully returned uvin and its associated operator information"
           schema:
             $ref: '#/definitions/VehicleOperationData'
         401:
@@ -87,19 +88,19 @@ paths:
         403:
           description: "Forbidden"
         404:
-          description: "Not Found"        
-                  
+          description: "Not Found"
+
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
         503:
-          description: Service Unavailable 
+          description: Service Unavailable
           schema:
             $ref: "https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse"
-                
+
   /uas/operations:
-    get:  
-      description: Returns all operations around the point of reference 
+    get:
+      description: Returns all operations around the point of reference
       parameters:
         - name: "lat"
           in: "query"
@@ -132,14 +133,14 @@ paths:
           format: "date-time"
           minLength: 20
           maxLength: 25
-      
+
       responses:
         200:
-          description: "Needs clarification" 
+          description: "Needs clarification"
           schema:
             type: "array"
             items:
-              $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation'  
+              $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation'
         401:
           description: "Unauthorized"
           schema:
@@ -147,13 +148,13 @@ paths:
         403:
           description: "Forbidden"
         404:
-          description: "Not Found"        
-                  
+          description: "Not Found"
+
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
-      
-                
+
+
 definitions:
   VehicleOperationData:
      type: object
@@ -188,7 +189,7 @@ definitions:
         format: uuid
         maxLength: 36
         minLength: 36
-        example: "00000000-0000-0000-0000-000000000000" 
+        example: "00000000-0000-0000-0000-000000000000"
       operation_state:
          type: string
          example: "ROGUE"

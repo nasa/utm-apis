@@ -41,14 +41,14 @@ info:
   license:
     name: NASA Open Source Agreement
     url: 'https://ti.arc.nasa.gov/opensource/nosa/'
-host: ussdiscovery.arc.nasa.gov
+host: utm.defined.url
 basePath: /ussdisc
+schemes:
+  - https
+
 tags:
   - name: A. Required Endpoints
     description: The primary RESTful endpoints for sharing USS Instance data.
-schemes:
-  - https
-  - wss
 securityDefinitions:
   uss_discovery_security:
     type: oauth2
@@ -67,7 +67,7 @@ paths:
         - A. Required Endpoints
       summary: Request information regarding USS instances
       description: Allows for querying for USS instances.
-      operationId: getUSSes
+      security: []
       consumes:
         - application/json
       produces:
@@ -205,7 +205,7 @@ paths:
         - A. Required Endpoints
       summary: Request information regarding a single USS Instance
       description: Allows for querying for USS Instances.
-      operationId: getUSS
+      security: []
       produces:
         - application/json
       parameters:
@@ -239,7 +239,6 @@ paths:
       description: >-
         Allows for USS operators to submit a new USS Instance or update a
         previous USS Instance submission.
-      operationId: putUSS
       consumes:
         - application/json
       produces:

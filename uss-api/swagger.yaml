@@ -40,11 +40,12 @@ info:
   license:
     name: NASA Open Source Agreement
     url: 'https://ti.arc.nasa.gov/opensource/nosa/'
+
 host: uss.defined.url
 basePath: /uss
 schemes:
   - https
-  - wss
+
 security:
   - ussapi_security:
       - utm.nasa.gov_read.min_data

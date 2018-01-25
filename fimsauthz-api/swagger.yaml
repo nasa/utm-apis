@@ -7,11 +7,11 @@ externalDocs:
   description: SwaggerHub Documentation
   url: https://app.swaggerhub.com/apis/utm/fims_authz/
 
-host: tmiserver.arc.nasa.gov
+host: utm.defined.url
+basePath: /fimsAuthServer/oauth
 schemes:
  - https
 
-basePath: /fimsAuthServer/oauth
 securityDefinitions:
   application:
     type: oauth2

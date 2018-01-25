@@ -1,8 +1,8 @@
 swagger: '2.0'
 info:
   description: >-
-    This API describes the RESTful interface to the Supplemental Data Service 
-    Provider discovery service within the UTM System.  This service allows for 
+    This API describes the RESTful interface to the Supplemental Data Service
+    Provider discovery service within the UTM System.  This service allows for
     stakeholders to register and discovery data services that support UAS
     operations.
   version: v1
@@ -41,7 +41,7 @@ info:
     SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY
     LAW. RECIPIENT''S SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE,
     UNILATERAL TERMINATION OF THIS AGREEMENT.
-host: sdspdiscovery.arc.nasa.gov
+host: sdsp.defined.url
 basePath: /sdsdisc
 schemes:
   - https
@@ -50,9 +50,9 @@ tags:
   - name: A. Required Endpoints
     description: |
       The primary RESTful endpoints for using the SDSP Discovery service.
-      
+
 # https://swagger.io/docs/specification/authentication/oauth2/
-# clientCredentials – Client Credentials flow (is called application in OpenAPI 2.0)      
+# clientCredentials – Client Credentials flow (is called application in OpenAPI 2.0)
 securityDefinitions:
   sds_discovery_security:
     type: oauth2
@@ -67,7 +67,7 @@ security:
     - 'utm.nasa.gov_read.sdsp'
 
 paths:
-            
+
   /sds:
     post:
       tags:
@@ -194,7 +194,7 @@ paths:
                 - **String *array* operands** may only use `contains`. The RHS string will
                 be checked for partial matches against all strings in the LHS array. The RHS
                 string has a minimum length of three characters.
-                
+
                 - **Boolean operands** may only use `eq`.
 
 
@@ -299,7 +299,7 @@ definitions:
         description: >-
           The time at which the SDSP will begin available to provide services
           Note that the SDSP may be availble for other information
-          (registration, contact data, service descriptions, etc.) prior to 
+          (registration, contact data, service descriptions, etc.) prior to
           this time.  time_available_begin must be earlier than
           time_available_end.  time_available_begin cannot be more than one
           month later than time_submitted. ISO 8601 compliant:
@@ -323,7 +323,7 @@ definitions:
         externalDocs:
           description: ISO 8601 wikipedia page
           url: 'https://en.wikipedia.org/wiki/ISO_8601'
-      coverage_area: 
+      coverage_area:
         $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v1#/definitions/Point'
       time_last_modified:
         description: |-
@@ -361,7 +361,7 @@ definitions:
         default: false
       auth_description:
         description: >-
-          If authentiation or authorization are required, this field could be 
+          If authentiation or authorization are required, this field could be
           used by the SDSP to briefly describe what is required for access.
         type: string
         maxLength: 200
