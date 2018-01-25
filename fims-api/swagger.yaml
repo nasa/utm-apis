@@ -31,6 +31,22 @@ tags: # Have to add 'A' 'B' etc since ordering isn't respected in SwaggerUI.
       FIMS implements the USS API where appropriate.  For endpoints from the USS API that FIMS does not support, FIMS may return a 404.
 - name: B. Version
   description: Get information about this server.
+- name: C. Data Types
+  description: Psuedo endpoints used for the documentation of the data models
+
+securityDefinitions:
+  fims_ops_security:
+    type: oauth2
+    tokenUrl: http://thisserver/oauth/token
+    flow: application
+    scopes:
+      'utm.nasa.gov_write.operation': Subject can read, create, and update operational data such as operation plans and position reports
+      'utm.nasa.gov_read.operation': Subject can read operational data such as operation plans and position reports
+      'utm.nasa.gov_write.message': Subject can read, create, and update UTM message data
+      'utm.nasa.gov_read.message': Subject can read UTM message data
+responses:
+  WRONG_PROTOCOL:
+    description: A RESTful call was made to this endpoint but this is not a REST endpoint. Do not use this endpoint for REST calls.
 
 paths:
   /api:
@@ -45,14 +61,118 @@ paths:
           description: OK
           schema:
             $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Version'
+  /schema/Operation:
+    get:
+      tags:
+        - C. Data Types
+      summary: Operation schema
+      description: |
+        Illustrates an operation in JSON. This endpoint is not intended for use.
 
-securityDefinitions:
-  fims_ops_security:
-    type: oauth2
-    tokenUrl: http://thisserver/oauth/token
-    flow: application
-    scopes:
-      'utm.nasa.gov_write.operation': Subject can read, create, and update operational data such as operation plans and position reports
-      'utm.nasa.gov_read.operation': Subject can read operational data such as operation plans and position reports
-      'utm.nasa.gov_write.message': Subject can read, create, and update UTM message data
-      'utm.nasa.gov_read.message': Subject can read UTM message data
+        Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Operation'
+        410:
+          $ref: "#/responses/WRONG_PROTOCOL"
+
+  /schema/Point:
+    get:
+      tags:
+       - C. Data Types
+      summary: Point schema
+      description: |
+        Illustrates an Point in JSON. This endpoint is not intended for use.
+
+        Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+        410:
+          $ref: "#/responses/WRONG_PROTOCOL"
+
+  /schema/LineString:
+    get:
+      tags:
+        - C. Data Types
+      summary: LineString schema
+      description: |
+        Illustrates an LineString in JSON. This endpoint is not intended for use.
+
+        Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/LineString'
+        410:
+          $ref: "#/responses/WRONG_PROTOCOL"
+
+  /schema/Polygon:
+    get:
+      tags:
+        - C. Data Types
+      summary: Polygon schema
+      description: |
+        Illustrates an Polygon in JSON. This endpoint is not intended for use.
+
+        Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
+        410:
+          $ref: "#/responses/WRONG_PROTOCOL"
+
+  /schema/UTMMessage:
+    get:
+      tags:
+        - C. Data Types
+      summary: UTM Message schema
+      description: |
+        Illustrates the FIMS Alert Message. FIMS may send out Alert Messages from time to time. This endpoint is not intended for use.
+
+        Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint
+      operationId: alertMsgUsingGET
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMMessage'
+        410:
+          $ref: "#/responses/WRONG_PROTOCOL"
+
+  /schema/ConstraintMessage:
+    get:
+      tags:
+        - C. Data Types
+      summary: Constraint Message schema
+      description: |
+        Illustrates the FIMS Constraint Message. FIMS will send out a Constraint Message when a new constraint is put in place. This endpoint is not intended for use.
+
+        Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint
+      operationId: constraintMsgUsingGET
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage'
+        410:
+          $ref: "#/responses/WRONG_PROTOCOL"
