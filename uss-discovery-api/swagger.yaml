@@ -161,7 +161,9 @@ paths:
           required: false
           description: >-
              Value of radius around the point given by parameter 'intersects_circle_around'.
-          type: number
+          type: integer
+          format: int32
+          minimum: 0
         - name: sort
           in: query
           description: >-
