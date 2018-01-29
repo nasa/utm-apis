@@ -143,6 +143,23 @@ paths:
           items:
             type: number
             format: double
+        - name: intersects_circle_around
+          in: query
+          required: false
+          description: >-
+            Returns uss_instances around the given Point. Parameter 'radius' needs to be provided as well. The coordinates
+            are comma delimited. Example: -121.2204,36.6684
+          type: array
+          maxItems: 2
+          minItems: 2
+          items:
+            type: number
+            format: double
+        - name: radius
+          in: query
+          required: false
+          description: >-
+             Value of radius around the point given by parameter 'intersects_circle_around'.
         - name: sort
           in: query
           description: >-
