@@ -953,6 +953,7 @@ definitions:
       origin: FIMS
       free_text: Constraint added.
       sent_time: '2016-11-29T01:16:41.727Z'
+      type: SAFETY
       constraint_geography:
         type: Polygon
         coordinates:
@@ -1202,7 +1203,7 @@ definitions:
       uss_informational_url: 'https://utm.arc.nasa.gov'
       uss_openapi_url: 'https://nuss.arc.nasa.gov/api'
       uss_registration_url: 'https://nuss.arc.nasa.gov/signup'
-      contact_email: joseph.rios@nasa.gov
+      contact_email: contact@email.com
       contact_phone: 650-555-5555
       
   VehicleOperationData:
