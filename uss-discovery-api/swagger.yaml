@@ -124,7 +124,7 @@ paths:
           required: false
           description: >-
             Returns uss_instances containing the given Bbox. The coordinates are
-            comma delimited. Example: -121.3193,36.6089,-121.2204,36.6684
+            comma delimited (lon_min,lat_min,lon_max,lat_max). Example: -121.3193,36.6089,-121.2204,36.6684
           type: array
           maxItems: 4
           minItems: 4
@@ -136,7 +136,7 @@ paths:
           required: false
           description: >-
             Returns uss_instances intersecting the given Bbox. The coordinates
-            are comma delimited. Example: -121.1133,36.5317,-121.0941,36.6530
+            are comma delimited (lon_min,lat_min,lon_max,lat_max). Example: -121.1133,36.5317,-121.0941,36.6530
           type: array
           maxItems: 4
           minItems: 4
@@ -147,7 +147,7 @@ paths:
           in: query
           required: false
           description: >-
-            Returns uss_instances intersecting the circle around the given point.
+            Returns uss_instances around the given point within the 'distance'.
             It requires parameter 'distance' to be provided. The coordinates
             are comma delimited. Example: -121.2204,36.6684
           type: array
@@ -160,7 +160,8 @@ paths:
           in: query
           required: false
           description: >-
-            Distance around the point provided in parameter 'reference_point'.
+            Distance (in feet) around the 'reference_point'.
+            It requires parameter 'reference_point' to be provided.
           type: number
           format: double
           minimum: 0
