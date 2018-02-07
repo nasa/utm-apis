@@ -427,8 +427,6 @@ paths:
         - A. Required Endpoints
       summary: Retrieve an operation by GUFI.
       description: Retrieve an operation by GUFI.
-      consumes:
-        - application/json
       produces:
         - application/json
       parameters:
