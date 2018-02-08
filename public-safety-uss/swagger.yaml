@@ -52,7 +52,7 @@ security:
 paths:
   /uas/{uvin}:
     get:
-      description: Returns information on vehicle with the given uvin.
+      description: Returns information on vehicle with the given uvin. 
       parameters:
         - in: path
           name: "uvin"
@@ -84,7 +84,8 @@ paths:
         401:
           description: "Unauthorized"
           schema:
-            $ref: "https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse"
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         403:
           description: "Forbidden"
         404:
@@ -96,8 +97,9 @@ paths:
         503:
           description: Service Unavailable
           schema:
-            $ref: "https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse"
-  /uas:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+  /uas:        
     get:
       description: Returns vehicle information when a partial uvin or an faa_number is supplied. Atleast one parameter is required.
       parameters:
@@ -107,7 +109,7 @@ paths:
           maximum: 36.0
           minimum: 6
           type: "string"
-        - name: "faa_number"
+        - name: "faa_number"    
           in: "query"
           description: "Full faa_number."
           maximum: 10.0
@@ -126,7 +128,7 @@ paths:
           type: "number"
           maximum: 180.0
           minimum: -180.0
-          format: "double"
+          format: "double"  
       responses:
         200:
           description: "Successfully returns matched uvins and its associated operator information"
@@ -134,11 +136,12 @@ paths:
             type: "array"
             items:
               $ref: '#/definitions/VehicleOperationData'
-
+          
         401:
           description: "Unauthorized"
           schema:
-            $ref: "https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse"
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         403:
           description: "Forbidden"
         404:
@@ -150,7 +153,8 @@ paths:
         503:
           description: Service Unavailable
           schema:
-            $ref: "https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse"
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
 
   /uas/operations:
     get:
@@ -217,7 +221,8 @@ paths:
         401:
           description: "Unauthorized"
           schema:
-            $ref: "https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse"
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         403:
           description: "Forbidden"
         404:
