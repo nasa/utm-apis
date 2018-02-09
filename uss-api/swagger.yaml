@@ -433,26 +433,16 @@ paths:
         - in: path
           name: gufi
           required: true
-          type: array
-          collectionFormat: csv
-          minItems: 1
-          maxItems: 10
-          items:
-            type: string
-            format: uuid
-            minLength: 36
-            maxLength: 36
+          type: string
+          format: uuid
           description: >-
-            GUFI of the operation being requested. May submit multiple separated
-            by commas. /operations/gufi1,gufi2,gufi3 for example.
+            GUFI of the operation being requested.
       responses:
         '201':
           description: OK
           schema:
-            type: array
-            items:
-              $ref: >-
-                https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Operation
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Operation
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
