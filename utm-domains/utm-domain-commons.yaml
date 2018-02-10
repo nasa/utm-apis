@@ -30,7 +30,7 @@ definitions:
       The severity level of a UTMMessage. This severity labeling may be used by
       other components within UTM as well.  The labels are ordered such that
       they may be given priority handling by software systems and human users.
-
+      
       **EMERGENCY > ALERT > CRITICAL > WARNING > NOTICE > INFORMATIONAL**
 
       In relation to a UTMMessage, the severities may be interpreted as follows.
