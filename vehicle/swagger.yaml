@@ -1,65 +1,244 @@
 swagger: '2.0'
 info:
   version: 'v1'
-  title: Vehicle Identity
-  description: Validate the identity of a vehicle. Long term this authenticates the vehicle, and has access to Vehicle ID Authority Data.  For TCL3, validates that the vehicle ID was properly registered for the NASA event.
+  title: Vehicle Registration
+  description: Validates that the vehicle ID was properly registered for a NASA event.
+  contact:
+    name: 'NASA Ames Research Center, Aviation Systems Division'
+    url: 'https://utm.arc.nasa.gov/'
+    email: joseph.rios@nasa.gov
+  license:
+    name: NASA Open Source Agreement
+    url: 'https://ti.arc.nasa.gov/opensource/nosa/'
+  termsOfService: >
 
-host: sdsp.defined.url
-basePath: /pubsafe
+    A. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+    WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,
+    BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL CONFORM TO
+    SPECIFICATIONS, ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+    PARTICULAR PURPOSE, OR FREEDOM FROM INFRINGEMENT, ANY WARRANTY THAT THE
+    SUBJECT SOFTWARE WILL BE ERROR FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF
+    PROVIDED, WILL CONFORM TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN
+    ANY MANNER, CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR
+    RECIPIENT OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR
+    ANY OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE. FURTHER,
+    GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES REGARDING
+    THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE, AND DISTRIBUTES
+    IT "AS IS."
+
+
+    B. Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+    AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS
+    WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT''S USE OF THE SUBJECT SOFTWARE
+    RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES ARISING
+    FROM SUCH USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING
+    FROM, RECIPIENT''S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY
+    AND HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+    SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY
+    LAW. RECIPIENT''S SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE,
+    UNILATERAL TERMINATION OF THIS AGREEMENT.
+
+host: utmregistry.arc.nasa.gov
+basePath: /api
 schemes:
   - https
 
+securityDefinitions:
+  basicAuth:
+    type: basic
+security:
+    - basicAuth: []
+
 paths:
-  /registration:
+  /uvins/{uvin}:
     get:
-      tags:
-        - A. Vehicle
-      summary: "Returns registration status.  If registration status is OK returns registration data."
-      security: []
+      description: Returns information on vehicle with the given uvin.
+      parameters:
+        - in: path
+          name: "uvin"
+          type: "string"
+          required: true
+          description: "Specifies the vehicle id"
+        - in: header
+          name: "Accept"
+          type: "string"
+          required: true
+          description: "Must be 'application/json'"
+        - in: header
+          name: "X-UTM-Auth"
+          type: "string"
+          required: true
+          description: "Keyed-hash message authentication code obtained from the vehicle owner.  The purpose of this code is to ensure that uvin submitted was registered by the owner and the owner is not being impersonated."
+      responses:
+        200:
+          description: "Successfully returned uvin and its associated vehicle information"
+          schema:
+            $ref: '#/definitions/VehicleData'
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+
+        400:
+          description: "Bad request. Typically validation error. Fix your request\
+            \ and retry."
+        503:
+          description: Service Unavailable
+          schema:
+            $ref: "https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse"
+  /uvins/:
+    post:
+      description: USS registers a vehicele on behalf of a vehicle owner
+      parameters:
+        - in: header
+          name: "Accept"
+          type: "string"
+          required: true
+          description: "Must be 'application/json'"
+        - in: header
+          name: "X-UTM-Auth"
+          type: "string"
+          required: true
+          description: "Keyed-hash message authentication code obtained from the vehicle owner.  The purpose of this code is to ensure that the owner is not being impersonated."
       produces:
         - application/json
       responses:
         200:
-          description: OK
+          description: "Successfully registration of a vehicle"
           schema:
-            $ref: '#/definitions/VehicleRegistrationData'
-
-
-  /api:
-    get:
-      tags:
-        - B. Version and Health
-      summary: "get server info.  Can be used to check health"
-      security: []
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Version'
-
+            $ref: '#/definitions/VehicleRegData'
 definitions:
-
-  VehicleRegistrationData:
+  VehicleData:
+     type: object
+     properties:
+      vehicleRegistration:
+        type: object
+        properties:
+          uvin:
+            type: string
+            format: uuid
+            maxLength: 36
+            minLength: 36
+            example: "00000000-0000-0000-0000-000000000000"
+          date:
+            type: string
+            example: "2018-01-14 02:33:01.73454"
+          registeredBy:
+            type: string
+            example: "registeredBy"
+          nNumber:
+            type: string
+            example: "N98765"
+          faaNumber:
+            type: string
+            example: "FA1231232132131"
+          vehicleName:
+            type: string
+            description: A vehicle name identifier that has been given to the vehicle instance
+            example: "FlyingV"
+      vehicleType:
+        type: object
+        properties:
+          manufacturer:
+            type: string
+            example: "DJI"
+          model:
+            type: string
+            example: "Matrice 600 Pro"
+          class:
+            type: string
+            example: "Multi-Rotor"
+            description: Current return values are Multi-Rotor, Fixed-Wing, Hybrid, and Helicopter
+          accessType:
+            type: string
+            example: "public"
+            description: Current return values are public and private.  Public means this
+      properties:
+        type: object
+        properties:
+          vehicleTypeId:
+            type: string
+            format: uuid
+            maxLength: 36
+            minLength: 36
+            example: "00000000-0000-0000-0000-000000000000"
+          webLink:
+            type: string
+            example: "https://www.dji.com/matrice600-pro"
+          length:
+            type: "number"
+            format: double
+          width:
+            type: "number"
+            format: double
+          height:
+            type: "number"
+            format: double
+          maxVel:
+            type: "number"
+            format: double
+          cruiseVel:
+            type: "number"
+            format: double
+          maxWindVel:
+            type: "number"
+            format: double
+          maxEndurance:
+            type: "number"
+            format: double
+          mtow:
+            type: "number"
+            format: double
+          maxEmptyWeight:
+            type: "number"
+            format: double
+          payloadCapacity:
+            type: "number"
+            format: double
+          maxThrust:
+            type: "number"
+            format: double
+          maxRange:
+            type: "number"
+            format: double
+          maxCeiling:
+            type: "number"
+            format: double
+      classDetails:
+        type: object
+        properties:
+          numRotors:
+            type: "number"
+            format: double
+          rotorDiameter:
+            type: "number"
+            format: double
+          maxRollRate:
+            type: "number"
+            format: double
+          maxPitchRate:
+            type: "number"
+            format: double
+          maxYawRate:
+            type: "number"
+      engineDetails:
+        type: object
+        properties:
+          engineType:
+            type: string
+            example: "Electric Engine"
+          batteryType:
+            type: string
+            example: "Lithium Polymer"
+          batteryCapacity:
+            type: "number"
+            format: double
+          batteryVoltage:
+            type: "number"
+            format: double
+  VehicleRegData:
     type: object
-    properties:
-      make:
-        type: string
-      model:
-        type: string
-      uvin:
-        type: string
-        format: uuid
-      registration_status:
-          $ref: '#/definitions/VehicleRegistrationStatus'
-
-
-  VehicleRegistrationStatus:
-        type: string
-        default: VEHICLE_ID_FAILED_AUTHENTICATION
-        enum:
-        - VEHICLE_ID_FAILED_AUTHENTICATION
-        - VEHICLE_ID_REGISTERED
-        - VEHICLE_IS_NOT_REGISTERED
-        - VEHICLE_IS_AUTHENTICATED_AND_REGISTERED

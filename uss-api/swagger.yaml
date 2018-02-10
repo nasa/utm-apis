@@ -427,26 +427,16 @@ paths:
         - A. Required Endpoints
       summary: Retrieve an operation by GUFI.
       description: Retrieve an operation by GUFI.
-      consumes:
-        - application/json
       produces:
         - application/json
       parameters:
         - in: path
           name: gufi
           required: true
-          type: array
-          collectionFormat: csv
-          minItems: 1
-          maxItems: 10
-          items:
-            type: string
-            format: uuid
-            minLength: 36
-            maxLength: 36
+          type: string
+          format: uuid
           description: >-
-            GUFI of the operation being requested. May submit multiple separated
-            by commas. /operations/gufi1,gufi2,gufi3 for example.
+            GUFI of the operation being requested.
       responses:
         '201':
           description: OK

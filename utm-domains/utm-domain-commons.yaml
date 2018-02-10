@@ -953,6 +953,7 @@ definitions:
       origin: FIMS
       free_text: Constraint added.
       sent_time: '2016-11-29T01:16:41.727Z'
+      type: SAFETY
       constraint_geography:
         type: Polygon
         coordinates:
@@ -1173,8 +1174,8 @@ definitions:
       uss_instance_id: 00000000-0000-4444-8888-FEEDDEADBEEF
       uss_name: NUSS
       time_submitted: '2016-08-03T00:15:40.931Z'
-      time_available_begin: '2016-10-04T09:15:40Z'
-      time_available_end: '2016-11-04T13:20:42Z'
+      time_available_begin: '2016-10-04T09:15:40.231Z'
+      time_available_end: '2016-11-04T13:20:42.356Z'
       time_last_modified: '2016-08-04T17:31:01.253Z'
       coverage_area:
         type: Polygon
@@ -1198,11 +1199,12 @@ definitions:
       notes: >-
         NUSS will only provide services for fixed-wing aircraft within this USS
         Instance volume.
+      uss_base_callback_url: 'https://utm.arc.nasa.gov/nuss/uss'
       uss_informational_url: 'https://utm.arc.nasa.gov'
       uss_openapi_url: 'https://nuss.arc.nasa.gov/api'
       uss_registration_url: 'https://nuss.arc.nasa.gov/signup'
-      contact_email: joseph.rios@nasa.gov
-      contact_number: 650-555-5555
+      contact_email: contact@email.com
+      contact_phone: 650-555-5555
       
   VehicleOperationData:
      type: object
@@ -1272,8 +1274,8 @@ definitions:
       resource:
         type: string
     example:
-      http_status_code: 201
-      message: Resource created.
+      http_status_code: 40x
+      message: Error message
       resource: /resource/683c0e9e-49dc-44ce-82de-a5723b1f6965
 parameters:
   fieldsParam:
