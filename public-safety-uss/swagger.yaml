@@ -79,8 +79,8 @@ paths:
       responses:
         200:
           description: "Successfully returned uvin and its associated operator information"
-          schema:
-            $ref: '#/definitions/VehicleOperationData'
+          $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/VehicleOperationData
         401:
           description: "Unauthorized"
           schema:
@@ -233,46 +233,3 @@ paths:
             \ and retry."
 
 
-definitions:
-  VehicleOperationData:
-     type: object
-     properties:
-      registration_id:
-        type: string
-      vehicle_type:
-        type: string
-      owner_name:
-        type: string
-      owner_contact:
-        type: string
-        format: phone
-        maxLength: 100
-      n_number:
-        type: string
-        maxLength: 100
-      faa_registration-number:
-        type: string
-        maxLength: 100
-      uss_name:
-        type: string
-        maxLength: 250
-        minLength: 1
-        example: "utmbeta.arc.nasa.gov"
-      uss_instance_id:
-        type: string
-        format: uuid
-        maxLength: 36
-        minLength: 36
-        example: "00000000-0000-0000-0000-000000000000"
-      gufi:
-        type: string
-        format: uuid
-        maxLength: 36
-        minLength: 36
-        example: "00000000-0000-0000-0000-000000000000"
-      operation_state:
-         type: string
-         example: "ROGUE"
-      additional_details:
-         type: string
-         example: "Extra details"
