@@ -30,7 +30,7 @@ definitions:
       The severity level of a UTMMessage. This severity labeling may be used by
       other components within UTM as well.  The labels are ordered such that
       they may be given priority handling by software systems and human users.
-      
+
       **EMERGENCY > ALERT > CRITICAL > WARNING > NOTICE > INFORMATIONAL**
 
       In relation to a UTMMessage, the severities may be interpreted as follows.
@@ -1206,11 +1206,9 @@ definitions:
       contact_email: contact@email.com
       contact_phone: 650-555-5555
       
- VehicleOperationData:
+  VehicleOperationData:
      type: object
      properties:
-      registration_id:
-        type: string
       vehicle_type:
         type: string
       owner_name:
@@ -1241,13 +1239,13 @@ definitions:
         format: uuid
         maxLength: 36
         minLength: 36
-        example: "00000000-0000-0000-0000-000000000000"
+        example: "00000000-0000-0000-0000-000000000000" 
       operation_state:
          type: string
          example: "ROGUE"
       additional_details:
          type: string
-         example: "Extra details"
+         example: "Extra details"        
       
   Version:
     type: object
