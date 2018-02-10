@@ -78,7 +78,8 @@ paths:
       responses:
         200:
           description: "Successfully returned uvin and its associated operator information"
-          $ref: >-
+          schema:
+            $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/VehicleOperationData
         401:
           description: "Unauthorized"
@@ -134,7 +135,8 @@ paths:
           schema:
             type: "array"
             items:
-              $ref: '#/definitions/VehicleOperationData'
+              $ref: >-
+                 https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/VehicleOperationData
           
         401:
           description: "Unauthorized"
@@ -230,5 +232,3 @@ paths:
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
-
-
