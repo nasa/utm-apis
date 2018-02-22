@@ -789,9 +789,9 @@ definitions:
           8. CONTINGENCY_PLAN_CANCELLED
             Description TBD.
           9. PERIODIC_POSITION_REPORTS_START
-            The requestor wants position reports provided for the operation referenced in the 'gufi' field of this request. Reports MUST be provided as per the USS Specification.
+            The requestor wants position reports provided for the operation referenced in the 'gufi' field of this request. Reports MUST be provided as per the USS Specification. Must be sent with severity NOTICE.
           10. PERIODIC_POSITION_REPORTS_END
-            The requestor wants previously requested position reports to end. If this message is received without a corresponding PERIODIC_POSITION_REPORTS_START, the message response is TBD (200, 400, 401, 404, etc.)
+            The requestor wants previously requested position reports to end. If this message is received without a corresponding PERIODIC_POSITION_REPORTS_START, the message response is TBD (200, 400, 401, 404, etc.). Must be sent with severity NOTICE.
           11. UNAUTHORIZED_AIRSPACE_PROXIMITY
           12. UNAUTHORIZED_AIRSPACE_ENTRY
           13. OTHER_SEE_FREE_TEXT
@@ -1184,7 +1184,7 @@ definitions:
       uss_registration_url: 'https://nuss.arc.nasa.gov/signup'
       contact_email: contact@email.com
       contact_phone: 650-555-5555
-      
+
   VehicleOperationData:
      type: object
      properties:
@@ -1226,8 +1226,8 @@ definitions:
          example: "ROGUE"
       additional_details:
          type: string
-         example: "Extra details"      
-      
+         example: "Extra details"
+
   Version:
     type: object
     properties:
