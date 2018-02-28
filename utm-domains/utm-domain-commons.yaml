@@ -263,7 +263,7 @@ definitions:
       operation_volumes:
         description: >-
           The actual geographical information for the operation.  Maximum array
-          length of 12 currently allowed.
+          length of 250 currently allowed.
         type: array
         maxLength: 250
         minLength: 1
