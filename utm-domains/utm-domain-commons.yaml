@@ -793,7 +793,9 @@ definitions:
           10. PERIODIC_POSITION_REPORTS_END
             The requestor wants previously requested position reports to end. If this message is received without a corresponding PERIODIC_POSITION_REPORTS_START, the message response is TBD (200, 400, 401, 404, etc.). Must be sent with severity NOTICE.
           11. UNAUTHORIZED_AIRSPACE_PROXIMITY
+            An operation is within 3038 feet (almost 0.5nmi) from the boundary of unauthorized airspace (e.g., Dynamic Restriction/TFR, controlled airspace, airspace constraint)
           12. UNAUTHORIZED_AIRSPACE_ENTRY
+            An operation has breached the boundary and entered into unauthorized airspace (e.g., Dynamic Restriction/TFR, controlled airspace, airspace constraint)
           13. OTHER_SEE_FREE_TEXT
             Messages that do not fit any of the otherwise defined categories. Should be used sparingly or with additional out-of-band description.
         type: string
