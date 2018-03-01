@@ -187,14 +187,14 @@ paths:
           default: true
         - name: limit
           in: query
-          description: The maximum number or records to return.
+          description: The maximum number or records to return. Default 10.
           required: false
           type: integer
           default: 10
           format: int32
         - name: offset
           in: query
-          description: The index from which to begin the list of returned records.
+          description: The index from which to begin the list of returned records. Default 0.
           required: false
           type: integer
           default: 0
