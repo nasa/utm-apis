@@ -52,7 +52,7 @@ security:
 paths:
   /uvins/{uvin}:
     get:
-      description: Returns information on vehicle with the given uvin.
+      description: Returns information on vehicle with the given uvin. If it is a valid request and the uvin exists in the database, a VehicleReg model object is returned with an 200 HTTP code.  If it is a valid request and the uvin does not exist in the database, an empty array is returned also with a  200 HTTP code.
       parameters:
         - in: path
           name: "uvin"
@@ -64,16 +64,15 @@ paths:
           type: "string"
           required: true
           description: "Must be 'application/json'"
-        - in: header
-          name: "X-UTM-Auth"
+        - in: query
+          name: "org-code"
           type: "string"
-          required: true
-          description: "Keyed-hash message authentication code obtained from the vehicle owner.  The purpose of this code is to ensure that uvin submitted was registered by the owner and the owner is not being impersonated."
+          description: "Organization authenticity code."
       responses:
         200:
-          description: "Successfully returned uvin and its associated vehicle information"
+          description: "Successfully returned uvin and its associated vehicle information."
           schema:
-            $ref: '#/definitions/VehicleData'
+            $ref: '#/definitions/VehicleReg'
         401:
           description: "Unauthorized"
           schema:
@@ -92,6 +91,8 @@ paths:
             $ref: "https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse"
   /uvins/:
     post:
+      consumes:
+        - application/x-www-form-urlencoded
       description: USS registers a vehicele on behalf of a vehicle owner
       parameters:
         - in: header
@@ -99,146 +100,153 @@ paths:
           type: "string"
           required: true
           description: "Must be 'application/json'"
-        - in: header
-          name: "X-UTM-Auth"
-          type: "string"
+        - in: formData
+          name: vehicle-type-id
+          type: string
           required: true
-          description: "Keyed-hash message authentication code obtained from the vehicle owner.  The purpose of this code is to ensure that the owner is not being impersonated."
+          description: Vehicle type id of vehicle to be registered
+        - in: formData
+          name: org-uuid
+          type: string
+          required: true
+          description: Organization uuid
+        - in: formData
+          name: org-code
+          required: true
+          type: string
+          description: "Organization authenticity code."
+        - in: formData
+          name: vehicle-name
+          required: true
+          type: string
+          description: Name of vehicle instance
+        - in: formData
+          name: event-id
+          type: number
+          required: true
+          description: Event identifier; Enter X for TCLX
+        - in: formData
+          name: n-number
+          type: string
+          description: N-number of aircraft
+        - in: formData
+          name: faa-number
+          type: string
+          description: FAA number of aircraft
       produces:
         - application/json
+      responses:
+        201:
+          description: "Successfully registration of a vehicle"
+          schema:
+            $ref: '#/definitions/VehiclePost'
+  /orgs/{uvin}:
+    get:
+      description: Returns information on vehicle with the given uvin
+      parameters:
+        - in: path
+          name: "uvin"
+          type: "string"
+          required: true
+          description: "Specifies the vehicle id"
+        - in: header
+          name: "Accept"
+          type: "string"
+          required: true
+          description: "Must be 'application/json'"
       responses:
         200:
           description: "Successfully registration of a vehicle"
           schema:
-            $ref: '#/definitions/VehicleRegData'
+            $ref: '#/definitions/OrgData'
 definitions:
-  VehicleData:
-     type: object
-     properties:
-      vehicleRegistration:
-        type: object
-        properties:
-          uvin:
-            type: string
-            format: uuid
-            maxLength: 36
-            minLength: 36
-            example: "00000000-0000-0000-0000-000000000000"
-          date:
-            type: string
-            example: "2018-01-14 02:33:01.73454"
-          registeredBy:
-            type: string
-            example: "registeredBy"
-          nNumber:
-            type: string
-            example: "N98765"
-          faaNumber:
-            type: string
-            example: "FA1231232132131"
-          vehicleName:
-            type: string
-            description: A vehicle name identifier that has been given to the vehicle instance
-            example: "FlyingV"
-      vehicleType:
-        type: object
-        properties:
-          manufacturer:
-            type: string
-            example: "DJI"
-          model:
-            type: string
-            example: "Matrice 600 Pro"
-          class:
-            type: string
-            example: "Multi-Rotor"
-            description: Current return values are Multi-Rotor, Fixed-Wing, Hybrid, and Helicopter
-          accessType:
-            type: string
-            example: "public"
-            description: Current return values are public and private.  Public means this
-      properties:
-        type: object
-        properties:
-          vehicleTypeId:
-            type: string
-            format: uuid
-            maxLength: 36
-            minLength: 36
-            example: "00000000-0000-0000-0000-000000000000"
-          webLink:
-            type: string
-            example: "https://www.dji.com/matrice600-pro"
-          length:
-            type: "number"
-            format: double
-          width:
-            type: "number"
-            format: double
-          height:
-            type: "number"
-            format: double
-          maxVel:
-            type: "number"
-            format: double
-          cruiseVel:
-            type: "number"
-            format: double
-          maxWindVel:
-            type: "number"
-            format: double
-          maxEndurance:
-            type: "number"
-            format: double
-          mtow:
-            type: "number"
-            format: double
-          maxEmptyWeight:
-            type: "number"
-            format: double
-          payloadCapacity:
-            type: "number"
-            format: double
-          maxThrust:
-            type: "number"
-            format: double
-          maxRange:
-            type: "number"
-            format: double
-          maxCeiling:
-            type: "number"
-            format: double
-      classDetails:
-        type: object
-        properties:
-          numRotors:
-            type: "number"
-            format: double
-          rotorDiameter:
-            type: "number"
-            format: double
-          maxRollRate:
-            type: "number"
-            format: double
-          maxPitchRate:
-            type: "number"
-            format: double
-          maxYawRate:
-            type: "number"
-      engineDetails:
-        type: object
-        properties:
-          engineType:
-            type: string
-            example: "Electric Engine"
-          batteryType:
-            type: string
-            example: "Lithium Polymer"
-          batteryCapacity:
-            type: "number"
-            format: double
-          batteryVoltage:
-            type: "number"
-            format: double
-  VehicleRegData:
+  OrgData:
     type: object
+    properties:
+      orgName:
+        type: string
+        example: "Beer Buzz, LLC"
+      POC:
+        type: object
+        properties:
+          name:
+            type: string
+          tel:
+            type: string
+          email:
+            type: string
+  VehiclePost:
+    type: object
+    properties:
+      uvin:
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        example: "00000000-0000-0000-0000-000000000000"
+      vehicleTypeId:
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        example: "00000000-0000-0000-0000-000000000000"
+      createdTS:
+        type: string
+        example: "2018-01-14 02:33:01.73454"
+      nNumber:
+        type: string
+        example: "N98765"
+      faaNumber:
+        type: string
+        example: "FA1231232132131"
+      vehicleName:
+        type: string
+        description: A vehicle name identifier that has been given to the vehicle instance
+        example: "FlyingV"
+  VehicleReg:
+    type: object
+    properties:
+      uvin:
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        example: "00000000-0000-0000-0000-000000000000"
+      date:
+        type: string
+        example: "2018-01-14 02:33:01.73454"
+      registeredBy:
+        type: string
+        example: "registeredBy"
+      nNumber:
+        type: string
+        example: "N98765"
+      faaNumber:
+        type: string
+        example: "FA1231232132131"
+      vehicleName:
+        type: string
+        description: A vehicle name identifier that has been given to the vehicle instance
+        example: "FlyingV"
+      manufacturer:
+        type: string
+        description: Name of the manufacturer
+        example: "Lockheed Martin"
+      model:
+        type: string
+        description: Model name
+        example: "Indago"
+      class:
+        type: string
+        description: Vehicle class
+        example: "Multi-Rotor"
+      accessType:
+        type: string
+        description: Designates whether or not the vehicle type is publically available.  If private it can only be viewed by the manufacturer
+        example: "public"
+      vehicleTypeId:
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        example: "00000000-0000-0000-0000-000000000000"

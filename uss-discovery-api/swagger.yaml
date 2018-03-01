@@ -75,8 +75,9 @@ paths:
       parameters:
         - name: "fields"
           in: "query"
-          description: "The specific subset of fields to return. Comma separated list.\
-              \ Default will be all fields. "
+          description: "The specific subset of fields to return. Comma separated list. \
+              (If list is empty, no fields are returned.)
+              \ Default will be all fields (i.e. when fields parameter is not included in the query). "
           required: false
           type: "array"
           items:
