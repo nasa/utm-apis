@@ -265,8 +265,8 @@ definitions:
           The actual geographical information for the operation.  Maximum array
           length of 250 currently allowed.
         type: array
-        maxLength: 250
-        minLength: 1
+        maxItems: 250
+        minItems: 1
         items:
           $ref: '#/definitions/OperationVolume'
       metadata:
