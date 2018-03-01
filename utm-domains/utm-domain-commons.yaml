@@ -279,7 +279,10 @@ definitions:
       'priority_status' of PUBLIC_SAFETY or INFLIGHT_EMERGENCY accepts 'priority_level' values EMERGENCY, ALERT and
       CRITICAL only. 'priority_status' of NONE accepts 'priority_level' values WARNING, NOTICE and INFORMATIONAL only.
       The 'priority_level' values EMERGENCY, ALERT and CRITICAL should be used based on impact to other operations
-      and safety of people and property on the ground.
+      and safety of people and property on the ground.  Further guidance on the appropriate severity levels to apply 
+      in which situations to be provided in the future and potential in a separate document. For testing, it is 
+      sufficeint to agree a priori on the severity levels to be used such that all stakeholders are aware ahead
+      of time.
     type: object
     required:
       - priority_level
