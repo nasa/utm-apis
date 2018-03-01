@@ -260,7 +260,7 @@ definitions:
           - OTHER
       priority_elements:
         $ref: '#/definitions/PriorityElements'
-      operation_volumess:
+      operation_volumes:
         description: >-
           The actual geographical information for the operation.  Maximum array
           length of 250 currently allowed.
