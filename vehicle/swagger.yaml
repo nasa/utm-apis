@@ -67,7 +67,7 @@ paths:
         - in: query
           name: "org-code"
           type: "string"
-          description: "HMAC validation code - see documentation."
+          description: "Organization authenticity code."
       responses:
         200:
           description: "Successfully returned uvin and its associated vehicle information."
@@ -114,7 +114,7 @@ paths:
           name: org-code
           required: true
           type: string
-          description: "Keyed-hash message authentication code obtained from the vehicle owner.  UVIN validation code - see documentation."
+          description: "Organization authenticity code."
         - in: formData
           name: vehicle-name
           required: true
