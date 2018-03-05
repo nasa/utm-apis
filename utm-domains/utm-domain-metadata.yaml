@@ -1,5 +1,5 @@
 info:
-  description: "UTM metadata model used for events and other misc."
+  description: "UTM metadata model used for events for NASA MOPS data collection."
   version: 'v3'
   title: UTM Metadata
 
