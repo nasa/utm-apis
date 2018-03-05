@@ -940,11 +940,10 @@ definitions:
         type: string
         maxLength: 1000
     example:
-      gufi: '*'
-      category: ConstraintMessage
-      origin: FIMS
-      free_text: Constraint added.
-      sent_time: '2016-11-29T01:16:41.727Z'
+      gufi: '00000000-0000-4444-8888-FEEDDEADBEEF'
+      origin: USS
+      originator_id: uss1
+      originator_uss_instance_id: '00000000-0000-4444-8888-FEEDDEADFFFF'
       type: SAFETY
       constraint_geography:
         type: Polygon
@@ -957,8 +956,9 @@ definitions:
               - 37.41786440108
             - - -122.062176579
               - 37.40968041145
-      begin_time: '2016-11-29T01:16:41.727Z'
-      end_time: '2016-11-30T01:16:41.727Z'
+      effective_time_begin: '2016-11-29T01:16:41.727Z'
+      effective_time_end: '2016-11-30T01:16:41.727Z'
+      actual_time_end: '2016-11-30T01:15:41.727Z'
       min_altitude: 0
       max_altitude: 400
       reason: A UA leaving defined volume
