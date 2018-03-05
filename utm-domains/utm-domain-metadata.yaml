@@ -128,11 +128,14 @@ definitions:
 
     example:
       data_collection: true
-      test_card: 'TC3'
+      event_id: TCL3_FD
+      test_card: TC3
+      test_identifiers: ["CNS1", "DAT3", "CON5" ]
       call_sign: GCS1
       test_type: FLIGHT
       source: HWITL
-      event_id: NC3
       location: AK
       setting: FIELD
-      data_quality: data_quality@nasa.gov
+      free_text: "shakedown with Larry"
+      data_quality_engineer: data_quality@test-site.com
+      modfied: false
