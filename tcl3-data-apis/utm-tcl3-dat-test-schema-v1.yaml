@@ -1,0 +1,200 @@
+info:
+  description: >-
+    This document collects the UTM TCL3 DAT Test data collection schemas as a swagger domain.  These schemas specifically cover the DAT 2, DAT 3, and DAT 5 tests.  A separate instance of the appropriate model should be provided by each participating USS for each run of a test.  So, if DAT2 is run 4 times with the same two USSs, both USSs would submit 4 instances of model DAT2-DAT3. NASA will accept additional data fields in these models.  Not all fields are required for each USS in each test.  For questions, please contact joseph.rios@nasa.gov. The DAT 1 and DAT 4 tests are already described in the Data Management Plan.  DAT 6 is covered via human factors data collection.  
+  version: v1
+  title: UTM TCL3 DAT2,3,5 Test Data Collection Schemas
+  contact:
+    name: Joseph Rios
+    email: joseph.rios@nasa.gov
+  termsOfService: "Not for publid release. For NASA and UTM partner use only."
+definitions:
+  DAT2-DAT3:
+    properties:
+      test_card:
+        description: "The name or number of the test card. Should be able to cross-reference this with operations that were submitted during the run of this test card."
+        minLength: 1
+        type: string
+      time_test_card_begin:
+        description: >-
+          Time the test card began executing.
+        type: string
+        format: date-time
+        minLength: 20
+        maxLength: 25
+        example: '2015-08-20T14:11:56.118Z'
+      time_test_card_begin_how_measured:
+        description: >-
+          The method for obtaining this timestamp. Suggested values include 'manually recorded', 'auto logged from USS', etc. Aim for consistency in values for this field in your data reporting.
+        type: string
+      time_component_failure_initiated:
+        description: >-
+          Time the failure was initiated.  May not be known precisely by the reporting entity.
+        type: string
+        format: date-time
+        minLength: 20
+        maxLength: 25
+        example: '2015-08-20T14:11:56.118Z'
+      time_component_failure_initiated_how_measured:
+        description: >-
+          The method for obtaining this timestamp. Suggested values include 'manually recorded', 'auto logged from USS', etc. Aim for consistency in values for this field in your data reporting.
+        type: string
+      time_component_failure_recognized:
+        description: >-
+          Time the failure was recognize by entity submitting these data.
+        type: string
+        format: date-time
+        minLength: 20
+        maxLength: 25
+        example: '2015-08-20T14:11:56.118Z'
+      time_component_failure_reconized_how_measured:
+        description: >-
+          The method for obtaining this timestamp. Suggested values include 'manually recorded', 'auto logged from USS', etc. Aim for consistency in values for this field in your data reporting.
+        type: string
+      time_first_actions_initiated_based_on_failure:
+        description: >-
+          Time the entity submitting these data performed some action based on the failure.
+        type: string
+        format: date-time
+        minLength: 20
+        maxLength: 25
+        example: '2015-08-20T14:11:56.118Z'
+      time_first_actions_initiated_based_on_failure_how_measured:
+        description: >-
+          The method for obtaining this timestamp. Suggested values include 'manually recorded', 'auto logged from USS', etc. Aim for consistency in values for this field in your data reporting.
+        type: string
+      time_failed_component_recovered:
+        description: >-
+          Time the component recovered.  May not be known precisely by the reporting entity.
+        type: string
+        format: date-time
+        minLength: 20
+        maxLength: 25
+        example: '2015-08-20T14:11:56.118Z'
+      time_failed_component_recovered_how_measured:
+        description: >-
+          The method for obtaining this timestamp. Suggested values include 'manually recorded', 'auto logged from USS', etc. Aim for consistency in values for this field in your data reporting.
+        type: string
+      time_recognizing_component_recognized_recovery:
+        description: >-
+          Time that the recovery was recognized.
+        type: string
+        format: date-time
+        minLength: 20
+        maxLength: 25
+        example: '2015-08-20T14:11:56.118Z'
+      time_recognizing_component_recognized_recovery_how_measured:
+        description: >-
+          The method for obtaining this timestamp. Suggested values include 'manually recorded', 'auto logged from USS', etc. Aim for consistency in values for this field in your data reporting.
+        type: string
+      operations_under_management_in_test:
+        type: array
+        items:
+          type: string
+          format: uuid
+          minItems: 0
+          maxItems: 300
+      operations_airborne_at_failure:
+        type: array
+        items:
+          type: string
+          format: uuid
+          minItems: 0
+          maxItems: 300
+      operations_onground_at_failure:
+        type: array
+        items:
+          type: string
+          format: uuid
+          minItems: 0
+          maxItems: 300
+      modified_operations_due_to_failure:
+        type: array
+        items:
+          type: string
+          format: uuid
+          minItems: 0
+          maxItems: 300
+      cancelled_operations_due_to_failure:
+        type: array
+        items:
+          type: string
+          format: uuid
+          minItems: 0
+          maxItems: 300
+      notes:
+        type: string
+        
+  DAT5:
+    properties:
+      test_card:
+        description: >-
+          The name or number of the test card. Should be able to cross-reference this with operations that were submitted during the run of this test card.
+        minLength: 1
+        type: string
+      time_test_card_begin:
+        description: >-
+          Time the test card began executing.
+        type: string
+        format: date-time
+        minLength: 20
+        maxLength: 25
+        example: '2015-08-20T14:11:56.118Z'
+      time_test_card_begin_how_measured:
+        description: >-
+          The method for obtaining this timestamp. Suggested values include 'manually recorded', 'auto logged from USS', etc. Aim for consistency in values for this field in your data reporting.
+        type: string
+      operations_in_negotiation:
+        description: >-
+          An array of gufi's involved in negotiation.
+        type: array
+        items:
+          type: string
+          format: uuid
+          minLength: 2
+      time_conflict_first_recognized:
+        description: >-
+          The time the conflict being negotiated was first recognized by at least one party.
+        type: string
+        format: date-time
+        minLength: 20
+        maxLength: 25
+        example: '2015-08-20T14:11:56.118Z'
+      time_conflict_first_recognized_how_measured:
+        description: >-
+          The method for obtaining this timestamp. Suggested values include 'manually recorded', 'auto logged from USS', etc. Aim for consistency in values for this field in your data reporting.
+        type: string
+      time_first_negotiation_message_sent:
+        description: >-
+          The first negotiation was sent.
+        type: string
+        format: date-time
+        minLength: 20
+        maxLength: 25
+        example: '2015-08-20T14:11:56.118Z'
+      time_first_negotiation_message_sent_how_measured:
+        description: >-
+          The method for obtaining this timestamp. Suggested values include 'manually recorded', 'auto logged from USS', etc. Aim for consistency in values for this field in your data reporting.
+        type: string
+      time_last_negotiation_message_sent:
+        type: string
+        format: date-time
+        minLength: 20
+        maxLength: 25
+        example: '2015-08-20T14:11:56.118Z'
+      time_last_negotiation_message_sent_how_measured:
+        description: >-
+          The method for obtaining this timestamp. Suggested values include 'manually recorded', 'auto logged from USS', etc. Aim for consistency in values for this field in your data reporting.
+        type: string
+      number_of_negotiation_messages_sent:
+        description: >-
+          Total number of negotiation messages sent.
+        type: number
+        format: int32
+      conflict_resolved:
+        description: >-
+          Was the conflict resolved?
+        type: boolean
+      notes:
+        description: >-
+          Any notes would be valuable. If there is an external reference for the negotiation approach, please provide pointer to that reference here.
+        type: string
