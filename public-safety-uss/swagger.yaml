@@ -196,13 +196,6 @@ paths:
           type: string
           format: geojson-position
           required: false
-        - name: "altitude_gps_wgs84_ft"
-          type: "number"
-          required: true
-          in: "query"
-          format: "double"
-          description: "The altitude as measured via a GPS device on the aircraft. Units
-          in feet using the WGS84 reference system"
         - name: "time"
           in: "query"
           required: true
