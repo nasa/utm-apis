@@ -9,73 +9,99 @@ UTM_AUTHORITY:
       A small set of trusted users who manage identities of all core UTM
       components such as USSs.
       This is an abstract role that is not associated with oauth scopes.
+    identity_owner: itself
+    examples:
+      - "UTM Authority vets USS1's additional capability for PublicService, and adds the PUBLIC_SAFETY role to USS1 in the master list."
+      - "UTM Authority vets USS1, then adds an entry to master USS list and assigns the USS_BASIC role."
+
 
 FIMS_ADMIN:
     description: |
         This role enables an IT admin to maintain FIMS, for example by managing
-        databases and servers via command line interface (CLI).  This role
+        logfiles and servers via command line interface (CLI).  This role
         should not, in general, allow reading FIMS business data as knowledge
         of FIMS data is usually not needed to get the job done. Multi-Factor
         Authentication (MFA) should be enforced users with this role,
         and the number of users with this role should be minimized.
         This is an abstract role that is not associated with oauth scopes.
+    identity_owner: UTM_AUTHORITY
+    examples:
+        - "An IT admin manages FIMS-AZ logfiles."
+        - "An IT admin reads the master USS list to update FIMS-AZ's data table containing the USSs, their scopes and their credentials."
 
 FIMS_SME:
     description: |
-        (Alternative name... FIMS Manager)
         A user who is a FIMS Subject Matter Expert (SME) that
         manages airspace constraints and other aeronautical data
         This user is typically a client to the FIMS Ops server, and often
         works using a User Interface (rather than CLI).
     identity_owner: UTM_AUTHORITY
+    examples:
+        - "An airspace Subject Matter Expert composes an airspace constraint and submits this constraint to FIMS_OPS."
     scopes:
-        - utm.nasa.gov_write.fimsadmin
+        - utm.nasa.gov_write.constraint
+        - utm.nasa.gov_read.fimsadmin
+        - utm.nasa.gov_write.operation
+        - utm.nasa.gov_write.message
 
 FIMS_AUTHZ:
     description: This role is intrinsic to the FIMS Authorization server.
     This role cannot create, modify or delete identities, rather it
     authenticates UTM principals.
     identity_owner: UTM_AUTHORITY
+    examples:
+        - "When FIMS AZ services the token endpoint, it reads the data table containing the USSs and their scopes."
     scopes:
-      - utm.nasa.gov_read.fimsadmin
+       - utm.nasa.gov_read.fimsadmin
 
 FIMS_OPS:
     description: This role manages the interface between the USS Network and
     the ANSP.  This role is intrinsic to the FIMS_OPS server.
     identity_owner: UTM_AUTHORITY
+    examples:
+        - "FIMS_OPS injects an airspace constraint to the USS Network."
     scopes:
-        - utm.nasa.gov_write.operation
-        - utm.nasa.gov_write.message
+        - utm.nasa.gov_read.operation
+        - utm.nasa.gov_read.message
         - utm.nasa.gov_write.constraint
         - utm.nasa.gov_read.fimsadmin
 
 VEHICLE_AUTHORITY:
     identity_owner: TBD; May be a set of trusted commercial entities
     description: |
-      This role can create, modify and delete vehicle registrations.
-      Assigned to a small set of trusted entities by out-of-band processes tdb.
       Enables a users who are Vehicle Subject Matter Experts
       to manage vehicle registrations.
+      This role can create, modify and delete vehicle registrations.
+      Assigned to a small set of trusted entities by out-of-band processes tdb.
       This is an abstract role that is not associated with oauth scopes.
+    examples:
+       - "A vehicle subject matter expert adds a new vehicle UVIN."
 
 VEHICLE_REGISTRATION_CHECKER:
     description:
       Checks vehicle registrations using read-only access to registration data.
-      This role cannot create, modify or delete vehicle registrations, and
-      has access to a redacted data set.
+      This role cannot create, modify or delete vehicle registrations.
+      This is an abstract role that is not associated with oauth scopes.
     identity_owner: VEHICLE_AUTHORITY
-    scopes:
-      - utm.nasa.gov_read.uvin
-      - utm.nasa.gov_read_min.uvin
+    examples:
+      - "A Vehicle registration checker server protects its GET endpoints with the utm.nasa.gov_read_min.uvin scope. A USS with that scope may get data from that endpoint."
 
 USS_BASIC:
-    description: A USS
+    description: A USS. The UTM Authority assigns role after
+    out-of-band vetting. Vetting includes some testing mechanism and liability assumptions TBD.
     identity_owner: UTM_AUTHORITY
+    examples:
+        - "USS announces its operation to another USS."
+        - "USS queries Vehicle Registration Checker to determine if a UVIN is registered."
+        - "USS queries NASA's USS Discovery service to discover other USSs intersecting its coverage area."
+        - "USS registers its coverage area with NASA's USS Discovery service."
+        - "USS writes to a pull-based Strategic CM service such as GridCell to announce new operations."
     scopes:
         - utm.nasa.gov_write.operation
         - utm.nasa.gov_write.message
         - utm.nasa.gov_read.contraint
         - utm.nasa.gov_read_min.uvin
+        - utm.nasa.gov_write.stategic_cm
 
 USS_PUBLIC_SAFETY:
     description: |
@@ -84,12 +110,10 @@ USS_PUBLIC_SAFETY:
        USS_BASIC role. The UTM Authority assigns role after out-of-band
        vetting, which the vetting includes some testing mechanism and liability
        assumptions TBD.
-    identity_owner: UTM_AUTHORITY
+    identity_owner:
+    examples:
+        - "A USS with the Public Safety role queries other USSs to determine which USS is operating a particular vehicle."
     scopes:
-        - utm.nasa.gov_write.operation
-        - utm.nasa.gov_write.message
-        - utm.nasa.gov_read.contraint
-        - utm.nasa.gov_read_min.uvin
         - utm.nasa.gov_write.publicsafety
         - utm.nasa.gov_read.uvin
 
@@ -97,11 +121,23 @@ USS_CONSTRAINT_MANAGER:
     description: |
        A USS with the capabiity to support manage airspace constraints and
        other aeronautical data. This role can be assigned only to a principal
-       that has the USS_BASIC role.
+       that has the USS_BASIC role. The UTM Authority assigns role after out-of-band
+       vetting, which the vetting includes some testing mechanism and liability
+       assumptions TBD.
     identity_owner: UTM_AUTHORITY
+    examples:
+        - "A USS with Contraint Management role publishes an airspace constraint to the USS Network."
     scopes:
-        - utm.nasa.gov_write.operation
-        - utm.nasa.gov_write.message
-        - utm.nasa.gov_read.contraint
-        - utm.nasa.gov_read_min.uvin
         - utm.nasa.gov_write.constraint
+
+STRATEGIC_CM:
+    description: |
+       This role supports USS Strategic Confict Management. This role can be a
+       pull-based Data Provider such as Grid Cell, or a push-and-pull based server
+       such as NASA's Discovery Service.
+    identity_owner: UTM_AUTHORITY
+    examples:
+       - "NASA's USS Discovery service announces a USS instance to other USSs by PUTing USSInstance data to other USSs callback"
+       - "A Strategic CM service protects its endpoints with utm.nasa.gov_write.stategic_cm to support USSs updating Grid Cells."
+    scopes:
+          - utm.nasa.gov_write.stategic_cm
