@@ -43,16 +43,20 @@ basePath: /api
 schemes:
   - https
 
-securityDefinitions:
-  basicAuth:
-    type: basic
-security:
-    - basicAuth: []
+
 
 paths:
   /uvins/{uvin}:
     get:
-      description: Returns information on vehicle with the given uvin. If it is a valid request and the uvin exists in the database, a VehicleReg model object is returned with an 200 HTTP code.  If it is a valid request and the uvin does not exist in the database, an empty array is returned also with a  200 HTTP code.
+      description: >
+        Returns information on vehicle with the given uvin. If it is a valid request
+        and the uvin exists in the database, a VehicleReg model object is returned
+        with an 200 HTTP code.  If it is a valid request and the uvin does not exist in
+        the database, an empty array is returned also with a  200 HTTP code.
+      security:
+        - vehicle_oauth:
+            - utm.nasa.gov_read_min.uvin: "retrieve redacted uvin data, for example, a USS checks registration"
+            - utm.nasa.gov_read_uvin: "retrieve uvin data, for example, a Public Safety USS retrieves data."
       parameters:
         - in: path
           name: "uvin"
@@ -70,7 +74,7 @@ paths:
           description: "Organization authenticity code."
       responses:
         200:
-          description: "Successfully returned uvin and its associated vehicle information."
+          description: "Successful"
           schema:
             $ref: '#/definitions/VehicleReg'
         401:
@@ -96,6 +100,10 @@ paths:
       consumes:
         - application/x-www-form-urlencoded
       description: USS registers a vehicele on behalf of a vehicle owner
+      security:
+        - vehicle_oauth:
+            - utm.nasa.gov_write.uvi': "Write uvin data, for example, a Vehicle Authority enters new data."
+
       parameters:
         - in: header
           name: "Accept"
@@ -139,12 +147,17 @@ paths:
         - application/json
       responses:
         201:
-          description: "Successfully registration of a vehicle"
+          description: "Successful"
           schema:
             $ref: '#/definitions/VehiclePost'
   /orgs/{uvin}:
     get:
-      description: Returns information on vehicle with the given uvin
+      description: >
+        Returns information on vehicle owner, for example, a Public Safety
+          USS gets owner contact info for a vehicle
+      security:
+        - vehicle_oauth:
+            - 'utm.nasa.gov_read_min.uvin'
       parameters:
         - in: path
           name: "uvin"
@@ -158,7 +171,7 @@ paths:
           description: "Must be 'application/json'"
       responses:
         200:
-          description: "Successfully registration of a vehicle"
+          description: "Successful"
           schema:
             $ref: '#/definitions/OrgData'
 definitions:
@@ -258,3 +271,13 @@ definitions:
         maxLength: 36
         minLength: 36
         example: "00000000-0000-0000-0000-000000000000"
+
+securityDefinitions:
+  vehicle_oauth:
+    type: oauth2
+    authorizationUrl: 'https://utm.defined.host/oauth/token'
+    flow: application
+    scopes:
+      - utm.nasa.gov_read_min.uvin: "retrieve redacted uvin data, for example, a USS checks registration"
+      - utm.nasa.gov_read_uvin: "retrieve uvin data, for example, a Public Safety USS retrieves data."
+      - utm.nasa.gov_write.uvi': "Write uvin data, for example, a Vehicle Authority enters new data."

@@ -2,10 +2,10 @@ swagger: '2.0'
 info:
   version: "v3"
   title: Flight Information Management System (FIMS) Authorization (Authz) Server
-  description: FIMS_Authz provides authorization services for FIMS and USS stakeholders within UTM.  FIMS_Authz is an OAuth 2.0 compliant server.  The endpoints and data exchnages provided by this server are based on open standards.
-externalDocs:
-  description: SwaggerHub Documentation
-  url: https://app.swaggerhub.com/apis/utm/fims_authz/
+  description: >
+    FIMS_Authz provides authorization services for FIMS and USS stakeholders within UTM.
+    FIMS_Authz is an OAuth 2.0 compliant server.  The endpoints and data exchnages provided
+    by this server are based on open standards.
 
 host: utm.defined.url
 basePath: /fimsAuthServer/oauth
@@ -16,20 +16,32 @@ securityDefinitions:
   application:
     type: oauth2
     # Should be updated to the Token URL of your OAuth provider.
-    tokenUrl: https://thisserver.com/oauth/token
+    tokenUrl: https://utm.defined.host/oauth/token
     flow: application
     scopes:
+      'utm.nasa.gov_read.fimsadmin': Subject can read data internal to FIMS.
+      'utm.nasa.gov_write.fimsadmin': Subject can read, create, and update data internal to FIMS.
+      'utm.nasa.gov_read.operation': Subject can read operational data such as USS Instance data
+      'utm.nasa.gov_write.operation': Subject can read, create, and update operational data such as USS Instance data
+      'utm.nasa.gov_read.message': Subject can read message data such as UTM Message and Negotiations
+      'utm.nasa.gov_write.message': Subject can read, create, and update message data such as UTM Message and Negotiations
+      'utm.nasa.gov_read.publicsafety': Subject can read operations that are designated public safety operations.
+      'utm.nasa.gov_write.publicsafety': Subject can read, create, and update operations that are designated public safety operations.
       'utm.nasa.gov_read.constraint': Subject can read UTM constraint data
       'utm.nasa.gov_write.constraint': Subject can read, create, and update UTM constraint data. This means that the Subject can define areas that restrict other operations.
-      'utm.nasa.gov_read.min_data': Subject can read data which has been minimized for example, by redacting some properties
-      'utm.nasa.gov_write.operation': Subject can read, create, and update operational data such as USS Instance data
-      'utm.nasa.gov_read.operation': Subject can read operational data such as USS Instance data
-      'utm.nasa.gov_write.message': Subject can read, create, and update message data such as UTM Message and Negotiations
-      'utm.nasa.gov_read.message': Subject can read message data such as UTM Message and Negotiations
-      'utm.nasa.gov_write.publicsafety': Subject can read, create, and update operations that are designated public safety operations.
+      'utm.nasa.gov_read_min.uvin': Subject can read redacted vehicle registration data.
+      'utm.nasa.gov_read.uvin':  Subject can read vehicle registration data.
+      'utm.nasa.gov_write.uvin':  Subject can read and write vehicle registration data.
+      'utm.nasa.gov_read.stategic_cm':  Subject can read strategic conflict management data.
+      'utm.nasa.gov_write.stategic_cm':  Subject can read, write (and lock) strategic conflict management data.
+
   authenticate_using_client_credentials:
     type: basic
-    description: FIMS Authorization Server implments the RFC-6749 Client Credentials flow.  Version 17.09 of the server authenticates the client using the HTTP Authorization header with the Basic keyword and the oauth2 client secret.
+    description: >
+        The FIMS AZ server authenticates clients using the HTTP Authorization header with the
+        Basic keyword and the oauth2 client secret. Note that the FIMS Authorization Server
+        facilitates the RFC-6749 Client Credentials flow for UTM components that are Oauth2
+        Resources servers.
 
 paths:
 
