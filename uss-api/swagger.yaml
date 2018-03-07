@@ -55,6 +55,9 @@ paths:
       tags:
         - A. Required Endpoints
       summary: Allow constraints to be submitted from authorized entities.
+      security:
+        - ussapi_security:
+            - utm.nasa.gov_write.constraint
       consumes:
         - application/json
       parameters:
@@ -88,16 +91,17 @@ paths:
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-      security:
-        - ussapi_security:
-            - utm.nasa.gov_write.constraint
-            - utm.nasa.gov_all.all
+
+
   '/utm_messages/{message_id}':
     put:
       tags:
         - A. Required Endpoints
       summary: Allow other authorized entities to send a message to this USS.
       description: Allows another USS or FIMS to POST a message to this USS.
+      security:
+        - ussapi_security:
+            - utm.nasa.gov_write.message
       consumes:
         - application/json
       parameters:
@@ -131,9 +135,7 @@ paths:
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-      security:
-        - ussapi_security:
-            - utm.nasa.gov_write.message
+
   '/uss/{uss_instance_id}':
     put:
       tags:
@@ -144,6 +146,9 @@ paths:
         receiving messages about the USS Network from the USS Discovery
         Service.  For example, when a new USS Instance is registered, that
         announcement would come to this endpoint.
+      security:
+        - ussapi_security:
+            - utm.nasa.gov_write.operation
       consumes:
         - application/json
       parameters:
@@ -177,6 +182,7 @@ paths:
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+
   '/negotiations/{message_id}':
     put:
       tags:
@@ -187,6 +193,9 @@ paths:
         alteration in an existing operation managed by the receiving USS.  The
         requesting USS supplies a GUFI that references the operation that may be
         altered if the request is granted by the receiving USS.
+      security:
+        - ussapi_security:
+            - utm.nasa.gov_write.message
       consumes:
         - application/json
       produces:
@@ -222,9 +231,7 @@ paths:
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-      security:
-        - ussapi_security:
-            - utm.nasa.gov_write.message
+
   '/positions/{position_id}':
     put:
       tags:
@@ -233,6 +240,9 @@ paths:
       description: >-
         Providing position reports to others may allow other USSs to anticipate
         events.  The USS managing the operation has created the position ID.
+      security:
+        - ussapi_security:
+            - utm.nasa.gov_write.operation
       consumes:
         - application/json
       produces:
@@ -273,6 +283,9 @@ paths:
         - A. Required Endpoints
       summary: Request information regarding Operations
       description: Allows querying for Operation data.
+      security:
+        - ussapi_security:
+            - utm.nasa.gov_read.operation
       produces:
         - application/json
       parameters:
@@ -346,7 +359,6 @@ paths:
             that interesect the 2D circle defined by distance and
             reference_point.  When distance it excluded and reference_point is
             included, use default value (300ft) for distance.
-
             Described as a GeoJSON position.  The value is equivalent to what
             would be seen in the "coordinates" field for a GeoJSON Point
             object.  See https://tools.ietf.org/html/rfc7946#section-3.1.1 for
@@ -354,7 +366,6 @@ paths:
             37.414371] (URL safe:
             reference_point%3D%5B-122.056364%2C%2037.414371%5D). As per GeoJSON
             spec, this is long-lat format in the WGS84 reference system.
-
             MUST NOT include a third coordinate element, strictly 2D.
           type: string
           format: geojson-position
@@ -418,15 +429,16 @@ paths:
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-      security:
-        - ussapi_security:
-            - utm.nasa.gov_read.operation
+
   '/operations/{gufi}':
     get:
       tags:
         - A. Required Endpoints
       summary: Retrieve an operation by GUFI.
       description: Retrieve an operation by GUFI.
+      security:
+        - ussapi_security:
+            - utm.nasa.gov_read.operation
       produces:
         - application/json
       parameters:
@@ -453,9 +465,7 @@ paths:
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-      security:
-        - ussapi_security:
-            - utm.nasa.gov_read.operation
+
     put:
       tags:
         - A. Required Endpoints
@@ -463,6 +473,9 @@ paths:
       description: >-
         Announce an Operation to another USS, either initial Operation or an
         update to the Operation. The Operation's owner creates the ID.
+      security:
+        - ussapi_security:
+            - utm.nasa.gov_write.operation
       consumes:
         - application/json
       produces:
@@ -511,10 +524,7 @@ paths:
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-      security:
-        - ussapi_security:
-            - utm.nasa.gov_write.operation
-            - utm.nasa.gov_write.publicsafety
+
 securityDefinitions:
   ussapi_security:
     type: oauth2
