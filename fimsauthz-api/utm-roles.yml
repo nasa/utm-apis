@@ -8,23 +8,25 @@ UTM_AUTHORITY:
     description: |
       A small set of trusted users who manage identities of all core UTM
       components such as USSs.
+      This is an abstract role that is not associated with oauth scopes.
 
 FIMS_ADMIN:
     description: |
-        (Alternative names... FIMS Elevated Privs)
         This role enables an IT admin to maintain FIMS, for example by managing
         databases and servers via command line interface (CLI).  This role
         should not, in general, allow reading FIMS business data as knowledge
         of FIMS data is usually not needed to get the job done. Multi-Factor
         Authentication (MFA) should be enforced users with this role,
         and the number of users with this role should be minimized.
+        This is an abstract role that is not associated with oauth scopes.
 
 FIMS_SME:
     description: |
         (Alternative name... FIMS Manager)
         A user who is a FIMS Subject Matter Expert (SME) that
         manages airspace constraints and other aeronautical data
-        This user is typically a client to the FIMS Ops server.
+        This user is typically a client to the FIMS Ops server, and often
+        works using a User Interface (rather than CLI).
     identity_owner: UTM_AUTHORITY
     scopes:
         - utm.nasa.gov_write.fimsadmin
@@ -54,6 +56,7 @@ VEHICLE_AUTHORITY:
       Assigned to a small set of trusted entities by out-of-band processes tdb.
       Enables a users who are Vehicle Subject Matter Experts
       to manage vehicle registrations.
+      This is an abstract role that is not associated with oauth scopes.
 
 VEHICLE_REGISTRATION_CHECKER:
     description:
@@ -83,6 +86,10 @@ USS_PUBLIC_SAFETY:
        assumptions TBD.
     identity_owner: UTM_AUTHORITY
     scopes:
+        - utm.nasa.gov_write.operation
+        - utm.nasa.gov_write.message
+        - utm.nasa.gov_read.contraint
+        - utm.nasa.gov_read_min.uvin
         - utm.nasa.gov_write.publicsafety
         - utm.nasa.gov_read.uvin
 
@@ -93,4 +100,8 @@ USS_CONSTRAINT_MANAGER:
        that has the USS_BASIC role.
     identity_owner: UTM_AUTHORITY
     scopes:
+        - utm.nasa.gov_write.operation
+        - utm.nasa.gov_write.message
+        - utm.nasa.gov_read.contraint
+        - utm.nasa.gov_read_min.uvin
         - utm.nasa.gov_write.constraint

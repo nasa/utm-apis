@@ -36,13 +36,14 @@ tags: # Have to add 'A' 'B' etc since ordering isn't respected in SwaggerUI.
 securityDefinitions:
   fims_ops_security:
     type: oauth2
-    tokenUrl: http://thisserver/oauth/token
+    tokenUrl: http://utm.defined.host/oauth/token
     flow: application
     scopes:
       'utm.nasa.gov_write.operation': Subject can read, create, and update operational data such as operation plans and position reports
-      'utm.nasa.gov_read.operation': Subject can read operational data such as operation plans and position reports
       'utm.nasa.gov_write.message': Subject can read, create, and update UTM message data
-      'utm.nasa.gov_read.message': Subject can read UTM message data
+      'utm.nasa.gov_write.constraint': Subject can read, create, and update UTM constraint data. This means that the Subject can define areas that restrict other operations.
+      'utm.nasa.gov_read.fimsadmin': Subject can read data internal to FIMS.
+
 responses:
   WRONG_PROTOCOL:
     description: A RESTful call was made to this endpoint but this is not a REST endpoint. Do not use this endpoint for REST calls.

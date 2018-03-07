@@ -55,11 +55,9 @@ securityDefinitions:
     tokenUrl: 'https://thisserver.com/oauth/token'
     flow: application
     scopes:
-      utm.nasa.gov_read.sdsp: read all USS Discovery data
-      utm.nasa.gov_write.sdsp: create and modify USS Discovery data that you own
-security:
-  - uss_discovery_security:
-      - utm.nasa.gov_read.sdsp
+      'utm.nasa.gov_read.stategic_cm':  Subject can read strategic conflict management data.
+      'utm.nasa.gov_write.stategic_cm':  Subject can read and write strategic conflict management data.
+
 paths:
   /uss:
     get:
@@ -67,7 +65,6 @@ paths:
         - A. Required Endpoints
       summary: Request information regarding USS instances
       description: Allows for querying for USS instances.
-      security: []
       consumes:
         - application/json
       produces:
@@ -228,7 +225,9 @@ paths:
         - A. Required Endpoints
       summary: Request information regarding a single USS Instance
       description: Allows for querying for USS Instances.
-      security: []
+      security:
+        - uss_discovery_security:
+            - utm.nasa.gov_read.stategic_cm
       produces:
         - application/json
       parameters:
@@ -268,7 +267,7 @@ paths:
         - application/json
       security:
         - uss_discovery_security:
-            - utm.nasa.gov_write.sdsp
+            - utm.nasa.gov_write.stategic_cm
       parameters:
         - name: id
           in: path

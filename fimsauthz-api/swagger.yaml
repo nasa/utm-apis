@@ -33,7 +33,7 @@ securityDefinitions:
       'utm.nasa.gov_read.uvin':  Subject can read vehicle registration data.
       'utm.nasa.gov_write.uvin':  Subject can read and write vehicle registration data.
       'utm.nasa.gov_read.stategic_cm':  Subject can read strategic conflict management data.
-      'utm.nasa.gov_write.stategic_cm':  Subject can read, write (and lock) strategic conflict management data.
+      'utm.nasa.gov_write.stategic_cm':  Subject can read and write strategic conflict management data.
 
   authenticate_using_client_credentials:
     type: basic
