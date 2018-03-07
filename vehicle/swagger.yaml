@@ -42,7 +42,15 @@ host: utmregistry.arc.nasa.gov
 basePath: /api
 schemes:
   - https
-
+securityDefinitions:
+  vehicle_oauth:
+    type: oauth2
+    authorizationUrl: 'https://utm.defined.host/oauth/token'
+    flow: implicit
+    scopes:
+      'utm.nasa.gov_read_min.uvin': "retrieve redacted uvin data, for example, a USS checks registration"
+      'utm.nasa.gov_read_uvin': "retrieve uvin data, for example, a Public Safety USS retrieves data."
+      'utm.nasa.gov_write.uvin': "Write uvin data, for example, a Vehicle Authority enters new data."
 
 
 paths:
@@ -55,8 +63,8 @@ paths:
         the database, an empty array is returned also with a  200 HTTP code.
       security:
         - vehicle_oauth:
-            - utm.nasa.gov_read_min.uvin: "retrieve redacted uvin data, for example, a USS checks registration"
-            - utm.nasa.gov_read_uvin: "retrieve uvin data, for example, a Public Safety USS retrieves data."
+            - utm.nasa.gov_read_min.uvin
+            - utm.nasa.gov_read_uvin
       parameters:
         - in: path
           name: "uvin"
@@ -102,7 +110,7 @@ paths:
       description: USS registers a vehicele on behalf of a vehicle owner
       security:
         - vehicle_oauth:
-            - utm.nasa.gov_write.uvi': "Write uvin data, for example, a Vehicle Authority enters new data."
+            - 'utm.nasa.gov_write.uvin'
 
       parameters:
         - in: header
@@ -271,13 +279,3 @@ definitions:
         maxLength: 36
         minLength: 36
         example: "00000000-0000-0000-0000-000000000000"
-
-securityDefinitions:
-  vehicle_oauth:
-    type: oauth2
-    authorizationUrl: 'https://utm.defined.host/oauth/token'
-    flow: application
-    scopes:
-      - utm.nasa.gov_read_min.uvin: "retrieve redacted uvin data, for example, a USS checks registration"
-      - utm.nasa.gov_read_uvin: "retrieve uvin data, for example, a Public Safety USS retrieves data."
-      - utm.nasa.gov_write.uvi': "Write uvin data, for example, a Vehicle Authority enters new data."
