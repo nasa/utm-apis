@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: "1.0.10"
+  version: "v1"
   title: CNS JSON upload format description
   description: Enforced upload format for CNS MOP
   contact:
