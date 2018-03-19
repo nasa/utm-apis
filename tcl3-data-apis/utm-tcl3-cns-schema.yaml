@@ -1,0 +1,446 @@
+swagger: '2.0'
+info:
+  version: "v1"
+  title: CNS JSON upload format description
+  description: Enforced upload format for CNS MOP
+  contact:
+    name: 'NASA Ames Research Center, Aviation Systems Division'
+    url: 'https://utmregistry.arc.nasa.gov/'
+    email: joseph.rios@nasa.gov
+  license:
+    name: NASA Open Source Agreement
+    url: 'https://ti.arc.nasa.gov/opensource/nosa/'
+  termsOfService: >-
+    A. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT ANY
+    WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,
+    BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL CONFORM TO
+    SPECIFICATIONS, ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+    PARTICULAR PURPOSE, OR FREEDOM FROM INFRINGEMENT, ANY WARRANTY THAT THE
+    SUBJECT SOFTWARE WILL BE ERROR FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF
+    PROVIDED, WILL CONFORM TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN
+    ANY MANNER, CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR
+    RECIPIENT OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR
+    ANY OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE. FURTHER,
+    GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES REGARDING
+    THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE, AND DISTRIBUTES
+    IT \"AS IS.\"
+
+
+    B. Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+    AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS
+    WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT''S USE OF THE SUBJECT SOFTWARE
+    RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES ARISING
+    FROM SUCH USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING
+    FROM, RECIPIENT''S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY
+    AND HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+    SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY
+    LAW. RECIPIENT''S SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE,
+    UNILATERAL TERMINATION OF THIS AGREEMENT.
+paths: {}
+definitions:
+
+  CNS1_MOP:
+    type: object
+    required: ['basic','fType','UTM-TCL3-DMP-RevF-CNSPDF','plannedContingency','primaryLinkDescription','redundantLinkDescription','contingencyCause','contingencyResponse','contingencyLanding','contingencyLoiterType','contingencyLoiterAlt','contingencyLoiterRadius','maneuverCommand','estimatedTimeToVerifyManeuver','cns1TestType','timeManueverCommandSent','timeManeuverVerification','timePrimaryLinkDisconnect','timeRedundantLinkSwitch']
+    properties:
+      basic:
+        $ref: '#/definitions/basicInformation'
+      fType:
+        type: string
+        pattern: 'CNS1'
+      UTM-TCL3-DMP-RevF-CNSPDF:
+        $ref: '#/definitions/CNSPDFFileName'
+      plannedContingency:
+        $ref: '#/definitions/plannedContingency'
+      primaryLinkDescription:
+        type: array
+        items:
+          type: object
+          required: ['ts','primaryLinkDescription']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            primaryLinkDescription:
+              $ref: '#/definitions/string280'
+      redundantLinkDescription:
+        type: array
+        items:
+          type: object
+          required: ['ts','redundantLinkDescription']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            redundantLinkDescription:
+              $ref: '#/definitions/string280'
+      contingencyCause:
+        $ref: '#/definitions/contingencyCause'
+      contingencyResponse:
+        $ref: '#/definitions/contingencyResponse'
+      contingencyLanding:
+        $ref: '#/definitions/contingencyLanding'
+      contingencyLoiterType:
+        $ref: '#/definitions/contingencyLoiterType'
+      contingencyLoiterAlt:
+        $ref: '#/definitions/contingencyLoiterAlt'
+      contingencyLoiterRadius:
+        $ref: '#/definitions/contingencyLoiterRadius'
+      maneuverCommand:
+        type: array
+        items:
+          type: object
+          required: ['ts','maneuverCommand']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            maneuverCommand:
+              $ref: '#/definitions/string280'
+      estimatedTimeToVerifyManeuver:
+        type: array
+        items:
+          type: object
+          required: ['ts','estimatedTimeToVerifyManeuver_sec']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            estimatedTimeToVerifyManeuver_sec:
+              type: number
+      cns1TestType:
+        type: array
+        items:
+          type: object
+          required: ['ts','cns1TestType_nonDim']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            cns1TestType_nonDim:
+              type: integer
+              enum:
+                - 0
+                - 1
+                - 2
+      timeManueverCommandSent:
+        type: array
+        items:
+          $ref: '#/definitions/tsObject'
+      timeManeuverVerification:
+        type: array
+        items:
+          $ref: '#/definitions/tsObject'
+      timePrimaryLinkDisconnect:
+        type: array
+        items:
+          $ref: '#/definitions/tsObject'
+      timeRedundantLinkSwitch:
+        type: array
+        items:
+          $ref: '#/definitions/tsObject'
+
+
+  CNS2_MOP:
+    type: object
+    required: ['basic','fType','UTM-TCL3-DMP-RevF-CNSPDF','plannedContingency','uasTruth','prnGPSSat','uere','contingencyCause','contingencyResponse','contingencyLanding','contingencyLoiterType','contingencyLoiterAlt','contingencyLoiterRadius']
+    properties:
+      basic:
+        $ref: '#/definitions/basicInformation'
+      fType:
+        type: string
+        pattern: 'CNS2'
+      UTM-TCL3-DMP-RevF-CNSPDF:
+        $ref: '#/definitions/CNSPDFFileName'
+      plannedContingency:
+        $ref: '#/definitions/plannedContingency'
+      uasTruth:
+        type: array
+        items:
+          type: object
+          required: ['ts','uasTruthEcefXCoordinate_ft','uasTruthEcefYCoordinate_ft','uasTruthEcefZCoordinate_ft','estimatedTruthPositionError95Prct_in']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            uasTruthEcefXCoordinate_ft:
+              type: number
+            uasTruthEcefYCoordinate_ft:
+              type: number
+            uasTruthEcefZCoordinate_ft:
+              type: number
+            estimatedTruthPositionError95Prct_in:
+              type: number
+      prnGpsSat:
+        $ref: '#/definitions/prnGpsSat'
+      uere:
+        type: array
+        items:
+          type: object
+          required: ['ts','uere_in']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            uere_in:
+              type: number
+      contingencyCause:
+        $ref: '#/definitions/contingencyCause'
+      contingencyResponse:
+        $ref: '#/definitions/contingencyResponse'
+      contingencyLanding:
+        $ref: '#/definitions/contingencyLanding'
+      contingencyLoiterType:
+        $ref: '#/definitions/contingencyLoiterType'
+      contingencyLoiterAlt:
+        $ref: '#/definitions/contingencyLoiterAlt'
+      contingencyLoiterRadius:
+        $ref: '#/definitions/contingencyLoiterRadius'
+
+
+  CNS3_MOP:
+    type: object
+    required: ["basic","fType","UTM-TCL3-DMP-RevF-CNSPDF","RFData","prnGPSSat"]
+    properties:
+      basic:
+        $ref: '#/definitions/basicInformation'
+      fType:
+        type: string
+        pattern: 'CNS3'
+      UTM-TCL3-DMP-RevF-CNSPDF:
+        $ref: '#/definitions/CNSPDFFileName'
+      RFData:
+        $ref: '#/definitions/CNS3RFDataFileName'
+      prnGPSSat:
+        $ref: '#/definitions/prnGpsSat'
+
+# definitions shared by the MOPs
+
+  intOrFloatList:
+    type: string
+    pattern: '^([\+\-]{0,1}[0-9]*((\.[0-9]+)|([0-9]+\.)|([0-9]))[0-9]*)(,[\+\-]{0,1}[0-9]*((\.[0-9]+)|([0-9]+\.)|([0-9]))[0-9]*)*$'
+    example: '10,20,30,1.,2.0,0,.1,.12,29.4'
+
+  sensorList:
+    type: string
+    example:
+      type: array
+      items:
+        - xyz: 'vehiclePositionLat_deg,vehiclePositionLon_deg,vehiclePositionAlt_ft'
+        - alts: 'barometricAltitude_ft,barometricPressure_psi'
+        - attitude: 'yaw_deg,pitch_deg,roll_deg'
+    pattern: '^((vehiclePositionLat_deg)|(vehiclePositionLon_deg)|(vehiclePositionAlt_ft)|(barometricAltitude_ft)|(barometricPressure_psi)|(altitudeUsedByAutopilot_ft)|(aboveTerrainAltitude_ft)|(laserSensorAltitude_ft)|(opticalSensorAltitude_ft)|(imageSensorAltitude_ft)|(radarSensorAltitude_ft)|(acousticSensorAltitude_ft)|(indicatedAirspeed_ftPerSec)|(trueAirspeed_ftPerSec)|(groundSpeed_ftPerSec)|(groundCourse_deg)|(hdop_nonDim)|(vdop_nonDim)|(numGpsSatellitesInView_nonDim)|(numGpsSat_nonDim)|(roll_deg)|(pitch_deg)|(yaw_deg)|(velNorth_ftPerSec)|(velEast_ftPerSec)|(velDown_ftPerSec)|(rollRate_degPerSec)|(pitchRate_degPerSec)|(yawRate_degPerSec)|(accBodyX_ftPerSec2)|(accBodyY_ftPerSec2)|(accBodyZ_ftPerSec2)|(motor1ControlThrottleCommand_nonDim)|(motor2ControlThrottleCommand_nonDim)|(motor3ControlThrottleCommand_nonDim)|(motor4ControlThrottleCommand_nonDim)|(motor5ControlThrottleCommand_nonDim)|(motor6ControlThrottleCommand_nonDim)|(motor7ControlThrottleCommand_nonDim)|(motor8ControlThrottleCommand_nonDim)|(motor9ControlThrottleCommand_nonDim)|(motor10ControlThrottleCommand_nonDim)|(motor11ControlThrottleCommand_nonDim)|(motor12ControlThrottleCommand_nonDim)|(motor13ControlThrottleCommand_nonDim)|(motor14ControlThrottleCommand_nonDim)|(motor15ControlThrottleCommand_nonDim)|(motor16ControlThrottleCommand_nonDim)|(aileronActuatorCommand_nonDim)|(elevatorActuatorCommand_nonDim)|(rudderActuatorCommand_nonDim)|(flapActuatorCommand_nonDim)|(landingGearActuatorCommand_nonDim)|(batteryVoltage_v)|(batteryCurrent_a)|(angleOfAttack_deg)|(sideSlip_deg)|(targetWaypointLat_deg)|(targetWaypointLon_deg)|(targetWaypointAlt_ft)|(aircraftControlMode)|(targetGroundSpeed_ftPerSec)|(targetAirSpeed_ftPerSec)|(aircraftAirborneState_nonDim)|(minDistToDefinedAreaLateralBoundary_ft)|(minDistToDefinedAreaVerticalBoundary_ft)|(c2RssiAircraft_dBm)|(c2RssiGcs_dBm)|(c2NoiseAircraft_dBm)|(c2NoiseGcs_dBm)|(c2PacketLossRateAircraftPrct_nonDim)|(c2PacketLossRateGcsPrct_nonDim)|(lateralNavPositionError_ft)|(verticalNavPositionError_ft)|(lateralNavVelocityError_ftPerSec)|(verticalNavVelocityError_ftPerSec))(, *((vehiclePositionLat_deg)|(vehiclePositionLon_deg)|(vehiclePositionAlt_ft)|(barometricAltitude_ft)|(barometricPressure_psi)|(altitudeUsedByAutopilot_ft)|(aboveTerrainAltitude_ft)|(laserSensorAltitude_ft)|(opticalSensorAltitude_ft)|(imageSensorAltitude_ft)|(radarSensorAltitude_ft)|(acousticSensorAltitude_ft)|(indicatedAirspeed_ftPerSec)|(trueAirspeed_ftPerSec)|(groundSpeed_ftPerSec)|(groundCourse_deg)|(hdop_nonDim)|(vdop_nonDim)|(numGpsSatellitesInView_nonDim)|(numGpsSat_nonDim)|(roll_deg)|(pitch_deg)|(yaw_deg)|(velNorth_ftPerSec)|(velEast_ftPerSec)|(velDown_ftPerSec)|(rollRate_degPerSec)|(pitchRate_degPerSec)|(yawRate_degPerSec)|(accBodyX_ftPerSec2)|(accBodyY_ftPerSec2)|(accBodyZ_ftPerSec2)|(motor1ControlThrottleCommand_nonDim)|(motor2ControlThrottleCommand_nonDim)|(motor3ControlThrottleCommand_nonDim)|(motor4ControlThrottleCommand_nonDim)|(motor5ControlThrottleCommand_nonDim)|(motor6ControlThrottleCommand_nonDim)|(motor7ControlThrottleCommand_nonDim)|(motor8ControlThrottleCommand_nonDim)|(motor9ControlThrottleCommand_nonDim)|(motor10ControlThrottleCommand_nonDim)|(motor11ControlThrottleCommand_nonDim)|(motor12ControlThrottleCommand_nonDim)|(motor13ControlThrottleCommand_nonDim)|(motor14ControlThrottleCommand_nonDim)|(motor15ControlThrottleCommand_nonDim)|(motor16ControlThrottleCommand_nonDim)|(aileronActuatorCommand_nonDim)|(elevatorActuatorCommand_nonDim)|(rudderActuatorCommand_nonDim)|(flapActuatorCommand_nonDim)|(landingGearActuatorCommand_nonDim)|(batteryVoltage_v)|(batteryCurrent_a)|(angleOfAttack_deg)|(sideSlip_deg)|(targetWaypointLat_deg)|(targetWaypointLon_deg)|(targetWaypointAlt_ft)|(aircraftControlMode)|(targetGroundSpeed_ftPerSec)|(targetAirSpeed_ftPerSec)|(aircraftAirborneState_nonDim)|(minDistToDefinedAreaLateralBoundary_ft)|(minDistToDefinedAreaVerticalBoundary_ft)|(c2RssiAircraft_dBm)|(c2RssiGcs_dBm)|(c2NoiseAircraft_dBm)|(c2NoiseGcs_dBm)|(c2PacketLossRateAircraftPrct_nonDim)|(c2PacketLossRateGcsPrct_nonDim)|(lateralNavPositionError_ft)|(verticalNavPositionError_ft)|(lateralNavVelocityError_ftPerSec)|(verticalNavVelocityError_ftPerSec)))*$'
+
+  LAT:
+    type: string
+    pattern: '^[\+\-]{0,1}[0-9]{0,2}\.[0-9]{7,}$'
+    example: '55.3456789'
+
+  LON:
+    type: string
+    pattern: '^[\+\-]{0,1}[0-9]{0,3}\.[0-9]{7,}$'
+    example: '125.1234567'
+
+  tsObject:
+    type: object
+    required: ['ts']
+    properties:
+      ts:
+        $ref: '#/definitions/timestamp'
+
+  contingencyCause:
+    type: array
+    items:
+      type: object
+      required: ['ts','contingencyCause_nonDim']
+      properties:
+        ts:
+          $ref: '#/definitions/timestamp'
+        contingencyCause_nonDim:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+            - 9
+            - 10
+            - 11
+            - 12
+            - 13
+
+  contingencyResponse:
+    type: array
+    items:
+      type: object
+      required: ['ts','contingencyResponse_nonDim']
+      properties:
+        ts:
+          $ref: '#/definitions/timestamp'
+        contingencyResponse_nonDim:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+
+  contingencyLanding:
+    type: array
+    items:
+      type: object
+      required: ['ts','contingencyLandingPoint_deg','contingencyLandingAlt_ft']
+      properties:
+        ts:
+          $ref: '#/definitions/timestamp'
+        contingencyLandingPoint_deg:
+          $ref: '#/definitions/LatLonList'
+        contingencyLandingAlt_ft:
+          $ref: '#/definitions/AltitudeList'
+
+  contingencyLoiterType:
+    type: array
+    items:
+      type: object
+      required: ['ts','contingencyLoiterType_nonDim']
+      properties:
+        ts:
+          $ref: '#/definitions/timestamp'
+        contingencyLoiterType_nonDim:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+
+  contingencyLoiterAlt:
+    type: array
+    items:
+      type: object
+      required: ['ts','contingencyLoiterAlt_ft']
+      properties:
+        ts:
+          $ref: '#/definitions/timestamp'
+        contingencyLoiterAlt_ft:
+          $ref: '#/definitions/AltitudeList'
+
+  contingencyLoiterRadius:
+    type: array
+    items:
+      type: object
+      required: ['ts','contingencyLoiterRadius_ft']
+      properties:
+        ts:
+          $ref: '#/definitions/timestamp'
+        contingencyLoiterRadius_ft:
+          $ref: '#/definitions/NumberList'
+
+  prnGpsSat:
+    type: array
+    items:
+      type: object
+      required: ['ts','prnGpsSat_nonDim']
+      properties:
+        ts:
+          $ref: '#/definitions/timestamp'
+        prnGpsSat_nonDim:
+          $ref: '#/definitions/prnList'
+
+  CNSPDFFileName:
+    type: string
+    pattern: 'UTM-[^-]+-CNS-[0-9]+.pdf'
+    example: 'UTM-UASORG-CNS-3.pdf'
+
+  CNS3RFDataFileName:
+    type: string
+    pattern: '^UTM-[^-]+-2[0-9][0-9][0-9][01][0-9][123][0-9]-[0-9]{4}-rfData\..*$'
+    example: 'UTM-UASORG-20180231-1459-rfData.bin'
+
+  basicInformation:
+    type: object
+    required: ['uvin','gufi','submitTime','ussName','ussInstanceID']
+    properties:
+      uvin:
+        $ref: '#/definitions/GUID'
+      gufi:
+        $ref: '#/definitions/GUID'
+      submitTime:
+        $ref: '#/definitions/timestamp'
+      ussName:
+        type: string
+      ussInstanceID:
+        $ref: '#/definitions/GUID'
+
+  MOPTypes:
+    # comma separated list of MOPs
+    type: string
+    pattern: '^(((CNS)\.{0,1}[123])|((SAA)\.{0,1}[1-6])|((DAT)\.{0,1}([1-6]|(4\.1)|(4\.2)|(4\.3)|(99\.1)))|((CON)\.{0,1}[1-5])|(OMEGA1))(,(((CNS)\.{0,1}[123])|((SAA)\.{0,1}[1-6])|((DAT)\.{0,1}([1-6]|(4\.1)|(4\.2)|(4\.3)|(99\.1)))|((CON)\.{0,1}[1-5])|(OMEGA1)))*$'
+
+  MOP:
+    type: string
+    pattern: '^(((CNS)\.{0,1}[123])|((SAA)\.{0,1}[1-6])|((DAT)\.{0,1}([1-6]|(4\.1)|(4\.2)|(4\.3)|(99\.1)))|((CON)\.{0,1}[1-5])|(OMEGA1))$'
+    example:
+      cns1: 'CNS1'
+      cns2: 'CNS.2'
+      saa3: 'SAA3'
+      dat1: 'DAT1'
+      dat2: 'DAT.2'
+      dat4: 'DAT.4'
+      dat99: 'DAT99.1'
+      con3: 'CON3'
+      omega1: 'OMEGA1'
+
+  plannedContingency:
+    type: object
+    required: ['LandingPoint_deg','LandingPointAlt_ft','LoiterAlt_ft','LoiterRadius_ft']
+    properties:
+      plannedContingencyLandingPoint_deg:
+        $ref: '#/definitions/LatLonList'
+      plannedContingencyLandingPointAlt_ft:
+        $ref: '#/definitions/AltitudeList'
+      plannedContingencyLoiterAlt_ft:
+        $ref: '#/definitions/AltitudeList'
+      plannedContingencyLoiterRadius_ft:
+        $ref: '#/definitions/NumberList'
+
+# low level definitions
+
+  timestamp:
+    type: string
+    pattern: '^2[0-9][0-9][0-9]-[01][0-9]-[0123][0-9]T[012][0-9]:[012345][0-9]:[012345][0-9]\.[0-9][0-9][0-9][0-9]*$'
+    example: '2018-03-05T19:56:23.445'
+
+  string280:
+    type: string
+    maxLength: 280
+
+  LatLonList:
+    type: string
+    pattern: '^(\[[\+\-]{0,1}[0-9]{1,3}\.[0-9]{7,},[\+\-]{0,1}[0-9]{1,3}\.[0-9]{7,}\])(,\[[\+\-]{0,1}[0-9]{1,3}\.[0-9]{7,},[\+\-]{0,1}[0-9]{1,3}\.[0-9]{7,}\])*$'
+    example: >-
+      '[37.4119851,-122.0623431],[-37.4119853,-122.0623429],[37.4119857,-122.0623423]'
+
+  AltitudeList:
+    # positive and negative ints and floats
+    type: string
+    pattern: '^\[[\+\-]{0,1}[0-9]*((\.[0-9]+)|([0-9]+\.)|([0-9]))[0-9]*\](,\[[\+\-]{0,1}[0-9]*((\.[0-9]+)|([0-9]+\.)|([0-9]))[0-9]*\])*$'
+    example: '[300],[250],[350],[300.2],[.345],[-123.],[0.0]'
+
+  NumberList:
+    # postive ints and floats only
+    type: string
+    pattern: '^\[[0-9]*((\.[0-9]+)|([0-9]+\.)|([0-9]))[0-9]*\](,\[[0-9]*((\.[0-9]+)|([0-9]+\.)|([0-9]))[0-9]*\])*$'
+    example: '[300],[250],[350],[300.2],[.345],[123.],[0.0]'
+
+  prnList:
+    # gps satellite numbers, 1-32
+    type: string
+    pattern: '^\[(([1-9])|([12][0-9])|(3[012]))\](,\[(([1-9])|([12][0-9])|(3[012]))\])*$'
+    example: '[3],[27],[32]'
+
+  GUID:
+    type: string
+    format: uuid
+    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+    example: 'd7126818-d280-475f-aaee-c16e9c6f04e0'
+    maxLength: 36
+    minLength: 36
