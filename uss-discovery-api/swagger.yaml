@@ -55,8 +55,8 @@ securityDefinitions:
     tokenUrl: 'https://thisserver.com/oauth/token'
     flow: application
     scopes:
-      'utm.nasa.gov_read.stategic_cm':  Subject can read strategic conflict management data.
-      'utm.nasa.gov_write.stategic_cm':  Subject can read and write strategic conflict management data.
+      'utm.nasa.gov_read.conflictmanagement':  Subject can read conflict management data.
+      'utm.nasa.gov_write.conflictmanagement':  Subject can read and write conflict management data.
 
 paths:
   /uss:
@@ -227,7 +227,7 @@ paths:
       description: Allows for querying for USS Instances.
       security:
         - uss_discovery_security:
-            - utm.nasa.gov_read.stategic_cm
+            - utm.nasa.gov_read.conflictmanagement
       produces:
         - application/json
       parameters:
@@ -267,7 +267,7 @@ paths:
         - application/json
       security:
         - uss_discovery_security:
-            - utm.nasa.gov_write.stategic_cm
+            - utm.nasa.gov_write.conflictmanagement
       parameters:
         - name: id
           in: path

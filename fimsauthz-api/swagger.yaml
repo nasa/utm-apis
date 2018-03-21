@@ -29,11 +29,10 @@ securityDefinitions:
       'utm.nasa.gov_write.publicsafety': Subject can read, create, and update operations that are designated public safety operations.
       'utm.nasa.gov_read.constraint': Subject can read UTM constraint data
       'utm.nasa.gov_write.constraint': Subject can read, create, and update UTM constraint data. This means that the Subject can define areas that restrict other operations.
-      'utm.nasa.gov_read_min.uvin': Subject can read redacted vehicle registration data.
       'utm.nasa.gov_read.uvin':  Subject can read vehicle registration data.
       'utm.nasa.gov_write.uvin':  Subject can read and write vehicle registration data.
-      'utm.nasa.gov_read.stategic_cm':  Subject can read strategic conflict management data.
-      'utm.nasa.gov_write.stategic_cm':  Subject can read and write strategic conflict management data.
+      'utm.nasa.gov_read.conflictmanagement':  Subject can read conflict management data.
+      'utm.nasa.gov_write.conflictmanagement':  Subject can read and write conflict management data.
 
   authenticate_using_client_credentials:
     type: basic

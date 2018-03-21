@@ -46,9 +46,6 @@ basePath: /uss
 schemes:
   - https
 
-security:
-  - ussapi_security:
-      - utm.nasa.gov_read.min_data
 paths:
   '/constraints/{message_id}':
     put:
