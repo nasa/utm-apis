@@ -8,7 +8,7 @@ UTM_AUTHORITY:
     description: |
       A small set of trusted users who manage identities of all core UTM
       components such as USSs.
-    identity_manager: ANSP
+    authority: ANSP
     examples:
       - "UTM Authority vets USS1's additional capability for Public Service, and adds the PUBLIC_SAFETY role to USS1 in the master list."
       - "UTM Authority vets USS1, then adds an entry to master USS list and assigns the USS_BASIC role."
@@ -22,7 +22,7 @@ FIMS_ADMIN:
         Authentication (MFA) should be enforced users with this role,
         and the number of users with this role should be minimized.
         This role is typically associated with a User whose authorization is out of band WRT FIMS oauth.
-    identity_manager: UTM_AUTHORITY
+    authority: UTM_AUTHORITY
     examples:
         - "An IT admin manages FIMS-AZ logfiles."
         - "An IT admin reads the master USS list to update FIMS-AZ's data table containing the USSs, their scopes and their credentials."
@@ -33,28 +33,28 @@ FIMS_SME:
         manages airspace constraints and other aeronautical data
         This user could be a client to the FIMS Ops server using a User Interface (rather than CLI).
         This role is typically associated with a user whose authorization is out of band WRT FIMS oauth.
-    identity_manager: ANSP
+    authority: ANSP
     examples:
         - "An airspace Subject Matter Expert composes an airspace constraint and submits this constraint to FIMS_OPS."
 
 FIMS_AUTHZ:
     description: This is the service role supporting the FIMS Authorization server.
     This role cannot create, modify or delete UTM Identity data, rather access is read-only.
-    identity_manager: UTM_AUTHORITY
+    authority: UTM_AUTHORITY
     examples:
         - "When FIMS AZ services the token endpoint, it reads a data table containing USS identities and their scopes."
 
 FIMS_OPS:
     description: This role manages the interface between the USS Network and
     the ANSP.  This role is assigned to the FIMS_OPS server.
-    identity_manager: UTM_AUTHORITY
+    authority: UTM_AUTHORITY
     examples:
         - "FIMS_OPS is authorized to inject an airspace constraint to the USS Network."
     scopes:
         - utm.nasa.gov_write.constraint
 
 VEHICLE_AUTHORITY:
-    identity_manager: TBD; May be a set of trusted commercial entities
+    authority: TBD; May be a set of trusted commercial entities
     description: |
       This role allows creation, modifcation and deletion of vehicle registrations.
       This role is typically associated with a user whose authentication and
@@ -67,7 +67,7 @@ VEHICLE_REGISTRATION_CHECKER:
     description: |
       This is the service role supporting vehicle registration data providers.
       This role cannot create, modify or delete vehicle registrations.
-    identity_manager: VEHICLE_AUTHORITY
+    authority: VEHICLE_AUTHORITY
     examples:
       - "A vehicle registration data provider protects its endpoints with UTM uvin scopes."
       - "USS queries a vehicle data provider using its uvin scopes to check whethter a UVIN is registered."
@@ -78,7 +78,7 @@ CONFLICT_MANAGEMENT:
        This is the service role supporting USS Confict Management data providers.
        These data providers can be pull-based such as Grid Cell data, or a push-and-pull based
        such as NASA's Discovery Service.
-    identity_manager: USS Network
+    authority: USS Network
     examples:
        - "NASA's USS Discovery Service PUTs USSInstance data to USS-API endpoints protected by write.conflictmanagement scope."
        - "USS Discovery service protects its endpoints with read.conflictmanagement scope."
@@ -89,7 +89,7 @@ CONFLICT_MANAGEMENT:
 USS_BASIC:
     description: A USS. The UTM Authority assigns role after
        out-of-band vetting. Vetting includes some testing mechanism and liability assumptions TBD.
-    identity_manager: UTM_AUTHORITY
+    authority: UTM_AUTHORITY
     examples:
         - "USS announces its operation to another USS."
         - "USS queries Vehicle Registration server to check that a UVIN is registered."
@@ -110,7 +110,7 @@ USS_PUBLIC_SAFETY:
        USS_BASIC role. The UTM Authority assigns this role after out-of-band
        vetting, which includes some testing mechanism and liability
        assumptions TBD.
-    identity_manager: UTM_AUTHORITY
+    authority: UTM_AUTHORITY
     examples:
         - "A Public Safety USS queries other USSs to determine which USS is operating a particular vehicle."
         - "A Public Safety USS queries vehicle registration using its uvin scopes to learn the vehicle's owner."
@@ -125,7 +125,7 @@ USS_CONSTRAINT_MANAGER:
        USS_BASIC role. The UTM Authority assigns this role after out-of-band
        vetting, which includes some testing mechanism and liability
        assumptions TBD.
-    identity_manager: UTM_AUTHORITY
+    authority: UTM_AUTHORITY
     examples:
         - "A USS with Contraint Management role publishes an airspace constraint to the USS Network."
     scopes:
