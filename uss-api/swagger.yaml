@@ -525,7 +525,7 @@ paths:
 securityDefinitions:
   ussapi_security:
     type: oauth2
-    tokenUrl: 'https://thisserver.com/oauth/token'
+    tokenUrl: 'https://utm.defined.host/oauth/token'
     flow: application
     scopes:
       utm.nasa.gov_read.constraint: Subject can read UTM constraint data
