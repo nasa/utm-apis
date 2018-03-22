@@ -45,7 +45,34 @@ host: uss.defined.url
 basePath: /uss
 schemes:
   - https
-
+securityDefinitions:
+  ussapi_security:
+    type: oauth2
+    tokenUrl: 'https://utm.defined.host/oauth/token'
+    flow: application
+    scopes:
+      utm.nasa.gov_read.constraint: Subject can read UTM constraint data
+      utm.nasa.gov_write.constraint: >-
+        Subject can read, create, and update UTM constraint data. This means
+        that the Subject can define areas that restrict other operations.
+      utm.nasa.gov_read.min_data: >-
+        Subject can read data which has been minimized for example, by redacting
+        some properties
+      utm.nasa.gov_write.operation: >-
+        Subject can read, create, and update operational data such as USS
+        Instance data
+      utm.nasa.gov_read.operation: Subject can read operational data such as USS Instance data
+      utm.nasa.gov_write.message: >-
+        Subject can read, create, and update message data such as UTM Message
+        and Negotiations
+      utm.nasa.gov_read.message: Subject can read message data such as UTM Message and Negotiations
+      utm.nasa.gov_write.publicsafety: >-
+        Subject can read, create, and update operations that are designated
+        public safety operations.
+      utm.nasa.gov_all.all: >-
+        Subject can read, create, and udpate data throughout UTM. Used
+        sparingly, if ever. Goes against priciple of least privelege, but may be
+        necessary in some cases.
 paths:
   '/constraints/{message_id}':
     put:
@@ -521,32 +548,3 @@ paths:
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-
-securityDefinitions:
-  ussapi_security:
-    type: oauth2
-    tokenUrl: 'https://utm.defined.host/oauth/token'
-    flow: application
-    scopes:
-      utm.nasa.gov_read.constraint: Subject can read UTM constraint data
-      utm.nasa.gov_write.constraint: >-
-        Subject can read, create, and update UTM constraint data. This means
-        that the Subject can define areas that restrict other operations.
-      utm.nasa.gov_read.min_data: >-
-        Subject can read data which has been minimized for example, by redacting
-        some properties
-      utm.nasa.gov_write.operation: >-
-        Subject can read, create, and update operational data such as USS
-        Instance data
-      utm.nasa.gov_read.operation: Subject can read operational data such as USS Instance data
-      utm.nasa.gov_write.message: >-
-        Subject can read, create, and update message data such as UTM Message
-        and Negotiations
-      utm.nasa.gov_read.message: Subject can read message data such as UTM Message and Negotiations
-      utm.nasa.gov_write.publicsafety: >-
-        Subject can read, create, and update operations that are designated
-        public safety operations.
-      utm.nasa.gov_all.all: >-
-        Subject can read, create, and udpate data throughout UTM. Used
-        sparingly, if ever. Goes against priciple of least privelege, but may be
-        necessary in some cases.
