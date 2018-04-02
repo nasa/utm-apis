@@ -279,8 +279,8 @@ definitions:
       'priority_status' of PUBLIC_SAFETY or INFLIGHT_EMERGENCY accepts 'priority_level' values EMERGENCY, ALERT and
       CRITICAL only. 'priority_status' of NONE accepts 'priority_level' values WARNING, NOTICE and INFORMATIONAL only.
       The 'priority_level' values EMERGENCY, ALERT and CRITICAL should be used based on impact to other operations
-      and safety of people and property on the ground.  Further guidance on the appropriate severity levels to apply 
-      in which situations to be provided in the future and potential in a separate document. For testing, it is 
+      and safety of people and property on the ground.  Further guidance on the appropriate severity levels to apply
+      in which situations to be provided in the future and potential in a separate document. For testing, it is
       sufficeint to agree a priori on the severity levels to be used such that all stakeholders are aware ahead
       of time.
     type: object
@@ -552,7 +552,6 @@ definitions:
       - time_measured
       - time_sent
       - track_ground_speed_kn
-      - track_true_north_deg
       - uss_name
       - uss_instance_id
       - vdop_gps
@@ -632,6 +631,44 @@ definitions:
         minLength: 20
         maxLength: 25
         example: '2015-08-20T14:11:57.968Z'
+      track_bearing:
+        type: number
+        format: double
+        description: >-
+          The direction of travel relative to track_bearing_reference in
+          degrees. Value must be >= 0.0 and < 360.0.  Note that FIXM allows for
+          the value of 360.0, while UTM does not.  The reason is for clarity by
+          not allowing two numbers (0.0 and 360.0) to represent the same
+          measurement.
+        minimum: 0
+        exclusiveMinimum: false
+        maximum: 360
+        exclusiveMaximum: true
+        x-utm-fixm-reference: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/Measures_xsd.html#BearingType
+        xml:
+          name: BearingType
+          namespace: https://www.fixm.aero/nas/4.1
+          prefix: fb
+          attribute: false
+      track_bearing_reference:
+        type: string
+        enum:
+          - TRUE_NORTH
+          - MAGNETIC_NORTH
+        default: TRUE_NORTH
+        description: >-
+          A code indicating the direction of the zero bearing.
+
+          TRUE_NORTH  This value indicates that the direction is relative to True North.
+          MAGNETIC_NORTH  This value indicates that the direction is relative to Magnetic North.
+
+          This field is equivalent to
+        x-utm-fixm-reference: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/Measures_xsd.html#BearingType
+        xml:
+          name: ZeroBearingTypeType
+          namespace: https://www.fixm.aero/nas/4.1
+          prefix: fb
+          attribute: true
       track_ground_speed_kn:
         type: number
         format: double
@@ -640,26 +677,6 @@ definitions:
           knots.
         minimum: 0
         exclusiveMinimum: false
-      track_magnetic_north_deg:
-        type: number
-        format: double
-        description: >-
-          The direction of travel relative to magnetic north in degrees. Value
-          must be >= 0.0 and < 360.0.
-        minimum: 0
-        exclusiveMinimum: false
-        maximum: 360
-        exclusiveMaximum: true
-      track_true_north_deg:
-        type: number
-        format: double
-        description: >-
-          The direction of travel relative to true north in degrees. Value must
-          be >= 0.0 and < 360.0.
-        minimum: 0
-        exclusiveMinimum: false
-        maximum: 360
-        exclusiveMaximum: true
       uss_name:
         description: >-
           The name of the entity providing UAS Support Services. Populated by
