@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   version: "v1"
   title: CON JSON upload format description
-  description: Enforced upload format for CNS MOP
+  description: Enforced upload format for CON MOP
   contact:
     name: 'NASA Ames Research Center, Aviation Systems Division'
     url: 'https://utmregistry.arc.nasa.gov/'
@@ -189,7 +189,7 @@ definitions:
 
   CON4_MOP:
     type: object
-    required: ['basic','fType','UTM-TCL3-DMP-RevF-CNSPDF','UTM-TCL3-DMP-RevF-CONKML']
+    required: ['basic','fType','UTM-TCL3-DMP-RevF-CONPDF','UTM-TCL3-DMP-RevF-CONKML']
     properties:
       basic:
         $ref: '#/definitions/basicInformation'
