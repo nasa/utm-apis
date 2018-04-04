@@ -44,7 +44,7 @@ definitions:
     type: object
     required: ['basicUSS','fType','uas_id']
     properties:
-      basicUSS:
+      basic:
         $ref: '#/definitions/basicUSSInformation'
       fType:
         type: string
@@ -55,9 +55,9 @@ definitions:
     description: >-
       DAT 99 MOP records the various timestamps associated with the registration of a USS instance with the USS Discovery Service.  In order to register a USS instance, a sequence of HTTP requests (PUT) and HTTP responses occur.  For a given instance, we record the timestamps of these events.  A USS instance can have one and only one data object (instance_reg_latency) described below.  
     type: object
-    required: ['basicUSS','fType','instance_reg_latency']
+    required: ['basic','fType','instance_reg_latency']
     properties:
-      basicUSS:
+      basic:
         $ref: '#/definitions/basicUSSInformation'
       fType:
         type: string
