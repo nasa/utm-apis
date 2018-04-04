@@ -1,8 +1,8 @@
 swagger: '2.0'
 info:
-  version: "v1"
+  version: "v2"
   title: Flight Data JSON upload format description
-  description: Enforced upload format for CNS MOP
+  description: Enforced upload format for FLIGHT_DATA
   contact:
     name: 'NASA Ames Research Center, Aviation Systems Division'
     url: 'https://utmregistry.arc.nasa.gov/'
@@ -42,24 +42,27 @@ definitions:
 
   FLIGHT_DATA:
     type: object
-    required: ['basic','AuxiliaryUASOperation','AircraftFlightPlan','UASState']
+    required: ['basic','fType','auxiliaryUASOperation','aircraftFlightPlan','uasState']
     properties:
       basic:
         $ref: '#/definitions/basicInformation'
-      AuxiliaryUASOperation:
+      fType:
+        type: string
+        pattern: 'FLIGHT_DATA'
+      auxiliaryUASOperation:
         type: object
         required: ['typeOfOperation','flightTestCardName','testIdentifiers','takeoffWeight_lb','takeOffTime','takeoffPosLat_deg','takeoffPosLon_deg','takeoffPosAlt_ft','landingTime','landingPosLat_deg','landingPosLon_deg','landingPosAlt_ft','gcsPosLat_deg','gcsPosLon_deg','gcsPosAlt_ft']
         properties:
           typeOfOperation:
             type: string
-            pattern: '((Live)|(Simulated))'
-          flightTestCardName:
+            pattern: '((Live)|(Simulated))' 
+          flightTestCardName: 
             type: string
           testIdentifiers:
             $ref: '#/definitions/MOPTypes'
-          takeoffWeight_lb:
-            type: number
-          takeOffTime:
+          takeoffWeight_lb: 
+            type: number 
+          takeOffTime: 
             $ref: '#/definitions/timestamp'
           takeoffPosLat_deg:
             $ref: '#/definitions/LAT'
@@ -81,7 +84,7 @@ definitions:
             $ref: '#/definitions/LON'
           gcsPosAlt_ft:
             type: number
-      AircraftFlightPlan:
+      aircraftFlightPlan:
         type: array
         items:
           type: object
@@ -108,31 +111,32 @@ definitions:
               type: number
             wpTime:
               $ref: '#/definitions/timestamp'
-      UASState:
+      uasState:
+        description: Note that within each object, the sensor and value fields may be a comma separated list or a single scalar value.  A comma separated list may be desirable if several sensors have a common sampling rate.  
         type: array
         items:
           type: object
-          required: ['ts','sensors','value']
+          required: ['ts','sensor','value']
           properties:
             ts:
               $ref: '#/definitions/timestamp'
-            sensors:
+            sensor:
               $ref: '#/definitions/sensorList'
             value:
               $ref: '#/definitions/intOrFloatList'
           example:
             - ts: 2018-03-12T16:02:00.000
-              sensors: 'vehiclePositionLat_deg,vehiclePositionLon_deg,vehiclePositionAlt_ft'
+              sensor: 'vehiclePositionLat_deg,vehiclePositionLon_deg,vehiclePositionAlt_ft'
               value: '37.246973,-115.799630,4500'
             - ts: 2018-03-12T16:03:00.000
-              sensors: 'vehiclePositionLat_deg,vehiclePositionLon_deg,vehiclePositionAlt_ft'
+              sensor: 'vehiclePositionLat_deg,vehiclePositionLon_deg,vehiclePositionAlt_ft'
               value: '37.233200,-115.792284,5000'
             - ts: 2018-03-12T16:04:00.000
-              sensors: 'vehiclePositionLat_deg,vehiclePositionLon_deg,vehiclePositionAlt_ft'
-              value: '37.219504,-115.785051,5500'
+              sensor: 'vehiclePositionLat_deg,vehiclePositionLon_deg,vehiclePositionAlt_ft'
+              value: '37.219504,-115.785051,5500' 
 
-
-
+    
+  
 
 # definitions shared by the MOPs
 
@@ -150,26 +154,17 @@ definitions:
         - alts: 'barometricAltitude_ft,barometricPressure_psi'
         - attitude: 'yaw_deg,pitch_deg,roll_deg'
     pattern: '^((vehiclePositionLat_deg)|(vehiclePositionLon_deg)|(vehiclePositionAlt_ft)|(barometricAltitude_ft)|(barometricPressure_psi)|(altitudeUsedByAutopilot_ft)|(aboveTerrainAltitude_ft)|(laserSensorAltitude_ft)|(opticalSensorAltitude_ft)|(imageSensorAltitude_ft)|(radarSensorAltitude_ft)|(acousticSensorAltitude_ft)|(indicatedAirspeed_ftPerSec)|(trueAirspeed_ftPerSec)|(groundSpeed_ftPerSec)|(groundCourse_deg)|(hdop_nonDim)|(vdop_nonDim)|(numGpsSatellitesInView_nonDim)|(numGpsSat_nonDim)|(roll_deg)|(pitch_deg)|(yaw_deg)|(velNorth_ftPerSec)|(velEast_ftPerSec)|(velDown_ftPerSec)|(rollRate_degPerSec)|(pitchRate_degPerSec)|(yawRate_degPerSec)|(accBodyX_ftPerSec2)|(accBodyY_ftPerSec2)|(accBodyZ_ftPerSec2)|(motor1ControlThrottleCommand_nonDim)|(motor2ControlThrottleCommand_nonDim)|(motor3ControlThrottleCommand_nonDim)|(motor4ControlThrottleCommand_nonDim)|(motor5ControlThrottleCommand_nonDim)|(motor6ControlThrottleCommand_nonDim)|(motor7ControlThrottleCommand_nonDim)|(motor8ControlThrottleCommand_nonDim)|(motor9ControlThrottleCommand_nonDim)|(motor10ControlThrottleCommand_nonDim)|(motor11ControlThrottleCommand_nonDim)|(motor12ControlThrottleCommand_nonDim)|(motor13ControlThrottleCommand_nonDim)|(motor14ControlThrottleCommand_nonDim)|(motor15ControlThrottleCommand_nonDim)|(motor16ControlThrottleCommand_nonDim)|(aileronActuatorCommand_nonDim)|(elevatorActuatorCommand_nonDim)|(rudderActuatorCommand_nonDim)|(flapActuatorCommand_nonDim)|(landingGearActuatorCommand_nonDim)|(batteryVoltage_v)|(batteryCurrent_a)|(angleOfAttack_deg)|(sideSlip_deg)|(targetWaypointLat_deg)|(targetWaypointLon_deg)|(targetWaypointAlt_ft)|(aircraftControlMode)|(targetGroundSpeed_ftPerSec)|(targetAirSpeed_ftPerSec)|(aircraftAirborneState_nonDim)|(minDistToDefinedAreaLateralBoundary_ft)|(minDistToDefinedAreaVerticalBoundary_ft)|(c2RssiAircraft_dBm)|(c2RssiGcs_dBm)|(c2NoiseAircraft_dBm)|(c2NoiseGcs_dBm)|(c2PacketLossRateAircraftPrct_nonDim)|(c2PacketLossRateGcsPrct_nonDim)|(lateralNavPositionError_ft)|(verticalNavPositionError_ft)|(lateralNavVelocityError_ftPerSec)|(verticalNavVelocityError_ftPerSec))(, *((vehiclePositionLat_deg)|(vehiclePositionLon_deg)|(vehiclePositionAlt_ft)|(barometricAltitude_ft)|(barometricPressure_psi)|(altitudeUsedByAutopilot_ft)|(aboveTerrainAltitude_ft)|(laserSensorAltitude_ft)|(opticalSensorAltitude_ft)|(imageSensorAltitude_ft)|(radarSensorAltitude_ft)|(acousticSensorAltitude_ft)|(indicatedAirspeed_ftPerSec)|(trueAirspeed_ftPerSec)|(groundSpeed_ftPerSec)|(groundCourse_deg)|(hdop_nonDim)|(vdop_nonDim)|(numGpsSatellitesInView_nonDim)|(numGpsSat_nonDim)|(roll_deg)|(pitch_deg)|(yaw_deg)|(velNorth_ftPerSec)|(velEast_ftPerSec)|(velDown_ftPerSec)|(rollRate_degPerSec)|(pitchRate_degPerSec)|(yawRate_degPerSec)|(accBodyX_ftPerSec2)|(accBodyY_ftPerSec2)|(accBodyZ_ftPerSec2)|(motor1ControlThrottleCommand_nonDim)|(motor2ControlThrottleCommand_nonDim)|(motor3ControlThrottleCommand_nonDim)|(motor4ControlThrottleCommand_nonDim)|(motor5ControlThrottleCommand_nonDim)|(motor6ControlThrottleCommand_nonDim)|(motor7ControlThrottleCommand_nonDim)|(motor8ControlThrottleCommand_nonDim)|(motor9ControlThrottleCommand_nonDim)|(motor10ControlThrottleCommand_nonDim)|(motor11ControlThrottleCommand_nonDim)|(motor12ControlThrottleCommand_nonDim)|(motor13ControlThrottleCommand_nonDim)|(motor14ControlThrottleCommand_nonDim)|(motor15ControlThrottleCommand_nonDim)|(motor16ControlThrottleCommand_nonDim)|(aileronActuatorCommand_nonDim)|(elevatorActuatorCommand_nonDim)|(rudderActuatorCommand_nonDim)|(flapActuatorCommand_nonDim)|(landingGearActuatorCommand_nonDim)|(batteryVoltage_v)|(batteryCurrent_a)|(angleOfAttack_deg)|(sideSlip_deg)|(targetWaypointLat_deg)|(targetWaypointLon_deg)|(targetWaypointAlt_ft)|(aircraftControlMode)|(targetGroundSpeed_ftPerSec)|(targetAirSpeed_ftPerSec)|(aircraftAirborneState_nonDim)|(minDistToDefinedAreaLateralBoundary_ft)|(minDistToDefinedAreaVerticalBoundary_ft)|(c2RssiAircraft_dBm)|(c2RssiGcs_dBm)|(c2NoiseAircraft_dBm)|(c2NoiseGcs_dBm)|(c2PacketLossRateAircraftPrct_nonDim)|(c2PacketLossRateGcsPrct_nonDim)|(lateralNavPositionError_ft)|(verticalNavPositionError_ft)|(lateralNavVelocityError_ftPerSec)|(verticalNavVelocityError_ftPerSec)))*$'
-
+    
   LAT:
     type: string
     pattern: '^[\+\-]{0,1}[0-9]{0,2}\.[0-9]{7,}$'
     example: '55.3456789'
-
+    
   LON:
     type: string
     pattern: '^[\+\-]{0,1}[0-9]{0,3}\.[0-9]{7,}$'
     example: '125.1234567'
-
-  tsObject:
-    type: object
-    required: ['ts']
-    properties:
-      ts:
-        $ref: '#/definitions/timestamp'
-
-
-
+    
   basicInformation:
     type: object
     required: ['uvin','gufi','submitTime','ussName','ussInstanceID']
@@ -184,12 +179,12 @@ definitions:
         type: string
       ussInstanceID:
         $ref: '#/definitions/GUID'
-
+        
   MOPTypes:
     # comma separated list of MOPs
     type: string
     pattern: '^(((CNS)\.{0,1}[123])|((SAA)\.{0,1}[1-6])|((DAT)\.{0,1}([1-6]|(4\.1)|(4\.2)|(4\.3)|(99\.1)))|((CON)\.{0,1}[1-5])|(OMEGA1))(,(((CNS)\.{0,1}[123])|((SAA)\.{0,1}[1-6])|((DAT)\.{0,1}([1-6]|(4\.1)|(4\.2)|(4\.3)|(99\.1)))|((CON)\.{0,1}[1-5])|(OMEGA1)))*$'
-
+      
   MOP:
     type: string
     pattern: '^(((CNS)\.{0,1}[123])|((SAA)\.{0,1}[1-6])|((DAT)\.{0,1}([1-6]|(4\.1)|(4\.2)|(4\.3)|(99\.1)))|((CON)\.{0,1}[1-5])|(OMEGA1))$'
@@ -203,25 +198,15 @@ definitions:
       dat99: 'DAT99.1'
       con3: 'CON3'
       omega1: 'OMEGA1'
-
-
+      
+        
 # low level definitions
-
+        
   timestamp:
     type: string
-    pattern: '^2[0-9][0-9][0-9]-[01][0-9]-[0123][0-9]T[012][0-9]:[012345][0-9]:[012345][0-9]\.[0-9][0-9][0-9][0-9]*$'
+    pattern: '^2[0-9][0-9][0-9]-[01][0-9]-[0123][0-9]T[012][0-9]:[012345][0-9]:[012345][0-9]\.[0-9][0-9][0-9][0-9]*Z{0,1}$'
     example: '2018-03-05T19:56:23.445'
-
-
-
-
-
-
-
-
-
-
-
+    
   GUID:
     type: string
     format: uuid
