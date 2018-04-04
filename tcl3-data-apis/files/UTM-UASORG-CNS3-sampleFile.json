@@ -1,0 +1,16 @@
+{
+  "fType": "CNS3",
+  "UTM-TCL3-DMP-RevF-CNSPDF": "UTM-UASORG-CNS-4.pdf",
+  "basic": {
+    "uvin": "13b51a25-0002-0009-0000-000000006b20",
+    "gufi": "94c28eaf-0000-000d-0000-000000006b20",
+    "submitTime": "2018-03-24T00:35:22.528Z",
+    "ussInstanceID": "dbc56b6d-0009-0008-0000-000000006b20",
+    "ussName": "WUSS"
+  },
+  "RFData": "UTM-UASORG-20180231-1459-rfData.bin",
+  "prnGPSSat": [
+    { "ts": "2018-03-24T00:47:03.002Z",  "prnGpsSat_nonDim": "[3],[12],[23],[10]" },
+    { "ts": "2018-03-24T00:51:34.341Z",  "prnGpsSat_nonDim": "[3],[27],[32]" }
+  ]
+}
