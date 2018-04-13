@@ -55,7 +55,8 @@ definitions:
         $ref: '#/definitions/basicInformation'        
       fType:
         type: string
-        pattern: 'SAA1'
+        enum:
+        - SAA1
       timeAtEncounterInit:
         $ref: '#/definitions/timestamp'
       timeAtConflictAlert:  
@@ -81,7 +82,8 @@ definitions:
         $ref: '#/definitions/basicInformation'     
       fType:
         type: string
-        pattern: 'SAA2'  
+        enum:
+        - SAA2
       geoFence:
         $ref: '#/definitions/geoFence'
     
@@ -97,7 +99,8 @@ definitions:
         $ref: '#/definitions/basicInformation'     
       fType:
         type: string
-        pattern: 'SAA3'  
+        enum:
+        - SAA3
       geoFence:
         $ref: '#/definitions/geoFence'
       
@@ -110,7 +113,8 @@ definitions:
         $ref: '#/definitions/basicInformation'     
       fType:
         type: string
-        pattern: 'SAA4'
+        enum:
+        - SAA4
       intruder:
         $ref: '#/definitions/intruder'        
       relativeHeadingAtFirstDetection_deg: 
@@ -177,7 +181,8 @@ definitions:
         $ref: '#/definitions/basicInformation'       
       fType:
         type: string
-        pattern: 'SAA5'
+        enum:
+        - SAA5
       lookAheadTime_sec:
         type: number
       UTM-TCL3-DMP-RevF-SAAPDF:
@@ -209,7 +214,8 @@ definitions:
         $ref: '#/definitions/basicInformation'    
       fType:
         type: string
-        pattern: 'SAA6'
+        enum:
+        - SAA6
       numberOfLossesOfSeparation_nonDim:
         type: number    
       numberOfNmac_nonDim:
@@ -327,7 +333,7 @@ definitions:
     
   SAAPDFFileName:
     type: string
-    pattern: 'UTM-[^-]+-SAA-[0-9]+.pdf'
+    pattern: '^UTM-[^-]+-SAA-[0-9]+.pdf$'
     example: 'UTM-UASORG-SAA-3.pdf'
     
 

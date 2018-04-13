@@ -47,7 +47,8 @@ definitions:
         $ref: '#/definitions/basicInformation'
       fType:
         type: string
-        pattern: 'CNS1'
+        enum:
+        - CNS1
       UTM-TCL3-DMP-RevF-CNSPDF:
         $ref: '#/definitions/CNSPDFFileName'
       plannedContingency:
@@ -144,7 +145,8 @@ definitions:
         $ref: '#/definitions/basicInformation'
       fType:
         type: string
-        pattern: 'CNS2'
+        enum:
+        - CNS2
       UTM-TCL3-DMP-RevF-CNSPDF:
         $ref: '#/definitions/CNSPDFFileName'
       plannedContingency:
@@ -199,11 +201,12 @@ definitions:
         $ref: '#/definitions/basicInformation'
       fType:
         type: string
-        pattern: 'CNS3'
+        enum:
+        - CNS3
       UTM-TCL3-DMP-RevF-CNSPDF:
         $ref: '#/definitions/CNSPDFFileName'
       RFData:
-        $ref: '#/definitions/CNS3RFDataList'
+        $ref: '#/definitions/CNS3RFDataFileName'
       prnGPSSat:
         $ref: '#/definitions/prnGpsSat'
 
@@ -307,17 +310,12 @@ definitions:
           
   CNSPDFFileName:
     type: string
-    pattern: 'UTM-[^-]+-CNS-[0-9]+.pdf'
+    pattern: '^UTM-[^-]+-CNS-[0-9]+.pdf$'
     example: 'UTM-UASORG-CNS-3.pdf'
-    
-  CNS3RFDataList:
-    type: array
-    items:
-      $ref: '#/definitions/CNS3RFDataFileName'
     
   CNS3RFDataFileName:
     type: string
-    pattern: '^UTM-[^-]+-2[0-9][0-9][0-9][01][0-9][123][0-9]-[0-9]{4}-.*-rfData\..*$'
+    pattern: '^UTM-[^-]+-2[0-9][0-9][0-9][01][0-9][123][0-9]-[0-9]{4}-rfData\..*$'
     example: 'UTM-UASORG-20180231-1459-rfData.bin'
     
   basicInformation:

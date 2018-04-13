@@ -48,14 +48,17 @@ definitions:
         $ref: '#/definitions/basicInformation'
       fType:
         type: string
-        pattern: 'FLIGHT_DATA'
+        enum:
+        - FLIGHT_DATA
       auxiliaryUASOperation:
         type: object
         required: ['typeOfOperation','flightTestCardName','testIdentifiers','takeoffWeight_lb','takeOffTime','takeoffPosLat_deg','takeoffPosLon_deg','takeoffPosAlt_ft','landingTime','landingPosLat_deg','landingPosLon_deg','landingPosAlt_ft','gcsPosLat_deg','gcsPosLon_deg','gcsPosAlt_ft']
         properties:
           typeOfOperation:
             type: string
-            pattern: '((Live)|(Simulated))' 
+            enum:
+              - Live
+              - Simulated
           flightTestCardName: 
             type: string
           testIdentifiers:
@@ -152,7 +155,83 @@ definitions:
     
   sensorItem:
     type: string
-    pattern: '^((vehiclePositionLat_deg)|(vehiclePositionLon_deg)|(vehiclePositionAlt_ft)|(barometricAltitude_ft)|(barometricPressure_psi)|(altitudeUsedByAutopilot_ft)|(aboveTerrainAltitude_ft)|(laserSensorAltitude_ft)|(opticalSensorAltitude_ft)|(imageSensorAltitude_ft)|(radarSensorAltitude_ft)|(acousticSensorAltitude_ft)|(indicatedAirspeed_ftPerSec)|(trueAirspeed_ftPerSec)|(groundSpeed_ftPerSec)|(groundCourse_deg)|(hdop_nonDim)|(vdop_nonDim)|(numGpsSatellitesInView_nonDim)|(numGpsSat_nonDim)|(roll_deg)|(pitch_deg)|(yaw_deg)|(velNorth_ftPerSec)|(velEast_ftPerSec)|(velDown_ftPerSec)|(rollRate_degPerSec)|(pitchRate_degPerSec)|(yawRate_degPerSec)|(accBodyX_ftPerSec2)|(accBodyY_ftPerSec2)|(accBodyZ_ftPerSec2)|(motor1ControlThrottleCommand_nonDim)|(motor2ControlThrottleCommand_nonDim)|(motor3ControlThrottleCommand_nonDim)|(motor4ControlThrottleCommand_nonDim)|(motor5ControlThrottleCommand_nonDim)|(motor6ControlThrottleCommand_nonDim)|(motor7ControlThrottleCommand_nonDim)|(motor8ControlThrottleCommand_nonDim)|(motor9ControlThrottleCommand_nonDim)|(motor10ControlThrottleCommand_nonDim)|(motor11ControlThrottleCommand_nonDim)|(motor12ControlThrottleCommand_nonDim)|(motor13ControlThrottleCommand_nonDim)|(motor14ControlThrottleCommand_nonDim)|(motor15ControlThrottleCommand_nonDim)|(motor16ControlThrottleCommand_nonDim)|(aileronActuatorCommand_nonDim)|(elevatorActuatorCommand_nonDim)|(rudderActuatorCommand_nonDim)|(flapActuatorCommand_nonDim)|(landingGearActuatorCommand_nonDim)|(batteryVoltage_v)|(batteryCurrent_a)|(angleOfAttack_deg)|(sideSlip_deg)|(targetWaypointLat_deg)|(targetWaypointLon_deg)|(targetWaypointAlt_ft)|(aircraftControlMode)|(targetGroundSpeed_ftPerSec)|(targetAirSpeed_ftPerSec)|(aircraftAirborneState_nonDim)|(minDistToDefinedAreaLateralBoundary_ft)|(minDistToDefinedAreaVerticalBoundary_ft)|(c2RssiAircraft_dBm)|(c2RssiGcs_dBm)|(c2NoiseAircraft_dBm)|(c2NoiseGcs_dBm)|(c2PacketLossRateAircraftPrct_nonDim)|(c2PacketLossRateGcsPrct_nonDim)|(lateralNavPositionError_ft)|(verticalNavPositionError_ft)|(lateralNavVelocityError_ftPerSec)|(verticalNavVelocityError_ftPerSec))*$'
+    enum:
+    - aboveTerrainAltitude_ft
+    - accBodyX_ftPerSec2
+    - accBodyY_ftPerSec2
+    - accBodyZ_ftPerSec2
+    - acousticSensorAltitude_ft
+    - aileronActuatorCommand_nonDim
+    - aircraftAirborneState_nonDim
+    - aircraftControlMode
+    - altitudeUsedByAutopilot_ft
+    - angleOfAttack_deg
+    - barometricAltitude_ft
+    - barometricPressure_psi
+    - batteryCurrent_a
+    - batteryVoltage_v
+    - c2NoiseAircraft_dBm
+    - c2NoiseGcs_dBm
+    - c2PacketLossRateAircraftPrct_nonDim
+    - c2PacketLossRateGcsPrct_nonDim
+    - c2RssiAircraft_dBm
+    - c2RssiGcs_dBm
+    - elevatorActuatorCommand_nonDim
+    - flapActuatorCommand_nonDim
+    - groundCourse_deg
+    - groundSpeed_ftPerSec
+    - hdop_nonDim
+    - imageSensorAltitude_ft
+    - indicatedAirspeed_ftPerSec
+    - landingGearActuatorCommand_nonDim
+    - laserSensorAltitude_ft
+    - lateralNavPositionError_ft
+    - lateralNavVelocityError_ftPerSec
+    - minDistToDefinedAreaLateralBoundary_ft
+    - minDistToDefinedAreaVerticalBoundary_ft
+    - motor10ControlThrottleCommand_nonDim
+    - motor11ControlThrottleCommand_nonDim
+    - motor12ControlThrottleCommand_nonDim
+    - motor13ControlThrottleCommand_nonDim
+    - motor14ControlThrottleCommand_nonDim
+    - motor15ControlThrottleCommand_nonDim
+    - motor16ControlThrottleCommand_nonDim
+    - motor1ControlThrottleCommand_nonDim
+    - motor2ControlThrottleCommand_nonDim
+    - motor3ControlThrottleCommand_nonDim
+    - motor4ControlThrottleCommand_nonDim
+    - motor5ControlThrottleCommand_nonDim
+    - motor6ControlThrottleCommand_nonDim
+    - motor7ControlThrottleCommand_nonDim
+    - motor8ControlThrottleCommand_nonDim
+    - motor9ControlThrottleCommand_nonDim
+    - numGpsSat_nonDim
+    - numGpsSatellitesInView_nonDim
+    - opticalSensorAltitude_ft
+    - pitchRate_degPerSec
+    - pitch_deg
+    - radarSensorAltitude_ft
+    - rollRate_degPerSec
+    - roll_deg
+    - rudderActuatorCommand_nonDim
+    - sideSlip_deg
+    - targetAirSpeed_ftPerSec
+    - targetGroundSpeed_ftPerSec
+    - targetWaypointAlt_ft
+    - targetWaypointLat_deg
+    - targetWaypointLon_deg
+    - trueAirspeed_ftPerSec
+    - vdop_nonDim
+    - vehiclePositionAlt_ft
+    - vehiclePositionLat_deg
+    - vehiclePositionLon_deg
+    - velDown_ftPerSec
+    - velEast_ftPerSec
+    - velNorth_ftPerSec
+    - verticalNavPositionError_ft
+    - verticalNavVelocityError_ftPerSec
+    - yawRate_degPerSec
+    - yaw_deg
 
   LAT:
     type: number

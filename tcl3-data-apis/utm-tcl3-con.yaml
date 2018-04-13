@@ -52,7 +52,8 @@ definitions:
         $ref: '#/definitions/basicInformation'
       fType:
         type: string
-        pattern: 'CON1'
+        enum:
+        - CON1
       UTM-TCL3-DMP-RevF-CONPDF:
         $ref: '#/definitions/CONPDFFileName'
       plannedBvlosLandingPoint_deg: 
@@ -137,7 +138,8 @@ definitions:
         $ref: '#/definitions/basicInformation'
       fType:
         type: string
-        pattern: 'CON2'
+        enum:
+        - CON2
       UTM-TCL3-DMP-RevF-CONPDF:
         $ref: '#/definitions/CONPDFFileName'
       UTM-TCL3-DMP-RevF-CONKML:
@@ -155,11 +157,12 @@ definitions:
       emergencyInitiationTime:
         type: array
         items:
-          $ref: '#/definitions/tsObject'
+          $ref: '#/definitions/timestamp'
       emergencyCompletionTime:
         type: array
         items:
-          $ref: '#/definitions/tsObject'     
+          $ref: '#/definitions/timestamp'
+
       contingencyCause:
         type: array
         items:
@@ -196,7 +199,8 @@ definitions:
         $ref: '#/definitions/basicInformation'
       fType:
         type: string
-        pattern: 'CON4'
+        enum:
+        - CON4
       UTM-TCL3-DMP-RevF-CONPDF:
         $ref: '#/definitions/CONPDFFileName'
       UTM-TCL3-DMP-RevF-CONKML:
@@ -212,7 +216,8 @@ definitions:
         $ref: '#/definitions/basicInformation'
       fType:
         type: string
-        pattern: 'CON5'
+        enum:
+        - CON5
       distFromBoundary:
         type: array
         items:
@@ -240,13 +245,6 @@ definitions:
     
 # definitions shared by the MOPs
     
-  tsObject:
-    type: object
-    required: ['ts']
-    properties:
-      ts:          
-        $ref: '#/definitions/timestamp'
-        
   contingencyResponse:
     type: array
     items:
@@ -316,12 +314,12 @@ definitions:
           
   CONPDFFileName:
     type: string
-    pattern: 'UTM-[^-]+-CON-[0-9]+.pdf'
+    pattern: '^UTM-[^-]+-CON-[0-9]+.pdf$'
     example: 'UTM-UASORG-CON-3.pdf'
     
   CONKMLFileName:
     type: string
-    pattern: 'UTM-[^-]+-CON-[0-9]+.kml'
+    pattern: '^UTM-[^-]+-CON-[0-9]+.kml$'
     example: 'UTM-UASORG-CON-3.kml'
     
   basicInformation:
@@ -361,7 +359,7 @@ definitions:
     
   plannedContingency:
     type: object
-    required: ['plannedContingencyLandingPoint_deg','plannedContingencyLandingPointAlt_ft','plannedContingencyLoiterAlt_ftt','plannedContingencyLoiterRadius_ft']
+    required: ['plannedContingencyLandingPoint_deg','plannedContingencyLandingPointAlt_ft','plannedContingencyLoiterAlt_ft','plannedContingencyLoiterRadius_ft']
     properties:
       plannedContingencyLandingPoint_deg:
         $ref: '#/definitions/LatLonList'
