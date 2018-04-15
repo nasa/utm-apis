@@ -10,10 +10,10 @@
   },
 
   "plannedContingency": {
-    "plannedContingencyLandingPoint_deg": "[37.4119851,-122.0623431],[-37.4119853,-122.0623429],[37.4119857,-122.0623423]",
-    "plannedContingencyLandingPointAlt_ft": "[300],[250],[350]",
-    "plannedContingencyLoiterAlt_ft": "[300],[300.2],[0.345]",
-    "plannedContingencyLoiterRadius_ft": "[50],[45.5],[40.01]"
+    "plannedContingencyLandingPoint_deg": [ { "lat":37.4119851, "lon":-122.0623431 }, { "lat":-37.4119853, "lon":-122.0623429 }, { "lat":37.4119857, "lon":-122.0623423 } ],
+    "plannedContingencyLandingPointAlt_ft": [300,250,350],
+    "plannedContingencyLoiterAlt_ft": [300,300.2,0.345],
+    "plannedContingencyLoiterRadius_ft": [50,45.5,40.01]
   },
 
   "cns1TestType": [
@@ -22,35 +22,35 @@
   ],
 
   "contingencyCause": [
-    { "ts": "2018-03-23T07:10:33.512Z",  "contingencyCause_nonDim": "[0]" },
-    { "ts": "2018-03-23T07:15:10.609Z",  "contingencyCause_nonDim": "[5],[7]" }
+    { "ts": "2018-03-23T07:10:33.512Z",  "contingencyCause_nonDim": [0] },
+    { "ts": "2018-03-23T07:15:10.609Z",  "contingencyCause_nonDim": [5,7] }
   ],
   "contingencyResponse": [
     { "ts": "2018-03-23T07:10:33.516Z",  "contingencyResponse_nonDim": 0 },
     { "ts": "2018-03-23T07:15:10.609Z",  "contingencyResponse_nonDim": 1 }
   ],
   "contingencyLoiterAlt": [
-    { "ts": "2018-03-23T07:10:33.527Z",  "contingencyLoiterAlt_ft": "[300]" },
-    { "ts": "2018-03-23T07:15:33.607Z",  "contingencyLoiterAlt_ft": "[300],[250]" }
+    { "ts": "2018-03-23T07:10:33.527Z",  "contingencyLoiterAlt_ft": [300] },
+    { "ts": "2018-03-23T07:15:33.607Z",  "contingencyLoiterAlt_ft": [300,250] }
   ],
   "contingencyLoiterType": [
     { "ts": "2018-03-23T07:10:33.523Z",  "contingencyLoiterType_nonDim": 0 },
     { "ts": "2018-03-23T07:15:33.607Z",  "contingencyLoiterType_nonDim": 1 }
   ],
   "contingencyLoiterRadius": [
-    { "ts": "2018-03-23T07:10:33.531Z",  "contingencyLoiterRadius_ft": "[2]" },
-    { "ts": "2018-03-23T07:15:33.607Z",  "contingencyLoiterRadius_ft": "[20],[33]" }
+    { "ts": "2018-03-23T07:10:33.531Z",  "contingencyLoiterRadius_ft": [2] },
+    { "ts": "2018-03-23T07:15:33.607Z",  "contingencyLoiterRadius_ft": [20,33] }
   ],
   "contingencyLanding": [
     {
       "ts": "2018-03-23T07:10:33.520Z",
-      "contingencyLandingPointAlt_ft": "[300.4],[251]",
-      "contingencyLandingPoint_deg": "[37.4119851,-122.0623431],[37.4119857,-122.0623423]"
+      "contingencyLandingPointAlt_ft": [300.4,251],
+      "contingencyLandingPoint_deg": [ { "lat":37.4119851, "lon":-122.0623431 }, {"lat":37.4119857, "lon":-122.0623423 } ]
     },
 	{
       "ts": "2018-03-23T07:15:33.925Z",
-      "contingencyLandingPointAlt_ft": "[300.4],[251]",
-      "contingencyLandingPoint_deg": "[37.4119851,-122.0623431],[37.4119857,-122.0623423]"
+      "contingencyLandingPointAlt_ft": [300.4,251],
+      "contingencyLandingPoint_deg": [ { "lat":37.4119851, "lon":-122.0623431 }, { "lat":37.4119857, "lon":-122.0623423 } ]
     }
   ],
 
