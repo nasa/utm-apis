@@ -206,7 +206,7 @@ definitions:
       UTM-TCL3-DMP-RevF-CNSPDF:
         $ref: '#/definitions/CNSPDFFileName'
       RFData:
-        $ref: '#/definitions/CNS3RFDataFileName'
+        $ref: '#/definitions/CNS3RFDataList'
       prnGPSSat:
         $ref: '#/definitions/prnGpsSat'
 
@@ -313,6 +313,11 @@ definitions:
     pattern: '^UTM-[^-]+-CNS-[0-9]+.pdf$'
     example: 'UTM-UASORG-CNS-3.pdf'
     
+  CNS3RFDataList:
+    type: array
+    items:
+      $ref: '#/definitions/CNS3RFDataFileName'
+      
   CNS3RFDataFileName:
     type: string
     pattern: '^UTM-[^-]+-2[0-9][0-9][0-9][01][0-9][123][0-9]-[0-9]{4}-rfData\..*$'
