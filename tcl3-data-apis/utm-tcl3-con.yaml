@@ -346,15 +346,15 @@ definitions:
         type: number
       pressure:
         type: number
-        minimum: 25
-        maximum: 33
+        minimum: 5
+        maximum: 40
       windspeed:
         type: number
         minimum: 0
         maximum: 1000
       windDir:
         type: number
-        minimum: -180
+        minimum:  0
         maximum:  360
     
   plannedContingency:

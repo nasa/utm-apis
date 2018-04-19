@@ -115,7 +115,6 @@ definitions:
             wpTime:
               $ref: '#/definitions/timestamp'
       uasState:
-        description: Note that within each object, the sensor and value fields may be a comma separated list or a single scalar value.  A comma separated list may be desirable if several sensors have a common sampling rate.  
         type: array
         items:
           type: object
