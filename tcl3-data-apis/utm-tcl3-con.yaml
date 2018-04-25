@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: "v1"
+  version: "v2"
   title: CON JSON upload format description
   description: Enforced upload format for CON MOP
   contact:
@@ -52,7 +52,8 @@ definitions:
         $ref: '#/definitions/basicInformation'
       fType:
         type: string
-        pattern: 'CON1'
+        enum:
+        - CON1
       UTM-TCL3-DMP-RevF-CONPDF:
         $ref: '#/definitions/CONPDFFileName'
       plannedBvlosLandingPoint_deg: 
@@ -106,13 +107,14 @@ definitions:
             ts:
               $ref: '#/definitions/timestamp'
             c2RssiAircraft_dBm:
-              $ref: '#/definitions/c2_dBm'
+              type: number
             c2RssiGcs_dBm:
-              $ref: '#/definitions/c2_dBm'
+              type: number
             c2NoiseAircraft_dBm:
-              $ref: '#/definitions/c2_dBm'
+              type: number
             c2NoiseGcs_dBm:
-              $ref: '#/definitions/c2_dBm'
+              type: number
+
       c2PacketLoss:
         type: array
         items:
@@ -136,7 +138,8 @@ definitions:
         $ref: '#/definitions/basicInformation'
       fType:
         type: string
-        pattern: 'CON2'
+        enum:
+        - CON2
       UTM-TCL3-DMP-RevF-CONPDF:
         $ref: '#/definitions/CONPDFFileName'
       UTM-TCL3-DMP-RevF-CONKML:
@@ -154,11 +157,12 @@ definitions:
       emergencyInitiationTime:
         type: array
         items:
-          $ref: '#/definitions/tsObject'
+          $ref: '#/definitions/timestamp'
       emergencyCompletionTime:
         type: array
         items:
-          $ref: '#/definitions/tsObject'     
+          $ref: '#/definitions/timestamp'
+
       contingencyCause:
         type: array
         items:
@@ -195,7 +199,8 @@ definitions:
         $ref: '#/definitions/basicInformation'
       fType:
         type: string
-        pattern: 'CON4'
+        enum:
+        - CON4
       UTM-TCL3-DMP-RevF-CONPDF:
         $ref: '#/definitions/CONPDFFileName'
       UTM-TCL3-DMP-RevF-CONKML:
@@ -211,7 +216,8 @@ definitions:
         $ref: '#/definitions/basicInformation'
       fType:
         type: string
-        pattern: 'CON5'
+        enum:
+        - CON5
       distFromBoundary:
         type: array
         items:
@@ -239,13 +245,6 @@ definitions:
     
 # definitions shared by the MOPs
     
-  tsObject:
-    type: object
-    required: ['ts']
-    properties:
-      ts:          
-        $ref: '#/definitions/timestamp'
-        
   contingencyResponse:
     type: array
     items:
@@ -315,12 +314,12 @@ definitions:
           
   CONPDFFileName:
     type: string
-    pattern: 'UTM-[^-]+-CON-[0-9]+.pdf'
+    pattern: '^UTM-[^-]+-CON-[0-9]+.pdf$'
     example: 'UTM-UASORG-CON-3.pdf'
     
   CONKMLFileName:
     type: string
-    pattern: 'UTM-[^-]+-CON-[0-9]+.kml'
+    pattern: '^UTM-[^-]+-CON-[0-9]+.kml$'
     example: 'UTM-UASORG-CON-3.kml'
     
   basicInformation:
@@ -339,19 +338,28 @@ definitions:
         $ref: '#/definitions/GUID'
         
   wxBvlosLandingZoneData:
-    type: string
-    pattern: '^\[[\+\-]{0,1}[0-9]*((\.[0-9]+)|([0-9]+\.)|([0-9]))[0-9]*(,[0-9]*((\.[0-9]+)|([0-9]+\.)|([0-9]))[0-9]*){3}\]$'
-    example: '[-95,29.6,2,315]'  
+    type: object
+    required: ['temp','pressure','windSpeed','windDir']
+    description: 4 numbers for temperature, air pressure (inHg), windspeed (ft/sec), wind direction
+    properties:
+      temp:
+        type: number
+      pressure:
+        type: number
+        minimum: 5
+        maximum: 40
+      windspeed:
+        type: number
+        minimum: 0
+        maximum: 1000
+      windDir:
+        type: number
+        minimum:  0
+        maximum:  360
     
-  c2_dBm:
-    type: string
-    pattern: '^\[[\+\-]{0,1}[0-9]*((\.[0-9]+)|([0-9]+\.)|([0-9]))[0-9]*\]$'
-    example: '[-4.2588885]'
-    
-      
   plannedContingency:
     type: object
-    required: ['plannedContingencyLandingPoint_deg','plannedContingencyLandingPointAlt_ft','plannedContingencyLoiterAlt_ftt','plannedContingencyLoiterRadius_ft']
+    required: ['plannedContingencyLandingPoint_deg','plannedContingencyLandingPointAlt_ft','plannedContingencyLoiterAlt_ft','plannedContingencyLoiterRadius_ft']
     properties:
       plannedContingencyLandingPoint_deg:
         $ref: '#/definitions/LatLonList'
@@ -372,28 +380,50 @@ definitions:
   string280:
     type: string
     maxLength: 280
-    
+
+  LatLon:
+    description: Latitude and Longitude should have precision of 7 or more digits
+    type: object
+    required: ['lat','lon']
+    properties:
+      lat:
+        type: number
+        minimum: -90.0
+        maximum:  90.0
+      lon:
+        type: number
+        minimum: -180.0
+        maximum: 180.0
+
   LatLonList:
-    type: string
-    pattern: '^(\[[\+\-]{0,1}[0-9]{1,3}\.[0-9]{7,},[\+\-]{0,1}[0-9]{1,3}\.[0-9]{7,}\])(,\[[\+\-]{0,1}[0-9]{1,3}\.[0-9]{7,},[\+\-]{0,1}[0-9]{1,3}\.[0-9]{7,}\])*$'
-    example: >-
-      '[37.4119851,-122.0623431],[-37.4119853,-122.0623429],[37.4119857,-122.0623423]'
+    type: array
+    minItems: 1
+    items:
+      $ref: '#/definitions/LatLon'
       
   AltitudeList:
-    # positive and negative ints and floats
-    type: string
-    pattern: '^\[[\+\-]{0,1}[0-9]*((\.[0-9]+)|([0-9]+\.)|([0-9]))[0-9]*\](,\[[\+\-]{0,1}[0-9]*((\.[0-9]+)|([0-9]+\.)|([0-9]))[0-9]*\])*$'
-    example: '[300],[250],[350],[300.2],[.345],[-123.],[0.0]'
+    # positive and negative ints and floats (feet)
+    type: array
+    minItems: 1
+    items:
+      type: number
+    example: [300,250,350,300.2,.345,-123.,0.0]
 
   ContingencyCauseNumberList:
-    type: string
-    pattern: '^(\[(([0-9])|(10)|(11)|(12)|(13))\])(,(\[(([0-9])|(10)|(11)|(12)|(13))\]))*$'
+    type: array
+    minItems: 1
+    items:
+      type: integer
+      minimum: 0
+      maximum: 13
   
   NumberList:
-    # postive ints and floats only
-    type: string
-    pattern: '^\[[0-9]*((\.[0-9]+)|([0-9]+\.)|([0-9]))[0-9]*\](,\[[0-9]*((\.[0-9]+)|([0-9]+\.)|([0-9]))[0-9]*\])*$'
-    example: '[300],[250],[350],[300.2],[.345],[123.],[0.0]'
+    # postive ints and floats
+    type: array
+    minItems: 1
+    items:
+      type: number
+      minimum: 0
     
   GUID:
     type: string
@@ -402,8 +432,9 @@ definitions:
     example: 'd7126818-d280-475f-aaee-c16e9c6f04e0'
     maxLength: 36
     minLength: 36
+
 # Added by API Auto Mocking Plugin
 host: virtserver.swaggerhub.com
-basePath: /NASA/CON/1.0.0
+basePath: /NASA8/CON/V3.0
 schemes:
  - https
