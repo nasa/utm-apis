@@ -154,7 +154,7 @@
     { "ts": "2017-05-28T15:27:31.000Z", "sensor": ["targetAirSpeed_ftPerSec"], "value": [9.71922245] },
     { "ts": "2017-05-28T15:27:31.000Z", "sensor": ["targetWaypointLat_deg"], "value": [43.2345810] },
     { "ts": "2017-05-28T15:27:31.000Z", "sensor": ["minDistToDefinedAreaVerticalBoundary_ft"], "value": [2.0] },
-    { "ts": "2017-05-28T15:27:31.000Z", "sensor": ["velEast_ftPerSec"], "value": [3.2] },
+    { "ts": "2017-05-28T15:27:31.000Z", "sensor": ["velEast_ftPerSec","velNorth_ftPerSec"], "value": [3.2,-1.7] },
 	
     { "ts": "2017-05-28T15:27:32.000Z", "sensor": ["c2RssiAircraft_dBm"], "value": [-60.6842105263] },
     { "ts": "2017-05-28T15:27:32.000Z", "sensor": ["c2RssiGcs_dBm"], "value": [-58.0526315789] },
@@ -195,7 +195,7 @@
     { "ts": "2017-05-28T15:27:32.000Z", "sensor": ["targetAirSpeed_ftPerSec"], "value": [9.71922245] },
     { "ts": "2017-05-28T15:27:32.000Z", "sensor": ["targetWaypointLat_deg"], "value": [43.2345810] },
     { "ts": "2017-05-28T15:27:32.000Z", "sensor": ["minDistToDefinedAreaVerticalBoundary_ft"], "value": [2.0] },
-    { "ts": "2017-05-28T15:27:32.000Z", "sensor": ["velEast_ftPerSec"], "value": [3.3] },
+    { "ts": "2017-05-28T15:27:32.000Z", "sensor": ["velEast_ftPerSec","velNorth_ftPerSec"], "value": [3.3,-2.4] },
 	
     { "ts": "2017-05-28T15:27:33.000Z", "sensor": ["c2RssiAircraft_dBm"], "value": [-60.6842105263] },
     { "ts": "2017-05-28T15:27:33.000Z", "sensor": ["c2RssiGcs_dBm"], "value": [-58.0526315789] },

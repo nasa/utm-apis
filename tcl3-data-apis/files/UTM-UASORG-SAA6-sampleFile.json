@@ -18,13 +18,13 @@
       { "ts": "2018-03-29T17:16:15.123456Z", "geoFenceEnable_nonDim": 1 },
       { "ts": "2018-03-29T17:16:15.123456Z", "geoFenceEnable_nonDim": 0 }
     ],
-    "geoFenceEndTime": [
-      "2018-03-29T17:16:15.123456Z",
-      "2018-03-29T17:16:15.123456Z"
-    ],
     "geoFenceStartTime": [
       "2018-03-29T17:16:15.123456Z",
-      "2018-03-29T17:16:15.123456Z"
+      "2018-03-29T17:18:04.543"
+    ],
+    "geoFenceEndTime": [
+      "2018-03-29T17:16:58.123456Z",
+      "2018-03-29T17:19:33.9876Z"
     ],
     "geoFenceCircularRadius_ft": 100,
     "geoFenceDynamicPolygonPoint": [

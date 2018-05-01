@@ -8,7 +8,9 @@
     "ussInstanceID": "dbc56b6d-0009-0008-0000-000000006b20",
     "ussName": "WUSS"
   },
-  "RFData": "UTM-UASORG-20180231-1459-rfData.bin",
+  "RFData": [
+     "UTM-UASORG-20180231-1459-rfData.bin"
+  ],
   "prnGPSSat": [
     { "ts": "2018-03-24T00:47:03.002Z",  "prnGpsSat_nonDim": [3,12,23,10] },
     { "ts": "2018-03-24T00:51:34.341Z",  "prnGpsSat_nonDim": [3,27,32] }
