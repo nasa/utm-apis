@@ -44,15 +44,6 @@ FIMS_AUTHZ:
     examples:
         - "When FIMS AZ services the token endpoint, it reads a data table containing USS identities and their scopes."
 
-FIMS_OPS:
-    description: This role manages the interface between the USS Network and
-    the ANSP.  This role is assigned to the FIMS_OPS server.
-    authority: UTM_AUTHORITY
-    examples:
-        - "FIMS_OPS is authorized to inject an airspace constraint to the USS Network."
-    scopes:
-        - utm.nasa.gov_write.constraint
-
 VEHICLE_AUTHORITY:
     authority: TBD; May be a set of trusted commercial entities
     description: |
@@ -118,7 +109,7 @@ USS_PUBLIC_SAFETY:
         - utm.nasa.gov_write.publicsafety
         - utm.nasa.gov_read.uvin
 
-USS_CONSTRAINT_MANAGER:
+CONSTRAINT_MANAGER:
     description: |
        A USS with this role can publish airspace constraints and
        other aeronautical data. This role can be assigned only to a USS that has the
@@ -127,6 +118,8 @@ USS_CONSTRAINT_MANAGER:
        assumptions TBD.
     authority: UTM_AUTHORITY
     examples:
+        - "FIMS_OPS has the USS_CONSTRAINT_MANAGER role and can publish a constraint to the USS Network."
         - "A USS with Contraint Management role publishes an airspace constraint to the USS Network."
+        - "All USSs protect their PUT Constraint endpoint with these scopes."
     scopes:
         - utm.nasa.gov_write.constraint

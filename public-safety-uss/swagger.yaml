@@ -43,20 +43,15 @@ schemes:
   - https
 
 securityDefinitions:
-  pubsafe_oauth:
-    type: oauth2
-    authorizationUrl: 'https://utm.defined.host/oauth/token'
-    flow: implicit
-    scopes:
-      'utm.nasa.gov_read_publicsafety': "retrieve public safety data, for example, a Public Safety USS retrieves data."
-      'utm.nasa.gov_read_uvin': "retrieve uvin registration data, for example, a USS checks that a vehicle is registered."
-      'utm.nasa.gov_write.uvin': "Write uvin data, for example, a Vehicle Authority enters new data."
-
+  basicAuth:
+    type: basic
+security:
+    - basicAuth: []
 
 paths:
   /uas/{uvin}:
     get:
-      description: Returns information on vehicle with the given uvin.
+      description: Returns information on vehicle with the given uvin. 
       parameters:
         - in: path
           name: "uvin"
@@ -104,7 +99,7 @@ paths:
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-  /uas:
+  /uas:        
     get:
       description: Returns vehicle information when a partial uvin or an faa_number is supplied. Atleast one parameter is required.
       parameters:
@@ -114,7 +109,7 @@ paths:
           maximum: 36.0
           minimum: 6
           type: "string"
-        - name: "faa_number"
+        - name: "faa_number"    
           in: "query"
           description: "Full faa_number."
           maximum: 10.0
@@ -133,7 +128,7 @@ paths:
           type: "number"
           maximum: 180.0
           minimum: -180.0
-          format: "double"
+          format: "double"  
       responses:
         200:
           description: "Successfully returns matched uvins and its associated operator information"
@@ -142,7 +137,7 @@ paths:
             items:
               $ref: >-
                  https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/VehicleOperationData
-
+          
         401:
           description: "Unauthorized"
           schema:
