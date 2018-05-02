@@ -1,10 +1,10 @@
 {
   "fType": "SAA1",
   "basic": {
-    "uvin": "cf8e2212-000a-000b-0000-00000000ef99",
-    "gufi": "9d6cc3b0-0009-000c-0000-00000000ef9d",
+    "uvin": "cf8e2212-000a-400b-b000-00000000ef99",
+    "gufi": "9d6cc3b0-0009-400c-b000-00000000ef9d",
     "submitTime": "2018-03-29T17:16:15.123456Z",
-    "ussInstanceID": "f60053e3-0001-000e-0000-00000000ef9e",
+    "ussInstanceID": "f60053e3-0001-400e-b000-00000000ef9e",
     "ussName": "WUSS"
   },
   "timeAtEncounterInit": "2018-03-29T17:16:16.000012Z",

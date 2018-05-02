@@ -4,7 +4,7 @@
     "uvin": "a1ea02c5-41d6-4f3e-bfb6-271b12f285a8",
     "gufi": "8d3bbd66-7f07-40a2-94b5-555c185a7112",
     "submitTime": "2017-05-28T15:27:31.000Z",
-    "ussInstanceID": "564b1862-000a-000e-0000-000000005220",
+    "ussInstanceID": "564b1862-000a-400e-b000-000000005220",
     "ussName": "RandysPocketUSS"
   },
   "auxiliaryUASOperation": {
@@ -154,8 +154,9 @@
     { "ts": "2017-05-28T15:27:31.000Z", "sensor": ["targetAirSpeed_ftPerSec"], "value": [9.71922245] },
     { "ts": "2017-05-28T15:27:31.000Z", "sensor": ["targetWaypointLat_deg"], "value": [43.2345810] },
     { "ts": "2017-05-28T15:27:31.000Z", "sensor": ["minDistToDefinedAreaVerticalBoundary_ft"], "value": [2.0] },
-    { "ts": "2017-05-28T15:27:31.000Z", "sensor": ["velEast_ftPerSec","velNorth_ftPerSec"], "value": [3.2,-1.7] },
-	
+    { "ts": "2017-05-28T15:27:31.000Z", "sensor": ["velEast_ftPerSec"], "value": [3.2] },
+    { "ts": "2017-05-28T15:27:31.000Z", "sensor": ["velNorth_ftPerSec"], "value": [-6.5] },
+
     { "ts": "2017-05-28T15:27:32.000Z", "sensor": ["c2RssiAircraft_dBm"], "value": [-60.6842105263] },
     { "ts": "2017-05-28T15:27:32.000Z", "sensor": ["c2RssiGcs_dBm"], "value": [-58.0526315789] },
     { "ts": "2017-05-28T15:27:32.000Z", "sensor": ["numGpsSatellitesInView_nonDim"], "value": [22] },
@@ -195,8 +196,9 @@
     { "ts": "2017-05-28T15:27:32.000Z", "sensor": ["targetAirSpeed_ftPerSec"], "value": [9.71922245] },
     { "ts": "2017-05-28T15:27:32.000Z", "sensor": ["targetWaypointLat_deg"], "value": [43.2345810] },
     { "ts": "2017-05-28T15:27:32.000Z", "sensor": ["minDistToDefinedAreaVerticalBoundary_ft"], "value": [2.0] },
-    { "ts": "2017-05-28T15:27:32.000Z", "sensor": ["velEast_ftPerSec","velNorth_ftPerSec"], "value": [3.3,-2.4] },
-	
+    { "ts": "2017-05-28T15:27:32.000Z", "sensor": ["velEast_ftPerSec"], "value": [3.3] },
+    { "ts": "2017-05-28T15:27:32.000Z", "sensor": ["velNorth_ftPerSec"], "value": [-6.4] },
+
     { "ts": "2017-05-28T15:27:33.000Z", "sensor": ["c2RssiAircraft_dBm"], "value": [-60.6842105263] },
     { "ts": "2017-05-28T15:27:33.000Z", "sensor": ["c2RssiGcs_dBm"], "value": [-58.0526315789] },
     { "ts": "2017-05-28T15:27:33.000Z", "sensor": ["numGpsSatellitesInView_nonDim"], "value": [22] },
@@ -236,6 +238,7 @@
     { "ts": "2017-05-28T15:27:33.000Z", "sensor": ["targetAirSpeed_ftPerSec"], "value": [9.71922245] },
     { "ts": "2017-05-28T15:27:33.000Z", "sensor": ["targetWaypointLat_deg"], "value": [43.2345810] },
     { "ts": "2017-05-28T15:27:33.000Z", "sensor": ["minDistToDefinedAreaVerticalBoundary_ft"], "value": [2.0] },
-    { "ts": "2017-05-28T15:27:33.000Z", "sensor": ["velEast_ftPerSec"], "value": [3.5] }
+    { "ts": "2017-05-28T15:27:33.000Z", "sensor": ["velEast_ftPerSec"], "value": [3.5] },
+    { "ts": "2017-05-28T15:27:33.000Z", "sensor": ["velNorth_ftPerSec"], "value": [-6.3] }
   ]
 }

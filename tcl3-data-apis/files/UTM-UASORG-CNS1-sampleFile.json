@@ -47,7 +47,7 @@
       "contingencyLandingPointAlt_ft": [300.4,251],
       "contingencyLandingPoint_deg": [ { "lat":37.4119851, "lon":-122.0623431 }, {"lat":37.4119857, "lon":-122.0623423 } ]
     },
-	{
+    {
       "ts": "2018-03-23T07:15:33.925Z",
       "contingencyLandingPointAlt_ft": [300.4,251],
       "contingencyLandingPoint_deg": [ { "lat":37.4119851, "lon":-122.0623431 }, { "lat":37.4119857, "lon":-122.0623423 } ]

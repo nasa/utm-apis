@@ -1,11 +1,11 @@
 {
   "fType": "CON2",
   "basic": { 
-    "uvin": "882790d6-000b-0003-0000-00000000f6f7",
-    "gufi": "b36a45f8-0003-0011-0000-00000000f6f7",
+    "uvin": "882790d6-000b-4003-b000-00000000f6f7",
+    "gufi": "b36a45f8-0003-4011-b000-00000000f6f7",
     "submitTime": "2018-03-29T17:16:15.123456Z",
     "ussName": "WUSS",
-    "ussInstanceID": "6c4ec31e-0002-0009-0000-00000000f6f8"
+    "ussInstanceID": "6c4ec31e-0002-4009-b000-00000000f6f8"
   },
   "UTM-TCL3-DMP-RevF-CONPDF": "UTM-RazzMagic-CON-1.pdf",
   "UTM-TCL3-DMP-RevF-CONKML": "UTM-RazzMagic-CON-1.kml",

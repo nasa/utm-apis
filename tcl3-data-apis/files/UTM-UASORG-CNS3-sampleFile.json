@@ -9,7 +9,9 @@
     "ussName": "WUSS"
   },
   "RFData": [
-     "UTM-UASORG-20180231-1459-rfData.bin"
+    "UTM-UASORG-20180418-1757-2200_84MHz-55_18MSPS-rfData.bin",
+    "UTM-UASORG-20180418-1757-2200920KHz-55180KSPS-rfData.bin",
+    "UTM-UASORG-20180418-1757-750MHz-55MSPS-rfData.bin"
   ],
   "prnGPSSat": [
     { "ts": "2018-03-24T00:47:03.002Z",  "prnGpsSat_nonDim": [3,12,23,10] },
