@@ -7,7 +7,7 @@
     "ussName": "WUSS",
     "ussInstanceID": "95401977-000d-4010-b000-000000005364"
   },
-  "UTM-TCL3-DMP-RevF-CONPDF": "UTM-RazzMagic-CON-1.pdf",
+  "UTM-TCL3-DMP-RevF-CONPDF": "UTM-SAMPLE-CON-1.pdf",
   "plannedBvlosLandingPoint_deg": [
     { "lat":37.4119851, "lon":-122.0623431 },
     { "lat":37.4119853, "lon":-122.0623429 },
