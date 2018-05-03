@@ -1,13 +1,13 @@
 {
   "fType": "CON1",
   "basic": { 
-    "uvin": "cc10e9e9-0004-0005-0000-000000005363",
-    "gufi": "eabb408a-000e-000b-0000-000000005363",
+    "uvin": "cc10e9e9-0004-4005-b000-000000005363",
+    "gufi": "eabb408a-000e-400b-b000-000000005363",
     "submitTime": "2018-03-29T17:16:15.123456Z",
     "ussName": "WUSS",
-    "ussInstanceID": "95401977-000d-0010-0000-000000005364"
+    "ussInstanceID": "95401977-000d-4010-b000-000000005364"
   },
-  "UTM-TCL3-DMP-RevF-CONPDF": "UTM-RazzMagic-CON-1.pdf",
+  "UTM-TCL3-DMP-RevF-CONPDF": "UTM-SAMPLE-CON-1.pdf",
   "plannedBvlosLandingPoint_deg": [
     { "lat":37.4119851, "lon":-122.0623431 },
     { "lat":37.4119853, "lon":-122.0623429 },
@@ -29,7 +29,7 @@
         { "lat":37.4119851, "lon":-122.0623431 },
         { "lat":37.4119853, "lon":-122.0623429 },
         { "lat":37.4119857, "lon":-122.0623423 } 
-	  ],
+      ],
       "actualBVLOSLandingPointAlt_ft": [1.1,2.2,3.3]
     }
   ],

@@ -1,0 +1,12 @@
+{
+  "fType": "CON4",
+  "basic": {
+    "uvin": "c03c6755-0004-4009-b000-000000000fe7",
+    "gufi": "382db215-000e-400a-b000-000000000fe7",
+    "submitTime": "2018-03-29T17:16:15.123456Z",
+    "ussInstanceID": "7c2f92ba-000e-400c-b000-000000000fe8",
+    "ussName": "WUSS"
+  },
+  "UTM-TCL3-DMP-RevF-CONPDF": "UTM-SAMPLE-CON-1.pdf",
+  "UTM-TCL3-DMP-RevF-CONKML": "UTM-SAMPLE-CON-1.kml"
+}

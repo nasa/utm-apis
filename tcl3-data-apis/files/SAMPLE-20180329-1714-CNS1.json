@@ -1,6 +1,6 @@
 {
   "fType": "CNS1",
-  "UTM-TCL3-DMP-RevF-CNSPDF": "UTM-UASORG-CNS-4.pdf",
+  "UTM-TCL3-DMP-RevF-CNSPDF": "UTM-SAMPLE-CNS-4.pdf",
   "basic": {
     "uvin": "2e6793e1-0007-0006-0000-00000000dc12",
     "gufi": "1b5aa406-000f-0009-0000-00000000dc16",
@@ -47,7 +47,7 @@
       "contingencyLandingPointAlt_ft": [300.4,251],
       "contingencyLandingPoint_deg": [ { "lat":37.4119851, "lon":-122.0623431 }, {"lat":37.4119857, "lon":-122.0623423 } ]
     },
-	{
+    {
       "ts": "2018-03-23T07:15:33.925Z",
       "contingencyLandingPointAlt_ft": [300.4,251],
       "contingencyLandingPoint_deg": [ { "lat":37.4119851, "lon":-122.0623431 }, { "lat":37.4119857, "lon":-122.0623423 } ]

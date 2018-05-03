@@ -1,10 +1,10 @@
 {
-  "fType": "SAA3",
+  "fType": "SAA6",
   "basic": {
-    "uvin": "58a04474-0003-0001-0000-00000000d597",
-    "gufi": "1ce879b7-0010-000f-0000-00000000d597",
+    "uvin": "e5cf4d8c-000d-4007-b000-000000005484",
+    "gufi": "48802488-000e-4003-b000-000000005485",
     "submitTime": "2018-03-29T17:16:15.123456Z",
-    "ussInstanceID": "c3bba53b-0003-0006-0000-00000000d598",
+    "ussInstanceID": "418c0891-000c-4009-b000-000000005486",
     "ussName": "WUSS"
   },
   "geoFence": {
@@ -41,9 +41,35 @@
           { "lat":37.4349402, "lon":-122.0680381 },
           { "lat":37.4357561, "lon":-122.0276982 },
           { "lat":37.4010582, "lon":-122.0358520 },
-          { "lat":37.4084903, "lon":-122.0669224 } 
+          { "lat":37.4084903, "lon":-122.0669224 }
         ]
       }
     ]
-  }
+  },
+  "numberOfLossesOfSeparation_nonDim": 3,
+  "numberOfNmac_nonDim": 4,
+  "numberOfPrimaryConflicts_nonDim": 1,
+  "numberOfInducedConflicts_nonDim": 3,
+  "numberOfResolvedConflicts_nonDim": 3,
+  "numberOfUnresolvedConflicts_nonDim": 1,
+  "slantRangeAtPtOfApproach_ft": 1.79, 
+  "horMissDistAtClosestPtApproach_ft": 8.0,
+  "verMissDistAtClosestPtApproach_ft": 9.2,
+  "numberOfAlertsPerPrimaryConflict_nonDim": 2,
+  "numberOfAlertsPerInducedConflict_nonDim": 5,
+  "numberOfStrengtheningAlertsPerConflict_nonDim": 2,
+  "numberOfStrengtheningAlertsTotal_nonDim": 4,
+  "numberOfWeakeningAlertsPerConflict_nonDim": 1,
+  "numberOfWeakeningAlertsTotal_nonDim": 1,
+  "numberOfReversalAlertsPerConflict_nonDim": 0,
+  "numberOfReversalAlertsTotal_nonDim": 0,
+  "numberOfYoYoAlertsPerConflict_nonDim": 1,
+  "numberOfYoYoAlertsTotal_nonDim": 1,
+  "horFlightPathDeviation_ft": 15.0,
+  "verFlightPathDeviation_ft": 12.0,
+  "maxAbsolutePathDeviation_ft": 19.2,
+  "maxHorPathDeviation_ft": 21.3,
+  "maxVerPathDeviation_ft": 24.04,
+  "totalHorPathDeviation_ft2": 78.0,
+  "totalVerPathDeviation_ft2": 93.5
 }

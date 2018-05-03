@@ -1,17 +1,12 @@
 {
-  "fType": "SAA1",
+  "fType": "SAA3",
   "basic": {
-    "uvin": "cf8e2212-000a-000b-0000-00000000ef99",
-    "gufi": "9d6cc3b0-0009-000c-0000-00000000ef9d",
+    "uvin": "58a04474-0003-4001-b000-00000000d597",
+    "gufi": "1ce879b7-0010-400f-b000-00000000d597",
     "submitTime": "2018-03-29T17:16:15.123456Z",
-    "ussInstanceID": "f60053e3-0001-000e-0000-00000000ef9e",
+    "ussInstanceID": "c3bba53b-0003-4006-b000-00000000d598",
     "ussName": "WUSS"
   },
-  "timeAtEncounterInit": "2018-03-29T17:16:16.000012Z",
-  "timeAtConflictAlert": "2018-03-29T17:16:18.020033Z",
-  "timeAtConflictResManeuverInit": "2018-03-29T17:16:20.101001Z",
-  "timeAtConflictResManeuverComplt": "2018-03-29T17:16:25.570013Z",
-  "timeAtClearOfConflict": "2018-03-29T17:16:28.492042Z",
   "geoFence": {
     "geoFenceAvailable_nonDim": 1,
     "geoFenceStartTime": [
