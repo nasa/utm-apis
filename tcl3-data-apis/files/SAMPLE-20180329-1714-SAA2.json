@@ -1,0 +1,49 @@
+{
+  "fType": "SAA2",
+  "basic": {
+    "uvin": "a193c135-0001-4010-b000-00000000c950",
+    "gufi": "9433dca9-0001-4010-b000-00000000c951",
+    "submitTime": "2018-03-29T17:16:15.123456Z",
+    "ussInstanceID": "4e13626b-0008-4010-b000-00000000c952",
+    "ussName": "WUSS"
+  },
+  "geoFence": {
+    "geoFenceAvailable_nonDim": 1,
+    "geoFenceStartTime": [
+      "2018-03-29T17:16:16.123456Z",
+      "2018-03-29T17:18:00.994056Z"
+    ],
+    "geoFenceEndTime": [
+      "2018-03-29T17:17:22.123456Z",
+      "2018-03-29T17:23:05.206608Z"
+    ],
+    "geoFenceType_nonDim": 0,
+    "geoFenceMinAltitude_ft": 100,
+    "geoFenceMaxAltitude_ft": 300,
+    "geoFenceCircularPointLat_deg": 37.4178391,
+    "geoFenceCircularPointLon_deg": -122.05128902,
+    "geoFenceCircularRadius_ft": 100,
+    "geoFenceEnable": [
+      { "ts": "2018-03-29T17:16:17.000000Z", "geoFenceEnable_nonDim": 1 },
+      { "ts": "2018-03-29T17:23:15.000000Z", "geoFenceEnable_nonDim": 0 }
+    ],
+    "geoFenceDynamicPolygonPoint": [
+      { "ts": "2018-03-29T17:16:15.123456Z",
+        "geoFenceDynamicPolygonPoint_deg": [
+          { "lat":37.4217203, "lon":-122.0562211 },
+          { "lat":37.4217203, "lon":-122.0462250 },
+          { "lat":37.4138512, "lon":-122.0462250 },
+          { "lat":37.4138512, "lon":-122.0562211 }
+        ]
+      },
+      { "ts": "2018-03-29T17:16:15.123456Z",
+        "geoFenceDynamicPolygonPoint_deg": [
+          { "lat":37.4217203, "lon":-122.0562211 },
+          { "lat":37.4217203, "lon":-122.0462250 },
+          { "lat":37.4138512, "lon":-122.0462250 },
+          { "lat":37.4138512, "lon":-122.0562211 }
+        ]
+      }
+    ]
+  }
+}

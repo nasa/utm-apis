@@ -1,0 +1,72 @@
+{
+  "fType": "CON2",
+  "basic": { 
+    "uvin": "882790d6-000b-4003-b000-00000000f6f7",
+    "gufi": "b36a45f8-0003-4011-b000-00000000f6f7",
+    "submitTime": "2018-03-29T17:16:15.123456Z",
+    "ussName": "WUSS",
+    "ussInstanceID": "6c4ec31e-0002-4009-b000-00000000f6f8"
+  },
+  "UTM-TCL3-DMP-RevF-CONPDF": "UTM-SAMPLE-CON-1.pdf",
+  "UTM-TCL3-DMP-RevF-CONKML": "UTM-SAMPLE-CON-1.kml",
+  "declaredEmerg": [
+    { "ts": "2018-03-29T17:16:15.123456Z", "declaredEmergency": "Goose!" },
+    { "ts": "2018-03-29T17:16:30.123456Z", "declaredEmergency": "Duck!" }
+  ],
+  "emergencyInitiationTime": [
+    "2018-03-29T17:16:15.123456Z",
+    "2018-03-29T17:16:30.123456Z"
+  ],
+  "emergencyCompletionTime": [
+    "2018-03-29T17:16:20.123456Z",
+    "2018-03-29T17:16:40.123456Z"
+  ],
+  "contingencyCause": [
+    { "ts": "2018-03-29T17:16:15.123456Z", "contingencyCause_nonDim": [10,11] },
+    { "ts": "2018-03-29T17:16:30.123456Z", "contingencyCause_nonDim": [10,11] }
+  ],
+  "contingencyResponse": [
+    { "ts": "2018-03-29T17:16:15.123456Z", "contingencyResponse_nonDim": 0 },
+    { "ts": "2018-03-29T17:16:15.123456Z", "contingencyResponse_nonDim": 0 }
+  ],
+  "plannedContingency": { 
+    "plannedContingencyLandingPoint_deg": [
+      { "lat":37.4119851, "lon":-122.0623431 },
+      { "lat":37.4119853, "lon":-122.0623429 },
+      { "lat":37.4119857, "lon":-122.0623423 }
+     ],
+    "plannedContingencyLandingPointAlt_ft": [300,250,350],
+    "plannedContingencyLoiterAlt_ft": [300,250,350,300.2,0.345,-123,0.0],
+    "plannedContingencyLoiterRadius_ft": [50,45.5,40.01,30,30,40,40]
+  },
+  "contingencyLanding": [
+    { 
+      "ts": "2018-03-29T17:16:15.123456Z",
+      "contingencyLandingPoint_deg": [
+        { "lat":37.4119852, "lon":-122.0623431 },
+        { "lat":37.4119854, "lon":-122.0623429 }
+      ],
+      "contingencyLandingPointAlt_ft": [300.4,251]
+    },
+    { 
+      "ts": "2018-03-29T17:16:16.123456Z",
+      "contingencyLandingPoint_deg": [
+        { "lat":37.411962, "lon":-122.0623431 },
+        { "lat":37.411966, "lon":-122.0623435 }
+      ],
+      "contingencyLandingPointAlt_ft": [300.4,251]
+    }
+  ],
+  "contingencyLoiterType": [
+    {  "ts": "2018-03-29T17:16:15.123456Z", "contingencyLoiterType_nonDim": 1 },
+    {  "ts": "2018-03-29T17:16:16.123456Z", "contingencyLoiterType_nonDim": 1 }
+  ],
+  "contingencyLoiterAlt": [
+    {  "ts": "2018-03-29T17:16:15.123456Z", "contingencyLoiterAlt_ft": [300,250,300,300] },
+    {  "ts": "2018-03-29T17:16:16.123456Z", "contingencyLoiterAlt_ft": [300,250,300,300] }
+  ],
+  "contingencyLoiterRadius": [
+    {  "ts": "2018-03-29T17:16:15.123456Z", "contingencyLoiterRadius_ft": [50.1,45.5,40.1,30.2] },
+    {  "ts": "2018-03-29T17:16:16.123456Z", "contingencyLoiterRadius_ft": [50.1,45.5,40.1,30.2] }
+  ]
+}

@@ -1,0 +1,440 @@
+swagger: '2.0'
+info:
+  version: "v2"
+  title: CON JSON upload format description
+  description: Enforced upload format for CON MOP
+  contact:
+    name: 'NASA Ames Research Center, Aviation Systems Division'
+    url: 'https://utmregistry.arc.nasa.gov/'
+    email: joseph.rios@nasa.gov
+  license:
+    name: NASA Open Source Agreement
+    url: 'https://ti.arc.nasa.gov/opensource/nosa/'
+  termsOfService: >-
+    A. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT ANY
+    WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,
+    BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL CONFORM TO
+    SPECIFICATIONS, ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+    PARTICULAR PURPOSE, OR FREEDOM FROM INFRINGEMENT, ANY WARRANTY THAT THE
+    SUBJECT SOFTWARE WILL BE ERROR FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF
+    PROVIDED, WILL CONFORM TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN
+    ANY MANNER, CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR
+    RECIPIENT OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR
+    ANY OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE. FURTHER,
+    GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES REGARDING
+    THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE, AND DISTRIBUTES
+    IT \"AS IS.\"
+
+
+    B. Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+    AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS
+    WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT''S USE OF THE SUBJECT SOFTWARE
+    RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES ARISING
+    FROM SUCH USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING
+    FROM, RECIPIENT''S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY
+    AND HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+    SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY
+    LAW. RECIPIENT''S SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE,
+    UNILATERAL TERMINATION OF THIS AGREEMENT.
+paths: {}
+definitions:
+
+# Refer 2018-03-01_MasterVariableList-DMP.Rev.F-Draft-CON for all the necessary inputs required for data collection of CON MOPS
+# It is mandatory to collect FLIGHT_DATA for CON1, CON2, CON4, CON5 available at https://app.swaggerhub.com/apis/utm/tcl3-flight-data/v2 in addition you have to collect the following data for respective MOPS
+
+#CON.1-BVLOS Landing
+
+  CON1_MOP:
+    type: object
+    required: ['basic','fType','UTM-TCL3-DMP-RevF-CONPDF','plannedBvlosLandingPoint_deg','plannedBvlosLandingPointAlt_ft','actualBvlosLandingPoint','landingOffset_ft','alongTrackDistanceFlown_ft','distanceFromLaunchSite_ft','bvlosLandingZoneSize_ft','bvlosLandingZoneStructure_deg','bvlosLandingZonePeople_deg','wxBvlosLandingZone','c2','c2PacketLoss']
+    properties:
+      basic:
+        $ref: '#/definitions/basicInformation'
+      fType:
+        type: string
+        enum:
+        - CON1
+      UTM-TCL3-DMP-RevF-CONPDF:
+        $ref: '#/definitions/CONPDFFileName'
+      plannedBvlosLandingPoint_deg: 
+        $ref: '#/definitions/LatLonList'
+      plannedBvlosLandingPointAlt_ft:
+        $ref: '#/definitions/AltitudeList'
+      actualBvlosLandingPoint: 
+        type: array
+        items:
+          type: object
+          required: ['ts','actualBvlosLandingPoint_deg','actualBVLOSLandingPointAlt_ft']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            actualBvlosLandingPoint_deg:
+              $ref: '#/definitions/LatLonList'
+            actualBVLOSLandingPointAlt_ft:
+              $ref: '#/definitions/AltitudeList'
+      landingOffset_ft: 
+        $ref: '#/definitions/NumberList'
+      alongTrackDistanceFlown_ft: 
+        type: number
+      distanceFromLaunchSite_ft: 
+        type: number
+      bvlosLandingZoneSize_ft: 
+        $ref: '#/definitions/NumberList'
+      bvlosLandingZoneStructure_deg: 
+        $ref: '#/definitions/LatLonList'
+      bvlosLandingZonePeople_deg: 
+        $ref: '#/definitions/LatLonList'
+      wxBvlosLandingZone:
+        type: array
+        items:
+          type: object
+          required: ['ts','wxBvlosLandingZone1Data','wxBvlosLandingZone2Data','wxBvlosLandingZone3Data']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            wxBvlosLandingZone1Data:
+              $ref: '#/definitions/wxBvlosLandingZoneData'
+            wxBvlosLandingZone2Data:
+              $ref: '#/definitions/wxBvlosLandingZoneData'
+            wxBvlosLandingZone3Data:
+              $ref: '#/definitions/wxBvlosLandingZoneData'
+      c2:
+        type: array
+        items:
+          type: object
+          required: ['ts','c2RssiAircraft_dBm','c2RssiGcs_dBm','c2NoiseAircraft_dBm','c2NoiseGcs_dBm']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            c2RssiAircraft_dBm:
+              type: number
+            c2RssiGcs_dBm:
+              type: number
+            c2NoiseAircraft_dBm:
+              type: number
+            c2NoiseGcs_dBm:
+              type: number
+
+      c2PacketLoss:
+        type: array
+        items:
+          type: object
+          required: ['ts','c2PacketLossRateAircraftPrct_nonDim','c2PacketLossRateGcsPrct_nonDim']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            c2PacketLossRateAircraftPrct_nonDim:
+              type: number 
+            c2PacketLossRateGcsPrct_nonDim:
+              type: number
+              
+#CON.2-Contingency Initiation
+    
+  CON2_MOP:
+    type: object
+    required: ['basic','fType','UTM-TCL3-DMP-RevF-CONPDF','UTM-TCL3-DMP-RevF-CONKML','declaredEmerg','emergencyInitiationTime','emergencyCompletionTime','contingencyCause','contingencyResponse','plannedContingency','contingencyLanding','contingencyLoiterType','contingencyLoiterAlt','contingencyLoiterRadius']
+    properties:
+      basic:
+        $ref: '#/definitions/basicInformation'
+      fType:
+        type: string
+        enum:
+        - CON2
+      UTM-TCL3-DMP-RevF-CONPDF:
+        $ref: '#/definitions/CONPDFFileName'
+      UTM-TCL3-DMP-RevF-CONKML:
+        $ref: '#/definitions/CONKMLFileName'
+      declaredEmerg:
+        type: array
+        items:
+          type: object
+          required: ['ts','declaredEmergency']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            declaredEmergency:
+              $ref: '#/definitions/string280'
+      emergencyInitiationTime:
+        type: array
+        items:
+          $ref: '#/definitions/timestamp'
+      emergencyCompletionTime:
+        type: array
+        items:
+          $ref: '#/definitions/timestamp'
+
+      contingencyCause:
+        type: array
+        items:
+          type: object
+          required: ['ts','contingencyCause_nonDim']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            contingencyCause_nonDim:
+              $ref: '#/definitions/ContingencyCauseNumberList'
+      contingencyResponse:
+        $ref: '#/definitions/contingencyResponse'
+      plannedContingency:
+        $ref: '#/definitions/plannedContingency'
+      contingencyLanding:
+        $ref: '#/definitions/contingencyLanding'
+      contingencyLoiterType:
+        $ref: '#/definitions/contingencyLoiterType'
+      contingencyLoiterAlt:
+        $ref: '#/definitions/contingencyLoiterAlt'
+      contingencyLoiterRadius:
+        $ref: '#/definitions/contingencyLoiterRadius'
+    
+#CON.3-Public Portal
+#CON3_MOP The final deliverable for the Public Portal test will be a report delivered to the NASA CON3 test POC - Jeffrey Homola [jeffrey.r.homola@nasa.gov]
+  
+#CON.4-Multiple TCL-2/3 operations for a sustained period
+
+  CON4_MOP:
+    type: object
+    required: ['basic','fType','UTM-TCL3-DMP-RevF-CONPDF','UTM-TCL3-DMP-RevF-CONKML']
+    properties:
+      basic:
+        $ref: '#/definitions/basicInformation'
+      fType:
+        type: string
+        enum:
+        - CON4
+      UTM-TCL3-DMP-RevF-CONPDF:
+        $ref: '#/definitions/CONPDFFileName'
+      UTM-TCL3-DMP-RevF-CONKML:
+        $ref: '#/definitions/CONKMLFileName'  
+    
+#CON.5-FIMS/USS interaction when vehicle heads towards controlled or unauthorized airspace
+  
+  CON5_MOP:
+    type: object
+    required: ['basic','fType','distFromBoundary','unauthorizedAirspaceStatus']
+    properties:
+      basic:
+        $ref: '#/definitions/basicInformation'
+      fType:
+        type: string
+        enum:
+        - CON5
+      distFromBoundary:
+        type: array
+        items:
+          type: object
+          required: ['ts','distFromBoundary_ft']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            distFromBoundary_ft:
+              type: number
+      unauthorizedAirspaceStatus:
+        type: array
+        items:
+          type: object
+          required: ['ts','unauthorizedAirspaceStatus_nonDim']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            unauthorizedAirspaceStatus_nonDim:
+              type: integer
+              enum:
+                - 0
+                - 1
+   
+    
+# definitions shared by the MOPs
+    
+  contingencyResponse:
+    type: array
+    items:
+      type: object
+      required: ['ts','contingencyResponse_nonDim']
+      properties:
+        ts:
+          $ref: '#/definitions/timestamp'
+        contingencyResponse_nonDim:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            
+  contingencyLanding:
+    type: array
+    items:
+      type: object
+      required: ['ts','contingencyLandingPoint_deg','contingencyLandingPointAlt_ft']
+      properties:
+        ts:
+          $ref: '#/definitions/timestamp'
+        contingencyLandingPoint_deg:
+          $ref: '#/definitions/LatLonList'
+        contingencyLandingPointAlt_ft:
+          $ref: '#/definitions/AltitudeList'
+  
+  contingencyLoiterType:
+    type: array
+    items:
+      type: object
+      required: ['ts','contingencyLoiterType_nonDim']
+      properties:
+        ts:
+          $ref: '#/definitions/timestamp'
+        contingencyLoiterType_nonDim:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            
+  contingencyLoiterAlt:
+    type: array
+    items:
+      type: object
+      required: ['ts','contingencyLoiterAlt_ft']
+      properties:
+        ts:
+          $ref: '#/definitions/timestamp'
+        contingencyLoiterAlt_ft:
+          $ref: '#/definitions/AltitudeList'
+          
+  contingencyLoiterRadius:
+    type: array
+    items:
+      type: object
+      required: ['ts','contingencyLoiterRadius_ft']
+      properties:
+        ts:
+          $ref: '#/definitions/timestamp'
+        contingencyLoiterRadius_ft:
+          $ref: '#/definitions/NumberList'
+          
+  CONPDFFileName:
+    type: string
+    pattern: '^UTM-[^-]+-CON-[0-9]+.pdf$'
+    example: 'UTM-UASORG-CON-3.pdf'
+    
+  CONKMLFileName:
+    type: string
+    pattern: '^UTM-[^-]+-CON-[0-9]+.kml$'
+    example: 'UTM-UASORG-CON-3.kml'
+    
+  basicInformation:
+    type: object
+    required: ['uvin','gufi','submitTime','ussName','ussInstanceID']
+    properties:
+      uvin:
+        $ref: '#/definitions/GUID'
+      gufi:
+        $ref: '#/definitions/GUID'
+      submitTime:
+        $ref: '#/definitions/timestamp'
+      ussName:
+        type: string
+      ussInstanceID:
+        $ref: '#/definitions/GUID'
+        
+  wxBvlosLandingZoneData:
+    type: object
+    required: ['temp','pressure','windSpeed','windDir']
+    description: 4 numbers for temperature, air pressure (inHg), windspeed (ft/sec), wind direction
+    properties:
+      temp:
+        type: number
+      pressure:
+        type: number
+        minimum: 5
+        maximum: 40
+      windspeed:
+        type: number
+        minimum: 0
+        maximum: 1000
+      windDir:
+        type: number
+        minimum:  0
+        maximum:  360
+    
+  plannedContingency:
+    type: object
+    required: ['plannedContingencyLandingPoint_deg','plannedContingencyLandingPointAlt_ft','plannedContingencyLoiterAlt_ft','plannedContingencyLoiterRadius_ft']
+    properties:
+      plannedContingencyLandingPoint_deg:
+        $ref: '#/definitions/LatLonList'
+      plannedContingencyLandingPointAlt_ft:
+        $ref: '#/definitions/AltitudeList'
+      plannedContingencyLoiterAlt_ft:
+        $ref: '#/definitions/AltitudeList'
+      plannedContingencyLoiterRadius_ft:
+        $ref: '#/definitions/NumberList'
+        
+# low level definitions
+        
+  timestamp:
+    type: string
+    pattern: '^2[0-9][0-9][0-9]-[01][0-9]-[0123][0-9]T[012][0-9]:[012345][0-9]:[012345][0-9]\.[0-9][0-9][0-9][0-9]*Z{0,1}$'
+    example: '2018-03-05T19:56:23.445'
+    
+  string280:
+    type: string
+    maxLength: 280
+
+  LatLon:
+    description: Latitude and Longitude should have precision of 7 or more digits
+    type: object
+    required: ['lat','lon']
+    properties:
+      lat:
+        type: number
+        minimum: -90.0
+        maximum:  90.0
+      lon:
+        type: number
+        minimum: -180.0
+        maximum: 180.0
+
+  LatLonList:
+    type: array
+    minItems: 1
+    items:
+      $ref: '#/definitions/LatLon'
+      
+  AltitudeList:
+    # positive and negative ints and floats (feet)
+    type: array
+    minItems: 1
+    items:
+      type: number
+    example: [300,250,350,300.2,.345,-123.,0.0]
+
+  ContingencyCauseNumberList:
+    type: array
+    minItems: 1
+    items:
+      type: integer
+      minimum: 0
+      maximum: 13
+  
+  NumberList:
+    # postive ints and floats
+    type: array
+    minItems: 1
+    items:
+      type: number
+      minimum: 0
+    
+  GUID:
+    type: string
+    format: uuid
+    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+    example: 'd7126818-d280-475f-aaee-c16e9c6f04e0'
+    maxLength: 36
+    minLength: 36
+
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /NASA8/CON/V3.0
+schemes:
+ - https

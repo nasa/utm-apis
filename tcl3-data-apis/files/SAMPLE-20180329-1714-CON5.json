@@ -1,0 +1,22 @@
+{
+  "fType": "CON5",
+  "basic": { 
+    "uvin": "f5e24049-000d-4000-b000-0000000052e4",
+    "gufi": "771daea6-0009-4002-b000-0000000052e7",
+    "submitTime": "2018-03-29T17:16:15.123456Z",
+    "ussName": "WUSS",
+    "ussInstanceID": "1e9075e9-0002-4002-b000-0000000052e7"
+  },
+  "distFromBoundary": [
+    {  "ts": "2018-03-29T17:16:15.123456Z", "distFromBoundary_ft": 42.2 },
+    {  "ts": "2018-03-29T17:16:16.123456Z", "distFromBoundary_ft": 32.2 },
+    {  "ts": "2018-03-29T17:16:17.123456Z", "distFromBoundary_ft": 35.5 },
+    {  "ts": "2018-03-29T17:16:18.123456Z", "distFromBoundary_ft": 34.8 }
+  ],
+  "unauthorizedAirspaceStatus": [
+    {  "ts": "2018-03-29T17:16:15.123456Z", "unauthorizedAirspaceStatus_nonDim": 0 },
+    {  "ts": "2018-03-29T17:16:16.123456Z", "unauthorizedAirspaceStatus_nonDim": 0 },
+    {  "ts": "2018-03-29T17:16:17.123456Z", "unauthorizedAirspaceStatus_nonDim": 1 },
+    {  "ts": "2018-03-29T17:16:18.123456Z", "unauthorizedAirspaceStatus_nonDim": 0 }
+  ]
+}
