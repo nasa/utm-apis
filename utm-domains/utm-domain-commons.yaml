@@ -26,7 +26,7 @@ info:
   title: UTM models
   externalDocs:
     description: The USS Specification document is a key enabler to this API.
-    url: https://only.available.directly.from.nasa.currently.
+    url: https://only.available.directly.from.nasa/this.has.to.be.a.url/ugh
 definitions:
   scope:
     description: >-
