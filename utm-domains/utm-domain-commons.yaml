@@ -1,7 +1,32 @@
 info:
-  description: UTM models (swagger domain)
+  description: >-
+    This file contains the core UTM models as OpenAPI 2.0 compliant definitions.
+
+    Some key caveats when using/referencing this API:
+      1. The API on its own is insufficeint to develop a USS or other UTM
+      component.  For example, the USS Specification is needed to understand
+      how and when to use the various endpoints and provides more details on
+      security features that cannot be captured in the API docs.
+      2. There is not a unified time synchronization approach in UTM currently.
+      As such, times provided from one server MUST NOT be validated against
+      each other.  For example, if a sending server states that a data element
+      was sent at 10:00:23, but the receiving server thinks it is currently
+      10:00:22, the receiving server MUST NOT reject the data submission.  As
+      we develop and roll out the time synchronization scheme for the USS
+      Network, we will add appropriate validation requirements to the API
+      documentation.
+      3. On the contrary, times MUST be validated for consistency within a
+      given data submission.  For example, if a server states that it sends
+      a data instance at 10:00:23 and one of the other data elements states
+      that a measurement was performed at 10:00:24, then the receiving server
+      MUST reject that data submission. Some of these checks are explictly
+      stated in the descriptions below. If you recognize any such checks that
+      are not documented, please submit an issue report on github.
   version: v3
   title: UTM models
+  externalDocs:
+    description: The USS Specification document is a key enabler to this API.
+    url: https://only.available.directly.from.nasa.currently.
 definitions:
   scope:
     description: >-
@@ -105,7 +130,11 @@ definitions:
           decimal).  The 'Z' implies UTC times and is the only timezone
           accepted. This value is set by the USS managing this Operation upon
           submitting the initial data to another server in the USS Network. This
-          test MUST be true: submit_time <= last_lun_update_time.
+          test MUST be true: submit_time <= last_lun_update_time. Uses the
+          ISO 8601 format conforming to pattern:
+          YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy
+          (three positions after decimal).  The 'Z' implies UTC times and is the
+          only timezone accepted.
         type: string
         format: date-time
         minLength: 20
@@ -338,7 +367,7 @@ definitions:
           ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.
           Seconds may have up to millisecond accuracy (three positions after
           decimal).  The 'Z' implies UTC times and is the only timezone
-          accepted.
+          accepted.  effective_time_begin < effective_time_begin MUST be true.
         type: string
         format: date-time
         minLength: 20
@@ -351,6 +380,7 @@ definitions:
           conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up
           to millisecond accuracy (three positions after decimal).  The 'Z'
           implies UTC times and is the only timezone accepted.
+          effective_time_begin < effective_time_begin MUST be true.
         type: string
         format: date-time
         minLength: 20
