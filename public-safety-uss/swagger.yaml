@@ -229,7 +229,7 @@ paths:
   /restrictions/{message_id}:
     put:
       description: >-
-        Endpoint to PUT a constraint that will be sent to LUN members intersecting the constraint geography.
+        Endpoint to PUT a constraint message that will be sent to LUN members intersecting the constraint geography.
       parameters:
         - in: path
           name: message_id
