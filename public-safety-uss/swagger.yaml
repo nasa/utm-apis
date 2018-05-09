@@ -226,3 +226,37 @@ paths:
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
+  /restrictions/{message_id}:
+    put:
+      description: >-
+        Endpoint to PUT a constraint that will be sent to LUN members intersecting the constraint geography.
+      parameters:
+        - in: path
+          name: message_id
+          required: true
+          type: string
+          description: PUT by message_id
+        - in: body
+          name: constraint_message
+          description: The ConstraintMessage being sent
+          required: true
+          schema:
+            $ref: >-
+                      https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
+      responses:
+        '204':
+          description: Constraint data received. No content returned.
+        '400':
+          description: Bad request. Typically validation error. Fix your request and retry.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '401':
+          description: Unauthorized.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '403':
+          description: "Forbidden"
+        '404':
+          description: "Not Found"
