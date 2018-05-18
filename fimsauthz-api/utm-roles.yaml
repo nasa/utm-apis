@@ -91,7 +91,7 @@ USS_BASIC:
         - utm.nasa.gov_write.operation
         - utm.nasa.gov_write.message
         - utm.nasa.gov_read.contraint
-        - utm.nasa.gov_read_min.uvin
+        - utm.nasa.gov_read_uvin
         - utm.nasa.gov_write.conflictmanagement
 
 USS_PUBLIC_SAFETY:
@@ -106,8 +106,7 @@ USS_PUBLIC_SAFETY:
         - "A Public Safety USS queries other USSs to determine which USS is operating a particular vehicle."
         - "A Public Safety USS queries vehicle registration using its uvin scopes to learn the vehicle's owner."
     scopes:
-        - utm.nasa.gov_write.publicsafety
-        - utm.nasa.gov_read.uvin
+        - utm.nasa.gov_read.publicsafety
 
 CONSTRAINT_MANAGER:
     description: |
