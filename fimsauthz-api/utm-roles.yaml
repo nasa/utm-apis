@@ -1,8 +1,8 @@
 # UTM roles and, when applicatble, their scopes.
 #   This is the master data for the Role and Scopes for the
-#   FIMS Authorization Server.
-#   Its schema is defined as a domain in swgger spec.
-#
+#   FIMS Authorization Server (FIMS AZ).
+#   See the FIMS AZ API Spec for scope definitions.  Note that a write scope
+#   allows reading. 
 
 UTM_AUTHORITY:
     description: |
