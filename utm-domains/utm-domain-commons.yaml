@@ -3,28 +3,6 @@ info:
   version: v3
   title: UTM models
 definitions:
-  scope:
-    description: >-
-      The set of scopes used in UTM OAuth 2.0 implementation. Scopes take the
-      form of <namespace>_<operation>.<object> where "operation" is the type of
-      permission (read/write, etc.) and "object" is the type of thing the action
-      is performed upon. A "write" action should be assumed to all read access
-      to the subject as well as writing. The namespace may aid in deconfliction
-      and clarity of scopes. Terms conform to INCITS 359.
-    type: string
-    enum:
-      - utm.nasa.gov_write.operation
-      - utm.nasa.gov_read.operation
-      - utm.nasa.gov_write.message
-      - utm.nasa.gov_read.message
-      - utm.nasa.gov_write.publicsafety
-      - utm.nasa.gov_read.publicsafety
-      - utm.nasa.gov_write.constraint
-      - utm.nasa.gov_read.constraint
-      - utm.nasa.gov_read.sdsp
-      - utm.nasa.gov_write.sdsp
-      - utm.nasa.gov_all.all
-      - utm.nasa.gov_read.min_data
   severity:
     description: >-
       The severity level of a UTMMessage. This severity labeling may be used by
@@ -279,8 +257,8 @@ definitions:
       'priority_status' of PUBLIC_SAFETY or INFLIGHT_EMERGENCY accepts 'priority_level' values EMERGENCY, ALERT and
       CRITICAL only. 'priority_status' of NONE accepts 'priority_level' values WARNING, NOTICE and INFORMATIONAL only.
       The 'priority_level' values EMERGENCY, ALERT and CRITICAL should be used based on impact to other operations
-      and safety of people and property on the ground.  Further guidance on the appropriate severity levels to apply 
-      in which situations to be provided in the future and potential in a separate document. For testing, it is 
+      and safety of people and property on the ground.  Further guidance on the appropriate severity levels to apply
+      in which situations to be provided in the future and potential in a separate document. For testing, it is
       sufficeint to agree a priori on the severity levels to be used such that all stakeholders are aware ahead
       of time.
     type: object
