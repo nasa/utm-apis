@@ -65,6 +65,10 @@ paths:
       tags:
         - A. Required Endpoints
       summary: Allow constraints to be submitted from authorized entities.
+      description: >-
+        Allow constraints to be submitted from authorized entities.
+        For validation purposes:
+          {message_id} in path == UTMMessage.message_id of body data
       security:
         - ussapi_security:
             - utm.nasa.gov_write.constraint
@@ -108,7 +112,10 @@ paths:
       tags:
         - A. Required Endpoints
       summary: Allow other authorized entities to send a message to this USS.
-      description: Allows another USS or FIMS to PUT a message to this USS.
+      description: >-
+        Allows another USS or FIMS to PUT a message to this USS.
+        For validation purposes:
+          {message_id} in path == UTMMessage.message_id of body data
       security:
         - ussapi_security:
             - utm.nasa.gov_write.message
@@ -156,6 +163,9 @@ paths:
         receiving messages about the USS Network from the USS Discovery
         Service.  For example, when a new USS Instance is registered, that
         announcement would come to this endpoint.
+
+        For valiedation purposes:
+          {uss_instance_id} in path == UssInstance.uss_instance_id of body data
       security:
         - ussapi_security:
             - utm.nasa.gov_write.operation
@@ -203,6 +213,9 @@ paths:
         alteration in an existing operation managed by the receiving USS.  The
         requesting USS supplies a GUFI that references the operation that may be
         altered if the request is granted by the receiving USS.
+
+        For validation purposes:
+          {message_id} in path == NegotiationMessage.message_id in body data
       security:
         - ussapi_security:
             - utm.nasa.gov_write.message
@@ -250,6 +263,9 @@ paths:
       description: >-
         Providing position reports to others may allow other USSs to anticipate
         events.  The USS managing the operation has created the position ID.
+
+        For validation purposes:
+          {position_id} in path == Position.enroute_positions_id of body data
       security:
         - ussapi_security:
             - utm.nasa.gov_write.operation
@@ -262,7 +278,7 @@ paths:
           name: position_id
           required: true
           type: string
-          description: PUT by position_id
+          description: PUT by enroute_positions_id
         - in: body
           name: position
           required: true
@@ -506,6 +522,7 @@ paths:
               2. time_available_end value that is in the future.
               3. No date-time fields that are in the past are modified.
               4. Other rules for a USS Operation PUT are satisfied.
+              5. {gufi} path parameter == Operation.gufi of supplied plan
           required: true
           schema:
             $ref: >-
