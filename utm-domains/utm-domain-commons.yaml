@@ -865,6 +865,16 @@ definitions:
           for easier consumption by other automated systems.
         type: string
         maxLength: 1000
+      callback:
+        description: >-
+          A complete URL that the receiver would need to complete a
+          communication request.  The only current example is a position report
+          request from one USS to another.  In that case, the callback should
+          contain the complete URL to the requesting USSs positions endpoint.
+          This field is required when 'message_type' is
+          PERIODIC_POSITION_REPORTS_START.
+        type: string
+        format: url
   ConstraintMessage:
     description: >
       An element defined by spatial and temporal bounds that affects UAS
