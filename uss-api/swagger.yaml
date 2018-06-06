@@ -462,7 +462,7 @@ paths:
           description: >-
             GUFI of the operation being requested.
       responses:
-        '201':
+        '200':
           description: OK
           schema:
             $ref: >-
