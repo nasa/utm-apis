@@ -882,6 +882,7 @@ definitions:
     required:
       - message_id
       - type
+      - constraint_geography
       - effective_time_begin
       - effective_time_end
     properties:
