@@ -146,8 +146,17 @@ paths:
           required: false
           description: >-
             Returns uss_instances around the given point within the 'distance'.
-            It requires parameter 'distance' to be provided. The coordinates
-            are comma delimited. Example: -121.2204,36.6684
+            It requires parameter 'distance' to be provided.
+
+            Described as a GeoJSON position.  The value is equivalent to what
+            would be seen in the "coordinates" field for a GeoJSON Point
+            object.  See https://tools.ietf.org/html/rfc7946#section-3.1.1 for
+            further reference.  Example would be reference_point=[-122.056364,
+            37.414371] (URL safe:
+            reference_point%3D%5B-122.056364%2C%2037.414371%5D). As per GeoJSON
+            spec, this is long-lat format in the WGS84 reference system.
+
+            MUST NOT include a third coordinate element, strictly 2D.
           type: array
           maxItems: 2
           minItems: 2
