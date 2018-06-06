@@ -108,7 +108,7 @@ paths:
       tags:
         - A. Required Endpoints
       summary: Allow other authorized entities to send a message to this USS.
-      description: Allows another USS or FIMS to POST a message to this USS.
+      description: Allows another USS or FIMS to PUT a message to this USS.
       security:
         - ussapi_security:
             - utm.nasa.gov_write.message
@@ -199,7 +199,7 @@ paths:
         - A. Required Endpoints
       summary: Allow other USSs to submit a negotiation request
       description: >-
-        A POST to the negotiations endpoint is interpretted as a request for
+        A PUT to the negotiations endpoint is interpreted as a request for
         alteration in an existing operation managed by the receiving USS.  The
         requesting USS supplies a GUFI that references the operation that may be
         altered if the request is granted by the receiving USS.
@@ -505,7 +505,7 @@ paths:
               1. Contains a valid uss_operation_id.
               2. time_available_end value that is in the future.
               3. No date-time fields that are in the past are modified.
-              4. Other rules for a USS Operation POST are satisfied.
+              4. Other rules for a USS Operation PUT are satisfied.
           required: true
           schema:
             $ref: >-
