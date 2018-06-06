@@ -547,7 +547,7 @@ definitions:
         format: date-time
         minLength: 20
         maxLength: 25
-        example: '2015-08-20T14:31:56.118Z'
+        example: '2015-08-20T14:41:09.651Z'
   Position:
     type: object
     required:
