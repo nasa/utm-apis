@@ -184,13 +184,6 @@ definitions:
         description: Optional. For use by USS for identification purposes.
         type: string
         maxLength: 100
-      user_id:
-        description: This field is populated based on the provided credentials.
-        type: string
-      created_by:
-        description: The user that created the operation.
-        type: string
-        maxLength: 100
       primary_contact_name:
         description: >-
           Not currently checked for validity, but clients should endeavor to
@@ -298,7 +291,7 @@ definitions:
             5. Each spatial dimension of an op vol's bounding box must have
             length less than M. Should discuss with partners the value of M.
             This is a sanity check against excessively large volumes. Need to
-            be careful here as there may be legitimate use cases wherein large 
+            be careful here as there may be legitimate use cases wherein large
             volumes are required/allowed, but we want to encourage efficient
             planning and protect against misuse of the shared airspace.
             6. The planned duration of an op vol must be less than T. Again,
