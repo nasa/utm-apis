@@ -28,6 +28,31 @@ info:
     description: The USS Specification document is a key enabler to this API.
     url: https://only.available.directly.from.nasa/this.has.to.be.a.url/ugh
 definitions:
+  data_accessibility:
+    description: >-
+      Each data member of each model will be tagged with a value representing
+      its accessibility level.  This enum provides the potential values.
+
+      Each value of the enum implies AT LEAST the accessibility of the previous
+      value.  With the ordering:
+
+        PUBLIC <= OPERATIONAL <= SAFETY <= SPECIAL
+
+      The most restrictive value possible will be chosen for each data member
+      while still meeting overall objectives of the system. Finding the correct
+      values will likely be an on-going process. The values will be a first
+      cut in the research platform version of UTM.
+
+      The server receiving a request for data will need to filter the results
+      based on the authorization presented by the requesting server.  Further
+      details to be developed later.
+    type: string
+    enum:
+      - PUBLIC
+      - OPERATIONAL
+      - SAFETY
+      - SPECIAL
+
   severity:
     description: >-
       The severity level of a UTMMessage. This severity labeling may be used by
@@ -83,6 +108,7 @@ definitions:
         format: uuid
         maxLength: 36
         minLength: 36
+        x-utm-data-accessibility: PUBLIC
         example: 00000000-0000-4444-8888-FEEDDEADBEEF
       uss_name:
         description: >-
@@ -92,6 +118,7 @@ definitions:
         type: string
         maxLength: 250
         minLength: 1
+        x-utm-data-accessibility: PUBLIC
         example: utmbeta.arc.nasa.gov
       uss_instance_id:
         description: Identity of the USS Instance hosting this operation.
@@ -99,6 +126,7 @@ definitions:
         format: uuid
         maxLength: 36
         minLength: 36
+        x-utm-data-accessibility: PUBLIC
         example: 00000000-0000-4444-8888-FEEDDEADBEEF
       submit_time:
         description: >-
@@ -117,6 +145,7 @@ definitions:
         format: date-time
         minLength: 20
         maxLength: 25
+        x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T14:11:56.118Z'
       last_lun_update_time:
         description: >-
@@ -138,6 +167,7 @@ definitions:
         format: date-time
         minLength: 20
         maxLength: 25
+        x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T14:11:56.118Z'
       aircraft_comments:
         description: >-
@@ -145,6 +175,7 @@ definitions:
           for human stakeholders.
         type: string
         default: NOT PROVIDED
+        x-utm-data-accessibility: SAFETY
         maxLength: 1000
       flight_comments:
         description: >-
@@ -152,6 +183,7 @@ definitions:
           for human stakeholders.
         type: string
         default: NOT PROVIDED
+        x-utm-data-accessibility: SAFETY
         maxLength: 1000
       volumes_description:
         description: >-
@@ -159,6 +191,7 @@ definitions:
           System. Only for human stakeholders.
         type: string
         default: NOT PROVIDED
+        x-utm-data-accessibility: SAFETY
         maxLength: 1000
       uas_registrations:
         description: >-
@@ -173,6 +206,7 @@ definitions:
         minLength: 1
         items:
           $ref: '#/definitions/UasRegistration'
+        x-utm-data-accessibility: SAFETY
       airspace_authorization:
         description: TBD
         type: string
@@ -180,10 +214,12 @@ definitions:
         maxLength: 36
         minLength: 36
         example: 00000000-0000-4444-8888-FEEDDEADBEEF
+        x-utm-data-accessibility: SAFETY
       flight_number:
         description: Optional. For use by USS for identification purposes.
         type: string
         maxLength: 100
+        x-utm-data-accessibility: OPERATIONAL
       primary_contact_name:
         description: >-
           Not currently checked for validity, but clients should endeavor to
@@ -192,14 +228,17 @@ definitions:
           with the operation before, during, or after that operation.
         type: string
         maxLength: 100
+        x-utm-data-accessibility: SAFETY
       primary_contact_phone:
         type: string
         format: phone
         maxLength: 100
+        x-utm-data-accessibility: SAFETY
       primary_contact_email:
         type: string
         format: email
         maxLength: 100
+        x-utm-data-accessibility: SAFETY
       additional_contact_info:
         description: >-
           Any additional contact information that may be useful (hours of
@@ -207,6 +246,7 @@ definitions:
         type: string
         default: NOT PROVIDED
         maxLength: 1000
+        x-utm-data-accessibility: SAFETY
       state:
         description: >
           The current state of the operation.  Must be maintained by the USS.
@@ -228,10 +268,13 @@ definitions:
           - CLOSED
           - NONCONFORMING
           - ROGUE
+        x-utm-data-accessibility: OPERATIONAL
       controller_location:
         $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+        x-utm-data-accessibility: SAFETY
       gcs_location:
         $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+        x-utm-data-accessibility: SAFETY
       contingency_plans:
         description: >-
           An array of ContingencyPlans wherein this operation may land if
@@ -242,6 +285,7 @@ definitions:
         minItems: 1
         items:
           $ref: '#/definitions/ContingencyPlan'
+        x-utm-data-accessibility: OPERATIONAL
       faa_rule:
         description: |-
           1. PART_107
@@ -258,8 +302,10 @@ definitions:
           - PART_107X
           - PART_101E
           - OTHER
+        x-utm-data-accessibility: OPERATIONAL
       priority_elements:
         $ref: '#/definitions/PriorityElements'
+        x-utm-data-accessibility: OPERATIONAL
       operation_volumes:
         description: >-
           The actual geographical information for the operation.
@@ -305,9 +351,11 @@ definitions:
         minItems: 1
         items:
           $ref: '#/definitions/OperationVolume'
+        x-utm-data-accessibility: OPERATIONAL
       metadata:
         $ref: >-
           https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-metadata.yaml#/definitions/EventMetadata
+        x-utm-data-accessibility: OPERATIONAL
   PriorityElements:
     description: >-
       Data elements used to describe the status of priority operation. Nominal
