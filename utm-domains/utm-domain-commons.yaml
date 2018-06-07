@@ -269,8 +269,44 @@ definitions:
         $ref: '#/definitions/PriorityElements'
       operation_volumes:
         description: >-
-          The actual geographical information for the operation.  Maximum array
-          length of 250 currently allowed.
+          The actual geographical information for the operation.
+
+          A note on "intersection":
+            Note 2: All of the terms "crosses", "within", "touches" imply
+            intersection. I can track down a source for this definition
+            (probably OGC), but for now, you can see it illustrated in the
+            description for PostGIS intersection:
+              https://postgis.net/docs/ST_Intersects.html
+
+          Validation of the array must include the following checks:
+            1. The array of operation volumes must have minimum length of 1.
+            2. The array of operation volumes must have maximum length of 250.
+            3.  Each operation volume must have non-zero 4D volume (i.e. each of
+             the 4 dimensions much be > 0 in magnitude).
+            4. Volume intersection must pass the following checks:
+              a. When ordered by ordinal values, a succeeding operation volume
+              must have a 2D or 3D spatial intersection with its immediately
+              preceding operation volume.
+              b. When ordered by ordinal values, a succeeding operation volume
+              must have a non-negative temporal intersection with its
+              immediately preceding operation volume (Note we'd calculate this
+              by t1-t2 where t1 is the preceding operation volume end time and
+              t2 is the succeeding operation volume start time.).
+              c. When ordered by ordinal values, a succeeding operation volume
+              must have either a non-zero volume (3D) intersection OR a positive
+              temporal intersection. (Note it may have both intersection types.)
+            5. Each spatial dimension of an op vol's bounding box must have
+            length less than M. Should discuss with partners the value of M.
+            This is a sanity check against excessively large volumes. Need to
+            be careful here as there may be legitimate use cases wherein large 
+            volumes are required/allowed, but we want to encourage efficient
+            planning and protect against misuse of the shared airspace.
+            6. The planned duration of an op vol must be less than T. Again,
+            need to be careful to not damage legitimate use cases, but need to
+            protect against misuse/poor planning. For long duration missions,
+            it may be reasonable to have them replan or to have volumes with
+            the same geog and long time values that slightly intersect.
+
         type: array
         maxItems: 250
         minItems: 1

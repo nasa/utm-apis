@@ -522,7 +522,7 @@ paths:
               2. time_available_end value that is in the future.
               3. No date-time fields that are in the past are modified.
               4. Other rules for a USS Operation PUT are satisfied.
-              5. {gufi} path parameter == Operation.gufi of supplied plan
+              5. {gufi} path parameter == Operation.gufi of body data
           required: true
           schema:
             $ref: >-
