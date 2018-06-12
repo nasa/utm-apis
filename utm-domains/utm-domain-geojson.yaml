@@ -37,12 +37,11 @@ info:
 #Commented out unsupported elements in UTM (multi*, GeometryCollection)
 #Updated externalDocs links to point to RFC
 #Improved "description" fields.
-#issmith1 trying github push , switch to yaml
-#retrying github push to nasa repo.
-#issmith1 test whether collaborator can push to Git via API Key
+
 #jlrios: "Point2d" rendering, renamed as "Position" to align with GeoJSON spec.
 #jlrios: flattened by removing Geometry to improve codegen, simplify schema
 #issmith: debug integrations
+#jlrios: added required fileds for Polygon and LineString
 
 definitions:
 
@@ -66,9 +65,12 @@ definitions:
           type: number
           format: double
         example: [0.0, 0.0]
-        
+
   LineString:
     type: object
+    required:
+      - type
+      - coordinates
     description: GeoJSon LineString. Positions all 2D.
     externalDocs:
       url: https://tools.ietf.org/html/rfc7946#section-3.1.4
@@ -93,6 +95,9 @@ definitions:
 
   Polygon:
     type: object
+    required:
+      - type
+      - coordinates
     description: GeoJSon Polygon. Positions all 2D.
     externalDocs:
       url: https://tools.ietf.org/html/rfc7946#section-3.1.6
