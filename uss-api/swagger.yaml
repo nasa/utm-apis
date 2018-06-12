@@ -405,7 +405,7 @@ paths:
             list.
           required: false
           type: string
-          default: time_submitted
+          default: submit_time
         - name: sort_increasing
           in: query
           description: >-
