@@ -402,8 +402,16 @@ definitions:
       ordinal:
         description: >-
           This integer represents the ordering of the operation volume within
-          the set of operation volumes. Need not be consecutive integers.
+          the set of operation volumes. Need not be consecutive integers. Note
+          that the max and min are larger than the allowed number of op vols.
+          This is by design to allow implementers to use this field in a
+          flexible manner. For example, in replanning, it may be useful to have
+          a larger set of integers available and to space them by large offsets.
         type: integer
+        minimum: -1000
+        exclusiveMinimum: false
+        maximum: 99999
+        exclusiveMaximum: false
       volume_type:
         description: >-
             More description later.
