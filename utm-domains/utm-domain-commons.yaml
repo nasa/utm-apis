@@ -200,10 +200,12 @@ definitions:
           multiple vehicles (e.g. 'swarms' or tandem inspections).  This array
           MUST NOT be used as a list of potential vehicles for this Operation.
           If the vehicle data changes prior to an Operation, an update to the
-          plan may be submitted with the updated vehicle information.
+          plan may be submitted with the updated vehicle information. Providing
+          multiple uas_registrations in this manner implies that all vehicles
+          will conform to the provided operation volumes.
         type: array
-        maxLength: 100
-        minLength: 1
+        maxItems: 1000
+        minItems: 1
         items:
           $ref: '#/definitions/UasRegistration'
         x-utm-data-accessibility: SAFETY
