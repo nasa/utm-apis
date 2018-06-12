@@ -643,9 +643,15 @@ definitions:
     properties:
       air_speed_source:
         type: string
+        enum:
+          - MEASURED
+          - ESTIMATED
+          - OTHER
         description: >-
-          Required if air_speed_track_kn is submitted. No requirements yet on
-          the values here, but suggestions include ESTIMATED or MEASURED.
+          Required if air_speed_track_kn is submitted. If the air speed is
+          measured by some device, use MEASURED, if estimated by a human without
+          use ESTIMATED.  If some other means are used, use OTHER. Additional
+          details may be provided in the comments field.
         maxLength: 100
       air_speed_track_kn:
         type: number
@@ -665,6 +671,10 @@ definitions:
         description: Number of satellites used in calculating the altitude_gps_wgs84_ft.
         minimum: 0
         exclusiveMinimum: false
+      comments:
+        type: string
+        minLength: 0
+        maxLength: 1000
       enroute_positions_id:
         type: string
         format: uuid
