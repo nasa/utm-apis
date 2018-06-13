@@ -85,6 +85,65 @@ definitions:
       - WARNING
       - NOTICE
       - INFORMATIONAL
+  Altitude:
+    type: object
+    required:
+      - altitude_value
+      - vertical_reference
+      - units_of_measure
+    properties:
+      altitude_value:
+        description: >-
+          The numeric value of the altitude. Note that min and max values are
+          added as a sanity check. As use cases evolve and more options are
+          made available in terms of units of measure or reference systems,
+          these bounds should be re-evaluated.
+        type: double
+        minimum: -8000.0
+        exclusiveMinimum: false
+        maximum: 100000.0
+        exclusiveMaximum: false
+      vertical_reference:
+        description: >-
+          A code indicating the reference for a vertical distance. See AIXM 5.1
+          and FIXM 4.1.0.
+
+          Currently, UTM only allows WGS84 with no immediate plans to allow
+          other options. FIXM and AIXM allow for 'SFC' which is equivalent to
+          AGL.
+        externalDocs:
+          description: See FIXM 4.1.0 for further information.
+          url: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/Measures_xsd.html#VerticalReferenceType
+        type: string
+        enum:
+          - W84
+        minLength: 3
+        maxLength: 3
+      units_of_measure:
+        description: >-
+          The reference quantities used to express the value of altitude. See
+          FIXM 4.1.
+
+          Currently, UTM only allows feet with no immediate plans to allow
+          other options.  FIXM allows for feet or meters.
+        externalDocs:
+          description: See FIXM 4.1.0 for further information.
+          url: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/UnitsOfMeasure_xsd.html#UomHeightType
+        type: string
+        enum:
+          - FT
+        minLength: 2
+        maxLength: 2
+      source:
+        description: >-
+          Experimental field for testing and discussion to determine
+          applicability.
+        type: string
+        enum:
+          - ONBOARD_SENSOR
+          - OTHER
+        minLength: 5
+        maxLength: 14
   Operation:
     type: object
     required:
@@ -469,12 +528,20 @@ definitions:
           WGS84 reference system using feet as units.
         type: number
         format: double
+        minimum: -6000.0
+        exclusiveMinimum: false
+        maximum: 100000.0
+        exclusiveMaximum: false
       max_altitude_wgs84_ft:
         description: >-
           The maximum altitude for this operation in this operation volume. In
           WGS84 reference system using feet as units.
         type: number
         format: double
+        minimum: -6000.0
+        exclusiveMinimum: false
+        maximum: 100000.0
+        exclusiveMaximum: false
       operation_geography:
         $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       beyond_visual_line_of_sight:
@@ -571,6 +638,10 @@ definitions:
           reference system using feet as units.
         type: number
         format: double
+        minimum: -6000.0
+        exclusiveMinimum: false
+        maximum: 100000.0
+        exclusiveMaximum: false
       loiter_radius_ft:
         description: >-
           The radius of airspace used in loitering for this contingency.
@@ -672,6 +743,10 @@ definitions:
       altitude_gps_wgs84_ft:
         type: number
         format: double
+        minimum: -6000.0
+        exclusiveMinimum: false
+        maximum: 100000.0
+        exclusiveMaximum: false
         description: >-
           The altitude as measured via a GPS device on the aircraft. Units in
           feet using the WGS84 reference system.
@@ -1062,12 +1137,20 @@ definitions:
           max_altitude.
         type: number
         format: double
+        minimum: -6000.0
+        exclusiveMinimum: false
+        maximum: 100000.0
+        exclusiveMaximum: false
       max_altitude:
         description: >-
           The maximum altitude of the constraint. Must be greater than
           min_altitude.
         type: number
         format: double
+        minimum: -6000.0
+        exclusiveMinimum: false
+        maximum: 100000.0
+        exclusiveMaximum: false
       reason:
         description: The reason for the constraint. Meant for human consumption.
         type: string
