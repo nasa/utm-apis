@@ -774,6 +774,23 @@ definitions:
           namespace: https://www.fixm.aero/nas/4.1
           prefix: fb
           attribute: true
+      track_bearing_uom:
+        type: string
+        enum:
+          - DEG
+        description: >-
+          The reference quantities used to express the value of angles.
+          [ISO 19103, chapter 6.5.7.10]
+
+          As in FIXM, only a single option is provided (degrees). Including this
+          field allows for clarity in the data provided and allows for the
+          potential of other units of measure in the future.
+        x-utm-fixm-reference: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/UnitsOfMeasure_xsd.html#UomAngleType
+        xml:
+          name: UomAngleType
+          namespace: https://www.fixm.aero/nas/4.1
+          prefix: fb
+          attribute: true
       track_ground_speed_kn:
         type: number
         format: double
