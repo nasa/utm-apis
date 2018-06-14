@@ -846,7 +846,7 @@ definitions:
       - origin
       - originator_id
       - originator_uss_instance_id
-      - sent_time
+      - time_sent
       - severity
       - message_type
     type: object
