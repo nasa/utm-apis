@@ -55,7 +55,7 @@ paths:
         '501':
           description: Not Implemented
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/UTMRestResponse'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse'
   /token:
     post:
       tags:
@@ -207,7 +207,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/Version'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Version'
 
 definitions:
   TokenResponse:

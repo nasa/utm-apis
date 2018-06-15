@@ -88,7 +88,7 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         403:
           description: "Forbidden"
         404:
@@ -101,7 +101,7 @@ paths:
           description: Service Unavailable
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
   /uvins/:
     post:
       consumes:
