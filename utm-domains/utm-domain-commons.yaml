@@ -145,7 +145,7 @@ definitions:
         type: string
         format: date-time
         minLength: 20
-        maxLength: 25
+        maxLength: 24
         x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T14:11:56.118Z'
       last_lun_update_time:
@@ -167,7 +167,7 @@ definitions:
         type: string
         format: date-time
         minLength: 20
-        maxLength: 25
+        maxLength: 24
         x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T14:11:56.118Z'
       aircraft_comments:
@@ -437,7 +437,7 @@ definitions:
         type: string
         format: date-time
         minLength: 20
-        maxLength: 25
+        maxLength: 24
         example: '2015-08-20T14:11:56.118Z'
       effective_time_end:
         description: >-
@@ -450,7 +450,7 @@ definitions:
         type: string
         format: date-time
         minLength: 20
-        maxLength: 25
+        maxLength: 24
         example: '2015-08-20T15:11:56.118Z'
       actual_time_end:
         description: >-
@@ -462,7 +462,7 @@ definitions:
         type: string
         format: date-time
         minLength: 20
-        maxLength: 25
+        maxLength: 24
         example: '2015-08-20T14:31:56.118Z'
       min_altitude_wgs84_ft:
         description: >-
@@ -620,7 +620,7 @@ definitions:
         type: string
         format: date-time
         minLength: 20
-        maxLength: 25
+        maxLength: 24
         example: '2015-08-20T14:31:56.118Z'
       valid_time_end:
         description: >-
@@ -634,7 +634,7 @@ definitions:
         type: string
         format: date-time
         minLength: 20
-        maxLength: 25
+        maxLength: 24
         example: '2015-08-20T14:41:09.651Z'
   Position:
     type: object
@@ -722,7 +722,7 @@ definitions:
         type: string
         format: date-time
         minLength: 20
-        maxLength: 25
+        maxLength: 24
         example: '2015-08-20T14:11:56.118Z'
       time_sent:
         description: >-
@@ -735,7 +735,7 @@ definitions:
         type: string
         format: date-time
         minLength: 20
-        maxLength: 25
+        maxLength: 24
         example: '2015-08-20T14:11:57.968Z'
       track_bearing:
         type: number
@@ -1047,7 +1047,7 @@ definitions:
         type: string
         format: date-time
         minLength: 20
-        maxLength: 25
+        maxLength: 24
         example: '2015-08-20T14:11:56.118Z'
       effective_time_end:
         description: >-
@@ -1059,7 +1059,7 @@ definitions:
         type: string
         format: date-time
         minLength: 20
-        maxLength: 25
+        maxLength: 24
         example: '2015-08-20T15:11:56.118Z'
       actual_time_end:
         description: >-
@@ -1072,7 +1072,7 @@ definitions:
         type: string
         format: date-time
         minLength: 20
-        maxLength: 25
+        maxLength: 24
         example: '2015-08-20T14:31:56.118Z'
       min_altitude:
         description: >-
