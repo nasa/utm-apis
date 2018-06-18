@@ -99,6 +99,7 @@ definitions:
       - controller_location
       - operation_volumes
       - submit_time
+      - metadata
     properties:
       gufi:
         description: >-
