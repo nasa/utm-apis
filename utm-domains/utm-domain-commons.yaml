@@ -1080,7 +1080,7 @@ definitions:
           type: string
           format: uuid
           minLength: 0
-          maxLength: 100        
+          maxLength: 100
       type:
         type: string
         enum:
@@ -1457,17 +1457,22 @@ definitions:
         description: URL(s) for API Documentation
   UTMRestResponse:
     type: object
+    required:
+      - http_status_code
+      - message
     properties:
       http_status_code:
         type: integer
+        minimum: 100
+        exclusiveMinimum: false
+        maximum: 599
+        exclusiveMaximum: false
       message:
         type: string
-      resource:
-        type: string
+        maxLength: 500
     example:
-      http_status_code: 40x
-      message: Error message
-      resource: /resource/683c0e9e-49dc-44ce-82de-a5723b1f6965
+      http_status_code: 400
+      message: Bad Request. Invalid JSON?
 parameters:
   fieldsParam:
     name: fields
