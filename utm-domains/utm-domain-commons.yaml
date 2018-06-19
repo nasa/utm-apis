@@ -1013,6 +1013,8 @@ definitions:
       - constraint_geography
       - effective_time_begin
       - effective_time_end
+      - permitted_uas
+      - permitted_gufis
     properties:
       message_id:
         description: A UUIDv4 assigned to this message by the originator
@@ -1040,6 +1042,45 @@ definitions:
         maxLength: 36
         minLength: 36
         example: 00000000-0000-4444-8888-FEEDDEADBEEF
+      permitted_uas:
+        description: >-
+           T h e   t y p e s   o f   U A S   operations t h a t   a r e   p e r m i t t e d   w i t h i n   t h e   b o u n d s   o f   
+          t h e   c o n s t r a i n t .  When used in conjunction with permitted_gufis, the
+          filters are an 'OR' relationship. Any operation that matches either
+          filter is allowed within the bounds of the constraint.  This list of
+          permitted_uas types is not to be considered a final version.  It is
+          provided to initiate discussion of how the filter should be defined.
+        type: array
+        items:
+          type: string
+          enum:
+            - NONE
+            - PUBLIC_SAFETY
+            - SECURITY
+            - NEWS_GATHERING
+            - VLOS
+            - PART_107
+            - PART_101E
+            - PART_107X
+            - RADIO_LINE_OF_SIGHT
+        default:
+          - NONE
+        example:
+          - NONE
+      permitted_gufis:
+        description: >-
+           T h e  specific   U A S   operations t h a t   a r e   p e r m i t t e d   w i t h i n   t h e   b o u n d s   o f   
+          t h e   c o n s t r a i n t .  When used in conjunction with permitted_uas, the
+          filters are an 'OR' relationship. Any operation that matches either
+          filter is allowed within the bounds of the constraint.  The protocol
+          for adding the appropriate GUFIs to this array needs to be discussed.
+          This may be a chicken/egg problem that will have to be worked through.
+        type: array
+        items:
+          type: string
+          format: uuid
+          minLength: 0
+          maxLength: 100        
       type:
         type: string
         enum:
