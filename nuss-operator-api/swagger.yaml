@@ -463,7 +463,7 @@ paths:
           schema:
             type: "array"
             items:
-              $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/ConstraintMessage'
+              $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage'
         401:
           description: "Unauthorized"
         403:
@@ -485,7 +485,7 @@ paths:
         description: "constraint"
         required: true
         schema:
-          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/ConstraintMessage'
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage'
       responses:
         201:
           description: "Created"
