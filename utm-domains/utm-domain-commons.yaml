@@ -676,7 +676,6 @@ definitions:
           measured by some device, use MEASURED, if estimated by a human without
           use ESTIMATED.  If some other means are used, use OTHER. Additional
           details may be provided in the comments field.
-        maxLength: 100
       air_speed_track_kn:
         type: number
         format: double
