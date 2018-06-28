@@ -2,7 +2,7 @@
 swagger: "2.0"
 info:
   description: "RestAPI and Message definitions from USS-nasa to UAS Operator Interface"
-  version: "v2"
+  version: "v4"
   title: "USS-nasa to UAS Operator Interface"
 host: "tmiserver.arc.nasa.gov"
 basePath: "/uss"
@@ -423,7 +423,6 @@ paths:
       tags:
       - "Positions, Constraints, UReps"
       summary: "getConstraints"
-      operationId: "getConstraintsUsingGET"
       consumes:
       - "application/json"
       produces:
