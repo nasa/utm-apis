@@ -1003,6 +1003,17 @@ definitions:
           PERIODIC_POSITION_REPORTS_START.
         type: string
         format: url
+    example:
+      message_id: "00000000-0000-4444-8888-CAFEBEEFF00D"
+      origin: "USS"
+      originator_id: "uss.provider321.net"
+      originator_uss_instance_id: "00000000-0000-4444-8888-BAADBAADBAAD"
+      time_sent: "2015-08-20T14:11:57.345Z"
+      severity: "NOTICE"
+      message_type: "OPERATION_CLOSED"
+      gufi: "00000000-0000-4444-8888-FEEDDEADBEEF"
+      free_text: "Cool flight, bro"
+
   ConstraintMessage:
     description: >
       An element defined by spatial and temporal bounds that affects UAS
