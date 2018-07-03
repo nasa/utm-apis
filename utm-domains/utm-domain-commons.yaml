@@ -839,6 +839,7 @@ definitions:
       altitude_gps_wgs84_ft: 1111.111
       altitude_num_gps_satellites: 22
       air_speed_source: MEASURED
+      enroute_positions_id: d10cd900-086f-43c7-9d6c-38409de74b1e
       gufi: 00000000-0000-4444-8888-000000000000
       hdop_gps: 1.117
       time_measured: '2016-10-04T09:15:40.727Z'
