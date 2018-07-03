@@ -660,28 +660,12 @@ definitions:
       - location
       - time_measured
       - time_sent
-      - track_ground_speed_kn
+      - track_ground_speed
+      - track_ground_speed_units
       - uss_name
       - uss_instance_id
       - vdop_gps
     properties:
-      air_speed_source:
-        type: string
-        enum:
-          - MEASURED
-          - ESTIMATED
-          - OTHER
-        description: >-
-          Required if air_speed_track_kn is submitted. If the air speed is
-          measured by some device, use MEASURED, if estimated by a human without
-          use ESTIMATED.  If some other means are used, use OTHER. Additional
-          details may be provided in the comments field.
-      air_speed_track_kn:
-        type: number
-        format: double
-        description: >-
-          Air speed in relation to the direction of travel of the aircraft.
-          Value may be negative.
       altitude_gps_wgs84_ft:
         type: number
         format: double
@@ -804,14 +788,32 @@ definitions:
           namespace: https://www.fixm.aero/nas/4.1
           prefix: fb
           attribute: true
-      track_ground_speed_kn:
+      track_ground_speed:
         type: number
         format: double
         description: >-
           Ground speed int the direction of travel. Value must be >= 0.0. In
-          knots.
+          units as specifed by track_ground_speed_units.
         minimum: 0
         exclusiveMinimum: false
+      track_ground_speed_units:
+        type: string
+        enum:
+          -KT
+        description: >-
+           The reference quantities used to express the value of ground speed as
+           provided in track_ground_speed.
+
+           KT: Knots.
+
+           FIXM allows KT (knots) and KM_H (kilometers per hour) but we only
+           allow the KT choice.
+        x-utm-fixm-reference: https://www.fixm.aero/releases/US_Ext-4.2.0/doc/schema_documentation_us_extension/UnitsOfMeasure_xsd.html#UomGroundSpeedType
+        xml:
+          name: UomGroundSpeedType
+          namespace: https://www.fixm.aero/nas/4.1
+          prefix: fb
+          attribute: true
       uss_name:
         description: >-
           The name of the entity providing UAS Support Services. Populated by
