@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: 'v1'
+  version: 'v4'
   title: Vehicle Registration
   description: Validates that the vehicle ID was properly registered for a NASA event.
   contact:
