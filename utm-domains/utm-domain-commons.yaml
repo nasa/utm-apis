@@ -657,6 +657,23 @@ definitions:
       - uss_instance_id
       - vdop_gps
     properties:
+      air_speed_source:
+        type: string
+        enum:
+          - MEASURED
+          - ESTIMATED
+          - OTHER
+        description: >-
+          Required if air_speed_track_kn is submitted. If the air speed is
+          measured by some device, use MEASURED, if estimated by a human without
+          use ESTIMATED.  If some other means are used, use OTHER. Additional
+          details may be provided in the comments field.
+      air_speed_track_kn:
+        type: number
+        format: double
+        description: >-
+          Air speed in relation to the direction of travel of the aircraft.
+          Value may be negative.
       altitude_gps_wgs84_ft:
         type: number
         format: double
