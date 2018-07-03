@@ -652,8 +652,7 @@ definitions:
       - location
       - time_measured
       - time_sent
-      - track_ground_speed
-      - track_ground_speed_units
+      - track_ground_speed_kn
       - uss_name
       - uss_instance_id
       - vdop_gps
@@ -780,32 +779,14 @@ definitions:
           namespace: https://www.fixm.aero/nas/4.1
           prefix: fb
           attribute: true
-      track_ground_speed:
+      track_ground_speed_kn:
         type: number
         format: double
         description: >-
           Ground speed int the direction of travel. Value must be >= 0.0. In
-          units as specifed by track_ground_speed_units.
+          knots.
         minimum: 0
         exclusiveMinimum: false
-      track_ground_speed_units:
-        type: string
-        enum:
-          -KT
-        description: >-
-           The reference quantities used to express the value of ground speed as
-           provided in track_ground_speed.
-
-           KT: Knots.
-
-           FIXM allows KT (knots) and KM_H (kilometers per hour) but we only
-           allow the KT choice.
-        x-utm-fixm-reference: https://www.fixm.aero/releases/US_Ext-4.2.0/doc/schema_documentation_us_extension/UnitsOfMeasure_xsd.html#UomGroundSpeedType
-        xml:
-          name: UomGroundSpeedType
-          namespace: https://www.fixm.aero/nas/4.1
-          prefix: fb
-          attribute: true
       uss_name:
         description: >-
           The name of the entity providing UAS Support Services. Populated by
@@ -1082,11 +1063,8 @@ definitions:
         items:
           type: string
           format: uuid
-          maxLength: 36
-          minLength: 36
-          example: 00000000-0000-4444-8888-FEEDDEADBEEF
-        minItems: 0
-        maxItems: 100
+          minLength: 0
+          maxLength: 100
       type:
         type: string
         enum:
