@@ -350,7 +350,7 @@ definitions:
         x-utm-data-accessibility: OPERATIONAL
       metadata:
         $ref: >-
-          https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-metadata.yaml#/definitions/EventMetadata
+          https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-metadata.yaml#/definitions/EventMetadata
         x-utm-data-accessibility: OPERATIONAL
   PriorityElements:
     description: >-
