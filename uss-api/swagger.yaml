@@ -4,7 +4,7 @@ info:
     This API describes the minimum interface that a USS must implement to  be
     part of the USS Network.  This API allows for communication of data  between
     USS Instances and from FIMS to a USS regarding new USS Instances.
-  version: v3
+  version: v4
   title: USS Required API
   termsOfService: >
 

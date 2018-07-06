@@ -10,5 +10,5 @@ of existing PIREP data can be found on the internet; follows is an example.
 
 ![alt text][logo]
 
-[logo]: https://raw.githubusercontent.com/nasa/utm-apis/master/urep-api/urep-plot.png "Logo Title Text 2"
+[logo]: https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/urep-api/urep-plot.png "Logo Title Text 2"
 

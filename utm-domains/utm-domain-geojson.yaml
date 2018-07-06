@@ -24,7 +24,7 @@
 
 info:
   description: "UTM geogrpahy model (swagger domain)"
-  version: 'v1'
+  version: 'v4'
   title: UTM Geography Model
 
 #

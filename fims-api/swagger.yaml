@@ -4,7 +4,7 @@ info:
     This API describes the RESTful interface from a UAS Service Supplier (USS)
     to FIMS.
 
-  version: "v3"
+  version: "v4"
   title: "UTM Research Platform, FIMS-USS Interface"
   contact:
     name: NASA Ames Research Center, Aviation Systems Division

@@ -22,11 +22,8 @@ info:
       MUST reject that data submission. Some of these checks are explictly
       stated in the descriptions below. If you recognize any such checks that
       are not documented, please submit an issue report on github.
-  version: v3
+  version: v4
   title: UTM models
-  externalDocs:
-    description: The USS Specification document is a key enabler to this API.
-    url: https://only.available.directly.from.nasa/this.has.to.be.a.url/ugh
 definitions:
   data_accessibility:
     description: >-
@@ -71,12 +68,8 @@ definitions:
       5. **NOTICE**
         This issue is provided for situational awareness. Planning by operators and USSs may be affected.
       6. **INFORMATIONAL**
-        This issue is provided for situational awareness.
-      Note that this approach leverages RFC 5424: "The Syslog Protocol." By
-      taking this approach, there is the possibility of formalizing UTMMessaging
-      with more elements of the RFC to allow for compatibility with other
-      logging systems.
-      https://tools.ietf.org/html/rfc5424
+          This issue is provided for situational awareness. Note that this approach leverages RFC 5424: "The Syslog Protocol." By taking this approach, there is the possibility of formalizing UTMMessaging with more elements of the RFC to allow for compatibility with other logging systems. https://tools.ietf.org/html/rfc5424
+
     type: string
     enum:
       - EMERGENCY
@@ -357,7 +350,7 @@ definitions:
         x-utm-data-accessibility: OPERATIONAL
       metadata:
         $ref: >-
-          https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-metadata.yaml#/definitions/EventMetadata
+          https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-metadata.yaml#/definitions/EventMetadata
         x-utm-data-accessibility: OPERATIONAL
   PriorityElements:
     description: >-
@@ -376,8 +369,7 @@ definitions:
       - priority_status
     properties:
       priority_level:
-        $ref: >-
-          https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/severity
+        $ref: '#/definitions/severity'
       priority_status:
         type: string
         description: >-
@@ -924,8 +916,7 @@ definitions:
         maxLength: 100
         example: '2015-08-20T14:11:57.345Z'
       severity:
-        $ref: >-
-          https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/severity
+        $ref: '#/definitions/severity'
       message_type:
         description: >-
           The type of message. An enum to constrain messages and allow better
@@ -973,11 +964,9 @@ definitions:
           - UNAUTHORIZED_AIRSPACE_ENTRY
           - OTHER_SEE_FREE_TEXT
       last_known_position:
-        $ref: >-
-          https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Position
+        $ref: '#/definitions/Position'
       contingency:
-        $ref: >-
-          https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ContingencyPlan
+        $ref: '#/definitions/ContingencyPlan'
       prev_message_id:
         description: >-
           A message_id of a previously sent message that has relevance or
@@ -1058,8 +1047,8 @@ definitions:
         example: 00000000-0000-4444-8888-FEEDDEADBEEF
       permitted_uas:
         description: >-
-           T h e   t y p e s   o f   U A S   operations t h a t   a r e   p e r m i t t e d   w i t h i n   t h e   b o u n d s   o f   
-          t h e   c o n s t r a i n t .  When used in conjunction with permitted_gufis, the
+          The types of UAS operations that are permitted within the bound of
+          the constraint. When used in conjunction with permitted_gufis, the
           filters are an 'OR' relationship. Any operation that matches either
           filter is allowed within the bounds of the constraint.  This list of
           permitted_uas types is not to be considered a final version.  It is
@@ -1083,8 +1072,8 @@ definitions:
           - NONE
       permitted_gufis:
         description: >-
-           T h e  specific   U A S   operations t h a t   a r e   p e r m i t t e d   w i t h i n   t h e   b o u n d s   o f   
-          t h e   c o n s t r a i n t .  When used in conjunction with permitted_uas, the
+          The specific UAS operations that are permitted within the counds of
+          the constraint.  When used in conjunction with permitted_uas, the
           filters are an 'OR' relationship. Any operation that matches either
           filter is allowed within the bounds of the constraint.  The protocol
           for adding the appropriate GUFIs to this array needs to be discussed.
