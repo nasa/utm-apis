@@ -1189,10 +1189,9 @@ definitions:
           A name identifying the originator of this message. MUST be the
           uss_name as known by the authorization server. The maximum and minimum
           character length is based on a usable domain name, and considering the
-          maximum in RFC-1035. The maximum and minimum character length is based
-          on a usable domain name, and considering the maximum in RFC-1035.
+          maximum in RFC-1035.
         type: string
-        maxLength: 100
+        maxLength: 250
       originator_uss_instance_id:
         description: A USS instance_id value of the originator of this message.  UUIDv4.
         type: string
