@@ -164,7 +164,7 @@ paths:
         Service.  For example, when a new USS Instance is registered, that
         announcement would come to this endpoint.
 
-        For valiedation purposes:
+        For validation purposes:
           {uss_instance_id} in path == UssInstance.uss_instance_id of body data
       security:
         - ussapi_security:
