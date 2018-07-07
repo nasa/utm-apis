@@ -827,7 +827,7 @@ definitions:
       vdop_gps:
         type: number
         format: double
-        description: The vertical dilultion of precision as provided by the onboard GPS.
+        description: The vertical dilution of precision as provided by the onboard GPS.
         minimum: 0
     example:
       altitude_gps_wgs84_ft: 1111.111
