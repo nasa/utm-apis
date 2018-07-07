@@ -107,6 +107,11 @@ definitions:
         externalDocs:
           description: See FIXM 4.1.0 for further information.
           url: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/Measures_xsd.html#VerticalReferenceType
+        xml:
+          name: VerticalReferenceType
+          namespace: https://www.fixm.aero/nas/4.1
+          prefix: fb
+          attribute: false
         type: string
         enum:
           - W84
@@ -122,6 +127,11 @@ definitions:
         externalDocs:
           description: See FIXM 4.1.0 for further information.
           url: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/UnitsOfMeasure_xsd.html#UomHeightType
+        xml:
+          name: UomHeightType
+          namespace: https://www.fixm.aero/nas/4.1
+          prefix: fb
+          attribute: false
         type: string
         enum:
           - FT
@@ -515,26 +525,14 @@ definitions:
         minLength: 20
         maxLength: 24
         example: '2015-08-20T14:31:56.118Z'
-      min_altitude_wgs84_ft:
+      min_altitude:
         description: >-
-          The minimum altitude for this operation in this operation volume. In
-          WGS84 reference system using feet as units.
-        type: number
-        format: double
-        minimum: -6000.0
-        exclusiveMinimum: false
-        maximum: 100000.0
-        exclusiveMaximum: false
-      max_altitude_wgs84_ft:
+          The minimum altitude for this operation in this operation volume.
+        $ref: '#/definitions/Altitude'
+      max_altitude:
         description: >-
-          The maximum altitude for this operation in this operation volume. In
-          WGS84 reference system using feet as units.
-        type: number
-        format: double
-        minimum: -6000.0
-        exclusiveMinimum: false
-        maximum: 100000.0
-        exclusiveMaximum: false
+          The maximum altitude for this operation in this operation volume.
+        $ref: '#/definitions/Altitude'
       operation_geography:
         $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       beyond_visual_line_of_sight:
@@ -630,17 +628,11 @@ definitions:
           - RETURN_TO_BASE
       contingency_point:
         $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
-      loiter_altitude_wgs84_ft:
+      loiter_altitude:
         description: >-
           The altitude for this contingency. Relevant and required for the
-          LOITERING contingency_type, ignored for all other types. In WGS84
-          reference system using feet as units.
-        type: number
-        format: double
-        minimum: -6000.0
-        exclusiveMinimum: false
-        maximum: 100000.0
-        exclusiveMaximum: false
+          LOITERING contingency_type, ignored for all other types.
+        $ref: '#/definitions/Altitude'
       loiter_radius_ft:
         description: >-
           The radius of airspace used in loitering for this contingency.
@@ -732,20 +724,14 @@ definitions:
       - uss_instance_id
       - vdop_gps
     properties:
-      altitude_gps_wgs84_ft:
-        type: number
-        format: double
-        minimum: -6000.0
-        exclusiveMinimum: false
-        maximum: 100000.0
-        exclusiveMaximum: false
+      altitude_gps:
         description: >-
-          The altitude as measured via a GPS device on the aircraft. Units in
-          feet using the WGS84 reference system.
+          The altitude as measured via a GPS device on the aircraft.
+        $ref: '#/definitions/Altitude'
       altitude_num_gps_satellites:
         type: integer
         format: int32
-        description: Number of satellites used in calculating the altitude_gps_wgs84_ft.
+        description: Number of satellites used in calculating the altitude.
         minimum: 0
         exclusiveMinimum: false
       comments:
@@ -908,7 +894,7 @@ definitions:
         description: The vertical dilution of precision as provided by the onboard GPS.
         minimum: 0
     example:
-      altitude_gps_wgs84_ft: 1111.111
+#need Altitude example.  Didn't know how to format embedded model.
       altitude_num_gps_satellites: 22
       air_speed_source: MEASURED
       enroute_positions_id: d10cd900-086f-43c7-9d6c-BAADCAFEF00D
