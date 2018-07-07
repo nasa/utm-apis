@@ -425,7 +425,7 @@ definitions:
           ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.
           Seconds may have up to millisecond accuracy (three positions after
           decimal).  The 'Z' implies UTC times and is the only timezone
-          accepted.  effective_time_begin < effective_time_begin MUST be true.
+          accepted.  effective_time_begin < effective_time_end MUST be true.
         type: string
         format: date-time
         minLength: 20
@@ -438,7 +438,7 @@ definitions:
           conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up
           to millisecond accuracy (three positions after decimal).  The 'Z'
           implies UTC times and is the only timezone accepted.
-          effective_time_begin < effective_time_begin MUST be true.
+          effective_time_begin < effective_time_end MUST be true.
         type: string
         format: date-time
         minLength: 20
@@ -555,7 +555,7 @@ definitions:
           3. RETURN_TO_BASE
             The operation will return to base as specified by the contingency_point. The USS may issue an update to the operation plan to support this maneuver.
           4. OTHER
-            Additional details should be provided in
+            Additional details should be provided in free_text. If this gets used often for similar events, API will be updated with new enum value.
         type: string
         enum:
           - LANDING
