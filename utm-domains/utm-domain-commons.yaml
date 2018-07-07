@@ -1240,7 +1240,7 @@ definitions:
         type: string
         maxLength: 1000
     example:
-      gufi: '00000000-0000-4444-8888-FEEDDEADBEEF'
+      message_id: '00000000-0000-4444-8888-600DCAFEF00D'
       origin: USS
       originator_id: uss1
       originator_uss_instance_id: '00000000-0000-4444-8888-FEEDDEADFFFF'

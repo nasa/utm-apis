@@ -68,7 +68,7 @@ paths:
       description: >-
         Allow constraints to be submitted from authorized entities.
         For validation purposes:
-          {message_id} in path == UTMMessage.message_id of body data
+          {message_id} in path == ConstraintMessage.message_id of body data
       security:
         - ussapi_security:
             - utm.nasa.gov_write.constraint
