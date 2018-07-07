@@ -652,6 +652,9 @@ definitions:
       - location
       - time_measured
       - time_sent
+      - track_bearing
+      - track_bearing_reference
+      - track_bearing_uom
       - track_ground_speed
       - track_ground_speed_units
       - uss_name
