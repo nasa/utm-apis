@@ -791,7 +791,7 @@ definitions:
       track_ground_speed_units:
         type: string
         enum:
-          -KT
+          - KT
         description: >-
            The reference quantities used to express the value of ground speed as
            provided in track_ground_speed.
