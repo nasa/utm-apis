@@ -331,12 +331,12 @@ definitions:
               must have either a non-zero volume (3D) intersection OR a positive
               temporal intersection. (Note it may have both intersection types.)
             5. Each spatial dimension of an op vol's bounding box must have
-            length less than M. Should discuss with partners the value of M.
+            length less than 6000ft (should discuss with partners this value).
             This is a sanity check against excessively large volumes. Need to
             be careful here as there may be legitimate use cases wherein large
             volumes are required/allowed, but we want to encourage efficient
             planning and protect against misuse of the shared airspace.
-            6. The planned duration of an op vol must be less than T. Again,
+            6. The planned duration of an op vol must be less than 120 minutes. Again,
             need to be careful to not damage legitimate use cases, but need to
             protect against misuse/poor planning. For long duration missions,
             it may be reasonable to have them replan or to have volumes with
