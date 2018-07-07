@@ -373,8 +373,8 @@ definitions:
       priority_status:
         type: string
         description: >-
-          If a PUBLIC_SAFETY operation is POSTed to any endpoint, the correct
-          scope will be required. Any USS may POST an INFLIGHT_EMERGENCY with
+          If a PUBLIC_SAFETY operation is PUT to any endpoint, the correct
+          scope will be required. Any USS may PUT an INFLIGHT_EMERGENCY with
           non-priority scopes.  NONE should only be used to indicate that an
           operation that previously had a priority status now has no priority
           status.
@@ -688,7 +688,7 @@ definitions:
         format: uuid
         description: >-
           Each operation has an GUFI assigned upon submission. Required upon
-          POSTing a new position. It is a JSON string, but conforms to the UUID
+          PUTting a new position. It is a JSON string, but conforms to the UUID
           version 4 specification
         maxLength: 36
         minLength: 36
@@ -1337,7 +1337,7 @@ definitions:
         description: >-
           A base URL used by the USS Discovery Service and other USS Instances
           to callback to the USS Instance.
-          USS Discovery will append "/uss" to the base URL in order to POST a
+          USS Discovery will append "/uss" to the base URL in order to PUT a
           new uss_instance to the USS Instance. It will also do the same to test
           the URL when it first receives a uss_instance.
           USS Instances and other clients/services will append "/operations" to
