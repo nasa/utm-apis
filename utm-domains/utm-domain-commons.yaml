@@ -728,16 +728,19 @@ definitions:
         description: >-
           The altitude as measured via a GPS device on the aircraft.
         $ref: '#/definitions/Altitude'
+        x-utm-data-accessibility: OPERATIONAL
       altitude_num_gps_satellites:
         type: integer
         format: int32
         description: Number of satellites used in calculating the altitude.
         minimum: 0
         exclusiveMinimum: false
+        x-utm-data-accessibility: SAFETY
       comments:
         type: string
         minLength: 0
         maxLength: 1000
+        x-utm-data-accessibility: OPERATIONAL
       enroute_positions_id:
         type: string
         format: uuid
@@ -747,6 +750,7 @@ definitions:
           NOT modify this identifier.
         maxLength: 36
         minLength: 36
+        x-utm-data-accessibility: PUBLIC
       gufi:
         type: string
         format: uuid
@@ -756,13 +760,16 @@ definitions:
           version 4 specification
         maxLength: 36
         minLength: 36
+        x-utm-data-accessibility: PUBLIC
       hdop_gps:
         type: number
         format: double
         description: The horizontal dilution of precision as provided by the onboard GPS.
         minimum: 0
+        x-utm-data-accessibility: SAFETY
       location:
         $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+        x-utm-data-accessibility: PUBLIC
       time_measured:
         description: >-
           The time the position was measured. Likely the time provided with the
@@ -776,6 +783,7 @@ definitions:
         minLength: 20
         maxLength: 24
         example: '2015-08-20T14:11:56.118Z'
+        x-utm-data-accessibility: PUBLIC
       time_sent:
         description: >-
           The time the position was sent by the USS as measured by that USS's
@@ -789,6 +797,7 @@ definitions:
         minLength: 20
         maxLength: 24
         example: '2015-08-20T14:11:57.968Z'
+        x-utm-data-accessibility: OPERATIONAL
       track_bearing:
         type: number
         format: double
@@ -808,6 +817,7 @@ definitions:
           namespace: https://www.fixm.aero/nas/4.1
           prefix: fb
           attribute: false
+        x-utm-data-accessibility: OPERATIONAL
       track_bearing_reference:
         type: string
         enum:
@@ -827,6 +837,7 @@ definitions:
           namespace: https://www.fixm.aero/nas/4.1
           prefix: fb
           attribute: true
+        x-utm-data-accessibility: OPERATIONAL
       track_bearing_uom:
         type: string
         enum:
@@ -844,6 +855,7 @@ definitions:
           namespace: https://www.fixm.aero/nas/4.1
           prefix: fb
           attribute: true
+        x-utm-data-accessibility: OPERATIONAL
       track_ground_speed:
         type: number
         format: double
@@ -852,6 +864,7 @@ definitions:
           units as specifed by track_ground_speed_units.
         minimum: 0
         exclusiveMinimum: false
+        x-utm-data-accessibility: OPERATIONAL
       track_ground_speed_units:
         type: string
         enum:
@@ -870,6 +883,7 @@ definitions:
           namespace: https://www.fixm.aero/nas/4.1
           prefix: fb
           attribute: true
+        x-utm-data-accessibility: OPERATIONAL
       uss_name:
         description: >-
           The name of the entity providing UAS Support Services. Populated by
@@ -879,6 +893,7 @@ definitions:
         type: string
         minLength: 1
         maxLength: 250
+        x-utm-data-accessibility: OPERATIONAL
       uss_instance_id:
         description: >-
           A USS instance_id value for the USS instance managing this operation.
@@ -888,11 +903,13 @@ definitions:
         maxLength: 36
         minLength: 36
         example: 00000000-0000-4444-8888-FEEDDEADBEEF
+        x-utm-data-accessibility: OPERATIONAL
       vdop_gps:
         type: number
         format: double
         description: The vertical dilution of precision as provided by the onboard GPS.
         minimum: 0
+        x-utm-data-accessibility: SAFETY
     example:
 #need Altitude example.  Didn't know how to format embedded model.
       altitude_num_gps_satellites: 22
