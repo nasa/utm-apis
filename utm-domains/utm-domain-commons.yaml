@@ -78,6 +78,79 @@ definitions:
       - WARNING
       - NOTICE
       - INFORMATIONAL
+  PeronOrOrganization:
+    description: >-
+      From FIXM 4.1: "An identifiable, responsible entity that can be either a natural person or an organization."
+    type: object
+    xml:
+      name: PersonOrOrganizationType
+      namespace: https://www.fixm.aero/nas/4.1
+      prefix: fb
+      attribute: false
+    externalDocs:
+      description: See FIXM 4.1.0 for further information.
+      url: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/Organization_xsd.html#PersonOrOrganizationType
+    required:
+      - name
+      - email_addresses
+      - phone_numbers
+    properties:
+      name:
+        description: >-
+          The full official name of the Person, State, Organisation, Authority, aircraft operating
+          agency, handling agency etc. [FIXM]
+        type: string
+        minLength: 0
+        maxLength: 60
+        externalDocs:
+          description: See FIXM 4.1.0 for further information.
+          url: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/Types_xsd.html#TextNameType
+        xml:
+          name: TextNameType
+          namespace: https://www.fixm.aero/nas/4.1
+          prefix: fb
+          attribute: true
+      email_addresses:
+        description: >-
+          An array of email addresses. To establish best practices, the order
+          of the email addresses in the array should indicate the order that
+          they should be used.
+        type: array
+        minItems: 1
+        maxItems: 5
+        items:
+          type: string
+          format: email
+          externalDocs:
+            description: See FIXM 4.1.0 for further information.
+            url: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/Address_xsd.html#OnlineContactType
+          xml:
+            name: OnlineContactType
+            namespace: https://www.fixm.aero/nas/4.1
+            prefix: fb
+            attribute: true
+      phone_numbers:
+        description: >-
+          An array of phone numbers. To establish best practices, the order
+          of the phone numbers in the array should indicate the order that
+          they should be used.
+        type: array
+        minItems: 1
+        maxItems: 5
+        items:
+          type: string
+          format: phone-number
+          minLength: 1
+          maxLength: 500
+          pattern: (\+)?[0-9\s\-\(\)]+
+          externalDocs:
+            description: See FIXM 4.1.0 for further information.
+            url: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/Address_xsd.html#TextPhoneType
+          xml:
+            name: TextPhoneType
+            namespace: https://www.fixm.aero/nas/4.1
+            prefix: fb
+            attribute: true
   Altitude:
     type: object
     required:
