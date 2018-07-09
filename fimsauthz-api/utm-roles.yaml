@@ -90,7 +90,7 @@ USS_BASIC:
     scopes:
         - utm.nasa.gov_write.operation
         - utm.nasa.gov_write.message
-        - utm.nasa.gov_read.contraint
+        - utm.nasa.gov_read.constraint
         - utm.nasa.gov_read_uvin
         - utm.nasa.gov_write.conflictmanagement
 
