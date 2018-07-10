@@ -360,8 +360,6 @@ paths:
               - CLOSED
               - NONCONFORMING
               - ROGUE
-            minLength: 6
-            maxLength: 13
           collectionFormat: csv
           required: false
         - name: distance
@@ -415,8 +413,8 @@ paths:
               - gufi
               - state
           collectionFormat: csv
-          maxLength: 3
-          minLength: 1
+          maxItems: 3
+          minItems: 1
           default: submit_time
         - name: sort_increasing
           in: query

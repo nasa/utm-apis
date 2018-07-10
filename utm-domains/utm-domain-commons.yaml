@@ -240,6 +240,17 @@ definitions:
         description: >-
           Created and assigned by originating USS. Validated as UUID version 4
           specification.
+
+          If ordering or sorting is required, the sort order is lexicographic as
+          defined in RFC4122:
+
+          UUIDs, as defined in this document, can also be ordered
+          lexicographically.  For a pair of UUIDs, the first one follows the
+          second if the most significant field in which the UUIDs differ is
+          greater for the first UUID.  The second precedes the first if the
+          most significant field in which the UUIDs differ is greater for
+          the second UUID.
+          
         type: string
         format: uuid
         maxLength: 36
@@ -403,7 +414,7 @@ definitions:
           If ordering of states is required for any purpose, they shall be
           ordered as follows:
             ACCEPTED < ACTIVATED < CLOSED < NONCONFORMING < ROGUE
-            
+
         type: string
         enum:
           - ACCEPTED
