@@ -78,7 +78,7 @@ definitions:
       - WARNING
       - NOTICE
       - INFORMATIONAL
-  PeronOrOrganization:
+  PersonOrOrganization:
     description: >-
       From FIXM 4.1: "An identifiable, responsible entity that can be either a natural person or an organization."
     type: object
@@ -399,6 +399,11 @@ definitions:
             See USS Specification for requirements to transition to this state.
           5. ROGUE
             See USS Specification for requirements to transition to this state.
+
+          If ordering of states is required for any purpose, they shall be
+          ordered as follows:
+            ACCEPTED < ACTIVATED < CLOSED < NONCONFORMING < ROGUE
+            
         type: string
         enum:
           - ACCEPTED

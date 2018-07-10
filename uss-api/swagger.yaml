@@ -400,11 +400,23 @@ paths:
         - name: sort
           in: query
           description: >-
-            A valid field name to use for sorting records. If multiple fields
+            Field name(s) to use for sorting records. If multiple fields
             are provided, the sorting is based on the ordered priorty of that
-            list.
+            list.  Note that the enum provided designates the required fields
+            that a USS must support. A USS may decide to support additional
+            fields, but how that USS communicates that option is out of scope
+            for this API document.
           required: false
-          type: string
+          type: array
+          items:
+            type: string
+            enum:
+              - submit_time
+              - gufi
+              - state
+          collectionFormat: csv
+          maxLength: 3
+          minLength: 1
           default: submit_time
         - name: sort_increasing
           in: query
@@ -423,7 +435,9 @@ paths:
           type: integer
           default: 10
           maximum: 100
+          exclusiveMaximum: false
           minimum: 1
+          exclusiveMinimum: false
           format: int32
         - name: offset
           in: query
@@ -432,6 +446,7 @@ paths:
           type: integer
           default: 0
           minimum: 0
+          exclusiveMinimum: false
           format: int32
       responses:
         '200':
