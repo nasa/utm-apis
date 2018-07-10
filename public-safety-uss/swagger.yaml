@@ -38,7 +38,7 @@ info:
     UNILATERAL TERMINATION OF THIS AGREEMENT.
 
 host: uss.defined.url
-basePath: /pubsafe
+basePath: /
 schemes:
   - https
 

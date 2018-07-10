@@ -42,7 +42,7 @@ info:
     url: 'https://ti.arc.nasa.gov/opensource/nosa/'
 
 host: uss.defined.url
-basePath: /uss
+basePath: /
 schemes:
   - https
 securityDefinitions:
