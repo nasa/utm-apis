@@ -48,8 +48,8 @@ securityDefinitions:
     authorizationUrl: 'https://utm.defined.host/oauth/token'
     flow: implicit
     scopes:
-      'utm.nasa.gov_read_publicsafety': "retrieve public safety data, for example, a Public Safety USS retrieves data."
-      'utm.nasa.gov_read_uvin': "retrieve uvin registration data, for example, a USS checks that a vehicle is registered."
+      'utm.nasa.gov_read.publicsafety': "retrieve public safety data, for example, a Public Safety USS retrieves data."
+      'utm.nasa.gov_read.uvin': "retrieve uvin registration data, for example, a USS checks that a vehicle is registered."
       'utm.nasa.gov_write.uvin': "Write uvin data, for example, a Vehicle Authority enters new data."
 
 paths:
@@ -62,8 +62,8 @@ paths:
         the database, an empty array is returned also with a  200 HTTP code.
       security:
         - vehicle_oauth:
-            - utm.nasa.gov_read_publicsafety
-            - utm.nasa.gov_read_uvin
+            - utm.nasa.gov_read.publicsafety
+            - utm.nasa.gov_read.uvin
       parameters:
         - in: path
           name: "uvin"
@@ -164,7 +164,7 @@ paths:
           USS gets vehicle owner's contact data.
       security:
         - vehicle_oauth:
-            - 'utm.nasa.gov_read_publicsafety'
+            - 'utm.nasa.gov_read.publicsafety'
       parameters:
         - in: path
           name: "uvin"

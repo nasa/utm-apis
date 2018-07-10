@@ -2,7 +2,7 @@
 #   This is the master data for the Role and Scopes for the
 #   FIMS Authorization Server (FIMS AZ).
 #   See the FIMS AZ API Spec for scope definitions.  Note that a write scope
-#   allows reading. 
+#   allows reading.
 
 UTM_AUTHORITY:
     description: |
@@ -90,8 +90,8 @@ USS_BASIC:
     scopes:
         - utm.nasa.gov_write.operation
         - utm.nasa.gov_write.message
-        - utm.nasa.gov_read.contraint
-        - utm.nasa.gov_read_uvin
+        - utm.nasa.gov_read.constraint
+        - utm.nasa.gov_read.uvin
         - utm.nasa.gov_write.conflictmanagement
 
 USS_PUBLIC_SAFETY:
@@ -104,7 +104,7 @@ USS_PUBLIC_SAFETY:
     authority: UTM_AUTHORITY
     examples:
         - "A Public Safety USS queries other USSs to determine which USS is operating a particular vehicle."
-        - "A Public Safety USS queries vehicle registration using its uvin scopes to learn the vehicle's owner."
+        - "A Public Safety USS queries vehicle registration using its pubsafe scopes to learn the vehicle's owner."
     scopes:
         - utm.nasa.gov_read.publicsafety
 
@@ -118,7 +118,7 @@ CONSTRAINT_MANAGER:
     authority: UTM_AUTHORITY
     examples:
         - "FIMS_OPS has the USS_CONSTRAINT_MANAGER role and can publish a constraint to the USS Network."
-        - "A USS with Contraint Management role publishes an airspace constraint to the USS Network."
+        - "A USS with Constraint Management role publishes an airspace constraint to the USS Network."
         - "All USSs protect their PUT Constraint endpoint with these scopes."
     scopes:
         - utm.nasa.gov_write.constraint
