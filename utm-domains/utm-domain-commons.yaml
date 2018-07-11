@@ -547,8 +547,8 @@ definitions:
       - volume_type
       - effective_time_begin
       - effective_time_end
-      - min_altitude_wgs84_ft
-      - max_altitude_wgs84_ft
+      - min_altitude
+      - max_altitude
       - operation_geography
       - beyond_visual_line_of_sight
     properties:
@@ -609,6 +609,9 @@ definitions:
           8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds
           may have up to millisecond accuracy (three positions after decimal).
           The 'Z' implies UTC times and is the only timezone accepted.
+
+          This value must satisfy:  actual_time_end < effective_time_begin
+          whenever actual_time_end is not null.
         type: string
         format: date-time
         minLength: 20
@@ -617,10 +620,18 @@ definitions:
       min_altitude:
         description: >-
           The minimum altitude for this operation in this operation volume.
+
+          The following must hold:
+            min_altitude.altitude_value < max_altitude.altitude_value
+
         $ref: '#/definitions/Altitude'
       max_altitude:
         description: >-
           The maximum altitude for this operation in this operation volume.
+
+          The following must hold:
+            min_altitude.altitude_value < max_altitude.altitude_value
+
         $ref: '#/definitions/Altitude'
       operation_geography:
         $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
