@@ -250,7 +250,7 @@ definitions:
           greater for the first UUID.  The second precedes the first if the
           most significant field in which the UUIDs differ is greater for
           the second UUID.
-          
+
         type: string
         format: uuid
         maxLength: 36
@@ -1057,8 +1057,10 @@ definitions:
           based on a usable domain name, and considering the maximum in
           RFC-1035.
         type: string
-        minLength: 1
+        minLength: 4
+        exclusiveMinimum: false
         maxLength: 250
+        exclusiveMaximum: false
       originator_uss_instance_id:
         description: >-
           A USS instance_id value of the originator of this message.  This aids
@@ -1204,10 +1206,15 @@ definitions:
       originator_id:
         description: >-
           A name identifying the originator of this message. If a USS is the
-          originator, then this field MUST be the uss_id as known by the
-          authorization server.
+          originator, then this field MUST be the uss_name as known by the
+          authorization server. The maximum and minimum character length is
+          based on a usable domain name, and considering the maximum in
+          RFC-1035.
         type: string
-        maxLength: 100
+        minLength: 4
+        exclusiveMinimum: false
+        maxLength: 250
+        exclusiveMaximum: false
       originator_uss_instance_id:
         description: A USS instance_id value of the originator of this message.  UUIDv4.
         type: string
@@ -1331,7 +1338,7 @@ definitions:
     example:
       message_id: '00000000-0000-4444-8888-600DCAFEF00D'
       origin: USS
-      originator_id: uss1
+      originator_id: "uss.provider321.com"
       originator_uss_instance_id: '00000000-0000-4444-8888-FEEDDEADFFFF'
       type: SAFETY
       constraint_geography:
