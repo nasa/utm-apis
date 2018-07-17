@@ -290,8 +290,9 @@ definitions:
           only timezone accepted.
         type: string
         format: date-time
-        minLength: 20
+        minLength: 24
         maxLength: 24
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
         x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T14:11:56.118Z'
       last_lun_update_time:
@@ -311,9 +312,11 @@ definitions:
           only timezone accepted. This field is set and maintained by the USS
           managing the Operation and is communicated to other USSs.
         type: string
+        type: string
         format: date-time
-        minLength: 20
+        minLength: 24
         maxLength: 24
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
         x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T14:11:56.118Z'
       aircraft_comments:
@@ -585,9 +588,11 @@ definitions:
           decimal).  The 'Z' implies UTC times and is the only timezone
           accepted.  effective_time_begin < effective_time_end MUST be true.
         type: string
+        type: string
         format: date-time
-        minLength: 20
+        minLength: 24
         maxLength: 24
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
         example: '2015-08-20T14:11:56.118Z'
       effective_time_end:
         description: >-
@@ -599,8 +604,9 @@ definitions:
           effective_time_begin < effective_time_end MUST be true.
         type: string
         format: date-time
-        minLength: 20
+        minLength: 24
         maxLength: 24
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
         example: '2015-08-20T15:11:56.118Z'
       actual_time_end:
         description: >-
@@ -614,8 +620,9 @@ definitions:
           whenever actual_time_end is not null.
         type: string
         format: date-time
-        minLength: 20
+        minLength: 24
         maxLength: 24
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
         example: '2015-08-20T14:31:56.118Z'
       min_altitude:
         description: >-
@@ -780,8 +787,9 @@ definitions:
           only timezone accepted.
         type: string
         format: date-time
-        minLength: 20
+        minLength: 24
         maxLength: 24
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
         example: '2015-08-20T14:31:56.118Z'
       valid_time_end:
         description: >-
@@ -794,8 +802,9 @@ definitions:
           only timezone accepted.
         type: string
         format: date-time
-        minLength: 20
+        minLength: 24
         maxLength: 24
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
         example: '2015-08-20T14:41:09.651Z'
       free_text:
           description: >-
@@ -880,8 +889,9 @@ definitions:
           only timezone accepted.
         type: string
         format: date-time
-        minLength: 20
+        minLength: 24
         maxLength: 24
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
         example: '2015-08-20T14:11:56.118Z'
         x-utm-data-accessibility: PUBLIC
       time_sent:
@@ -894,8 +904,9 @@ definitions:
           only timezone accepted.
         type: string
         format: date-time
-        minLength: 20
+        minLength: 24
         maxLength: 24
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
         example: '2015-08-20T14:11:57.968Z'
         x-utm-data-accessibility: OPERATIONAL
       track_bearing:
@@ -1096,7 +1107,9 @@ definitions:
           'Z' implies UTC times and is the only timezone accepted."
         type: string
         format: date-time
-        maxLength: 100
+        minLength: 24
+        maxLength: 24
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
         example: '2015-08-20T14:11:57.345Z'
       severity:
         $ref: '#/definitions/severity'
@@ -1294,8 +1307,10 @@ definitions:
           The 'Z' implies UTC times and is the only timezone accepted.
         type: string
         format: date-time
-        minLength: 20
+        minLength: 24
         maxLength: 24
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
         example: '2015-08-20T14:11:56.118Z'
       effective_time_end:
         description: >-
@@ -1306,8 +1321,9 @@ definitions:
           accepted.
         type: string
         format: date-time
-        minLength: 20
+        minLength: 24
         maxLength: 24
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
         example: '2015-08-20T15:11:56.118Z'
       actual_time_end:
         description: >-
@@ -1319,8 +1335,9 @@ definitions:
           required.
         type: string
         format: date-time
-        minLength: 20
+        minLength: 24
         maxLength: 24
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
         example: '2015-08-20T14:31:56.118Z'
       min_altitude:
         description: >-
@@ -1492,12 +1509,18 @@ definitions:
       time_submitted:
         type: string
         format: date-time
+        minLength: 24
+        maxLength: 24
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
         description: >-
           The time at which the submission of this USS Instance was received at
           this discovery service.  Only modifiable by discovery service.
       time_available_begin:
         type: string
         format: date-time
+        minLength: 24
+        maxLength: 24
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
         description: >-
           The time at which the USS will begin providing services for active UAS
           operations for this USS Instance.  Note that the USS may provide
@@ -1506,6 +1529,9 @@ definitions:
       time_available_end:
         type: string
         format: date-time
+        minLength: 24
+        maxLength: 24
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
         description: >-
           The time at which the USS will cease providing services for active UAS
           operations for this USS Instance.  This means that there will not be
@@ -1516,6 +1542,9 @@ definitions:
       time_last_modified:
         type: string
         format: date-time
+        minLength: 24
+        maxLength: 24
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
         description: >-
           The last time there was an update to the data regarding this USS
           Instance. Only modifiable by discovery service.
