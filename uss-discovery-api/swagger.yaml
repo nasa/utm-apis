@@ -193,10 +193,21 @@ paths:
           default: true
         - name: limit
           in: query
-          description: The maximum number or records to return. Default 10.
+          description: >-
+            The maximum number or records to return. Default 1000.
+
+            Please note that if there are more than 1000 instances, the caller
+            might not know there are more.  It is recommended to call again
+            with offset = 1000, if your first call returns exactly 1000 records.
+
+            Also note if we are returning 1000 records, there is probably
+            something very wrong with overall design.  Limit added now for
+            testing purposes as concept is further developed.
           required: false
           type: integer
-          default: 10
+          default: 1000
+          minimum: 1
+          maximum: 1000
           format: int32
         - name: offset
           in: query
