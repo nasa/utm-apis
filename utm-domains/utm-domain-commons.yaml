@@ -659,8 +659,8 @@ definitions:
           A positive integer unique amongst the set of Contingencies for this
           operation. The integers may be ordered by some scheme, but this is not
           required.
-        type: number
-        format: integer
+        type: integer
+        format: int32
         minimum: 1
         exclusiveMinimum: false
         maximum: 1000
