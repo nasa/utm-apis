@@ -25,6 +25,42 @@ info:
   version: v4
   title: UTM models
 definitions:
+  timestamp:
+    description: >-
+      Timestamps must follow the guidance set forth in RFC3339.  This RFC
+      defines a profile for ISO8601 forcused on interoperability of Internet
+      based systems.  This profile makes certain design decisions based on
+      reducing rarely used options, elimination of redundant information, and
+      overall simplicity.
+
+      From these goals and insight from building interoperable systems,
+      RFC3339 provides a grammar for timestamps.  Please see
+
+      https://tools.ietf.org/html/rfc3339#section-5.6
+
+      for that grammer and the sections preceding that grammar for more
+      detailed discussion.
+
+      For UTM, we have attempted to reduce the grammar to a regular expression,
+      but this does not take into account all rules.  For example, a valid
+      timestamp should not allow 30 days in February, but this is not in the
+      regular expression.  Likewise, leap years are not captured in the
+      regular expression.  Thus it is possible for a timestamp to satisfy this
+      RE, but still not be valid and, thus, be rejected by some components of
+      UTM.
+
+      Also note that this format allows for varying resolutions. To support this
+      flexibility, participating systems must maintain the resolution of the
+      timestamp provided to them.  For example, additional padding of zeros
+      MUST NOT be added to a timestamp received from another system.
+
+      There may be some instances of this data type in some models that require
+      a specific resolution or other requirements.  If that is the case, those
+      requirements will be noted in that instance description.  This should
+      be an exception to the rule and, therefore, rarely used.
+    type: "string"
+    format: "iso8601"
+    pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{1,6})?(Z|((\\+|-)(2[0-3]|[01][0-9]):[0-5][0-9]))?$"
   uuid:
     description: >-
       Currently, this is a UUID version 4.  These UUIDs have a well-defined
@@ -130,7 +166,7 @@ definitions:
           The full official name of the Person, State, Organisation, Authority, aircraft operating
           agency, handling agency etc. [FIXM]
         type: string
-        minLength: 0
+        minLength: 1
         maxLength: 60
         externalDocs:
           description: See FIXM 4.1.0 for further information.
@@ -284,23 +320,8 @@ definitions:
         $ref: '#/definitions/uuid'
         x-utm-data-accessibility: PUBLIC
       submit_time:
-        description: >-
-          Time the operation submission was sent by the managing USS. Uses the
-          ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.
-          Seconds may have up to millisecond accuracy (three positions after
-          decimal).  The 'Z' implies UTC times and is the only timezone
-          accepted. This value is set by the USS managing this Operation upon
-          submitting the initial data to another server in the USS Network. This
-          test MUST be true: submit_time <= last_lun_update_time. Uses the
-          ISO 8601 format conforming to pattern:
-          YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy
-          (three positions after decimal).  The 'Z' implies UTC times and is the
-          only timezone accepted.
-        type: string
-        format: date-time
-        minLength: 24
-        maxLength: 24
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
+        type:
+          $ref: '#/definitions/timestamp'
         x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T14:11:56.118Z'
       last_lun_update_time:
@@ -319,12 +340,8 @@ definitions:
           (three positions after decimal).  The 'Z' implies UTC times and is the
           only timezone accepted. This field is set and maintained by the USS
           managing the Operation and is communicated to other USSs.
-        type: string
-        type: string
-        format: date-time
-        minLength: 24
-        maxLength: 24
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
+        type:
+          $ref: '#/definitions/timestamp'
         x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T14:11:56.118Z'
       aircraft_comments:
@@ -585,47 +602,34 @@ definitions:
         default: false
       effective_time_begin:
         description: >-
-          Earliest time the operation will use the operation volume.  Uses the
-          ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.
-          Seconds may have up to millisecond accuracy (three positions after
-          decimal).  The 'Z' implies UTC times and is the only timezone
-          accepted.  effective_time_begin < effective_time_end MUST be true.
-        type: string
-        type: string
-        format: date-time
-        minLength: 24
-        maxLength: 24
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
+          Earliest time the operation will use the operation volume.  It must
+          be less than effective_time_end.
+
+          effective_time_begin < effective_time_end MUST be true.
+        type:
+          $ref: '#/definitions/timestamp'
+        x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T14:11:56.118Z'
       effective_time_end:
         description: >-
           Latest time the operation will done with the operation volume. It must
-          be greater than effective_time_begin.  Uses the ISO 8601 format
-          conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up
-          to millisecond accuracy (three positions after decimal).  The 'Z'
-          implies UTC times and is the only timezone accepted.
+          be greater than effective_time_begin.
+
           effective_time_begin < effective_time_end MUST be true.
-        type: string
-        format: date-time
-        minLength: 24
-        maxLength: 24
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
+        type:
+          $ref: '#/definitions/timestamp'
+        x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T15:11:56.118Z'
       actual_time_end:
         description: >-
           Time that the operational volume was freed for use by other
-          operations.  Should be populated and stored by the USS. Uses the ISO
-          8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds
-          may have up to millisecond accuracy (three positions after decimal).
-          The 'Z' implies UTC times and is the only timezone accepted.
+          operations.  Should be populated and stored by the USS.
 
           This value must satisfy:  actual_time_end < effective_time_begin
           whenever actual_time_end is not null.
-        type: string
-        format: date-time
-        minLength: 24
-        maxLength: 24
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
+        type:
+          $ref: '#/definitions/timestamp'
+        x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T14:31:56.118Z'
       min_altitude:
         description: >-
@@ -784,30 +788,20 @@ definitions:
           Optional. Time that this location is expected to be first available.
           For example, if an operation begins at 1100, but this location is not
           available until 1105 at the earliest, then this field could indicate
-          that fact. Uses the ISO 8601 format conforming to pattern:
-          YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy
-          (three positions after decimal).  The 'Z' implies UTC times and is the
-          only timezone accepted.
-        type: string
-        format: date-time
-        minLength: 24
-        maxLength: 24
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
+          that fact.
+        type:
+          $ref: '#/definitions/timestamp'
+        x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T14:31:56.118Z'
       valid_time_end:
         description: >-
           Optional. Time that this location is expected to become unavailable.
           For example, if an operation begins at 1100, but this location becomes
           closed for some reason at 1105, then this field could indicate that
-          fact. Uses the ISO 8601 format conforming to pattern:
-          YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy
-          (three positions after decimal).  The 'Z' implies UTC times and is the
-          only timezone accepted.
-        type: string
-        format: date-time
-        minLength: 24
-        maxLength: 24
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
+          fact.
+        type:
+          $ref: '#/definitions/timestamp'
+        x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T14:41:09.651Z'
       free_text:
           description: >-
@@ -880,32 +874,18 @@ definitions:
         description: >-
           The time the position was measured. Likely the time provided with the
           GPS position reading.  time_measured < time_sent MUST be true.
-          Uses the ISO 8601 format conforming to pattern:
-          YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy
-          (three positions after decimal).  The 'Z' implies UTC times and is the
-          only timezone accepted.
-        type: string
-        format: date-time
-        minLength: 24
-        maxLength: 24
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
+        type:
+          $ref: '#/definitions/timestamp'
         example: '2015-08-20T14:11:56.118Z'
         x-utm-data-accessibility: PUBLIC
       time_sent:
         description: >-
           The time the position was sent by the USS as measured by that USS's
           system time.  time_measured < time_sent MUST be true.
-          Uses the ISO 8601 format conforming to pattern:
-          YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy
-          (three positions after decimal).  The 'Z' implies UTC times and is the
-          only timezone accepted.
-        type: string
-        format: date-time
-        minLength: 24
-        maxLength: 24
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
-        example: '2015-08-20T14:11:57.968Z'
+        type:
+          $ref: '#/definitions/timestamp'
         x-utm-data-accessibility: OPERATIONAL
+        example: '2015-08-20T14:11:57.968Z'
       track_bearing:
         type: number
         format: double
@@ -1081,15 +1061,10 @@ definitions:
         $ref: '#/definitions/uuid'
       time_sent:
         description: >-
-          Time the message was generated by the origin.  Uses the ISO 8601
-          format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may
-          have up to millisecond accuracy (three positions after decimal).  The
-          'Z' implies UTC times and is the only timezone accepted."
-        type: string
-        format: date-time
-        minLength: 24
-        maxLength: 24
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
+          Time the message was generated by the origin.
+        type:
+          $ref: '#/definitions/timestamp'
+        x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T14:11:57.345Z'
       severity:
         $ref: '#/definitions/severity'
@@ -1265,43 +1240,26 @@ definitions:
         $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       effective_time_begin:
         description: >-
-          The time that the constraint will begin to be in effect.  Uses the ISO
-          8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds
-          may have up to millisecond accuracy (three positions after decimal).
-          The 'Z' implies UTC times and is the only timezone accepted.
-        type: string
-        format: date-time
-        minLength: 24
-        maxLength: 24
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
+          The time that the constraint will begin to be in effect.
+        type:
+          $ref: '#/definitions/timestamp'
+        x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T14:11:56.118Z'
       effective_time_end:
         description: >-
-          The time that the constraint will cease to be in effect..  Uses the
-          ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.
-          Seconds may have up to millisecond accuracy (three positions after
-          decimal).  The 'Z' implies UTC times and is the only timezone
-          accepted.
-        type: string
-        format: date-time
-        minLength: 24
-        maxLength: 24
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
+          The time that the constraint will cease to be in effect.
+        type:
+          $ref: '#/definitions/timestamp'
+        x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T15:11:56.118Z'
       actual_time_end:
         description: >-
-          Time that the constaint actually ceased being in effect.  Uses the ISO
-          8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.  Seconds
-          may have up to millisecond accuracy (three positions after decimal).
-          The 'Z' implies UTC times and is the only timezone accepted.  This
+          Time that the constaint actually ceased being in effect. This
           value is likely used when a constraint ends early, but is not
           required.
-        type: string
-        format: date-time
-        minLength: 24
-        maxLength: 24
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
+        type:
+          $ref: '#/definitions/timestamp'
+        x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T14:31:56.118Z'
       min_altitude:
         description: >-
@@ -1451,31 +1409,25 @@ definitions:
         minLength: 1
         maxLength: 250
       time_submitted:
-        type: string
-        format: date-time
-        minLength: 24
-        maxLength: 24
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
+        type:
+          $ref: '#/definitions/timestamp'
+        x-utm-data-accessibility: OPERATIONAL
         description: >-
           The time at which the submission of this USS Instance was received at
           this discovery service.  Only modifiable by discovery service.
       time_available_begin:
-        type: string
-        format: date-time
-        minLength: 24
-        maxLength: 24
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
+        type:
+          $ref: '#/definitions/timestamp'
+        x-utm-data-accessibility: OPERATIONAL
         description: >-
           The time at which the USS will begin providing services for active UAS
           operations for this USS Instance.  Note that the USS may provide
           planning services prior to the time_available_begin depending on the
           policies of the USS.
       time_available_end:
-        type: string
-        format: date-time
-        minLength: 24
-        maxLength: 24
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
+        type:
+          $ref: '#/definitions/timestamp'
+        x-utm-data-accessibility: OPERATIONAL
         description: >-
           The time at which the USS will cease providing services for active UAS
           operations for this USS Instance.  This means that there will not be
@@ -1484,11 +1436,9 @@ definitions:
       coverage_area:
         $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       time_last_modified:
-        type: string
-        format: date-time
-        minLength: 24
-        maxLength: 24
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]{3})(Z)$"
+        type:
+          $ref: '#/definitions/timestamp'
+        x-utm-data-accessibility: OPERATIONAL
         description: >-
           The last time there was an update to the data regarding this USS
           Instance. Only modifiable by discovery service.
@@ -1619,7 +1569,9 @@ definitions:
         type: string
         description: Version number for the API
       build_time:
-        type: string
+        type:
+          $ref: '#/definitions/timestamp'
+        x-utm-data-accessibility: PUBLIC
         description: Time of the latest build
       api_docs:
         type: array
