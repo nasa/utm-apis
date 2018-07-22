@@ -303,8 +303,7 @@ definitions:
       - uss_instance_id
       - faa_rule
       - state
-      - primary_contact_name
-      - primary_contact_phone
+      - contact
       - controller_location
       - operation_volumes
       - submit_time
@@ -1428,14 +1427,9 @@ definitions:
         description: >-
           The last time there was an update to the data regarding this USS
           Instance. Only modifiable by discovery service.
-      contact_email:
-        type: string
-        format: email
-        description: An optional contact email address for the USS.
-      contact_phone:
-        type: string
-        format: phone
-        description: An optional contact number for the USS.
+      contact:
+        $ref: '#/definitions/PersonOrOrganization'
+        x-utm-data-accessibility: OPERATIONAL
       uss_base_callback_url:
         type: string
         format: url
@@ -1507,8 +1501,6 @@ definitions:
       uss_informational_url: 'https://utm.arc.nasa.gov'
       uss_openapi_url: 'https://nuss.arc.nasa.gov/api'
       uss_registration_url: 'https://nuss.arc.nasa.gov/signup'
-      contact_email: contact@email.com
-      contact_phone: 650-555-5555
 
   VehicleOperationData:
      type: object
