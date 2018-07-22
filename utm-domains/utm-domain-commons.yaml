@@ -89,7 +89,7 @@ definitions:
     format: "uuidv4"
     minLength: 36
     maxLength: 36
-    pattern: "$[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}^"
+    pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
     example: "00000000-0000-4444-8888-FEEDDEADBEEF"
   data_accessibility:
     description: >-
@@ -115,7 +115,6 @@ definitions:
       - OPERATIONAL
       - SAFETY
       - SPECIAL
-
   severity:
     description: >-
       The severity level of a UTMMessage. This severity labeling may be used by
@@ -181,6 +180,14 @@ definitions:
           An array of email addresses. To establish best practices, the order
           of the email addresses in the array should indicate the order that
           they should be used.
+
+          Note that we do not include a regular expression for email addresses.
+          Such a RE is quite unweildy if it attempts to be complete.
+
+          The responsibility is on the USS providing the email address to
+          ensure it is valid and operational.
+
+          Several sources on the Internet can be found discussing email REs.
         type: array
         minItems: 1
         maxItems: 5
