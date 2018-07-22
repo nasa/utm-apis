@@ -217,6 +217,14 @@ definitions:
             namespace: https://www.fixm.aero/nas/4.1
             prefix: fb
             attribute: true
+      comments:
+        description: >-
+          Any additional coments related to contact information. Optional. May
+          not have a clean FIXM equivalent, but may be useful in some UTM
+          contexts.
+        type: string
+        maxLength: 1000
+        minLength: 1
   Altitude:
     type: object
     required:
@@ -392,32 +400,10 @@ definitions:
         type: string
         maxLength: 100
         x-utm-data-accessibility: OPERATIONAL
-      primary_contact_name:
+      contact:
         description: >-
-          Not currently checked for validity, but clients should endeavor to
-          provide useful, appropriate information in these fields. These values
-          should represent the contact that should be used in case of an issue
-          with the operation before, during, or after that operation.
-        type: string
-        maxLength: 100
-        x-utm-data-accessibility: SAFETY
-      primary_contact_phone:
-        type: string
-        format: phone
-        maxLength: 100
-        x-utm-data-accessibility: SAFETY
-      primary_contact_email:
-        type: string
-        format: email
-        maxLength: 100
-        x-utm-data-accessibility: SAFETY
-      additional_contact_info:
-        description: >-
-          Any additional contact information that may be useful (hours of
-          availability, fax number, communication limitations, etc.).
-        type: string
-        default: NOT PROVIDED
-        maxLength: 1000
+          Contact information for this Operation.
+        $ref: '#/definitions/PersonOrOrganization'
         x-utm-data-accessibility: SAFETY
       state:
         description: >
