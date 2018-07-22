@@ -289,8 +289,6 @@ definitions:
         type: string
         enum:
           - FT
-        minLength: 2
-        maxLength: 2
       source:
         description: >-
           Experimental field for testing and discussion to determine
@@ -299,8 +297,6 @@ definitions:
         enum:
           - ONBOARD_SENSOR
           - OTHER
-        minLength: 5
-        maxLength: 14
   Operation:
     type: object
     required:
@@ -643,8 +639,8 @@ definitions:
         $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       beyond_visual_line_of_sight:
         description: >-
-          Describes whether the operation volume is beyond the visual line of
-          sight of the RPIC.
+          Describes whether any portion of the operation volume is beyond the
+          visual line of sight of the RPIC.
         type: boolean
   ContingencyPlan:
     type: object
@@ -806,7 +802,7 @@ definitions:
     type: object
     required:
       - enroute_positions_id
-      - altitude_gps_wgs84_ft
+      - altitude_gps
       - altitude_num_gps_satellites
       - gufi
       - hdop_gps
@@ -987,19 +983,23 @@ definitions:
         minimum: 0
         x-utm-data-accessibility: SAFETY
     example:
-#need Altitude example.  Didn't know how to format embedded model.
+      altitude_gps:
+        altitude_value: 1239.77
+        vertical_reference: "W84"
+        units_of_measure: "FT"
+        source: "ONBOARD_SENSOR"
       altitude_num_gps_satellites: 22
-      air_speed_source: MEASURED
-      enroute_positions_id: d10cd900-086f-43c7-9d6c-BAADCAFEF00D
-      gufi: 00000000-0000-4444-8888-000000000000
+      air_speed_source: "MEASURED"
+      enroute_positions_id: "d10cd900-086f-43c7-9d6c-BAADCAFEF00D"
+      gufi: "00000000-0000-4444-8888-000000000000"
       hdop_gps: 1.117
       time_measured: '2016-10-04T09:15:40.727Z'
       time_sent: '2016-10-04T09:15:40.727Z'
       track_bearing: 33.44
-      track_bearing_reference: MAGNETIC_NORTH
-      track_bearing_uom: DEG
+      track_bearing_reference: "MAGNETIC_NORTH"
+      track_bearing_uom: "DEG"
       track_ground_speed_kn: 33.33
-      uss_name: uss.provider321.net
+      uss_name: "uss.provider321.net"
       vdop_gps: 0.932
       location:
         type: Point
@@ -1257,22 +1257,14 @@ definitions:
         description: >-
           The minimum altitude of the constraint. Must be less than
           max_altitude.
-        type: number
-        format: double
-        minimum: -6000.0
-        exclusiveMinimum: false
-        maximum: 100000.0
-        exclusiveMaximum: false
+        type:
+          $ref: '#/definitions/Altitude'
       max_altitude:
         description: >-
           The maximum altitude of the constraint. Must be greater than
           min_altitude.
-        type: number
-        format: double
-        minimum: -6000.0
-        exclusiveMinimum: false
-        maximum: 100000.0
-        exclusiveMaximum: false
+        type:
+          $ref: '#/definitions/Altitude'
       reason:
         description: The reason for the constraint. Meant for human consumption.
         type: string
@@ -1297,8 +1289,14 @@ definitions:
       effective_time_begin: '2016-11-29T01:16:41.727Z'
       effective_time_end: '2016-11-30T01:16:41.727Z'
       actual_time_end: '2016-11-30T01:15:41.727Z'
-      min_altitude: 0
-      max_altitude: 400
+      min_altitude:
+        altitude_value: 0
+        vertical_reference: "W84"
+        units_of_measure: "FT"
+      max_altitude:
+        altitude_value: 400
+        vertical_reference: "W84"
+        units_of_measure: "FT"
       reason: A UA leaving defined volume
   NegotiationMessage:
     required:
