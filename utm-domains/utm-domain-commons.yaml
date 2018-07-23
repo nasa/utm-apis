@@ -49,18 +49,12 @@ definitions:
       RE, but still not be valid and, thus, be rejected by some components of
       UTM.
 
-      Also note that this format allows for varying resolutions. To support this
-      flexibility, participating systems must maintain the resolution of the
-      timestamp provided to them.  For example, additional padding of zeros
-      MUST NOT be added to a timestamp received from another system.
+      Also note that this UTM format specifies millisecond precision for all
+      time stamps.
 
-      There may be some instances of this data type in some models that require
-      a specific resolution or other requirements.  If that is the case, those
-      requirements will be noted in that instance description.  This should
-      be an exception to the rule and, therefore, rarely used.
     type: "string"
     format: "iso8601"
-    pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{1,6})?(Z|((\\+|-)(2[0-3]|[01][0-9]):[0-5][0-9])){1}$"
+    pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
     example: "2015-08-20T14:11:56.118Z"
   uuid:
     description: >-
