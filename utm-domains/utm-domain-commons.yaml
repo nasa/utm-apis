@@ -1256,14 +1256,14 @@ definitions:
         example: '2015-08-20T14:31:56.118Z'
       min_altitude:
         description: >-
-          The minimum altitude of the constraint. Must be less than
-          max_altitude.
+          The minimum altitude of the constraint. altitude_value MUST be less than
+          max_altitude.altitude_value.
         type:
           $ref: '#/definitions/Altitude'
       max_altitude:
         description: >-
-          The maximum altitude of the constraint. Must be greater than
-          min_altitude.
+          The maximum altitude of the constraint. altitude_value MUST be greater than
+          min_altitude.altitude_value.
         type:
           $ref: '#/definitions/Altitude'
       reason:
