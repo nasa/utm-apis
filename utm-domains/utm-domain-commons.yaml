@@ -994,12 +994,13 @@ definitions:
       enroute_positions_id: "d10cd900-086f-43c7-9d6c-BAADCAFEF00D"
       gufi: "00000000-0000-4444-8888-000000000000"
       hdop_gps: 1.117
-      time_measured: '2016-10-04T09:15:40.727Z'
-      time_sent: '2016-10-04T09:15:40.727Z'
+      time_measured: "2016-10-04T09:15:40.727Z"
+      time_sent: "2016-10-04T09:15:40.727Z"
       track_bearing: 33.44
       track_bearing_reference: "MAGNETIC_NORTH"
       track_bearing_uom: "DEG"
-      track_ground_speed_kn: 33.33
+      track_ground_speed: 33.33
+      track_ground_speed_units: "KT"
       uss_name: "uss.provider321.net"
       vdop_gps: 0.932
       location:
