@@ -1314,6 +1314,7 @@ definitions:
           character length is based on a usable domain name, and considering the
           maximum in RFC-1035.
         type: string
+        minLength: 4
         maxLength: 250
       originator_uss_instance_id:
         description: A USS instance_id value of the originator of this message.
