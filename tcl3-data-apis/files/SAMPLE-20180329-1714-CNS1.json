@@ -1,0 +1,90 @@
+{
+  "fType": "CNS1",
+  "UTM-TCL3-DMP-RevF-CNSPDF": "UTM-SAMPLE-CNS-4.pdf",
+  "basic": {
+    "uvin": "2e6793e1-0007-0006-0000-00000000dc12",
+    "gufi": "1b5aa406-000f-0009-0000-00000000dc16",
+    "submitTime": "2018-03-23T07:10:33.494Z",
+    "ussInstanceID": "99d702d3-0002-0000-0000-00000000dc16",
+    "ussName": "WUSS"
+  },
+
+  "plannedContingency": {
+    "plannedContingencyLandingPoint_deg": [ { "lat":37.4119851, "lon":-122.0623431 }, { "lat":-37.4119853, "lon":-122.0623429 }, { "lat":37.4119857, "lon":-122.0623423 } ],
+    "plannedContingencyLandingPointAlt_ft": [300,250,350],
+    "plannedContingencyLoiterAlt_ft": [300,300.2,0.345],
+    "plannedContingencyLoiterRadius_ft": [50,45.5,40.01]
+  },
+
+  "cns1TestType": [
+    { "ts": "2018-03-23T07:10:33.546Z",  "cns1TestType_nonDim": 0 },
+    { "ts": "2018-03-23T07:15:33.786Z",  "cns1TestType_nonDim": 0 }
+  ],
+
+  "contingencyCause": [
+    { "ts": "2018-03-23T07:10:33.512Z",  "contingencyCause_nonDim": [0] },
+    { "ts": "2018-03-23T07:15:10.609Z",  "contingencyCause_nonDim": [5,7] }
+  ],
+  "contingencyResponse": [
+    { "ts": "2018-03-23T07:10:33.516Z",  "contingencyResponse_nonDim": 0 },
+    { "ts": "2018-03-23T07:15:10.609Z",  "contingencyResponse_nonDim": 1 }
+  ],
+  "contingencyLoiterAlt": [
+    { "ts": "2018-03-23T07:10:33.527Z",  "contingencyLoiterAlt_ft": [300] },
+    { "ts": "2018-03-23T07:15:33.607Z",  "contingencyLoiterAlt_ft": [300,250] }
+  ],
+  "contingencyLoiterType": [
+    { "ts": "2018-03-23T07:10:33.523Z",  "contingencyLoiterType_nonDim": 0 },
+    { "ts": "2018-03-23T07:15:33.607Z",  "contingencyLoiterType_nonDim": 1 }
+  ],
+  "contingencyLoiterRadius": [
+    { "ts": "2018-03-23T07:10:33.531Z",  "contingencyLoiterRadius_ft": [2] },
+    { "ts": "2018-03-23T07:15:33.607Z",  "contingencyLoiterRadius_ft": [20,33] }
+  ],
+  "contingencyLanding": [
+    {
+      "ts": "2018-03-23T07:10:33.520Z",
+      "contingencyLandingPointAlt_ft": [300.4,251],
+      "contingencyLandingPoint_deg": [ { "lat":37.4119851, "lon":-122.0623431 }, {"lat":37.4119857, "lon":-122.0623423 } ]
+    },
+    {
+      "ts": "2018-03-23T07:15:33.925Z",
+      "contingencyLandingPointAlt_ft": [300.4,251],
+      "contingencyLandingPoint_deg": [ { "lat":37.4119851, "lon":-122.0623431 }, { "lat":37.4119857, "lon":-122.0623423 } ]
+    }
+  ],
+
+  "maneuverCommand": [
+    { "ts": "2018-03-23T07:10:33.535Z",  "maneuverCommand": "Climb to 400 ft and loiter" },
+    { "ts": "2018-03-23T07:15:44.005Z",  "maneuverCommand": "Return to takeoff location" }
+  ],
+  "timeManeuverCommandSent": [
+    {"ts": "2018-03-23T07:10:33.550Z"},
+    {"ts": "2018-03-23T07:15:44.733Z"}
+  ],
+  "estimatedTimeToVerifyManeuver": [
+    { "ts": "2018-03-23T07:10:33.542Z",  "estimatedTimeToVerifyManeuver_sec": 0.5 },
+    { "ts": "2018-03-23T07:15:44.005Z",  "estimatedTimeToVerifyManeuver_sec": 1.7 }
+  ],
+  "timeManeuverVerification": [
+    {"ts": "2018-03-23T07:10:34.721Z"},
+    {"ts": "2018-03-23T07:15:46.043Z"}
+  ],
+
+  "primaryLinkDescription": [
+    { "ts": "2018-03-23T07:10:30.502Z",  "primaryLinkDescription": "Description-of-the-primary-link" },
+    { "ts": "2018-03-23T07:15:39.126Z",  "primaryLinkDescription": "Description-of-the-primary-link" }
+  ],
+  "redundantLinkDescription": [
+    { "ts": "2018-03-23T07:10:35.248Z",  "redundantLinkDescription": "Description-of-the-redundant-link" },
+    { "ts": "2018-03-23T07:15:44.842Z",  "redundantLinkDescription": "Description-of-the-redundant-link" }
+  ],
+  "timePrimaryLinkDisconnect": [
+    {"ts": "2018-03-23T07:10:33.550Z"},
+    {"ts": "2018-03-23T07:15:40.158Z"}
+  ],
+  "timeRedundantLinkSwitch": [
+    {"ts": "2018-03-23T07:10:36.228Z"},
+    {"ts": "2018-03-23T07:15:46.504Z"}
+  ]
+}

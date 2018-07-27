@@ -1,0 +1,87 @@
+{
+  "fType": "CON1",
+  "basic": { 
+    "uvin": "cc10e9e9-0004-4005-b000-000000005363",
+    "gufi": "eabb408a-000e-400b-b000-000000005363",
+    "submitTime": "2018-03-29T17:16:15.123456Z",
+    "ussName": "WUSS",
+    "ussInstanceID": "95401977-000d-4010-b000-000000005364"
+  },
+  "UTM-TCL3-DMP-RevF-CONPDF": "UTM-SAMPLE-CON-1.pdf",
+  "plannedBvlosLandingPoint_deg": [
+    { "lat":37.4119851, "lon":-122.0623431 },
+    { "lat":37.4119853, "lon":-122.0623429 },
+    { "lat":37.4119857, "lon":-122.0623423 }
+  ],
+  "plannedBvlosLandingPointAlt_ft": [1.1,2.2,3.3],
+
+  "actualBvlosLandingPoint": [
+    { "ts": "2018-03-29T17:16:15.123456Z",
+      "actualBvlosLandingPoint_deg": [
+         { "lat":37.4119851, "lon":-122.0623431 },
+         { "lat":37.4119853, "lon":-122.0623429 },
+         { "lat":37.4119857, "lon":-122.0623423 }
+      ],
+      "actualBVLOSLandingPointAlt_ft": [1.1,2.2,3.3]
+    },
+    { "ts": "2018-03-29T17:16:16.123456Z",
+      "actualBvlosLandingPoint_deg": [
+        { "lat":37.4119851, "lon":-122.0623431 },
+        { "lat":37.4119853, "lon":-122.0623429 },
+        { "lat":37.4119857, "lon":-122.0623423 } 
+      ],
+      "actualBVLOSLandingPointAlt_ft": [1.1,2.2,3.3]
+    }
+  ],
+  
+  "landingOffset_ft": [25.3,19.7,88.6],
+  "alongTrackDistanceFlown_ft": 1592.3,
+  "distanceFromLaunchSite_ft": 164.9,
+  "bvlosLandingZoneSize_ft": [40.0,45.1,50.5],
+  "bvlosLandingZoneStructure_deg": [
+    { "lat":37.4119851, "lon":-122.0623431 },
+    { "lat":37.4119853, "lon":-122.0623429 },
+    { "lat":37.4119857, "lon":-122.0623423 }
+  ],
+  "bvlosLandingZonePeople_deg": [ 
+    { "lat":37.4119851, "lon":-122.0623431 },
+    { "lat":37.4119853, "lon":-122.0623429 },
+    { "lat":37.4119857, "lon":-122.0623423 }
+  ],
+  "wxBvlosLandingZone": [
+    { "ts": "2018-03-29T17:16:15.123456Z",
+      "wxBvlosLandingZone1Data": { "temp":-10.0, "pressure":29.8, "windSpeed":9.8, "windDir":1.3 },
+      "wxBvlosLandingZone2Data": { "temp":-11.0, "pressure":30.9, "windSpeed":2.2, "windDir":2.3 },
+      "wxBvlosLandingZone3Data": { "temp":-10.5, "pressure":30.8, "windSpeed":3.7, "windDir":3.1 }
+    },
+    { "ts": "2018-03-29T17:16:16.123456Z",
+       "wxBvlosLandingZone1Data": { "temp":-10.1, "pressure":29.7, "windSpeed":9.7, "windDir":1.3 },
+       "wxBvlosLandingZone2Data": { "temp":-11.1, "pressure":30.8, "windSpeed":2.3, "windDir":2.2 },
+       "wxBvlosLandingZone3Data": { "temp":-10.4, "pressure":30.6, "windSpeed":3.6, "windDir":3.0 }
+    }
+  ],
+  "c2": [
+    { "ts": "2018-03-29T17:16:15.123456Z",
+      "c2RssiAircraft_dBm": 3.1,
+      "c2RssiGcs_dBm": 5.3,
+      "c2NoiseAircraft_dBm": 7.9,
+      "c2NoiseGcs_dBm": 9.1
+    },
+    { "ts": "2018-03-29T17:16:16.123456Z",
+      "c2RssiAircraft_dBm": 2.0,
+      "c2RssiGcs_dBm": 4.2,
+      "c2NoiseAircraft_dBm": 6.8,
+      "c2NoiseGcs_dBm": 8.4
+    }
+  ],
+  "c2PacketLoss": [
+    { "ts": "2018-03-29T17:16:15.123456Z",
+      "c2PacketLossRateAircraftPrct_nonDim": 45.4,
+      "c2PacketLossRateGcsPrct_nonDim": 99.9
+    },
+    { "ts": "2018-03-29T17:16:16.123456Z",
+      "c2PacketLossRateAircraftPrct_nonDim": 0.0,
+      "c2PacketLossRateGcsPrct_nonDim": 72.3
+    }
+  ]
+}

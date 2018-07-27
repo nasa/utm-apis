@@ -1,12 +1,12 @@
 info:
-  description: "UTM metadata model used for events and other misc."
-  version: "v3"
+  description: "UTM metadata model used for events for NASA MOPS data collection."
+  version: 'v3'
   title: UTM Metadata
 
 definitions:
   EventMetadata:
     type: object
-    required: 
+    required:
       - data_collection
       - test_card
       - call_sign
@@ -15,60 +15,126 @@ definitions:
       - event_id
       - location
       - setting
-    properties: 
-      data_collection: 
-        description: "If true this data is intended for Data Collection"
+    properties:
+      data_collection:
+        description: >-
+          If true these data are intended for Data Collection. Essentially
+          stating if particular data should be ignored during analysis. This
+          may be modified after submission in the case that there was an issue
+          during execution of the test/experiment that would invalidate the
+          data that were collected.
         type: boolean
-      test_card:
-        description: "The name or number of the test card."
-        minLength: 1
+      event_id:
         type: string
+        description: >-
+          A string tag indicating which event this operation is associated.
+          Will be used to select a set of rules for validation.
+        minLength: 1
+        maxLength: 100
+      test_card:
+        description: The name or number of the test card.
+        minLength: 1
+        maxLength: 100
+        type: string
+      test_identifiers:
+        description: >-
+          Specific tests ids supported by these data. These ids should map to
+          specific tests as outlined in the overall event description. As
+          an example, Event "TCL3_Demonstration" at a test site may have a
+          test_card called "CARD_44". The operation associated with this
+          metadata block may support "DAT2", "CNS1", and "CON4" specific tests.
+          If any one of those elements are missing (event_id, test_card,
+          test_identifiers), then data analysis may become difficult if not
+          impossible.
+        type: array
+        items:
+          type: string
+          minLength: 1
+          maxLength: 30
+        maxItems: 20
+        minItems: 1
+        uniqueItems: true
       call_sign:
         type: string
         minLength: 1
-        description: |
-          Expected values: a call sign, test card role, or flight ID that links this operation to a particular test card flight. As an example, in our TCL2 demo, "GCS3" could have been used here. For multiple flights emanating from one location on a test card, this data element could include further information to link the operation to the test card flight, such as GCS1A.
+        maxLength: 100
+        description: >-
+          Expected values: a call sign, test card role, or flight ID that links
+          this operation to a particular test card flight. As an example, in our
+          TCL2 demo, "GCS3" could have been used here. For multiple flights
+          emanating from one location on a test card, this data element could
+          include further information to link the operation to the test card
+          flight, such as GCS1A.
       test_type:
         type: string
-        description: "Test type"
-        enum: 
+        description: Test type.
+        enum:
           - GROUND
           - FLIGHT
       source:
         type: string
-        description: "Hardware-in-the-loop (HWITL) flights refer to ground or airborne flights. Software-in-the loop (SWITL) flights would be used to tag simulated flights."
-        enum: 
+        description: >-
+          Hardware-in-the-loop (HWITL) flights refer to ground or airborne
+          flights. Software-in-the loop (SWITL) flights would be used to tag
+          flights do not use a physical vehicle, whether or not there is a
+          full-featured simulation involved.
+        enum:
           - HWITL
           - SWITL
-      event_id:
-        type: string
-        description: "A string tag indicating which event this operation is associated. Will be used to select a set of rules for validation."
-        minLength: 1
       location:
         type: string
-        description: "Name of the testing location, such as NV, Moffett, Crows Landing, etc."
+        description: >-
+          Name of the testing location, such as NV, Moffett, Crows
+          Landing, etc.  The supplier of the metadata should use a constant
+          value for this field when the same location is used mulitple times
+          across data submissions. E.g. "AMES" should always be "AMES" and not
+          "ames" or "Ames" or "NASA Ames" at other various times.
         minLength: 1
+        maxLength: 100
       setting:
         type: string
-        description: "Test setting"
-        enum: 
+        description: >-
+          Test setting. Note that a LAB setting may involve HWITL source and
+          FIELD settings may involve SWITL sources.  LAB settings may have
+          GROUND or FLIGHT tests, same with FIELD settings.  This is some
+          insight into the reason for these various fields.
+        enum:
           - LAB
           - FIELD
       free_text:
         type: string
-        description: "free text"
-      data_quality:
+        description: >-
+          Free text may be included with the original submission and/or added
+          by a data_quality_engineer.  In the latter case, all previous
+          free_text should be preserved, i.e. the data_quality_engineer should
+          only append to the free_text field.
+        maxLength: 3000
+      data_quality_engineer:
         type: string
         format: email_address
-        description: "email address of author handling data quality issue"
-      
+        description: >-
+          Email address of author handling data quality issue. If multiple
+          individuals modify this metadata, this field will only hold the
+          last such individual.  In that case, the engineer should make an
+          effort to document as much as possible in the free_text field.
+        maxLength: 150
+      modified:
+        type: boolean
+        description: >-
+          This metadata was modified from its original submission by a
+          data_quality_engineer.
+
+
     example:
       data_collection: true
-      test_card: 'TC3'
+      event_id: TCL3_FD
+      test_card: TC3
+      test_identifiers: ["CNS1", "DAT3", "CON5" ]
       call_sign: GCS1
       test_type: FLIGHT
       source: HWITL
-      event_id: NC3
       location: AK
       setting: FIELD
-      data_quality: data_quality@nasa.gov
+      free_text: "shakedown with Larry"
+      data_quality_engineer: data_quality@test-site.com
+      modfied: false

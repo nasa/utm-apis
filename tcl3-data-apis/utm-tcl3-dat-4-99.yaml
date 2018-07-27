@@ -1,0 +1,216 @@
+swagger: '2.0'
+info:
+  version: "v1"
+  title: DAT JSON upload format description
+  description: Enforced upload format for DAT data
+  contact:
+    name: 'NASA Ames Research Center, Aviation Systems Division'
+    url: 'https://utmregistry.arc.nasa.gov/'
+    email: joseph.rios@nasa.gov
+  license:
+    name: NASA Open Source Agreement
+    url: 'https://ti.arc.nasa.gov/opensource/nosa/'
+  termsOfService: >-
+    A. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT ANY
+    WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,
+    BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL CONFORM TO
+    SPECIFICATIONS, ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+    PARTICULAR PURPOSE, OR FREEDOM FROM INFRINGEMENT, ANY WARRANTY THAT THE
+    SUBJECT SOFTWARE WILL BE ERROR FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF
+    PROVIDED, WILL CONFORM TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN
+    ANY MANNER, CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR
+    RECIPIENT OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR
+    ANY OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE. FURTHER,
+    GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES REGARDING
+    THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE, AND DISTRIBUTES
+    IT \"AS IS.\"
+
+
+    B. Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+    AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS
+    WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT''S USE OF THE SUBJECT SOFTWARE
+    RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES ARISING
+    FROM SUCH USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING
+    FROM, RECIPIENT''S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY
+    AND HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+    SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY
+    LAW. RECIPIENT''S SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE,
+    UNILATERAL TERMINATION OF THIS AGREEMENT.
+paths: {}
+definitions:
+  DAT4:
+    description: >- 
+      DAT4 MOP collects metrics and data related to the UAS ID concept demo.  This includes the technology used to identify the vehicle and HTTP request/response data resulting from the communication with the corresponding public safety USS.  Further details are discused below.  
+    type: object
+    required: ['basicUSS','fType','uas_id']
+    properties:
+      basic:
+        $ref: '#/definitions/basicUSSInformation'
+      fType:
+        type: string
+        pattern: 'DAT4'
+      uas_id:
+        $ref: '#/definitions/uas_id'
+  DAT99:
+    description: >-
+      DAT 99 MOP records the various timestamps associated with the registration of a USS instance with the USS Discovery Service.  In order to register a USS instance, a sequence of HTTP requests (PUT) and HTTP responses occur.  For a given instance, we record the timestamps of these events.  A USS instance can have one and only one data object (instance_reg_latency) described below.  
+    type: object
+    required: ['basic','fType','instance_reg_latency']
+    properties:
+      basic:
+        $ref: '#/definitions/basicUSSInformation'
+      fType:
+        type: string
+        pattern: 'DAT99'
+      instance_reg_latency:
+        $ref: '#/definitions/instance_reg_latency'
+        
+        
+  basicUSSInformation:
+    type: object
+    required: ['ussName','ussInstanceID']
+    properties:
+      ussName:
+        type: string
+      ussInstanceID:
+        $ref: '#/definitions/GUID'
+  GUID:
+    type: string
+    format: uuid
+    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+    example: 'd7126818-d280-475f-aaee-c16e9c6f04e0'
+    maxLength: 36
+    minLength: 36
+    
+  timestamp:
+    type: string
+    pattern: '^2[0-9][0-9][0-9]-[01][0-9]-[0123][0-9]T[012][0-9]:[012345][0-9]:[012345][0-9]\.[0-9][0-9][0-9][0-9]*Z{0,1}$'
+    example: '2018-03-05T19:56:23.445'
+    
+  instance_reg_latency:
+    type: object
+    properties: 
+      timeInitialSubmission:
+        description: >-
+          Time of initial submission to USS Discovery Service. 
+          This is the inital PUT emanating from the USS instance to be 
+          registered to the USS Discovery Service URL.  Uses the
+          ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.
+          Seconds may have up to millisecond accuracy (three positions after
+          decimal).  The 'Z' implies UTC times and is the only timezone
+          accepted. 
+        type: string
+        pattern: '^2[0-9][0-9][0-9]-[01][0-9]-[0123][0-9]T[012][0-9]:[012345][0-9]:[012345][0-9]\.[0-9][0-9][0-9][0-9]*Z{0,1}$'
+        example: '2018-03-05T19:56:23.445'
+      timeFirstMsgRecieved:
+        description: >-
+          Time of first PUT message received from USS Discovery Service.  USS Discover sends a PUT message to the callback URL in the JSON registration payload.  Uses the
+          ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.
+          Seconds may have up to millisecond accuracy (three positions after
+          decimal).  The 'Z' implies UTC times and is the only timezone
+          accepted. Enter NULL if no messaged recieved.
+        type: string
+        pattern: '^2[0-9][0-9][0-9]-[01][0-9]-[0123][0-9]T[012][0-9]:[012345][0-9]:[012345][0-9]\.[0-9][0-9][0-9][0-9]*Z{0,1}$'
+        example: '2018-03-05T19:56:23.445'
+      timeLastMsgReceived:
+        description: >-
+          Time of final PUT received from USS Discovery Service. Uses the
+          ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.
+          Seconds may have up to millisecond accuracy (three positions after
+          decimal).  The 'Z' implies UTC times and is the only timezone
+          accepted. Enter NULL if no messaged recieved.
+        type: string
+        pattern: '^2[0-9][0-9][0-9]-[01][0-9]-[0123][0-9]T[012][0-9]:[012345][0-9]:[012345][0-9]\.[0-9][0-9][0-9][0-9]*Z{0,1}$'
+        example: '2018-03-05T19:56:23.445'
+  uas_id: 
+    type: array
+    items:
+      type: object
+      properties:
+        uvin:
+          description: >-
+            The uvin corresponding to the vehicle that is to be detected.
+          type: string
+          format: uuid
+          maxLength: 36
+          minLength: 36
+          example: "00000000-0000-0000-0000-000000000000"
+        gufi:
+          description: >-
+            The gufi corresponding to the flight of the vehicle that is to be detected.
+          type: string
+          format: uuid
+          maxLength: 36
+          minLength: 36
+          example: "00000000-0000-0000-0000-000000000000"
+        tech: 
+          description: >-
+            The technology used to identify the vehicle and its position.
+          type: string
+        notes: 
+          type: string
+          description: Any additional notes corresponding to particular UAS ID test flight (gufi) can be noted here.
+        lookup: 
+          description: >-
+            For a given (uvin,gufi) pair, the uss instance can perform one or more lookups
+          type: array
+          items: 
+            type: object
+            properties: 
+              startTimeLookup:
+                description: >-
+                  Time the lookup is initiated (via call to public safety USS URL).  Uses the
+                  ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.
+                  Seconds may have up to millisecond accuracy (three positions after
+                  decimal).  The 'Z' implies UTC times and is the only timezone
+                  accepted. 
+                type: string
+                pattern: '^2[0-9][0-9][0-9]-[01][0-9]-[0123][0-9]T[012][0-9]:[012345][0-9]:[012345][0-9]\.[0-9][0-9][0-9][0-9]*Z{0,1}$'
+                example: '2018-03-05T19:56:23.445'
+              endTimeLookup:
+                description: >-
+                  Time the lookup is completed.  If it does not complete, use NULL. Uses the
+                  ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.
+                  Seconds may have up to millisecond accuracy (three positions after
+                  decimal).  The 'Z' implies UTC times and is the only timezone
+                  accepted. 
+                type: string
+                pattern: '^2[0-9][0-9][0-9]-[01][0-9]-[0123][0-9]T[012][0-9]:[012345][0-9]:[012345][0-9]\.[0-9][0-9][0-9][0-9]*Z{0,1}$'
+                example: '2018-03-05T19:56:23.445'
+              successfulLookupUasId:
+                description: >-
+                  If the lookup process resulted in the expected response.
+                type: boolean  
+              timeOfDetection:
+                description: >-
+                  Time the vehicle was detected by the device. Uses the
+                  ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.
+                  Seconds may have up to millisecond accuracy (three positions after
+                  decimal).  The 'Z' implies UTC times and is the only timezone
+                  accepted. 
+                type: string
+                pattern: '^2[0-9][0-9][0-9]-[01][0-9]-[0123][0-9]T[012][0-9]:[012345][0-9]:[012345][0-9]\.[0-9][0-9][0-9][0-9]*Z{0,1}$'
+                example: '2018-03-05T19:56:23.445'
+              vidPosLat:
+                description: >-
+                  WGS84 latitude of the vehicle identification device at the time of detection
+                type: number
+              vidPosLon: 
+                description: >-
+                  WGS84 longitude of the vehicle identification device at the time of detection
+                type: number
+              vidPosAlt: 
+                description: >-
+                  WGS84 altitude of the vehicle identification device at the time of detection
+                type: number
+              publicSafetyRequestUrl: 
+                description: Complete GET request of public safety USS URL including any query parameters 
+                type: string
+              publicSafetyResponse:
+                description: Complete HTTP response from public safety USS
+                type: string
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /akishiha/DAT_USS/v1
+schemes:
+ - https

@@ -1,8 +1,8 @@
 swagger: '2.0'
 info:
-  version: 'v3'
+  version: 'v1'
   title: Public Safety USS
-  description: A USS with the Public Safety role implements this API in addition to the base USS API. 
+  description: A USS with the Public Safety role implements this API in addition to the base USS API.
   contact:
     name: 'NASA Ames Research Center, Aviation Systems Division'
     url: 'https://utm.arc.nasa.gov/'
@@ -26,7 +26,6 @@ info:
     THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE, AND DISTRIBUTES
     IT "AS IS."
 
-
     B. Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
     AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS
     WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT''S USE OF THE SUBJECT SOFTWARE
@@ -37,7 +36,8 @@ info:
     SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY
     LAW. RECIPIENT''S SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE,
     UNILATERAL TERMINATION OF THIS AGREEMENT.
-host: publicsafety.arc.nasa.gov
+
+host: uss.defined.url
 basePath: /pubsafe
 schemes:
   - https
@@ -49,9 +49,9 @@ security:
     - basicAuth: []
 
 paths:
-  /uas/operation/{uvin}:
+  /uas/{uvin}:
     get:
-      description: Returns information on vehicle
+      description: Returns information on vehicle with the given uvin. 
       parameters:
         - in: path
           name: "uvin"
@@ -74,37 +74,50 @@ paths:
           maximum: 180.0
           minimum: -180.0
           format: "double"
-      
+
       responses:
         200:
-          description: "Successfully returned uvin and its associated operator information" 
+          description: "Successfully returned uvin and its associated operator information"
           schema:
-            $ref: '#/definitions/VehicleOperationData'
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/VehicleOperationData
         401:
           description: "Unauthorized"
           schema:
-            $ref: "https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse"
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         403:
           description: "Forbidden"
         404:
-          description: "Not Found"        
-                  
+          description: "Not Found"
+
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
         503:
-          description: Service Unavailable 
+          description: Service Unavailable
           schema:
-            $ref: "https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse"
-                
-  /uas/operations:
-    get:  
-      description: Returns all operations around the point of reference 
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+  /uas:        
+    get:
+      description: Returns vehicle information when a partial uvin or an faa_number is supplied. Atleast one parameter is required.
       parameters:
+        - name: "partial_uvin"
+          in: "query"
+          description: "Part of the uvin uuid."
+          maximum: 36.0
+          minimum: 6
+          type: "string"
+        - name: "faa_number"    
+          in: "query"
+          description: "Full faa_number."
+          maximum: 10.0
+          minimum: 6
+          type: "string"
         - name: "lat"
           in: "query"
           description: "Latitude of point for Geographic search. Approximate position of the vehicle."
-          required: true
           maximum: 90.0
           minimum: -90.0
           type: "number"
@@ -112,86 +125,138 @@ paths:
         - name: "lon"
           in: "query"
           description: "Longitude of point for Geographic search. Approximate position of the vehicle."
-          required: true
           type: "number"
           maximum: 180.0
           minimum: -180.0
-          format: "double"
-        - name: "altitude_gps_wgs84_ft"
-          type: "number"
-          required: true
-          in: "query"
-          format: "double"
-          description: "The altitude as measured via a GPS device on the aircraft. Units
-          in feet using the WGS84 reference system"
+          format: "double"  
+      responses:
+        200:
+          description: "Successfully returns matched uvins and its associated operator information"
+          schema:
+            type: "array"
+            items:
+              $ref: >-
+                 https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/VehicleOperationData
+          
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+
+        400:
+          description: "Bad request. Typically validation error. Fix your request\
+            \ and retry."
+        503:
+          description: Service Unavailable
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+
+  /uas/operations:
+    get:
+      description: Returns all operations around the point of reference
+      parameters:
+        - name: distance
+          in: query
+          description: >-
+            Distance from reference_point to find operations. Ignored if
+            reference_point is not provided.  Units are feet.  Returns all
+            operations that have any operation_volumes that interesect the 2D
+            circle defined by distance and reference_point.  Default value only
+            has meaning when reference_point parameter is provided.
+          type: integer
+          format: int32
+          maximum: 60762
+          minimum: 1
+          default: 300
+          required: false
+        - name: reference_point
+          in: query
+          description: >-
+            A single point used to find all operations within some distance from
+            that point. Returns all operations that have any operation_volumes
+            that interesect the 2D circle defined by distance and
+            reference_point.  When distance it excluded and reference_point is
+            included, use default value (300ft) for distance.
+
+            Described as a GeoJSON position.  The value is equivalent to what
+            would be seen in the "coordinates" field for a GeoJSON Point
+            object.  See https://tools.ietf.org/html/rfc7946#section-3.1.1 for
+            further reference.  Example would be reference_point=[-122.056364,
+            37.414371] (URL safe:
+            reference_point%3D%5B-122.056364%2C%2037.414371%5D). As per GeoJSON
+            spec, this is long-lat format in the WGS84 reference system.
+
+            MUST NOT include a third coordinate element, strictly 2D.
+          type: string
+          format: geojson-position
+          required: false
         - name: "time"
           in: "query"
           required: true
-          description: "Give me all the operations in this area as of this time"
+          description: "Known operations in this area as of this time"
           type: "string"
           format: "date-time"
           minLength: 20
           maxLength: 25
-      
+
       responses:
         200:
-          description: "Needs clarification" 
+          description: "Returns all operations within the specified geography"
           schema:
             type: "array"
             items:
-              $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation'  
+              $ref: >-
+                https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Operation
         401:
           description: "Unauthorized"
           schema:
-            $ref: "https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse"
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         403:
           description: "Forbidden"
         404:
-          description: "Not Found"        
-                  
+          description: "Not Found"
+
         400:
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
-      
-                
-definitions:
-  VehicleOperationData:
-     type: object
-     properties:
-      vehicle_type:
-        type: string
-      owner_name:
-        type: string
-      owner_contact:
-        type: string
-        format: phone
-        maxLength: 100
-      n_number:
-        type: string
-        maxLength: 100
-      faa_registration-number:
-        type: string
-        maxLength: 100
-      uss_name:
-        type: string
-        maxLength: 250
-        minLength: 1
-        example: "utmbeta.arc.nasa.gov"
-      uss_instance_id:
-        type: string
-        format: uuid
-        maxLength: 36
-        minLength: 36
-        example: "00000000-0000-0000-0000-000000000000"
-      gufi:
-        type: string
-        format: uuid
-        maxLength: 36
-        minLength: 36
-        example: "00000000-0000-0000-0000-000000000000" 
-      operation_state:
-         type: string
-         example: "ROGUE"
-      additional_details:
-         type: string
-         example: "Extra details"
+  /restrictions/{message_id}:
+    put:
+      description: >-
+        Endpoint to PUT a constraint message that will be sent to LUN members intersecting the constraint geography.
+      parameters:
+        - in: path
+          name: message_id
+          required: true
+          type: string
+          description: PUT by message_id
+        - in: body
+          name: constraint_message
+          description: The ConstraintMessage being sent
+          required: true
+          schema:
+            $ref: >-
+                      https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
+      responses:
+        '204':
+          description: Constraint data received. No content returned.
+        '400':
+          description: Bad request. Typically validation error. Fix your request and retry.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '401':
+          description: Unauthorized.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '403':
+          description: "Forbidden"
+        '404':
+          description: "Not Found"

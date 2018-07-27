@@ -1,0 +1,124 @@
+# UTM roles and, when applicatble, their scopes.
+#   This is the master data for the Role and Scopes for the
+#   FIMS Authorization Server (FIMS AZ).
+#   See the FIMS AZ API Spec for scope definitions.  Note that a write scope
+#   allows reading. 
+
+UTM_AUTHORITY:
+    description: |
+      A small set of trusted users who manage identities of all core UTM
+      components such as USSs.
+    authority: ANSP
+    examples:
+      - "UTM Authority vets USS1's additional capability for Public Service, and adds the PUBLIC_SAFETY role to USS1 in the master list."
+      - "UTM Authority vets USS1, then adds an entry to master USS list and assigns the USS_BASIC role."
+
+FIMS_ADMIN:
+    description: |
+        This role enables an IT admin to maintain FIMS, for example by managing
+        logfiles and servers via command line interface (CLI).  This role
+        should not, in general, allow reading FIMS business data as knowledge
+        of FIMS data is usually not needed to get the job done. Multi-Factor
+        Authentication (MFA) should be enforced users with this role,
+        and the number of users with this role should be minimized.
+        This role is typically associated with a User whose authorization is out of band WRT FIMS oauth.
+    authority: UTM_AUTHORITY
+    examples:
+        - "An IT admin manages FIMS-AZ logfiles."
+        - "An IT admin reads the master USS list to update FIMS-AZ's data table containing the USSs, their scopes and their credentials."
+
+FIMS_SME:
+    description: |
+        A role is assigned to user who is a FIMS Subject Matter Expert (SME) who
+        manages airspace constraints and other aeronautical data
+        This user could be a client to the FIMS Ops server using a User Interface (rather than CLI).
+        This role is typically associated with a user whose authorization is out of band WRT FIMS oauth.
+    authority: ANSP
+    examples:
+        - "An airspace Subject Matter Expert composes an airspace constraint and submits this constraint to FIMS_OPS."
+
+FIMS_AUTHZ:
+    description: This is the service role supporting the FIMS Authorization server.
+    This role cannot create, modify or delete UTM Identity data, rather access is read-only.
+    authority: UTM_AUTHORITY
+    examples:
+        - "When FIMS AZ services the token endpoint, it reads a data table containing USS identities and their scopes."
+
+VEHICLE_AUTHORITY:
+    authority: TBD; May be a set of trusted commercial entities
+    description: |
+      This role allows creation, modifcation and deletion of vehicle registrations.
+      This role is typically associated with a user whose authentication and
+      authorization is out of band WRT FIMS oauth.
+      These users are small set of trusted vehicle subject matter experts who manage vehicle registrations.
+    examples:
+       - "A vehicle subject matter expert adds a new vehicle UVIN."
+
+VEHICLE_REGISTRATION_CHECKER:
+    description: |
+      This is the service role supporting vehicle registration data providers.
+      This role cannot create, modify or delete vehicle registrations.
+    authority: VEHICLE_AUTHORITY
+    examples:
+      - "A vehicle registration data provider protects its endpoints with UTM uvin scopes."
+      - "USS queries a vehicle data provider using its uvin scopes to check whethter a UVIN is registered."
+      - "A Public Safety USS queries a vehicle data provider using its uvin scopes to learn the vehicle's owner."
+
+CONFLICT_MANAGEMENT:
+    description: |
+       This is the service role supporting USS Confict Management data providers.
+       These data providers can be pull-based such as Grid Cell data, or a push-and-pull based
+       such as NASA's Discovery Service.
+    authority: USS Network
+    examples:
+       - "NASA's USS Discovery Service PUTs USSInstance data to USS-API endpoints protected by write.conflictmanagement scope."
+       - "USS Discovery service protects its endpoints with read.conflictmanagement scope."
+       - "The Grid Cell Conflict Management service protects its endpoints with read.conflictmanagement scope."
+    scopes:
+       - utm.nasa.gov_write.conflictmanagement
+
+USS_BASIC:
+    description: A USS. The UTM Authority assigns role after
+       out-of-band vetting. Vetting includes some testing mechanism and liability assumptions TBD.
+    authority: UTM_AUTHORITY
+    examples:
+        - "USS announces its operation to another USS."
+        - "USS queries Vehicle Registration server to check that a UVIN is registered."
+        - "USS queries NASA's USS Discovery service to discover other USSs intersecting its coverage area."
+        - "USS registers its coverage area with NASA's USS Discovery service."
+        - "USS writes to a Conflict Management service such as GridCell to announce new operations."
+    scopes:
+        - utm.nasa.gov_write.operation
+        - utm.nasa.gov_write.message
+        - utm.nasa.gov_read.constraint
+        - utm.nasa.gov_read_uvin
+        - utm.nasa.gov_write.conflictmanagement
+
+USS_PUBLIC_SAFETY:
+    description: |
+       A USS with the capability to support public safety queries.
+       This role can be assigned only to a USS that has the
+       USS_BASIC role. The UTM Authority assigns this role after out-of-band
+       vetting, which includes some testing mechanism and liability
+       assumptions TBD.
+    authority: UTM_AUTHORITY
+    examples:
+        - "A Public Safety USS queries other USSs to determine which USS is operating a particular vehicle."
+        - "A Public Safety USS queries vehicle registration using its uvin scopes to learn the vehicle's owner."
+    scopes:
+        - utm.nasa.gov_read.publicsafety
+
+CONSTRAINT_MANAGER:
+    description: |
+       A USS with this role can publish airspace constraints and
+       other aeronautical data. This role can be assigned only to a USS that has the
+       USS_BASIC role. The UTM Authority assigns this role after out-of-band
+       vetting, which includes some testing mechanism and liability
+       assumptions TBD.
+    authority: UTM_AUTHORITY
+    examples:
+        - "FIMS_OPS has the USS_CONSTRAINT_MANAGER role and can publish a constraint to the USS Network."
+        - "A USS with Contraint Management role publishes an airspace constraint to the USS Network."
+        - "All USSs protect their PUT Constraint endpoint with these scopes."
+    scopes:
+        - utm.nasa.gov_write.constraint

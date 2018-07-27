@@ -1,0 +1,74 @@
+info:
+  description: "Performance Authorization long descripttion..."
+  version: 'v4'
+  title: Performance Authorization
+
+definitions:
+  PerformanceAuthorizationSchema:
+    type: object
+    required:
+      - event_id
+      - data_quality_engineer
+    properties:
+      event_id:
+        type: string
+        description: >-
+          A string tag indicating which event this operation is associated.
+          Will be used to select a set of rules for validation.
+        minLength: 1
+        maxLength: 100
+      test_identifiers:
+        description: >-
+          Specific tests ids supported by these data. These ids should map to
+          specific tests as outlined in the overall event description. As
+          an example, Event "TCL3_Demonstration" at a test site may have a
+          test_card called "CARD_44". The operation associated with this
+          metadata block may support "DAT2", "CNS1", and "CON4" specific tests.
+          If any one of those elements are missing (event_id, test_card,
+          test_identifiers), then data analysis may become difficult if not
+          impossible.
+        type: array
+        items:
+          type: string
+          minLength: 1
+          maxLength: 30
+        maxItems: 20
+        minItems: 1
+        uniqueItems: true
+      test_type:
+        type: string
+        description: Test type.
+        enum:
+          - GROUND
+          - FLIGHT
+      free_text:
+        type: string
+        description: >-
+          Free text may be included with the original submission and/or added
+          by a data_quality_engineer.  In the latter case, all previous
+          free_text should be preserved, i.e. the data_quality_engineer should
+          only append to the free_text field.
+        maxLength: 3000
+      data_quality_engineer:
+        type: string
+        format: email_address
+        description: >-
+          Email address of author handling data quality issue. If multiple
+          individuals modify this metadata, this field will only hold the
+          last such individual.  In that case, the engineer should make an
+          effort to document as much as possible in the free_text field.
+        maxLength: 150
+      modified:
+        type: boolean
+        description: >-
+          This metadata was modified from its original submission by a
+          data_quality_engineer.
+
+
+    example:
+      event_id: TCL3_FD
+      test_identifiers: ["CNS1", "DAT3", "CON5" ]
+      test_type: FLIGHTD
+      free_text: "shakedown with Larry"
+      data_quality_engineer: data_quality@test-site.com
+      modfied: false

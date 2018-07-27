@@ -1,6 +1,9 @@
 swagger: "2.0"
 info:
-  description: "This API describes the RESTful interface from a UAS Service Supplier (USS) to FIMS. Note that FIMS uses a webhook pattern to sends messages and other data such as constraints to USS's by POSTING to the USS API. Also, FIMS subscribes to USS Discovery to learn about the USS Network."
+  description: >-
+    This API describes the RESTful interface from a UAS Service Supplier (USS)
+    to FIMS.
+
   version: "v3"
   title: "UTM Research Platform, FIMS-USS Interface"
   contact:
@@ -16,32 +19,31 @@ info:
 
     B. Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT''S USE OF THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT''S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT''S SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL TERMINATION OF THIS AGREEMENT.
 
-host: "utmbeta.arc.nasa.gov"
-
+host: utm.defined.url
 basePath: "/fims"
 schemes:
 - https
-- wss
+
 tags: # Have to add 'A' 'B' etc since ordering isn't respected in SwaggerUI.
 - name: A. Required Endpoints
-  description:  RESTful endpoints for USS access to FIMS
-- name: B. Version and Health
+  description: >-
+      FIMS implements the USS API where appropriate.  For endpoints from the USS API that FIMS does not support, FIMS may return a 404.
+- name: B. Version
   description: Get information about this server.
 - name: C. Data Types
-  description: Psuedo endpoints used for the documentation of the data schema
-
+  description: Psuedo endpoints used for the documentation of the data models
 
 securityDefinitions:
   fims_ops_security:
     type: oauth2
-    tokenUrl: http://thisserver/oauth/token
+    tokenUrl: http://utm.defined.host/oauth/token
     flow: application
     scopes:
       'utm.nasa.gov_write.operation': Subject can read, create, and update operational data such as operation plans and position reports
-      'utm.nasa.gov_read.operation': Subject can read operational data such as operation plans and position reports
       'utm.nasa.gov_write.message': Subject can read, create, and update UTM message data
-      'utm.nasa.gov_read.message': Subject can read UTM message data
-    
+      'utm.nasa.gov_write.constraint': Subject can read, create, and update UTM constraint data. This means that the Subject can define areas that restrict other operations.
+      'utm.nasa.gov_read.fimsadmin': Subject can read data internal to FIMS.
+
 responses:
   WRONG_PROTOCOL:
     description: A RESTful call was made to this endpoint but this is not a REST endpoint. Do not use this endpoint for REST calls.
@@ -50,8 +52,7 @@ paths:
   /api:
     get:
       tags:
-        - B. Version and Health
-      summary: get server info.  Can be used to check health
+        - B. Version
       security: []
       produces:
         - application/json
@@ -59,114 +60,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Version' 
-            
-  
-  /operations/{gufi}:
-    put:
-      tags:
-        - A. Required Endpoints
-      summary: Add or modify an operation
-      description: Allows for creation or modifying of an operation plan in FIMS. For updating, submit the full set of properties of the Operation model.
-      operationId: updateOperation
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      security:
-        - fims_ops_security:
-          - 'utm.nasa.gov_write.operation'
-      parameters:
-      - in: path
-        name: gufi
-        description: "GUFI of the operation to update"
-        required: true
-        type: string
-        format: uuid
-      - in: body
-        name: operation
-        description: Operation updates
-        required: true
-        schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation'
-      responses:
-        200:
-          description: "Operation updated."
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
-        400:
-          description: "Bad request. Typically validation error. Fix your request and retry."
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
-        403:
-          description: "Unauthorized user."
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
-        404:
-          description: "Broken link. Check request URL"
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
-
-  /positions:
-    post:
-      deprecated: true
-      tags:
-        - A. Required Endpoints
-      summary: Submit position report
-      description: Allows for submission of position data related to a particular operation.
-      operationId: postPosition
-      security:
-        - fims_ops_security:
-          - 'utm.nasa.gov_write.operation'
-      responses:
-        201:
-          description: "Position posted successfully."
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
-        400:
-          description: "Invalid message. Please fix and retry."
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
-      parameters:
-      - in: body
-        name: position
-        description: Position to submit
-        required: true
-        schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Position'
-  
-  /utm_messages:
-    post:
-      tags:
-      - "A. Required Endpoints"
-      summary: "Submit alert to FIMS"
-      description: "Allows posting of a message to FIMS."
-      operationId: "postMessage"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      security:
-        - fims_ops_security:
-          - 'utm.nasa.gov_write.message'
-      parameters:
-      - in: "body"
-        name: "message"
-        description: "Message object being sent"
-        required: true
-        schema:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMMessage'
-      responses:
-        201:
-          description: "Returns message ID if received successfully."
-          schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMRestResponse'
-        400:
-          description: "Invalid message. Please fix and retry."
-
-        403:
-          description: "Unauthorized user."
-
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Version'
   /schema/Operation:
     get:
       tags:
@@ -182,7 +76,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/Operation'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Operation'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 
@@ -201,10 +95,9 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Point'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
-
 
   /schema/LineString:
     get:
@@ -221,7 +114,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/LineString'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/LineString'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 
@@ -240,7 +133,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/geojson/v3#/definitions/Polygon'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 
@@ -253,14 +146,13 @@ paths:
         Illustrates the FIMS Alert Message. FIMS may send out Alert Messages from time to time. This endpoint is not intended for use.
 
         Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint
-      operationId: alertMsgUsingGET
       produces:
         - application/json
       responses:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/UTMMessage'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMMessage'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 
@@ -273,17 +165,12 @@ paths:
         Illustrates the FIMS Constraint Message. FIMS will send out a Constraint Message when a new constraint is put in place. This endpoint is not intended for use.
 
         Note that if you are viewing this in a SwaggerUI, the "try it out" feature will not work since this is not a RESTful endpoint
-      operationId: constraintMsgUsingGET
       produces:
         - application/json
       responses:
         200:
           description: OK
           schema:
-            $ref: 'https://api.swaggerhub.com/domains/utm/commons/v3#/definitions/ConstraintMessage'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
-
-
-
-x-azure-api-id: "sh-1469571953760"

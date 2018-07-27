@@ -1,0 +1,429 @@
+swagger: '2.0'
+info:
+  version: "v3"
+  title: CNS JSON upload format description
+  description: Enforced upload format for CNS MOP
+  contact:
+    name: 'NASA Ames Research Center, Aviation Systems Division'
+    url: 'https://utmregistry.arc.nasa.gov/'
+    email: joseph.rios@nasa.gov
+  license:
+    name: NASA Open Source Agreement
+    url: 'https://ti.arc.nasa.gov/opensource/nosa/'
+  termsOfService: >-
+    A. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT ANY
+    WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,
+    BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL CONFORM TO
+    SPECIFICATIONS, ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+    PARTICULAR PURPOSE, OR FREEDOM FROM INFRINGEMENT, ANY WARRANTY THAT THE
+    SUBJECT SOFTWARE WILL BE ERROR FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF
+    PROVIDED, WILL CONFORM TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN
+    ANY MANNER, CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR
+    RECIPIENT OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR
+    ANY OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE. FURTHER,
+    GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES REGARDING
+    THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE, AND DISTRIBUTES
+    IT \"AS IS.\"
+
+
+    B. Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+    AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS
+    WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT''S USE OF THE SUBJECT SOFTWARE
+    RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES ARISING
+    FROM SUCH USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING
+    FROM, RECIPIENT''S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY
+    AND HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+    SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY
+    LAW. RECIPIENT''S SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE,
+    UNILATERAL TERMINATION OF THIS AGREEMENT.
+paths: {}
+definitions:
+
+  CNS1_MOP:
+    type: object
+    required: ['basic','fType','UTM-TCL3-DMP-RevF-CNSPDF','plannedContingency','primaryLinkDescription','redundantLinkDescription','contingencyCause','contingencyResponse','contingencyLanding','contingencyLoiterType','contingencyLoiterAlt','contingencyLoiterRadius','maneuverCommand','estimatedTimeToVerifyManeuver','cns1TestType','timeManeuverCommandSent','timeManeuverVerification','timePrimaryLinkDisconnect','timeRedundantLinkSwitch']
+    properties:
+      basic:
+        $ref: '#/definitions/basicInformation'
+      fType:
+        type: string
+        enum:
+        - CNS1
+      UTM-TCL3-DMP-RevF-CNSPDF:
+        $ref: '#/definitions/CNSPDFFileName'
+      plannedContingency:
+        $ref: '#/definitions/plannedContingency'
+      primaryLinkDescription:
+        type: array
+        items:
+          type: object
+          required: ['ts','primaryLinkDescription']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            primaryLinkDescription:
+              $ref: '#/definitions/string280'
+      redundantLinkDescription:
+        type: array
+        items:
+          type: object
+          required: ['ts','redundantLinkDescription']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            redundantLinkDescription:
+              $ref: '#/definitions/string280'
+      contingencyCause:
+        $ref: '#/definitions/contingencyCause'
+      contingencyResponse:
+        $ref: '#/definitions/contingencyResponse'
+      contingencyLanding:
+        $ref: '#/definitions/contingencyLanding'
+      contingencyLoiterType:
+        $ref: '#/definitions/contingencyLoiterType'
+      contingencyLoiterAlt:
+        $ref: '#/definitions/contingencyLoiterAlt'
+      contingencyLoiterRadius:
+        $ref: '#/definitions/contingencyLoiterRadius'
+      maneuverCommand:
+        type: array
+        items:
+          type: object
+          required: ['ts','maneuverCommand']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            maneuverCommand:
+              $ref: '#/definitions/string280'
+      estimatedTimeToVerifyManeuver:
+        type: array
+        items:
+          type: object
+          required: ['ts','estimatedTimeToVerifyManeuver_sec']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            estimatedTimeToVerifyManeuver_sec:
+              type: number
+      cns1TestType:
+        type: array
+        items:
+          type: object
+          required: ['ts','cns1TestType_nonDim']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            cns1TestType_nonDim:
+              type: integer
+              enum:
+                - 0
+                - 1
+                - 2
+      timeManeuverCommandSent:
+        type: array
+        items:
+          $ref: '#/definitions/tsObject'
+      timeManeuverVerification:
+        type: array
+        items:
+          $ref: '#/definitions/tsObject'
+      timePrimaryLinkDisconnect:
+        type: array
+        items:
+          $ref: '#/definitions/tsObject'
+      timeRedundantLinkSwitch:
+        type: array
+        items:
+          $ref: '#/definitions/tsObject'
+          
+          
+  CNS2_MOP:
+    type: object
+    required: ['basic','fType','UTM-TCL3-DMP-RevF-CNSPDF','plannedContingency','uasTruth','prnGPSSat','uere','contingencyCause','contingencyResponse','contingencyLanding','contingencyLoiterType','contingencyLoiterAlt','contingencyLoiterRadius']
+    properties:
+      basic:
+        $ref: '#/definitions/basicInformation'
+      fType:
+        type: string
+        enum:
+        - CNS2
+      UTM-TCL3-DMP-RevF-CNSPDF:
+        $ref: '#/definitions/CNSPDFFileName'
+      plannedContingency:
+        $ref: '#/definitions/plannedContingency'
+      uasTruth:
+        type: array
+        items:
+          type: object
+          required: ['ts','uasTruthEcefXCoordinate_ft','uasTruthEcefYCoordinate_ft','uasTruthEcefZCoordinate_ft','estimatedTruthPositionError95Prct_in']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            uasTruthEcefXCoordinate_ft:
+              type: number
+            uasTruthEcefYCoordinate_ft:
+              type: number
+            uasTruthEcefZCoordinate_ft:
+              type: number
+            estimatedTruthPositionError95Prct_in:
+              type: number
+      prnGpsSat:
+        $ref: '#/definitions/prnGpsSat'
+      uere:
+        type: array
+        items:
+          type: object
+          required: ['ts','uere_in']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            uere_in:
+              type: number
+      contingencyCause:
+        $ref: '#/definitions/contingencyCause'
+      contingencyResponse:
+        $ref: '#/definitions/contingencyResponse'
+      contingencyLanding:
+        $ref: '#/definitions/contingencyLanding'
+      contingencyLoiterType:
+        $ref: '#/definitions/contingencyLoiterType'
+      contingencyLoiterAlt:
+        $ref: '#/definitions/contingencyLoiterAlt'
+      contingencyLoiterRadius:
+        $ref: '#/definitions/contingencyLoiterRadius'
+        
+        
+  CNS3_MOP:
+    type: object
+    required: ["basic","fType","UTM-TCL3-DMP-RevF-CNSPDF","RFData","prnGPSSat"]    
+    properties:
+      basic:
+        $ref: '#/definitions/basicInformation'
+      fType:
+        type: string
+        enum:
+        - CNS3
+      UTM-TCL3-DMP-RevF-CNSPDF:
+        $ref: '#/definitions/CNSPDFFileName'
+      RFData:
+        $ref: '#/definitions/CNS3RFDataList'
+      prnGPSSat:
+        $ref: '#/definitions/prnGpsSat'
+
+# definitions shared by the MOPs
+
+  tsObject:
+    type: object
+    required: ['ts']
+    properties:
+      ts:          
+        $ref: '#/definitions/timestamp'
+        
+  contingencyCause:
+    type: array
+    items:
+      type: object
+      required: ['ts','contingencyCause_nonDim']
+      properties:
+        ts:
+          $ref: '#/definitions/timestamp'
+        contingencyCause_nonDim:
+          $ref: '#/definitions/ContingencyCauseNumberList'
+            
+  contingencyResponse:
+    type: array
+    items:
+      type: object
+      required: ['ts','contingencyResponse_nonDim']
+      properties:
+        ts:
+          $ref: '#/definitions/timestamp'
+        contingencyResponse_nonDim:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            
+  contingencyLanding:
+    type: array
+    items:
+      type: object
+      required: ['ts','contingencyLandingPoint_deg','contingencyLandingPointAlt_ft']
+      properties:
+        ts:
+          $ref: '#/definitions/timestamp'
+        contingencyLandingPoint_deg:
+          $ref: '#/definitions/LatLonList'
+        contingencyLandingPointAlt_ft:
+          $ref: '#/definitions/AltitudeList'
+          
+  contingencyLoiterType:
+    type: array
+    items:
+      type: object
+      required: ['ts','contingencyLoiterType_nonDim']
+      properties:
+        ts:
+          $ref: '#/definitions/timestamp'
+        contingencyLoiterType_nonDim:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            
+  contingencyLoiterAlt:
+    type: array
+    items:
+      type: object
+      required: ['ts','contingencyLoiterAlt_ft']
+      properties:
+        ts:
+          $ref: '#/definitions/timestamp'
+        contingencyLoiterAlt_ft:
+          $ref: '#/definitions/AltitudeList'
+          
+  contingencyLoiterRadius:
+    type: array
+    items:
+      type: object
+      required: ['ts','contingencyLoiterRadius_ft']
+      properties:
+        ts:
+          $ref: '#/definitions/timestamp'
+        contingencyLoiterRadius_ft:
+          $ref: '#/definitions/NumberList'
+          
+  prnGpsSat:
+    type: array
+    items:
+      type: object
+      required: ['ts','prnGpsSat_nonDim']
+      properties:
+        ts:
+          $ref: '#/definitions/timestamp'
+        prnGpsSat_nonDim:
+          $ref: '#/definitions/prnList'
+          
+  CNSPDFFileName:
+    type: string
+    pattern: '^UTM-[^-]+-CNS-[0-9]+.pdf$'
+    example: 'UTM-UASORG-CNS-3.pdf'
+    
+  CNS3RFDataList:
+    type: array
+    items:
+      $ref: '#/definitions/CNS3RFDataFileName'
+      
+  CNS3RFDataFileName:
+    type: string
+    pattern: '^UTM-[^-]+-2[0-9][0-9][0-9][01][0-9][123][0-9]-[0-9]{4}-rfData\..*$'
+    example: 'UTM-UASORG-20180231-1459-rfData.bin'
+    
+  basicInformation:
+    type: object
+    required: ['uvin','gufi','submitTime','ussName','ussInstanceID']
+    properties:
+      uvin:
+        $ref: '#/definitions/GUID'
+      gufi:
+        $ref: '#/definitions/GUID'
+      submitTime:
+        $ref: '#/definitions/timestamp'
+      ussName:
+        type: string
+      ussInstanceID:
+        $ref: '#/definitions/GUID'
+      
+  plannedContingency:
+    type: object
+    required: ['plannedContingencyLandingPoint_deg','plannedContingencyLandingPointAlt_ft','plannedContingencyLoiterAlt_ft','plannedContingencyLoiterRadius_ft']
+    properties:
+      plannedContingencyLandingPoint_deg:
+        $ref: '#/definitions/LatLonList'
+      plannedContingencyLandingPointAlt_ft:
+        $ref: '#/definitions/AltitudeList'
+      plannedContingencyLoiterAlt_ft:
+        $ref: '#/definitions/AltitudeList'
+      plannedContingencyLoiterRadius_ft:
+        $ref: '#/definitions/NumberList'
+        
+# low level definitions
+        
+  timestamp:
+    type: string
+    pattern: '^2[0-9][0-9][0-9]-[01][0-9]-[0123][0-9]T[012][0-9]:[012345][0-9]:[012345][0-9]\.[0-9][0-9][0-9][0-9]*Z{0,1}$'
+    example: '2018-03-05T19:56:23.445'
+    
+  string280:
+    type: string
+    maxLength: 280
+    
+  LatLon:
+    description: Latitude and Longitude should be specified to at least 7 digits of precision
+    type: object
+    required: ['lat','lon']
+    properties:
+      lat:
+        type: number
+        minimum: -90.0
+        maximum:  90.0
+      lon:
+        type: number
+        minimum: -180.0
+        maximum: 180.0
+
+  LatLonList:
+    type: array
+    minItems: 1
+    items:
+      $ref: '#/definitions/LatLon'
+      
+  AltitudeList:
+    # positive and negative ints and floats (feet)
+    type: array
+    minItems: 1
+    items:
+      type: number
+    
+  ContingencyCauseNumberList:
+    type: array
+    minItems: 1
+    items:
+      type: integer
+      minimum: 0
+      maximum: 13
+  
+  NumberList:
+    # postive ints and floats only
+    type: array
+    minItems: 1
+    items:
+      type: number
+      minimum: 0
+
+  prnList:
+    # gps satellite numbers, 1-32
+    type: array
+    minItems: 1
+    items:
+      type: integer
+      minimum: 0
+      maximum: 32
+    
+  GUID:
+    type: string
+    format: uuid
+    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+    example: 'd7126818-d280-475f-aaee-c16e9c6f04e0'
+    maxLength: 36
+    minLength: 36
+
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /NASA8/CNS/V3.0
+schemes:
+ - https

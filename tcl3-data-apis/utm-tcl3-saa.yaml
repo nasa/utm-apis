@@ -1,0 +1,439 @@
+swagger: '2.0'
+info:
+  version: "v2"
+  title: Flight Data JSON upload format description
+  description: Enforced upload format for SAA
+  contact:
+    name: 'NASA Ames Research Center, Aviation Systems Division'
+    url: 'https://utmregistry.arc.nasa.gov/'
+    email: joseph.rios@nasa.gov
+  license:
+    name: NASA Open Source Agreement
+    url: 'https://ti.arc.nasa.gov/opensource/nosa/'
+  termsOfService: >-
+    A. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED \"AS IS\" WITHOUT ANY
+    WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING,
+    BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL CONFORM TO
+    SPECIFICATIONS, ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+    PARTICULAR PURPOSE, OR FREEDOM FROM INFRINGEMENT, ANY WARRANTY THAT THE
+    SUBJECT SOFTWARE WILL BE ERROR FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF
+    PROVIDED, WILL CONFORM TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN
+    ANY MANNER, CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR
+    RECIPIENT OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR
+    ANY OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE. FURTHER,
+    GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES REGARDING
+    THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE, AND DISTRIBUTES
+    IT \"AS IS.\"
+
+
+    B. Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+    AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS
+    WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT''S USE OF THE SUBJECT SOFTWARE
+    RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES ARISING
+    FROM SUCH USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING
+    FROM, RECIPIENT''S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY
+    AND HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+    SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY
+    LAW. RECIPIENT''S SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE,
+    UNILATERAL TERMINATION OF THIS AGREEMENT.
+paths: {}
+definitions:
+
+
+#SAA (Sense and Avoid) includes any (or all) of the following tests: SAA1','SAA2','SAA3','SAA4','SAA5','SAA6'
+
+      
+# SAA.1: Description of Conflict Scenario
+# SAA1: defined by the totality of variables of (1) the uasState section of 
+# FLIGHT_DATA: https://app.swaggerhub.com/apis/utm/tcl3-flight-data/v2 
+# plus (2) the following parameters:
+  SAA1:
+    type: object
+    required: ['basic','fType','timeAtEncounterInit','timeAtConflictAlert','timeAtConflictResManeuverInit','timeAtConflictResManeuverComplt','timeAtClearOfConflict','geoFence']
+    properties:
+      basic:
+        $ref: '#/definitions/basicInformation'        
+      fType:
+        type: string
+        enum:
+        - SAA1
+      timeAtEncounterInit:
+        $ref: '#/definitions/timestamp'
+      timeAtConflictAlert:  
+        $ref: '#/definitions/timestamp'
+      timeAtConflictResManeuverInit:  
+        $ref: '#/definitions/timestamp'
+      timeAtConflictResManeuverComplt:  
+        $ref: '#/definitions/timestamp'
+      timeAtClearOfConflict:  
+        $ref: '#/definitions/timestamp'
+      geoFence:
+        $ref: '#/definitions/geoFence'
+    
+# SAA.2: Description of Mission
+# SAA2 is defined by the totality of variables of the (1) auxiliaryUASOperation and (2) aircraftFlightPlan sections of
+# FLIGHT_DATA: https://app.swaggerhub.com/apis/utm/tcl3-flight-data/v2
+# plus (3) geoFence parameters:
+  SAA2:
+    type: object
+    required: ['basic','fType','geoFence']
+    properties:
+      basic:
+        $ref: '#/definitions/basicInformation'     
+      fType:
+        type: string
+        enum:
+        - SAA2
+      geoFence:
+        $ref: '#/definitions/geoFence'
+    
+# SAA.3: Description of Aircraft Performance and State Data  
+# SAA3: defined by the totality of variables of (1) the uasState section of 
+# FLIGHT_DATA: https://app.swaggerhub.com/apis/utm/tcl3-flight-data/v2 
+# plus (2) geoFence parameters:
+  SAA3:
+    type: object
+    required: ['basic','fType','geoFence']
+    properties:
+      basic:
+        $ref: '#/definitions/basicInformation'     
+      fType:
+        type: string
+        enum:
+        - SAA3
+      geoFence:
+        $ref: '#/definitions/geoFence'
+      
+# SAA.4: Expected and Measured Sensor Performance
+  SAA4:
+    type: object
+    required: ['basic','fType','intruder','relativeHeadingAtFirstDetection_deg','azimuthSensorMin_deg','azimuthSensorMax_deg','elevationSensorMin_deg','elevationSensorMax_deg','typeOfSaaSensor', 'saaSensorMinSlantRange_ft', 'saaSensorMaxSlantRange_ft', 'minRcsOfSensor_ft2','maxRcsOfSensor_ft2','updateRateSensor_hz','saaSensorAzimuthAccuracy_deg','saaSensorAltitudeAccuracy_ft','horRangeAccuracy_ft','verRangeAccuracy_ft','slantRangeAccuracy_ft','timeToTrack_sec','probabilityFalseAlarmPrct_nonDim','probabilityIntruderDetectionPrct_nonDim','targetTrackCapacity_nonDim','dataPacketRatio_nonDim','transmissionDelay_sec','numberOfLostTracks_nonDim','intruderRadarCrossSection_ft2','txRadioFrequencyPower_w','geoFence']
+    properties:
+      basic:
+        $ref: '#/definitions/basicInformation'     
+      fType:
+        type: string
+        enum:
+        - SAA4
+      intruder:
+        $ref: '#/definitions/intruder'        
+      relativeHeadingAtFirstDetection_deg: 
+        type: number
+      azimuthSensorMin_deg:
+        type: number   
+      azimuthSensorMax_deg: 
+        type: number
+      elevationSensorMin_deg:
+        type: number    
+      elevationSensorMax_deg:
+        type: number    
+      typeOfSaaSensor:              
+        type: string
+        example: 'Radar'
+      saaSensorMinSlantRange_ft:
+        type: number    
+      saaSensorMaxSlantRange_ft:  
+        type: number    
+      minRcsOfSensor_ft2:              
+        type: number    
+      maxRcsOfSensor_ft2:
+        type: number    
+      updateRateSensor_hz:              
+        type: number
+      saaSensorAzimuthAccuracy_deg:
+        type: number    
+      saaSensorAltitudeAccuracy_ft:              
+        type: number
+      horRangeAccuracy_ft:
+        type: number    
+      verRangeAccuracy_ft:              
+        type: number
+      slantRangeAccuracy_ft:
+        type: number
+      timeToTrack_sec:
+        type: number    
+      probabilityFalseAlarmPrct_nonDim:              
+        type: number
+      probabilityIntruderDetectionPrct_nonDim:
+        type: number
+      targetTrackCapacity_nonDim:
+        type: number    
+      dataPacketRatio_nonDim:              
+        type: number
+      transmissionDelay_sec:
+        type: number    
+      numberOfLostTracks_nonDim:            
+        type: number
+      intruderRadarCrossSection_ft2:
+        type: number    
+      txRadioFrequencyPower_w:
+        type: number    
+      geoFence:
+        $ref: '#/definitions/geoFence'
+
+
+# SAA.5: Expected Conflict Resolution Performance
+  SAA5:
+    type: object
+    required: ['basic','fType','lookAheadTime_sec','UTM-TCL3-DMP-RevF-SAAPDF','typeOfConflictResolution_nonDim','expectedOperatorResponseTime_sec', 'expectedUASResponseTime_sec','expectedCommLatency_sec','expectedClimbRateOwnship_ftPerSec','expectedDescendRateOwnship_ftPerSec','expectedTurnRateOwnship_degPerSec','geoFence']
+    properties:   
+      basic:
+        $ref: '#/definitions/basicInformation'       
+      fType:
+        type: string
+        enum:
+        - SAA5
+      lookAheadTime_sec:
+        type: number
+      UTM-TCL3-DMP-RevF-SAAPDF:
+        $ref: '#/definitions/SAAPDFFileName'
+      typeOfConflictResolution_nonDim:
+        type: number          
+      expectedOperatorResponseTime_sec:
+        type: number
+      expectedUASResponseTime_sec:
+        type: number
+      expectedCommLatency_sec:
+        type: number
+      expectedClimbRateOwnship_ftPerSec:
+        type: number
+      expectedDescendRateOwnship_ftPerSec:
+        type: number
+      expectedTurnRateOwnship_degPerSec:
+        type: number   
+      geoFence:
+        $ref: '#/definitions/geoFence'      
+    
+
+# SAA.6: Measured Conflict Avoidance Performance
+  SAA6:
+    type: object
+    required: ['basic','fType','numberOfLossesOfSeparation_nonDim','numberOfNmac_nonDim','numberOfPrimaryConflicts_nonDim','numberOfInducedConflicts_nonDim','numberOfResolvedConflicts_nonDim','numberOfUnresolvedConflicts_nonDim','slantRangeAtPtOfApproach_ft','horMissDistAtClosestPtApproach_ft','verMissDistAtClosestPtApproach_ft','numberOfAlertsPerPrimaryConflict_nonDim','numberOfAlertsPerInducedConflict_nonDim','numberOfStrengtheningAlertsPerConflict_nonDim','numberOfStrengtheningAlertsTotal_nonDim','numberOfWeakeningAlertsPerConflict_nonDim','numberOfWeakeningAlertsTotal_nonDim','numberOfReversalAlertsPerConflict_nonDim','numberOfReversalAlertsTotal_nonDim','numberOfYoYoAlertsPerConflict_nonDim','numberOfYoYoAlertsTotal_nonDim','horFlightPathDeviation_ft','verFlightPathDeviation_ft','maxAbsolutePathDeviation_ft','maxHorPathDeviation_ft','maxVerPathDeviation_ft','totalHorPathDeviation_ft2','totalVerPathDeviation_ft2','geoFence']
+    properties:
+      basic:
+        $ref: '#/definitions/basicInformation'    
+      fType:
+        type: string
+        enum:
+        - SAA6
+      numberOfLossesOfSeparation_nonDim:
+        type: number    
+      numberOfNmac_nonDim:
+        type: number        
+      numberOfPrimaryConflicts_nonDim:
+        type: number             
+      numberOfInducedConflicts_nonDim:
+        type: number   
+      numberOfResolvedConflicts_nonDim:         
+        type: number   
+      numberOfUnresolvedConflicts_nonDim:   
+        type: number                
+      slantRangeAtPtOfApproach_ft:   
+        type: number   
+      horMissDistAtClosestPtApproach_ft:   
+        type: number   
+      verMissDistAtClosestPtApproach_ft:         
+        type: number   
+      numberOfAlertsPerPrimaryConflict_nonDim:   
+        type: number                
+      numberOfAlertsPerInducedConflict_nonDim:   
+        type: number            
+      numberOfStrengtheningAlertsPerConflict_nonDim:
+        type: number   
+      numberOfStrengtheningAlertsTotal_nonDim:         
+        type: number   
+      numberOfWeakeningAlertsPerConflict_nonDim:   
+        type: number                
+      numberOfWeakeningAlertsTotal_nonDim:   
+        type: number   
+      numberOfReversalAlertsPerConflict_nonDim:   
+        type: number   
+      numberOfReversalAlertsTotal_nonDim:         
+        type: number   
+      numberOfYoYoAlertsPerConflict_nonDim:   
+        type: number                
+      numberOfYoYoAlertsTotal_nonDim:   
+        type: number      
+      horFlightPathDeviation_ft:
+        type: number            
+      verFlightPathDeviation_ft:
+        type: number   
+      maxAbsolutePathDeviation_ft:         
+        type: number   
+      maxHorPathDeviation_ft:   
+        type: number                
+      maxVerPathDeviation_ft:   
+        type: number   
+      totalHorPathDeviation_ft2:   
+        type: number   
+      totalVerPathDeviation_ft2:         
+        type: number   
+      geoFence:
+        $ref: '#/definitions/geoFence'   
+    
+    
+    
+    
+    
+    
+# definitions shared by the MOPs    
+# ----------------------------------------------------------------------------
+  basicInformation:
+    type: object
+    required: ['uvin','gufi','submitTime','ussName','ussInstanceID']
+    properties:
+      uvin:
+        $ref: '#/definitions/GUID'
+      gufi:
+        $ref: '#/definitions/GUID'
+      submitTime:
+        $ref: '#/definitions/timestamp'
+      ussName:
+        type: string
+      ussInstanceID:    
+        $ref: '#/definitions/GUID'
+
+
+  intruder:
+    type: object
+    required: ['ts','intruderPositionLat_deg','intruderPositionLon_deg','intruderPositionAlt_ft','intruderGroundSpeed_ftPerSec','intruderVelNorth_ftPerSec','intruderVelEast_ftPerSec','intruderVelDown_ftPerSec','intruderGroundCourse_deg']
+    properties:
+      ts:
+        $ref: '#/definitions/timestamp'
+      intruderPositionLat_deg:
+        $ref: '#/definitions/LAT'
+      intruderPositionLon_deg:
+        $ref: '#/definitions/LON'        
+      intruderPositionAlt_ft:
+        type: number        
+      intruderGroundSpeed_ftPerSec:
+        type: number
+      intruderVelNorth_ftPerSec:
+        type: number
+      intruderVelEast_ftPerSec:
+        type: number        
+      intruderVelDown_ftPerSec:
+        type: number              
+      intruderGroundCourse_deg:
+        type: number
+        
+  LAT:
+    description: Latitude should have at least 7 digits of precision
+    type: number
+    minimum: -90.0
+    maximum:  90.0
+    example: 55.3456789
+    
+  LON:
+    description: Longitude should have at least 7 digits of precision
+    type: number
+    minimum: -180.0
+    maximum:  180.0
+    example: 125.1234567
+    
+  SAAPDFFileName:
+    type: string
+    pattern: '^UTM-[^-]+-SAA-[0-9]+.pdf$'
+    example: 'UTM-UASORG-SAA-3.pdf'
+    
+
+  geoFence:
+    type: object  
+    required: ['geoFenceAvailable_nonDim','geoFenceEnable','geoFenceStartTime','geoFenceEndTime','geoFenceType_nonDim','geoFenceMinAltitude_ft','geoFenceMaxAltitude_ft','geoFenceCircularPointLat_deg','geoFenceCircularPointLon_deg','geoFenceCircularRadius_ft','geoFenceDynamicPolygonPoint']  
+    properties:      
+      geoFenceAvailable_nonDim:
+        type: integer
+        enum:
+          - 0
+          - 1
+      geoFenceEnable:
+        type: array
+        items:
+          type: object
+          required: ['ts','geoFenceEnable_nonDim']
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            geoFenceEnable_nonDim:
+              type: integer
+              enum:
+                - 0
+                - 1
+      geoFenceStartTime:
+        type: array
+        items:
+          $ref: '#/definitions/timestamp'
+      geoFenceEndTime:
+        type: array
+        items:
+          $ref: '#/definitions/timestamp'
+      geoFenceType_nonDim:
+        type: integer
+        enum:
+          - 0
+          - 1
+      geoFenceMinAltitude_ft:
+        type: number
+      geoFenceMaxAltitude_ft:  
+        type: number
+      geoFenceCircularPointLat_deg:
+        $ref: '#/definitions/LAT'
+      geoFenceCircularPointLon_deg:
+        $ref: '#/definitions/LON'      
+      geoFenceCircularRadius_ft:
+        type: number      
+      geoFenceDynamicPolygonPoint:
+        type: array
+        items:
+          type: object
+          required: ['ts','geoFenceDynamicPolygonPoint_deg' ]
+          properties:
+            ts:
+              $ref: '#/definitions/timestamp'
+            geoFenceDynamicPolygonPoint_deg:
+              $ref: '#/definitions/LatLonList'
+
+          
+        
+    
+# low level definitions
+# ----------------------------------------------------------------------------
+
+  timestamp:
+    type: string
+    pattern: '^2[0-9][0-9][0-9]-[01][0-9]-[0123][0-9]T[012][0-9]:[012345][0-9]:[012345][0-9]\.[0-9][0-9][0-9][0-9]*Z{0,1}$'
+    example: '2018-03-05T19:56:23.445'
+
+  GUID:
+    type: string
+    format: uuid
+    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+    example: 'd7126818-d280-475f-aaee-c16e9c6f04e0'
+    maxLength: 36
+    minLength: 36
+    
+  LatLon:
+    type: object
+    description: Latitude and Longitude should be specified to at least 7 digits
+    required: ['lat','lon']
+    properties:
+      lat:
+        type: number
+        minimum: -90.0
+        maximum:  90.0
+      lon:
+        type: number
+        minimum: -180.0
+        maximum: 180.0
+
+  LatLonList:
+    type: array
+    minItems: 1
+    items:
+      $ref: '#/definitions/LatLon'
+
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /NASA8/SAA/V3.0
+schemes:
+ - https
