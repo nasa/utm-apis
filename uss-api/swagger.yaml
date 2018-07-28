@@ -51,7 +51,6 @@ securityDefinitions:
     tokenUrl: 'https://utm.defined.host/oauth/token'
     flow: application
     scopes:
-      'utm.nasa.gov_read.operation': Subject can read operational data such as USS Instance data
       'utm.nasa.gov_write.operation': Subject can read, create, and update operational data such as USS Instance data
       'utm.nasa.gov_write.message': Subject can read, create, and update message data such as UTM Message and Negotiations
       'utm.nasa.gov_read.publicsafety': Subject can read operations that are designated public safety operations.
@@ -311,7 +310,7 @@ paths:
       description: Allows querying for Operation data.
       security:
         - ussapi_security:
-            - utm.nasa.gov_read.operation
+            - utm.nasa.gov_write.operation
             - utm.nasa.gov_read.publicsafety
       produces:
         - application/json
@@ -478,7 +477,7 @@ paths:
       description: Retrieve an operation by GUFI.
       security:
         - ussapi_security:
-            - utm.nasa.gov_read.operation
+            - utm.nasa.gov_write.operation
             - utm.nasa.gov_read.publicsafety
       produces:
         - application/json
