@@ -489,8 +489,13 @@ definitions:
              the 4 dimensions much be > 0 in magnitude).
             4. Volume intersection must pass the following checks:
               a. When ordered by ordinal values, a succeeding operation volume
-              must have a 2D or 3D spatial intersection with its immediately
-              preceding operation volume.
+              must have a 2D or 3D intersection in 3D space with its immediately
+              preceding operation volume.  Note that a 2D intersection in 3D
+              space implies two volumes that "touch" and the intersection has 2D
+              area.  Sharing just an edge would not qualify.  3D volumes that
+              don't touch at all would not qualify, even if they would intersect
+              when projected into 2D space (e.g. if "looking down" on the two
+              volumes).
               b. When ordered by ordinal values, a succeeding operation volume
               must have a non-negative temporal intersection with its
               immediately preceding operation volume (Note we'd calculate this
@@ -498,7 +503,8 @@ definitions:
               t2 is the succeeding operation volume start time.).
               c. When ordered by ordinal values, a succeeding operation volume
               must have either a non-zero volume (3D) intersection OR a positive
-              temporal intersection. (Note it may have both intersection types.)
+              temporal intersection. (Note this is a logical "OR" so it may have
+               both intersection types... i.e. it is not an "exclusive OR").
             5. Each spatial dimension of an op vol's bounding box must have
             length less than 6000ft (should discuss with partners this value).
             This is a sanity check against excessively large volumes. Need to
@@ -510,6 +516,12 @@ definitions:
             protect against misuse/poor planning. For long duration missions,
             it may be reasonable to have them replan or to have volumes with
             the same geog and long time values that slightly intersect.
+            7. The start time of an operation volume other than the first in the
+            array must be greater than or equal to the start time of its
+            immediately preceding operation volume.
+            (note this probalby should be #4 or so, bumping the others down,
+            but I didn't want to cause confusion in case implementers are
+            referencing these checks somewhere by number.)
 
         type: array
         maxItems: 250
