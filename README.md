@@ -1,4 +1,5 @@
 # UTM APIs
+# temp branch to support internal swagger links which cannot be parameterized
 
 This repository contains the collection of OpenAPI specification APIs within the NASA's research version of the UTM System.  Many of UTM's data models are common and these are maintained using Swagger's "Domain" references.
 
