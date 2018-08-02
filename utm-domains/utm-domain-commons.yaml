@@ -611,7 +611,7 @@ definitions:
           Time that the operational volume was freed for use by other
           operations.  Should be populated and stored by the USS.
 
-          This value must satisfy:  actual_time_end < effective_time_begin
+          This value must satisfy:  actual_time_end > effective_time_begin
           whenever actual_time_end is not null.
         $ref: '#/definitions/timestamp'
         x-utm-data-accessibility: OPERATIONAL
