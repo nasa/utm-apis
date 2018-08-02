@@ -113,14 +113,50 @@ definitions:
         - Polygon
       coordinates:
         type: array
+        description: >-
+          The number of polygons allowed.  Currently 1, implying no interior
+          rings.  If this number is changes, the maxItems should be considered.
+
+          From RFC7946:
+          o  For type "Polygon", the "coordinates" member MUST be an array of
+          linear ring coordinate arrays.
+
+          o  For Polygons with more than one of these rings, the first MUST be
+          the exterior ring, and any others MUST be interior rings.  The
+          exterior ring bounds the surface, and the interior rings (if
+          present) bound holes within the surface.
+
+          Again, note we only allow a single set of coordinates, implying no
+          interior rings.
         minItems: 1
         maxItems: 1
         items:
           type: array
-          minItems: 3
+          description: >-
+            The number of vertices in this polygon. From RFC7946:
+              o  A linear ring is a closed LineString with four or more positions.
+
+              o  The first and last positions are equivalent, and they MUST contain
+              identical values; their representation SHOULD also be identical.
+
+              o  A linear ring is the boundary of a surface or the boundary of a
+              hole in a surface.
+
+              o  A linear ring MUST follow the right-hand rule with respect to the
+              area it bounds, i.e., exterior rings are counterclockwise, and
+              holes are clockwise.  (also in the spec:  parsers SHOULD NOT reject
+              Polygons that do not follow the right-hand rule.)
+
+              https://tools.ietf.org/html/rfc7946#section-3.1.6
+
+          minItems: 4
           maxItems: 100
           items:
             type: array
+            description: >-
+              The actual coordinates for a vertex of the linear ring.  Note that
+              UTM does not allow additional elements other than long and lat in
+              this array.
             maxItems: 2
             minItems: 2
             items:

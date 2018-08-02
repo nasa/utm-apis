@@ -38,7 +38,7 @@ info:
     UNILATERAL TERMINATION OF THIS AGREEMENT.
 
 host: uss.defined.url
-basePath: /pubsafe
+basePath: /
 schemes:
   - https
 
@@ -195,6 +195,7 @@ paths:
             MUST NOT include a third coordinate element, strictly 2D.
           type: string
           format: geojson-position
+          maxLength: 100
           required: false
         - name: "time"
           in: "query"
@@ -222,14 +223,125 @@ paths:
           description: "Forbidden"
         404:
           description: "Not Found"
-
         400:
+          description: "Bad request. Typically validation error. Fix your request\
+             and retry."
+  /restrictions:
+    get:
+      description: >-
+        Get constraint messages.
+      parameters:
+        - name: limit
+          in: query
+          description: The maximum number or records to return.
+          required: false
+          type: integer
+          default: 10
+          maximum: 100
+          exclusiveMaximum: false
+          minimum: 1
+          exclusiveMinimum: false
+          format: int32
+        - name: offset
+          in: query
+          description: The index from which to begin the list of returned records.
+          required: false
+          type: integer
+          default: 0
+          minimum: 0
+          exclusiveMinimum: false
+          format: int32
+        - name: distance
+          in: query
+          description: >-
+            Distance from reference_point to find restrictions. Ignored if
+            reference_point is not provided.  Units are feet.  Returns all
+            restrictions that have any geography values that interesect the 2D
+            circle defined by distance and reference_point.  Default value only
+            has meaning when reference_point parameter is provided.
+          type: integer
+          format: int32
+          maximum: 60762
+          minimum: 1
+          default: 300
+          required: false
+        - name: reference_point
+          in: query
+          description: >-
+            A single point used to find all restrictions within some distance from
+            that point. Returns all
+            restrictions that have any geography values that interesect the 2D
+            circle defined by distance and reference_point.
+            When distance it excluded and reference_point is
+            included, use default value (300ft) for distance.
+
+            Described as a GeoJSON position.  The value is equivalent to what
+            would be seen in the "coordinates" field for a GeoJSON Point
+            object.  See https://tools.ietf.org/html/rfc7946#section-3.1.1 for
+            further reference.  Example would be reference_point=[-122.056364,
+            37.414371] (URL safe:
+            reference_point%3D%5B-122.056364%2C%2037.414371%5D). As per GeoJSON
+            spec, this is long-lat format in the WGS84 reference system.
+
+            MUST NOT include a third coordinate element, strictly 2D.
+          type: string
+          format: geojson-position
+          maxLength: 100
+          required: false
+      responses:
+        '200':
+          description: Successful request.
+          schema:
+            type: array
+            items:
+              $ref: >-
+                https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
+        '401':
+          description: "Unauthorized"
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '403':
+          description: "Forbidden"
+        '404':
+          description: "Not Found"
+
+        '400':
           description: "Bad request. Typically validation error. Fix your request\
             \ and retry."
   /restrictions/{message_id}:
+    get:
+      description: >-
+        Get a specific constraint message.
+      parameters:
+        - in: path
+          name: message_id
+          required: true
+          type: string
+          description: GET by message_id
+      responses:
+        '200':
+          description: Successful request.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
+        '401':
+          description: "Unauthorized"
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '403':
+          description: "Forbidden"
+        '404':
+          description: "Not Found"
+
+        '400':
+          description: "Bad request. Typically validation error. Fix your request\
+            \ and retry."
     put:
       description: >-
-        Endpoint to PUT a constraint message that will be sent to LUN members intersecting the constraint geography.
+        Endpoint to PUT a constraint message that will be sent to LUN members
+        intersecting the constraint geography.
       parameters:
         - in: path
           name: message_id
@@ -242,7 +354,7 @@ paths:
           required: true
           schema:
             $ref: >-
-                      https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
       responses:
         '204':
           description: Constraint data received. No content returned.
