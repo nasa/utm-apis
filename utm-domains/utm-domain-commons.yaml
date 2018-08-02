@@ -266,10 +266,10 @@ definitions:
           - ROGUE
         x-utm-data-accessibility: OPERATIONAL
       controller_location:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v18.08.02/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
         x-utm-data-accessibility: SAFETY
       gcs_location:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v18.08.02/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
         x-utm-data-accessibility: SAFETY
       contingency_plans:
         description: >-
@@ -350,7 +350,7 @@ definitions:
         x-utm-data-accessibility: OPERATIONAL
       metadata:
         $ref: >-
-          https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-metadata.yaml#/definitions/EventMetadata
+          https://raw.githubusercontent.com/nasa/utm-apis/v18.08.02/utm-domains/utm-domain-metadata.yaml#/definitions/EventMetadata
         x-utm-data-accessibility: OPERATIONAL
   PriorityElements:
     description: >-
@@ -469,7 +469,7 @@ definitions:
         type: number
         format: double
       operation_geography:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v18.08.02/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       beyond_visual_line_of_sight:
         description: >-
           Describes whether the operation volume is beyond the visual line of
@@ -562,7 +562,7 @@ definitions:
           - LOITERING
           - RETURN_TO_BASE
       contingency_point:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v18.08.02/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
       loiter_altitude_wgs84_ft:
         description: >-
           The altitude for this contingency. Relevant and required for the
@@ -714,7 +714,7 @@ definitions:
         description: The horizontal dilution of precision as provided by the onboard GPS.
         minimum: 0
       location:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v18.08.02/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
       time_measured:
         description: >-
           The time the position was measured. Likely the time provided with the
@@ -1092,7 +1092,7 @@ definitions:
           - MUNICIPALITY
           - OTHER
       constraint_geography:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v18.08.02/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       effective_time_begin:
         description: >-
           The time that the constraint will begin to be in effect.  Uses the ISO
@@ -1307,7 +1307,7 @@ definitions:
           any UAS operations airborne after this time that would be supported by
           this USS Instance.
       coverage_area:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v18.08.02/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       time_last_modified:
         type: string
         format: date-time

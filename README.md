@@ -47,7 +47,7 @@ GENERATE="java  -Dmodels -DmodelDocs=false -DapiDocs=false -jar $CODEGEN generat
 
 $GENERATE -i ${SWREPO}/fims-uss-api/swagger.yaml   #localfile input
 or
-$GENERATE -i https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/uss-api/swagger.yaml
+$GENERATE -i https://raw.githubusercontent.com/nasa/utm-apis/v18.08.02/uss-api/swagger.yaml
 
 ````````
 
