@@ -247,7 +247,7 @@ definitions:
       access_token: tokenstring
       token_type: bearer
       expires_in: 3599
-      scope: utm.nasa.gov_write.operation utm.nasa.gov_read.operation
+      scope: utm.nasa.gov_write.operation
       sub: nasaUSS
       nbf: 1509470774
       iss: fims.arc.nasa.gov/fimsAuthServer
@@ -346,9 +346,8 @@ definitions:
           The "jti" (JWT ID) claim provides a unique identifier for the JWT. For this server, this is satisfied by the use of a UUID.
 
       scope:
-        type: array
-        items:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/scope'
+        description: >-
+          See securityDefinitions section in this spec.
 
 
   Metadata:
@@ -375,7 +374,7 @@ definitions:
       scopes_supported:
         type: array
         items:
-          $ref: 'https://api.swaggerhub.com/domains/utm/commons/v1#/definitions/scope'
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Version'
         description: >-
           JSON array containing a list of the OAuth 2.0 [RFC6749] "scope" values that this authorization server supports. Servers MAY choose not to advertise some supported scope values even when this parameter is used.
 # Currently no response types supported, return empty array
