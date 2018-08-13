@@ -271,8 +271,6 @@ definitions:
         type: string
         enum:
           - W84
-        minLength: 3
-        maxLength: 3
       units_of_measure:
         description: >-
           The reference quantities used to express the value of altitude. See
