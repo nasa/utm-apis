@@ -131,6 +131,28 @@ definitions:
         type: "string"
         format: "uuidv4"
         example: "00000000-0000-4444-9988-bo55beefface"
+
+  USSNegotiation:
+    required:
+      - "negotiation_id"
+    properties:
+      negotiation_id:
+        description: >-
+          A UUID assingned by the reporting USS for this instance of USSExchange.
+        type: "string"
+        format: "uuidv4"
+        example: "00000000-0000-4444-9988-bo55beefface"
+      reporter_gufi:
+        description: GUFI of the operation managed by reporting USS involved in this negotiation.
+        type: "string"
+        format: "uuidv4"
+        example: "00000000-0000-4444-9988-bo55beefface"
+      other_gufi:
+        description: GUFI of the other operation involved in this negotiation.
+        type: "string"
+        format: "uuidv4"
+        example: "00000000-0000-4444-9988-bo55beefface"
+        
   USSExchange:
     required:
       - "measurement_id"
