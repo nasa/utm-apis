@@ -9,6 +9,13 @@ info:
     url: 'https://utm.arc.nasa.gov/'
     email: joseph.rios@nasa.gov
 
+paths:
+  '/no-paths':
+    put:
+      responses:
+        '410':
+          description: "Gone. Not implemented. Will not be implemented."
+
 definitions:
   OffNominalReport:
     required:
@@ -28,7 +35,7 @@ definitions:
           Contact information of the reporter. Reference utm-commons for model.
           This information is for contacting the reporter when follow-up is
           needed, and should not be sent to NASA
-        $ref: '#/definitions/PersonOrOrganization'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/PersonOrOrganization'
       report_id:
         description: |-
           A UUID assingned by the reporting USS for this instance of
@@ -61,7 +68,7 @@ definitions:
           active contingency plan id for the operation. Reporter MUST see the prompt text before inputting data.
         x-utm-offnominal-prompt: >-
           Activated contingency plan id, if any. When more than one are used, please state so in the reporter narrative section.
-        $ref: '#/definitions/ContingencyPlan'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ContingencyPlan'
       role_responsibility:
         description: >-
           Reporter role and responsibility. Reporter MUST see the prompt text
@@ -125,34 +132,180 @@ definitions:
         description: >-
             date and time of off-nominal event in UTC, ONLY to be filled when
             value for the variable "reason_for_report" is "VOLUNTEER"
-        $ref: '#/definitions/timestamp'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/timestamp'
       gufi:
         description: GUFI of the operation that is the subject of this report.
         type: "string"
         format: "uuidv4"
         example: "00000000-0000-4444-9988-bo55beefface"
 
+  RemoteID:
+    required:
+      - "remote_id"
+      - "gufi"
+      - "detection_technology"
+      - "broadcast_technology"
+      - "network_lookup"
+      - "network_lookup_successful"
+      - "network_lookup_start_time"
+      - "network_lookup_end_time"
+      - "time_of_detection"
+      - "detection_position"
+      - "detection_altitude"
+      - "detection_position_method"
+      - "vehicle_position"
+      - "vehicle_altitude"
+      - "vehicle_position_method"
+    properties:
+      remote_id:
+        description: >-
+          A UUID assigned by the reporting USS for this instance of RemoteID.
+
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
+      gufi:
+        description: >-
+          GUFI of the operation that is looked up.
+
+          If the GUFI does not exist (in a non-cooperative lookup, for example)
+          use 00000000-0000-4444-8888-000000000000.
+
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
+      detection_technology:
+        description: >-
+          Brief description of technology used to detect the operation. This
+          is most applicable in "broadcast" approaches where the UA is emitting
+          information in some manner, thus requiring some device to detect that
+          emission.  In the case that no device or technology is used (maybe
+          just eyeballs), something like "VISUAL" is an appropriate response.
+
+          Consistency is important in this field for analysis purposes, so
+          use the same string whenever the same technology is used.
+        type: "string"
+        maxLength: 1000
+      broadcast_technology:
+        description: >-
+          Brief description of the technology used to broadcast information from
+          the UA.  If no broadcast technology is used, "NONE" os an
+          appropriate response.
+
+          Consistency is important in this field for analysis purposes, so
+          use the same string whenever the same technology is used.
+        type: "string"
+        maxLength: 1000
+      network_lookup:
+        description: Was USS Network used to look up this operation?
+        type: boolean
+      network_lookup_successful:
+        description: If USS Network used to look up this operation, was it successful?
+        type: boolean
+      detection_position:
+        description: Where was the device/person that detected the UAS?
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+      detection_altitude:
+        description: What altitude/elevation was the device/person that detected the UAS?
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
+      detection_position_method:
+        description: Was the position of the device/person measured or estimated?
+        type: "string"
+        enum:
+          - MEASURED
+          - ESTIMATED
+      vehicle_position:
+        description: Where was the UAS when it was detected?
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+      vehicle_altitude:
+        description: At what altitude was the UAS when it was detected?
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
+      vehicle_position_method:
+        description: Was the position of the UAS measured or estimated?
+        type: "string"
+        enum:
+          - MEASURED
+          - ESTIMATED
+      time_of_detection:
+        description: >-
+          Time the vehicle was detected by the device.  If visual detection only,
+          it is expected this value is an estimate.  If detetected
+      network_lookup_start_time:
+        description: If USS Network used to look up this operation, at what time did the lookup begin?
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/timestamp'
+      network_lookup_end_time:
+        description: If USS Network used to look up this operation, at what time did the lookup return?
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/timestamp'
+
+
+
   USSNegotiation:
     required:
       - "negotiation_id"
+      - "reporter_gufi"
+      - "other_gufi"
+      - "message_ids"
+      - "conflict_resolved"
+      - "reporter_op_action"
+      - "other_op_action"
+
     properties:
       negotiation_id:
         description: >-
-          A UUID assingned by the reporting USS for this instance of USSExchange.
-        type: "string"
-        format: "uuidv4"
-        example: "00000000-0000-4444-9988-bo55beefface"
+          A UUID assigned by the reporting USS for this instance of
+           USSNegotiation.
+
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
       reporter_gufi:
-        description: GUFI of the operation managed by reporting USS involved in this negotiation.
-        type: "string"
-        format: "uuidv4"
-        example: "00000000-0000-4444-9988-bo55beefface"
+        description: >-
+          GUFI of the operation managed by reporting USS involved in this
+          negotiation.
+
+          If GUFI does not exist, use 00000000-0000-4444-8888-000000000000.
+          If GUFI was generated after the negotiation, include that value.
+
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
       other_gufi:
-        description: GUFI of the other operation involved in this negotiation.
+        description: >-
+          GUFI of the other operation involved in this negotiation.
+
+          If GUFI does not exist, use 00000000-0000-4444-8888-000000000000.
+          If GUFI was generated after the negotiation, include that value.
+
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
+      message_ids:
+        description: Complete list of UUIDs from each NegotiationMessage involved.
+        type: "array"
+        items:
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
+      conflict_resolved:
+        description: >-
+          Were both operations allowed to complete their intended missions?
+        type: "boolean"
+      reporter_op_action:
+        description: >-
+          The action/modification by the reporting USS for its operation
+          resulting from this negotiation process. If OTHER_MOD, please detail
+          in the 'notes' field.
         type: "string"
-        format: "uuidv4"
-        example: "00000000-0000-4444-9988-bo55beefface"
-        
+        enum:
+          - NONE
+          - SPATIAL_MOD
+          - TEMPORAL_MOD
+          - SPATIAL_AND_TEMPORAL_MOD
+          - OTHER_MOD
+      other_op_action:
+        description: >-
+          The action/modification by the other USS for its operation
+          resulting from this negotiation process. If OTHER_MOD, please detail
+          in the 'notes' field.
+        type: "string"
+        enum:
+          - NONE
+          - SPATIAL_MOD
+          - TEMPORAL_MOD
+          - SPATIAL_AND_TEMPORAL_MOD
+          - OTHER_MOD
+      notes:
+        type: "string"
+        maxLength: 1500
+
   USSExchange:
     required:
       - "measurement_id"
@@ -171,9 +324,8 @@ definitions:
       measurement_id:
         description: >-
           A UUID assingned by the reporting USS for this instance of USSExchange.
-        type: "string"
-        format: "uuidv4"
-        example: "00000000-0000-4444-9988-bo55beefface"
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
+
       event_id:
         description: >-
           A string provided by the owner of the overall test (likely NASA) that identifies the event within which this data exchange occurs. NASA will define a pattern for this for consistency across tests.
@@ -191,9 +343,8 @@ definitions:
           then just populate this field with one of the primary keys. As a best
           practice, choose the first one in the array as they were sent between
           USSs.
-        type: "string"
-        format: "uuidv4"
-        example: "00000000-0000-4444-9988-decadefacade"
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
+
       exchanged_data_type:
         type: "string"
         enum:
@@ -227,18 +378,16 @@ definitions:
           If TARGET_USS, this is the time that the request was received from the SOURCE_USS.
 
           Same formatting rules as in other UTM exchanges (ms, 'Z').
-        type: "string"
-        format: "date-time"
-        example: "2015-08-20T14:11:56.118Z"
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/timestamp'
+
       time_request_completed:
         description: >-
           If SOURCE_USS, this is the time that the response was received from the TARGET_USS.
           If TARGET_USS, this is the time that the request was sent back to the SOURCE_USS.
 
           Same formatting rules as in other UTM exchanges (ms, 'Z').
-        type: "string"
-        format: "date-time"
-        example: "2015-08-20T14:11:56.937Z"
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/timestamp'
+
       endpoint:
         description: >-
           The endpoint to which the data request was initially sent.
