@@ -1068,7 +1068,6 @@ definitions:
         units_of_measure: "FT"
         source: "ONBOARD_SENSOR"
       altitude_num_gps_satellites: 22
-      air_speed_source: "MEASURED"
       enroute_positions_id: "d10cd900-086f-43c7-9d6c-BAADCAFEF00D"
       gufi: "00000000-0000-4444-8888-000000000000"
       hdop_gps: 1.117
