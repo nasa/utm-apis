@@ -467,33 +467,6 @@ paths:
           description: "Forbidden"
         404:
           description: "Not Found"
-    post:
-      tags:
-      - "Positions, Constraints"
-      summary: "addConstraint"
-      operationId: "addConstraintUsingPOST"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "constraint"
-        description: "constraint"
-        required: true
-        schema:
-          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage'
-      responses:
-        201:
-          description: "Created"
-          schema:
-            $ref: "#/definitions/UTMRestResponse"
-        401:
-          description: "Unauthorized"
-        403:
-          description: "Forbidden"
-        404:
-          description: "Not Found"
   /restrictions/{id}:
     get:
       tags:
