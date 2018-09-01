@@ -104,6 +104,7 @@ definitions:
           - CONSTRAINT_MESSAGE
           - NEGOTIATION_MESSAGE
           - USS_INSTANCE
+          - DISCOVERY 
           - OTHER_SEE_COMMENT
         example: "POSITION"
       source_uss:
