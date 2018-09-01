@@ -192,7 +192,7 @@ definitions:
 
           Limiting email length to 254 per well-supported discussion here:
             https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
-            
+
         type: array
         minItems: 1
         maxItems: 5
@@ -276,8 +276,6 @@ definitions:
         type: string
         enum:
           - W84
-        minLength: 3
-        maxLength: 3
       units_of_measure:
         description: >-
           The reference quantities used to express the value of altitude. See
