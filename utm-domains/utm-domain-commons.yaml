@@ -878,7 +878,7 @@ definitions:
       time_sent:
         description: >-
           The time the position was sent by the USS as measured by that USS's
-          system time.  time_measured < time_sent MUST be true.
+          system time.  time_measured <= time_sent MUST be true.
         $ref: '#/definitions/timestamp'
         x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T14:11:57.968Z'
