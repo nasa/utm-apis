@@ -1226,6 +1226,8 @@ definitions:
           $ref: '#/definitions/uuid'
         minItems: 0
         maxItems: 100
+        example:
+          - '00000000-0000-4444-8888-FEEDDEADFFFF'
       type:
         type: string
         enum:
@@ -1290,6 +1292,10 @@ definitions:
               - 37.40968041145
       effective_time_begin: '2016-11-29T01:16:41.727Z'
       effective_time_end: '2016-11-30T01:16:41.727Z'
+      permitted_uas:
+        - NONE
+      permitted_gufis:
+        - '00000000-0000-4444-8888-FEEDDEADFFFF'
       actual_time_end: '2016-11-30T01:15:41.727Z'
       min_altitude:
         altitude_value: 0
