@@ -1160,6 +1160,8 @@ definitions:
       - message_id
       - type
       - constraint_geography
+      - min_altitude
+      - max_altitude
       - effective_time_begin
       - effective_time_end
       - permitted_uas
