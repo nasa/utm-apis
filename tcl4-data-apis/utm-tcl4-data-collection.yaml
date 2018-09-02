@@ -307,155 +307,157 @@ definitions:
         maxLength: 1500
 
   USSExchange:
-    required:
-      - "measurement_id"
-      - "event_id"
-      - "exchanged_data_pk"
-      - "exchanged_data_type"
-      - "source_uss"
-      - "target_uss"
-      - "reporting_uss_role"
-      - "time_request_initiation"
-      - "time_request_completed"
-      - "actual_http_response"
-      - "endpoint"
-      - "http_method"
-    properties:
-      measurement_id:
-        description: >-
-          A UUID assigned by the reporting USS for this instance of USSExchange.
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
+    type: array
+    items:
+      type: object
+      required:
+        - "measurement_id"
+        - "event_id"
+        - "exchanged_data_pk"
+        - "exchanged_data_type"
+        - "source_uss"
+        - "target_uss"
+        - "reporting_uss_role"
+        - "time_request_initiation"
+        - "time_request_completed"
+        - "actual_http_response"
+        - "endpoint"
+        - "http_method"
+      properties:
+        measurement_id:
+          description: >-
+            A UUID assigned by the reporting USS for this instance of USSExchange.
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
+        event_id:
+          description: >-
+            A string provided by the owner of the overall test (likely NASA) that identifies the event within which this data exchange occurs. NASA will define a pattern for this for consistency across tests.
+          type: "string"
+          minLength: 3
+          maxLength: 100
+          example: "USS_SPRINT1_SIM_20180723_RUN5"
+        exchanged_data_pk:
+          description: >-
+            The primary key of the data that were exchanged.  For example, if an
+            Operation was exchanged, then this field would contain the gufi.
 
-      event_id:
-        description: >-
-          A string provided by the owner of the overall test (likely NASA) that identifies the event within which this data exchange occurs. NASA will define a pattern for this for consistency across tests.
-        type: "string"
-        minLength: 3
-        maxLength: 100
-        example: "USS_SPRINT1_SIM_20180723_RUN5"
-      exchanged_data_pk:
-        description: >-
-          The primary key of the data that were exchanged.  For example, if an
-          Operation was exchanged, then this field would contain the gufi.
+            In the case that multiple data elements were exchnaged (as in a GET
+            to the Operations endpoint resulting in multiple Operations returned)
+            then just populate this field with one of the primary keys. As a best
+            practice, choose the first one in the array as they were sent between
+            USSs.
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
 
-          In the case that multiple data elements were exchnaged (as in a GET
-          to the Operations endpoint resulting in multiple Operations returned)
-          then just populate this field with one of the primary keys. As a best
-          practice, choose the first one in the array as they were sent between
-          USSs.
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
+        exchanged_data_type:
+          type: "string"
+          enum:
+            - OPERATION
+            - POSITION
+            - UTM_MESSAGE
+            - CONSTRAINT_MESSAGE
+            - NEGOTIATION_MESSAGE
+            - USS_INSTANCE
+            - DISCOVERY 
+            - OTHER_SEE_COMMENT
+          example: "POSITION"
+        source_uss:
+          type: "string"
+          format: "dns-name"
+          example: "uss.provider123.net"
+        target_uss:
+          type: "string"
+          format: "dns-name"
+          example: "utm.cool-uss-team.com"
+        reporting_uss_role:
+          description: >-
+            An enum indicating if the USS providing these data was the one that initiated the request (SOURCE_USS) or the USS that received the request (TARGET_USS).
+          type: "string"
+          enum:
+            - SOURCE_USS
+            - TARGET_USS
+          example: "SOURCE_USS"
+        time_request_initiation:
+          description: >-
+            If SOURCE_USS, this is the time that the request is sent to the TARGET_USS.
+            If TARGET_USS, this is the time that the request was received from the SOURCE_USS.
 
-      exchanged_data_type:
-        type: "string"
-        enum:
-          - OPERATION
-          - POSITION
-          - UTM_MESSAGE
-          - CONSTRAINT_MESSAGE
-          - NEGOTIATION_MESSAGE
-          - USS_INSTANCE
-          - DISCOVERY 
-          - OTHER_SEE_COMMENT
-        example: "POSITION"
-      source_uss:
-        type: "string"
-        format: "dns-name"
-        example: "uss.provider123.net"
-      target_uss:
-        type: "string"
-        format: "dns-name"
-        example: "utm.cool-uss-team.com"
-      reporting_uss_role:
-        description: >-
-          An enum indicating if the USS providing these data was the one that initiated the request (SOURCE_USS) or the USS that received the request (TARGET_USS).
-        type: "string"
-        enum:
-          - SOURCE_USS
-          - TARGET_USS
-        example: "SOURCE_USS"
-      time_request_initiation:
-        description: >-
-          If SOURCE_USS, this is the time that the request is sent to the TARGET_USS.
-          If TARGET_USS, this is the time that the request was received from the SOURCE_USS.
+            Same formatting rules as in other UTM exchanges (ms, 'Z').
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/timestamp'
 
-          Same formatting rules as in other UTM exchanges (ms, 'Z').
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/timestamp'
+        time_request_completed:
+          description: >-
+            If SOURCE_USS, this is the time that the response was received from the TARGET_USS.
+            If TARGET_USS, this is the time that the request was sent back to the SOURCE_USS.
 
-      time_request_completed:
-        description: >-
-          If SOURCE_USS, this is the time that the response was received from the TARGET_USS.
-          If TARGET_USS, this is the time that the request was sent back to the SOURCE_USS.
+            Same formatting rules as in other UTM exchanges (ms, 'Z').
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/timestamp'
 
-          Same formatting rules as in other UTM exchanges (ms, 'Z').
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/timestamp'
+        endpoint:
+          description: >-
+            The endpoint to which the data request was initially sent.
+          type: "string"
+          format: "url"
+          example: "https://utm.cool-uss-team.com/operations"
+        http_method:
+          description: >-
+            The HTTP method used in this exchange.
+          type: string
+          enum:
+            - GET
+            - POST
+            - PUT
+            - DELETE
+            - HEAD
+            - TRACE
+            - OPTIONS
+            - CONNECT
+            - PATCH
+          example: "PUT"
+        expected_http_response:
+          description: >-
+            The expected HTTP response code.  This is required ONLY if the reporting_uss_role is SOURCE_USS.
+          type: "integer"
+          format: "int32"
+          minimum: 100
+          exclusiveMinimum: false
+          maximum: 599
+          exclusiveMaximum: false
+          example: 204
+        actual_http_response:
+          description: >-
+            The actual HTTP response code sent by the TARGET_USS to the SOURCE_USS. Must be reported by USSs in either role.
+          type: "integer"
+          format: "int32"
+          minimum: 100
+          exclusiveMinimum: false
+          maximum: 599
+          exclusiveMaximum: false
+          example: 204
+        jws:
+          description: >-
+            The JWS that was included in the data exchange. If a PUT/POST then
+            the SOURCE_USS would have generated and sent to TARGET_USS.  If a GET
+            then the TARGET_USS would have generated and sent to the SOURCE_USS.
+            In either case, both the SOURCE_USS and the TARGET_USS should include
+            the resulting JWS here.
 
-      endpoint:
-        description: >-
-          The endpoint to which the data request was initially sent.
-        type: "string"
-        format: "url"
-        example: "https://utm.cool-uss-team.com/operations"
-      http_method:
-        description: >-
-          The HTTP method used in this exchange.
-        type: string
-        enum:
-          - GET
-          - POST
-          - PUT
-          - DELETE
-          - HEAD
-          - TRACE
-          - OPTIONS
-          - CONNECT
-          - PATCH
-        example: "PUT"
-      expected_http_response:
-        description: >-
-          The expected HTTP response code.  This is required ONLY if the reporting_uss_role is SOURCE_USS.
-        type: "integer"
-        format: "int32"
-        minimum: 100
-        exclusiveMinimum: false
-        maximum: 599
-        exclusiveMaximum: false
-        example: 204
-      actual_http_response:
-        description: >-
-          The actual HTTP response code sent by the TARGET_USS to the SOURCE_USS. Must be reported by USSs in either role.
-        type: "integer"
-        format: "int32"
-        minimum: 100
-        exclusiveMinimum: false
-        maximum: 599
-        exclusiveMaximum: false
-        example: 204
-      jws:
-        description: >-
-          The JWS that was included in the data exchange. If a PUT/POST then
-          the SOURCE_USS would have generated and sent to TARGET_USS.  If a GET
-          then the TARGET_USS would have generated and sent to the SOURCE_USS.
-          In either case, both the SOURCE_USS and the TARGET_USS should include
-          the resulting JWS here.
+            This field is now marked as optional since we will not always be
+            exchanging JWS in every simulation.  If JWS is required for the sim
+            then this field should also be considered required.
 
-          This field is now marked as optional since we will not always be
-          exchanging JWS in every simulation.  If JWS is required for the sim
-          then this field should also be considered required.
+            We currently have no max size for this field, but eventually we should.
+          type: "string"
+          format: "jws (base64url)"
+        jws_public_key:
+          description: >-
+            If available, include the public key for decoding the jws. Recommended
+            whenever jws field is non-null.
 
-          We currently have no max size for this field, but eventually we should.
-        type: "string"
-        format: "jws (base64url)"
-      jws_public_key:
-        description: >-
-          If available, include the public key for decoding the jws. Recommended
-          whenever jws field is non-null.
-
-          We currently have no max size for this field, but eventually we should.
-        type: "string"
-        format: "base64"
-      comments:
-        description: >-
-          Any additional comments that could aid in analysis involving these data.
-        type: "string"
-        maxLength: 1000
-        example: "This test was good."
+            We currently have no max size for this field, but eventually we should.
+          type: "string"
+          format: "base64"
+        comments:
+          description: >-
+            Any additional comments that could aid in analysis involving these data.
+          type: "string"
+          maxLength: 1000
+          example: "This test was good."
