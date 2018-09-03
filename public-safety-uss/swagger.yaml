@@ -80,12 +80,12 @@ paths:
           description: "Successfully returned uvin and its associated operator information"
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/VehicleOperationData
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/VehicleOperationData
         401:
           description: "Unauthorized"
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         403:
           description: "Forbidden"
         404:
@@ -98,7 +98,7 @@ paths:
           description: Service Unavailable
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
   /uas:
     get:
       description: Returns vehicle information when a partial uvin or an faa_number is supplied. Atleast one parameter is required.
@@ -136,13 +136,13 @@ paths:
             type: "array"
             items:
               $ref: >-
-                 https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/VehicleOperationData
+                 https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/VehicleOperationData
 
         401:
           description: "Unauthorized"
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         403:
           description: "Forbidden"
         404:
@@ -155,7 +155,7 @@ paths:
           description: Service Unavailable
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
 
   /uas/operations:
     get:
@@ -213,12 +213,12 @@ paths:
             type: "array"
             items:
               $ref: >-
-                https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Operation
+                https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/Operation
         401:
           description: "Unauthorized"
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         403:
           description: "Forbidden"
         404:
@@ -295,12 +295,12 @@ paths:
             type: array
             items:
               $ref: >-
-                https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
+                https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
         '401':
           description: "Unauthorized"
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '403':
           description: "Forbidden"
         '404':
@@ -324,12 +324,12 @@ paths:
           description: Successful request.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
         '401':
           description: "Unauthorized"
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '403':
           description: "Forbidden"
         '404':
@@ -354,7 +354,7 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
       responses:
         '204':
           description: Constraint data received. No content returned.
@@ -362,12 +362,12 @@ paths:
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Unauthorized.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '403':
           description: "Forbidden"
         '404':

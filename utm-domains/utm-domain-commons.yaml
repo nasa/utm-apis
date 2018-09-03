@@ -271,8 +271,6 @@ definitions:
         type: string
         enum:
           - W84
-        minLength: 3
-        maxLength: 3
       units_of_measure:
         description: >-
           The reference quantities used to express the value of altitude. See
@@ -315,8 +313,13 @@ definitions:
       - metadata
     properties:
       gufi:
-        $ref: '#/definitions/uuid'
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
         x-utm-data-accessibility: PUBLIC
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       uss_name:
         description: >-
           Identity of the USS.  The maximum and minimum character length is
@@ -329,11 +332,30 @@ definitions:
         example: utmbeta.arc.nasa.gov
       uss_instance_id:
         description: Identity of the USS Instance hosting this operation.
-        $ref: '#/definitions/uuid'
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
         x-utm-data-accessibility: PUBLIC
       submit_time:
-        $ref: '#/definitions/timestamp'
+        description: >-
+          Time the operation submission was sent by the managing USS. Uses the
+          ISO 8601 format conforming to pattern: YYYY-MM-DDThh:mm:ss.sssZ.
+          Seconds may have up to millisecond accuracy (three positions after
+          decimal).  The 'Z' implies UTC times and is the only timezone
+          accepted. This value is set by the USS managing this Operation upon
+          submitting the initial data to another server in the USS Network. This
+          test MUST be true: submit_time <= last_lun_update_time. Uses the
+          ISO 8601 format conforming to pattern:
+          YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy
+          (three positions after decimal).  The 'Z' implies UTC times and is the
+          only timezone accepted.
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
         x-utm-data-accessibility: OPERATIONAL
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
         example: '2015-08-20T14:11:56.118Z'
       last_lun_update_time:
         description: >-
@@ -351,8 +373,12 @@ definitions:
           (three positions after decimal).  The 'Z' implies UTC times and is the
           only timezone accepted. This field is set and maintained by the USS
           managing the Operation and is communicated to other USSs.
-        $ref: '#/definitions/timestamp'
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
         x-utm-data-accessibility: OPERATIONAL
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
         example: '2015-08-20T14:11:56.118Z'
       aircraft_comments:
         description: >-
@@ -395,8 +421,13 @@ definitions:
           $ref: '#/definitions/UasRegistration'
         x-utm-data-accessibility: SAFETY
       airspace_authorization:
-        $ref: '#/definitions/uuid'
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
         x-utm-data-accessibility: SAFETY
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       flight_number:
         description: Optional. For use by USS for identification purposes.
         type: string
@@ -606,8 +637,12 @@ definitions:
           be less than effective_time_end.
 
           effective_time_begin < effective_time_end MUST be true.
-        $ref: '#/definitions/timestamp'
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
         x-utm-data-accessibility: OPERATIONAL
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
         example: '2015-08-20T14:11:56.118Z'
       effective_time_end:
         description: >-
@@ -615,9 +650,13 @@ definitions:
           be greater than effective_time_begin.
 
           effective_time_begin < effective_time_end MUST be true.
-        $ref: '#/definitions/timestamp'
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
         x-utm-data-accessibility: OPERATIONAL
-        example: '2015-08-20T15:11:56.118Z'
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
+        example: '2015-08-20T14:11:56.118Z'
       actual_time_end:
         description: >-
           Time that the operational volume was freed for use by other
@@ -625,9 +664,13 @@ definitions:
 
           This value must satisfy:  actual_time_end > effective_time_begin
           whenever actual_time_end is not null.
-        $ref: '#/definitions/timestamp'
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
         x-utm-data-accessibility: OPERATIONAL
-        example: '2015-08-20T14:31:56.118Z'
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
+        example: '2015-08-20T14:11:56.118Z'
       min_altitude:
         description: >-
           The minimum altitude for this operation in this operation volume.
@@ -786,18 +829,26 @@ definitions:
           For example, if an operation begins at 1100, but this location is not
           available until 1105 at the earliest, then this field could indicate
           that fact.
-        $ref: '#/definitions/timestamp'
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
         x-utm-data-accessibility: OPERATIONAL
-        example: '2015-08-20T14:31:56.118Z'
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
+        example: '2015-08-20T14:11:56.118Z'
       valid_time_end:
         description: >-
           Optional. Time that this location is expected to become unavailable.
           For example, if an operation begins at 1100, but this location becomes
           closed for some reason at 1105, then this field could indicate that
           fact.
-        $ref: '#/definitions/timestamp'
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
         x-utm-data-accessibility: OPERATIONAL
-        example: '2015-08-20T14:41:09.651Z'
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
+        example: '2015-08-20T14:11:56.118Z'
       free_text:
           description: >-
             To be used for additional comments as needed. For human use, not for
@@ -843,19 +894,29 @@ definitions:
         maxLength: 1000
         x-utm-data-accessibility: OPERATIONAL
       enroute_positions_id:
-        $ref: '#/definitions/uuid'
         description: >-
           Each position will be assigned a UUIDv4 by the USS managing the
           referenced operation.  Any system recieving this position object MUST
           NOT modify this identifier.
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
         x-utm-data-accessibility: PUBLIC
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       gufi:
-        $ref: '#/definitions/uuid'
         description: >-
           Each operation has an GUFI assigned upon submission. Required upon
           PUTting a new position. It is a JSON string, but conforms to the UUID
           version 4 specification
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
         x-utm-data-accessibility: PUBLIC
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       hdop_gps:
         type: number
         format: double
@@ -869,16 +930,24 @@ definitions:
         description: >-
           The time the position was measured. Likely the time provided with the
           GPS position reading.  time_measured < time_sent MUST be true.
-        $ref: '#/definitions/timestamp'
-        example: '2015-08-20T14:11:56.118Z'
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
         x-utm-data-accessibility: PUBLIC
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
+        example: '2015-08-20T14:11:56.118Z'
       time_sent:
         description: >-
           The time the position was sent by the USS as measured by that USS's
           system time.  time_measured < time_sent MUST be true.
-        $ref: '#/definitions/timestamp'
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
         x-utm-data-accessibility: OPERATIONAL
-        example: '2015-08-20T14:11:57.968Z'
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
+        example: '2015-08-20T14:11:56.118Z'
       track_bearing:
         type: number
         format: double
@@ -979,8 +1048,13 @@ definitions:
         description: >-
           A USS instance_id value for the USS instance managing this operation.
           UUIDv4.
-        $ref: '#/definitions/uuid'
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
         x-utm-data-accessibility: OPERATIONAL
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       vdop_gps:
         type: number
         format: double
@@ -1028,7 +1102,12 @@ definitions:
       Please see the descriptions provided with each field.
     properties:
       message_id:
-        $ref: '#/definitions/uuid'
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       origin:
         description: The user or process that generated this message.
         type: string
@@ -1052,16 +1131,30 @@ definitions:
         description: >-
           A USS instance_id value of the originator of this message.  This aids
           with certain requests such as position report requests.  UUIDv4.
-        $ref: '#/definitions/uuid'
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       gufi:
         description: The GUFI for the operation referenced in this message.  UUIDv4.
-        $ref: '#/definitions/uuid'
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       time_sent:
         description: >-
           Time the message was generated by the origin.
-        $ref: '#/definitions/timestamp'
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
         x-utm-data-accessibility: OPERATIONAL
-        example: '2015-08-20T14:11:57.345Z'
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
+        example: '2015-08-20T14:11:56.118Z'
       severity:
         $ref: '#/definitions/severity'
       message_type:
@@ -1120,7 +1213,12 @@ definitions:
           context for this message. Example might be
           "CONTINGENCY_PLAN_CANCELLED" referencing the previous
           "CONTINGENCY_PLAN_INITIATED" message.
-        $ref: '#/definitions/uuid'
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       free_text:
         description: >-
           Any additional information. Note that this is for human consumption.
@@ -1163,7 +1261,12 @@ definitions:
       - permitted_gufis
     properties:
       message_id:
-        $ref: '#/definitions/uuid'
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       origin:
         description: The user or process that generated this message
         type: string
@@ -1184,7 +1287,12 @@ definitions:
         exclusiveMaximum: false
       originator_uss_instance_id:
         description: A USS instance_id value of the originator of this message.
-        $ref: '#/definitions/uuid'
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       permitted_uas:
         description: >-
           The types of UAS operations that are permitted within the bound of
@@ -1220,7 +1328,12 @@ definitions:
           This may be a chicken/egg problem that will have to be worked through.
         type: array
         items:
-          $ref: '#/definitions/uuid'
+          type: string
+          format: uuid
+          maxLength: 36
+          minLength: 36
+          pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+          example: "00000000-0000-4444-8888-FEEDDEADBEEF"
         minItems: 0
         maxItems: 100
       type:
@@ -1237,23 +1350,35 @@ definitions:
       effective_time_begin:
         description: >-
           The time that the constraint will begin to be in effect.
-        $ref: '#/definitions/timestamp'
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
         x-utm-data-accessibility: OPERATIONAL
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
         example: '2015-08-20T14:11:56.118Z'
       effective_time_end:
         description: >-
           The time that the constraint will cease to be in effect.
-        $ref: '#/definitions/timestamp'
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
         x-utm-data-accessibility: OPERATIONAL
-        example: '2015-08-20T15:11:56.118Z'
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
+        example: '2015-08-20T14:11:56.118Z'
       actual_time_end:
         description: >-
           Time that the constaint actually ceased being in effect. This
           value is likely used when a constraint ends early, but is not
           required.
-        $ref: '#/definitions/timestamp'
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
         x-utm-data-accessibility: OPERATIONAL
-        example: '2015-08-20T14:31:56.118Z'
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
+        example: '2015-08-20T14:11:56.118Z'
       min_altitude:
         description: >-
           The minimum altitude of the constraint. altitude_value MUST be less than
@@ -1303,7 +1428,12 @@ definitions:
       - origin_uss_name
     properties:
       message_id:
-        $ref: '#/definitions/uuid'
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       origin_uss_name:
         description: >-
           A name identifying the originator of this message. MUST be the
@@ -1315,7 +1445,12 @@ definitions:
         maxLength: 250
       originator_uss_instance_id:
         description: A USS instance_id value of the originator of this message.
-        $ref: '#/definitions/uuid'
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       type:
         description: >-
           Placeholder for now.  Likely will be an enum.
@@ -1326,12 +1461,22 @@ definitions:
           the origin and receiver roles are strictly dependent on which USS is
           generating this message. May be empty in the case of ATC communication
           to USS via FIMS.
-        $ref: '#/definitions/uuid'
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       gufi_of_receiver:
         description: >
           The GUFI of the relevant operation of the receiving USS. May be empty
           in cases of communication with ATC via FIMS.
-        $ref: '#/definitions/uuid'
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       reference_message_ids:
         description: >-
           A set of UUIDs of any previous messages related to the same
@@ -1343,7 +1488,12 @@ definitions:
           aid the negotiation process.
         type: array
         items:
-          $ref: '#/definitions/uuid'
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       free_text:
         type: string
         maxLength: 1000
@@ -1360,7 +1510,12 @@ definitions:
         description: >-
           A unique registration identifier, minted by the registration authority
           as a UUIDv4.
-        $ref: '#/definitions/uuid'
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       registration_location:
         type: string
         format: url
@@ -1387,7 +1542,12 @@ definitions:
       - uss_base_callback_url
     properties:
       uss_instance_id:
-        $ref: '#/definitions/uuid'
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       uss_name:
         description: >-
           The name of the entity providing UAS Support Services. Populated by
@@ -1399,35 +1559,55 @@ definitions:
         minLength: 1
         maxLength: 250
       time_submitted:
-        $ref: '#/definitions/timestamp'
-        x-utm-data-accessibility: OPERATIONAL
         description: >-
           The time at which the submission of this USS Instance was received at
           this discovery service.  Only modifiable by discovery service.
-      time_available_begin:
-        $ref: '#/definitions/timestamp'
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
         x-utm-data-accessibility: OPERATIONAL
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
+        example: '2015-08-20T14:11:56.118Z'
+      time_available_begin:
         description: >-
           The time at which the USS will begin providing services for active UAS
           operations for this USS Instance.  Note that the USS may provide
           planning services prior to the time_available_begin depending on the
           policies of the USS.
-      time_available_end:
-        $ref: '#/definitions/timestamp'
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
         x-utm-data-accessibility: OPERATIONAL
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
+        example: '2015-08-20T14:11:56.118Z'
+      time_available_end:
         description: >-
           The time at which the USS will cease providing services for active UAS
           operations for this USS Instance.  This means that there will not be
           any UAS operations airborne after this time that would be supported by
           this USS Instance.
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
+        x-utm-data-accessibility: OPERATIONAL
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
+        example: '2015-08-20T14:11:56.118Z'
       coverage_area:
         $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       time_last_modified:
-        $ref: '#/definitions/timestamp'
-        x-utm-data-accessibility: OPERATIONAL
         description: >-
           The last time there was an update to the data regarding this USS
           Instance. Only modifiable by discovery service.
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
+        x-utm-data-accessibility: OPERATIONAL
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
+        example: '2015-08-20T14:11:56.118Z'
       contact:
         $ref: '#/definitions/PersonOrOrganization'
         x-utm-data-accessibility: OPERATIONAL
@@ -1528,9 +1708,19 @@ definitions:
         minLength: 1
         example: "utmbeta.arc.nasa.gov"
       uss_instance_id:
-        $ref: '#/definitions/uuid'
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       gufi:
-        $ref: '#/definitions/uuid'
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       operation_state:
          type: string
          example: "ROGUE"
@@ -1548,9 +1738,14 @@ definitions:
         type: string
         description: Version number for the API
       build_time:
-        $ref: '#/definitions/timestamp'
-        x-utm-data-accessibility: PUBLIC
         description: Time of the latest build
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
+        x-utm-data-accessibility: PUBLIC
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
+        example: '2015-08-20T14:11:56.118Z'
       api_docs:
         type: array
         items:
