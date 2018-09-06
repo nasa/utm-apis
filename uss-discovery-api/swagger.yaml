@@ -55,7 +55,6 @@ securityDefinitions:
     tokenUrl: 'https://utm.defined.host/oauth/token'
     flow: application
     scopes:
-      'utm.nasa.gov_read.conflictmanagement':  Subject can read conflict management data.
       'utm.nasa.gov_write.conflictmanagement':  Subject can read and write conflict management data.
 
 paths:
@@ -245,9 +244,6 @@ paths:
         - A. Required Endpoints
       summary: Request information regarding a single USS Instance
       description: Allows for querying for USS Instances.
-      security:
-        - uss_discovery_security:
-            - utm.nasa.gov_read.conflictmanagement
       produces:
         - application/json
       parameters:
