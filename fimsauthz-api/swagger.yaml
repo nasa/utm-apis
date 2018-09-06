@@ -248,7 +248,7 @@ definitions:
       token_type: bearer
       expires_in: 3599
       scope: utm.nasa.gov_write.operation
-      sub: nasaUSS
+      sub: nuss1.testing.nasa.gov
       nbf: 1509470774
       iss: fims.arc.nasa.gov/fimsAuthServer
       jti: 4d4c1a63-0959-48cc-885a-3648fd582db7

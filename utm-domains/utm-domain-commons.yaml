@@ -189,12 +189,17 @@ definitions:
           ensure it is valid and operational.
 
           Several sources on the Internet can be found discussing email REs.
+
+          Limiting email length to 254 per well-supported discussion here:
+            https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
+
         type: array
         minItems: 1
         maxItems: 5
         items:
           type: string
           format: email
+          maxLength: 254
           externalDocs:
             description: See FIXM 4.1.0 for further information.
             url: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/Address_xsd.html#OnlineContactType
@@ -940,7 +945,7 @@ definitions:
       time_sent:
         description: >-
           The time the position was sent by the USS as measured by that USS's
-          system time.  time_measured < time_sent MUST be true.
+          system time.  time_measured <= time_sent MUST be true.
         type: string
         format: date-time
         minLength: 24
@@ -1255,6 +1260,8 @@ definitions:
       - message_id
       - type
       - constraint_geography
+      - min_altitude
+      - max_altitude
       - effective_time_begin
       - effective_time_end
       - permitted_uas
@@ -1336,6 +1343,8 @@ definitions:
           example: "00000000-0000-4444-8888-FEEDDEADBEEF"
         minItems: 0
         maxItems: 100
+        example:
+          - '00000000-0000-4444-8888-FEEDDEADFFFF'
       type:
         type: string
         enum:
@@ -1412,6 +1421,10 @@ definitions:
               - 37.40968041145
       effective_time_begin: '2016-11-29T01:16:41.727Z'
       effective_time_end: '2016-11-30T01:16:41.727Z'
+      permitted_uas:
+        - NONE
+      permitted_gufis:
+        - '00000000-0000-4444-8888-FEEDDEADFFFF'
       actual_time_end: '2016-11-30T01:15:41.727Z'
       min_altitude:
         altitude_value: 0
