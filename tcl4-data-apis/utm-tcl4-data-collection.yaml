@@ -323,7 +323,7 @@ definitions:
     properties:
       measurement_id:
         description: >-
-          A UUID assingned by the reporting USS for this instance of USSExchange.
+          A UUID assigned by the reporting USS for this instance of USSExchange.
         $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
 
       event_id:
@@ -354,6 +354,7 @@ definitions:
           - CONSTRAINT_MESSAGE
           - NEGOTIATION_MESSAGE
           - USS_INSTANCE
+          - DISCOVERY
           - OTHER_SEE_COMMENT
         example: "POSITION"
       source_uss:
@@ -411,7 +412,7 @@ definitions:
         example: "PUT"
       expected_http_response:
         description: >-
-          The expected HTTP response.  This is required ONLY if the reporting_uss_role is SOURCE_USS.
+          The expected HTTP response code.  This is required ONLY if the reporting_uss_role is SOURCE_USS.
         type: "integer"
         format: "int32"
         minimum: 100
@@ -421,7 +422,7 @@ definitions:
         example: 204
       actual_http_response:
         description: >-
-          The actual HTTP response sent by the TARGET_USS to the SOURCE_USS. Must be reported by USSs in either role.
+          The actual HTTP response code sent by the TARGET_USS to the SOURCE_USS. Must be reported by USSs in either role.
         type: "integer"
         format: "int32"
         minimum: 100
