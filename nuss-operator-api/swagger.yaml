@@ -505,6 +505,7 @@ paths:
         404:
           description: "Not Found"
     put:
+      deprecated: true
       tags:
       - "Positions, Constraints"
       summary: "updateConstraint"
