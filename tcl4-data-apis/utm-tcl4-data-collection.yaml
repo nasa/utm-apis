@@ -247,6 +247,58 @@ definitions:
         maxLength: 3000
         minLength: 1
 
+  LossOfUSS:
+    description: >-
+      An instance of this model should be submitted upon any planned or unplanned
+      loss of USS services during a test.  If the USS is unaviable multiple times
+      in a single test, one submission is sufficient.
+    required:
+      - "uss_loss_id"
+      - "uss_id"
+      - "time_loss_detected"
+      - "time_uss_completely_restored"
+      - "method_loss_detected"
+      - "active_gufis_under_management"
+    properties:
+      uss_loss_id:
+        description: >-
+          A UUID assigned by the reporting USS for this instance of
+           USSNegotiation.
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
+      uss_id:
+        description: >-
+          The reporting USSs ID as known by USS Network/FIMS.
+        type: "string"
+        format: "dns-name"
+        example: "uss.provider123.net"
+      time_loss_detected:
+        description: >-
+          Time the loss of USS was detected.  When did the managers of that USS
+          know the USS was no longer reachable?
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/timestamp'
+      time_uss_completely_restored:
+        description: >-
+          Time the USS was available and ready to handle data exchanges with
+          other systems.
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/timestamp'
+      method_loss_detected:
+        description: >-
+          How was the loss of USS detected by managers of the USS?
+        type: string
+        minLength: 5
+        maxLength: 30
+      notes:
+        type: string
+        minLength: 1
+        maxLength: 3000
+      active_gufis_under_management:
+        description: >-
+          An arary of GUFIs for operations that were active at the time of USS
+          loss.  This may also include any operations that were to become active
+          during the time the USS was unaviable.
+        type: array
+        items:
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
   USSHandoff:
     description: >-
       An instance of this model should be submitted by each USS invovled in the
@@ -329,6 +381,10 @@ definitions:
       This is our only opportunity to collect, from the USSs perspective, data on
       the negotiation process.  It may inform future implementation of negotiation
       including improvements and potential standards development.
+
+      Note we expect to receive more detailed, message-by-message data from
+      the USSExchange model, since NegotiationMessages will be logged and supplied
+      there.
     required:
       - "negotiation_id"
       - "reporter_gufi"
