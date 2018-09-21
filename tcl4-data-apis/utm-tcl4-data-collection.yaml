@@ -140,6 +140,10 @@ definitions:
         example: "00000000-0000-4444-9988-bo55beefface"
 
   RemoteID:
+    description: >-
+      An instance of this model should be submitted every time an attempt is made
+      to lookup or identify an operation via the USSNetwork. Note that this might
+      mean several instances for a single gufi if several lookups are performed.
     required:
       - "remote_id"
       - "gufi"
@@ -196,7 +200,11 @@ definitions:
         description: Was USS Network used to look up this operation?
         type: boolean
       network_lookup_successful:
-        description: If USS Network used to look up this operation, was it successful?
+        description: >-
+          If USS Network used to look up this operation, was it successful? We
+          define "successful" as providing the expected result for the test.  This
+          means that if a negative result was expected and recieved, then the
+          lookup was "successful".
         type: boolean
       detection_position:
         description: Where was the device/person that detected the UAS?
@@ -205,7 +213,8 @@ definitions:
         description: What altitude/elevation was the device/person that detected the UAS?
         $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
       detection_position_method:
-        description: Was the position of the device/person measured or estimated?
+        description: >-
+          Was the position of the device/person measured or estimated?
         type: "string"
         enum:
           - MEASURED
@@ -225,17 +234,157 @@ definitions:
       time_of_detection:
         description: >-
           Time the vehicle was detected by the device.  If visual detection only,
-          it is expected this value is an estimate.  If detetected
+          it is expected this value is an estimate.
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/timestamp'
       network_lookup_start_time:
         description: If USS Network used to look up this operation, at what time did the lookup begin?
         $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/timestamp'
       network_lookup_end_time:
         description: If USS Network used to look up this operation, at what time did the lookup return?
         $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/timestamp'
+      notes:
+        type: string
+        maxLength: 3000
+        minLength: 1
 
+  LossOfUSS:
+    description: >-
+      An instance of this model should be submitted upon any planned or unplanned
+      loss of USS services during a test.  If the USS is unaviable multiple times
+      in a single test, one submission is sufficient.
+    required:
+      - "uss_loss_id"
+      - "uss_id"
+      - "time_loss_detected"
+      - "time_uss_completely_restored"
+      - "method_loss_detected"
+      - "active_gufis_under_management"
+    properties:
+      uss_loss_id:
+        description: >-
+          A UUID assigned by the reporting USS for this instance of
+           USSNegotiation.
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
+      uss_id:
+        description: >-
+          The reporting USSs ID as known by USS Network/FIMS.
+        type: "string"
+        format: "dns-name"
+        example: "uss.provider123.net"
+      time_loss_detected:
+        description: >-
+          Time the loss of USS was detected.  When did the managers of that USS
+          know the USS was no longer reachable?
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/timestamp'
+      time_uss_completely_restored:
+        description: >-
+          Time the USS was available and ready to handle data exchanges with
+          other systems.
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/timestamp'
+      method_loss_detected:
+        description: >-
+          How was the loss of USS detected by managers of the USS?
+        type: string
+        minLength: 5
+        maxLength: 30
+      notes:
+        type: string
+        minLength: 1
+        maxLength: 3000
+      active_gufis_under_management:
+        description: >-
+          An arary of GUFIs for operations that were active at the time of USS
+          loss.  This may also include any operations that were to become active
+          during the time the USS was unaviable.
+        type: array
+        items:
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
+  USSHandoff:
+    description: >-
+      An instance of this model should be submitted by each USS invovled in the
+      handoff of management of an operation.  These data are not captured within
+      the USSNetwork.  These data may inform future procedures and standards.
+
+    required:
+      - "handoff_id"
+      - "uss_id"
+      - "other_uss_id"
+      - "operator"
+      - "time_handoff_procedure_initiated"
+      - "time_handoff_procedure_completed"
+      - "gufi"
+    properties:
+      handoff_id:
+        description: >-
+          A UUID assigned by the reporting USS for this instance of
+           USSNegotiation.
+
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
+      uss_id:
+        description: >-
+          The reporting USSs ID as known by USS Network/FIMS.
+        type: "string"
+        format: "dns-name"
+        example: "uss.provider123.net"
+      other_uss_id:
+        description: >-
+          The other USSs ID (on the other side of the handoff) as known by
+          USS Network/FIMS.
+        type: "string"
+        format: "dns-name"
+        example: "uss.provider456.net"
+      gufi:
+        description: >-
+          GUFI of the operation that is handed off.
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
+      new_gufi:
+        description: >-
+          If a new gufi is generated after the handoff and is known, supply it here.
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
+      operator:
+        type: "string"
+        minLength: 4
+        maxLength: 100
+        example: "Super Operator, Inc."
+      reason_for_handoff:
+        type: string
+        enum:
+          - LOSS_OF_USS
+          - PLANNED_FOR_USS_COVERAGE
+          - OTHER
+      time_handoff_procedure_initiated:
+        description: >-
+          Time the handoff procedure was initiated.  This may be the time that
+          the original USS loses contact, or the time that the operator or USS
+          begins communicting the intent to handoff.
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/timestamp'
+      time_handoff_procedure_completed:
+        description: >-
+          Time the handoff procedure was completed.  THis would be the time that
+          the operation is fully under the management of the second USS.
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/timestamp'
+      notes:
+        type: string
+        minLength: 1
+        maxLength: 3000
 
 
   USSNegotiation:
+    description: >-
+      An instance of this model is required whenever a USS exchanges NegotiationMessages
+      with another USS for a given pair of gufis.  Both USSs involved would submit
+      their own version of this model for such an exchange.  Note that if two gufis
+      engage in negotiations more than once (say, once predeparture and again while enroute
+      to address a separate conflict), then two instances of this model would be submitted
+      by each of the USSs for that pair of gufis.
+
+      This is our only opportunity to collect, from the USSs perspective, data on
+      the negotiation process.  It may inform future implementation of negotiation
+      including improvements and potential standards development.
+
+      Note we expect to receive more detailed, message-by-message data from
+      the USSExchange model, since NegotiationMessages will be logged and supplied
+      there.
     required:
       - "negotiation_id"
       - "reporter_gufi"
@@ -244,7 +393,6 @@ definitions:
       - "conflict_resolved"
       - "reporter_op_action"
       - "other_op_action"
-
     properties:
       negotiation_id:
         description: >-
@@ -306,7 +454,191 @@ definitions:
         type: "string"
         maxLength: 1500
 
+  USS2OperatorExchange:
+    description: >-
+      An instance of this model is expected for each USS-operation mapping.  The
+      goal is to capture information about the volume and types of communications
+      between operators and their supporting USSs.  These data are not captured
+      via the USS Network, so this is a key opportunity to understand the
+      potential interactions between USS and Operator.  These data will
+      be correlated with data captured via the USS Network.
+    required:
+      - "uss_operator_exchange_id"
+      - "gufi"
+      - "uss_id"
+      - "operator"
+      - "human_interactions"
+    properties:
+      uss_operator_exchange_id:
+        description: >-
+          A UUID assigned by the reporting USS for this instance of USS2OperatorExchange.
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
+      gufi:
+        description: >-
+          GUFI of the operation managed by reporting USS involved in this
+          exchange.
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
+      uss_id:
+        description: >-
+          The reporting USSs ID as known by USS Network/FIMS.
+        type: "string"
+        format: "dns-name"
+        example: "uss.provider123.net"
+      operator:
+        type: "string"
+        minLength: 4
+        maxLength: 100
+        example: "Super Operator, Inc."
+      number_position_reports_received:
+        description: >-
+          Number of position reports received from the operator to the USS. While
+          USSs are required to be able to report at 1Hz to the USS Network, it is
+          possible that the USS receives position reports a higher frequency.
+        type: integer
+        format: int32
+        minimum: 0
+      number_messages_from_operator_received:
+        description: >-
+          Count of all messages received from the operator.  This value should
+          NOT contain position reports.  It might contain operation plan information,
+          state information about the operation, or other messages as requried or
+          requested by the USS for the support of this operation.
+        type: integer
+        format: int32
+        minimum: 0
+      number_messages_from_uss_sent:
+        description: >-
+          Count of all messages sent to the operator from the USS.  This may
+          include messages related to new constraints, information about nearby
+          operations, approval messages, etc.
+        type: integer
+        format: int32
+        minimum: 0
+      human_interactions:
+        description: >-
+          Were there any human interactions between individuals managing the
+          USS and individuals involved in operating the vehicle?  If 'true' then
+          the 'notes' field is mandatory to provide some insight into this
+          interaction.
+        type: boolean
+      continuous_uss_service:
+        description: >-
+          For the duration of this operation was there continuous availability
+          of USS services?  The discontinuity or unavailability of services
+          may have been planned or unplanned.  If this field has a value of
+          'true' then the 'notes' field is mandatory to provide some insight
+          into this interaction.
+        type: boolean
+      notes:
+        description: >-
+          Any additional notes to add context about the interaction between
+          the USS and this operator.
+  DynamicRestrictionOccurence:
+    description: >-
+      This model captures the enactment of a Dynamic Restriction from the
+      perspective of USS to operator interaction.  The goal is to capture how
+      USSs inform operators and how those operators react.  These data will
+      be correlated with data captured via the USS Network.
+    required:
+      - "dr_occurence_id"
+      - "gufi"
+      - "uss_id"
+      - "operator"
+      - "time_uss_received"
+      - "time_uss_sent"
+      - "time_response_from_operator_received"
+      - "message_protocol"
+      - "message_to_operator"
+
+    properties:
+      dr_occurence_id:
+        description: >-
+          A UUID assigned by the reporting USS for this instance of DynamicRestrictionOccurence.
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
+      gufi:
+        description: >-
+          GUFI of the operation managed by reporting USS involved in this
+          exchange.
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/uuid'
+      uss_id:
+        description: >-
+          The reporting USSs ID as known by USS Network/FIMS.
+        type: "string"
+        format: "dns-name"
+        example: "uss.provider123.net"
+      operator:
+        type: "string"
+        minLength: 4
+        maxLength: 100
+        example: "Super Operator, Inc."
+      time_uss_received:
+        description: >-
+          The time that the USS received the ConstraintMessage describing
+          this dynamic restriction.  This would have been received by another
+          USS or from FIMS.
+
+          Same formatting rules as in other UTM exchanges (ms, 'Z').
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/timestamp'
+
+      time_uss_sent:
+        description: >-
+          The time that the USS sent a message to an affected operation.
+
+          Same formatting rules as in other UTM exchanges (ms, 'Z').
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/timestamp'
+      time_response_from_operator_received:
+        description: >-
+          The time that the USS receives acknowledgement that the message was
+          recevied.  If an HTTP exchange this would be the time that the
+          20X was received.  If some other exchange mechanism, then just the
+          time that acknowledgement was received.
+
+          Same formatting rules as in other UTM exchanges (ms, 'Z').
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/timestamp'
+      message_protocol:
+        description: >-
+          How is the message sent to the operator?  If 'OTHER' you must describe
+          in 'notes' field.  May expand this enumeration based on discussions
+          with partners.
+        type: string
+        enum:
+          - HTTP
+          - WEBSOCKETS
+          - EMAIL
+          - SMS
+      message_to_operator:
+        description: >-
+          The actual data payload sent to the operator from the USS. May be
+          difficult to apply a maxLength to this field, should discuss.
+
+          This may be JSON formatted, so proper escaping of certain chars may
+          be necessary.  It may make sense to base64 encode this.  Should discuss.
+        type: string
+      successful_operator_response:
+        description: >-
+          In terms of the test goals and the operator's role in the test, did
+          the operator respond correctly?  Note that this might mean that the
+          operator takes no action.  For example, if the operator was
+          expected to clear an area, did that operator clear the area?  If the
+          operator was allowed to stay in the area, did the operator understand
+          that and continue operating?  If the operator needed to recognize it
+          was exempted from the DR, did the operator understand that fact and
+          stay/enter the DR?  If the DR did not affect the operator directly,
+          did the operator recognize that and NOT change plans?
+        type: boolean
+      notes:
+        type: string
+        maxLength: 10000
+        minLength: 1
+
   USSExchange:
+    description: >-
+      This model captures performance and interoperability data for a USS. since
+      these data are not captured explicitly in the USS network, it is important
+      to have USSs self report on these elements.  This information may inform
+      future performance requirements and forensics of certain incidents. This
+      may be an initial model that will be required operationally in terms of
+      a USSs need to log interactions with other USSs.
     required:
       - "measurement_id"
       - "event_id"
