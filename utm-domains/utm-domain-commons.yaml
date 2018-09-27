@@ -1156,6 +1156,9 @@ definitions:
     description: >-
       An element defined by spatial and temporal bounds that affects UAS
       operations by limiting access to that 4D bounded volume.
+
+      New guidance is letting us know this may be called a
+      "UAS Volume Reservation".
     required:
       - message_id
       - type
@@ -1211,8 +1214,7 @@ definitions:
             - PART_101E
             - PART_107X
             - RADIO_LINE_OF_SIGHT
-        default:
-          - NONE
+        minItems: 1
         example:
           - NONE
       permitted_gufis:
