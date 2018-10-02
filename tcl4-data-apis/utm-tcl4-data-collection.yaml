@@ -1,4 +1,3 @@
-swagger: "2.0"
 info:
   description: >-
     "TCL4 will require the submission of test data.  Some of these data are not readily collected via UTM means.  The models presented in this domain are in support of such data that are not readily collected otherwise.  Some of these data will be collected live, some after testing, but all should be collected as a soon as feasible.  Further details will be provided in other testing documentation."
@@ -8,13 +7,6 @@ info:
     name: 'NASA Ames Research Center, Aviation Systems Division'
     url: 'https://utm.arc.nasa.gov/'
     email: joseph.rios@nasa.gov
-
-paths:
-  '/no-paths':
-    put:
-      responses:
-        '410':
-          description: "Gone. Not implemented. Will not be implemented."
 
 definitions:
   OffNominalReport:
