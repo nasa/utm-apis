@@ -1093,9 +1093,9 @@ definitions:
           10. PERIODIC_POSITION_REPORTS_END
             The requestor wants previously requested position reports to end. If this message is received without a corresponding PERIODIC_POSITION_REPORTS_START, the message response is TBD (200, 400, 401, 404, etc.). Must be sent with severity NOTICE.
           11. UNAUTHORIZED_AIRSPACE_PROXIMITY
-            An operation is within 3038 feet (almost 0.5nmi) from the boundary of unauthorized airspace (e.g., Dynamic Restriction/TFR, controlled airspace, airspace constraint)
+            An operation is within 3038 feet (almost 0.5nmi) from the boundary of unauthorized airspace (e.g., UVR/TFR, controlled airspace, airspace constraint)
           12. UNAUTHORIZED_AIRSPACE_ENTRY
-            An operation has breached the boundary and entered into unauthorized airspace (e.g., Dynamic Restriction/TFR, controlled airspace, airspace constraint)
+            An operation has breached the boundary and entered into unauthorized airspace (e.g., UVR/TFR, controlled airspace, airspace constraint)
           13. OTHER_SEE_FREE_TEXT
             Messages that do not fit any of the otherwise defined categories. Should be used sparingly or with additional out-of-band description.
         type: string
@@ -1152,17 +1152,16 @@ definitions:
       gufi: "00000000-0000-4444-8888-FEEDDEADBEEF"
       free_text: "Cool flight, bro"
 
-  ConstraintMessage:
+  UASVolumeReservation:
     description: >-
       An element defined by spatial and temporal bounds that affects UAS
       operations by limiting access to that 4D bounded volume.
 
-      New guidance is letting us know this may be called a
-      "UAS Volume Reservation".
+      Formerly "ConstraintMessage".
     required:
       - message_id
-      - type
-      - constraint_geography
+      - cause
+      - geography
       - min_altitude
       - max_altitude
       - effective_time_begin
@@ -1190,22 +1189,32 @@ definitions:
         exclusiveMinimum: false
         maxLength: 250
         exclusiveMaximum: false
-      originator_uss_instance_id:
-        description: A USS instance_id value of the originator of this message.
-        $ref: '#/definitions/uuid'
+      type:
+        description: >-
+          The type of UVR.  It is expected this list will grow as use cases are
+          identified and cataloged.
+
+          Currently there is only a differentiation between a dynamic restriction
+          and a static advisory.  There is no official guidance on the difference
+          as of today.  Roughly, the assumption is that static advisories would
+          have a longer lead time and/or longer duration than a dynamic restriction.
+        type: string
+        enum:
+          - DYNAMIC_RESTRICTION
+          - STATIC_ADVISORY
       permitted_uas:
         description: >-
           The types of UAS operations that are permitted within the bound of
-          the constraint. When used in conjunction with permitted_gufis, the
+          the UVR. When used in conjunction with permitted_gufis, the
           filters are an 'OR' relationship. Any operation that matches either
-          filter is allowed within the bounds of the constraint.  This list of
+          filter is allowed within the bounds of the UVR.  This list of
           permitted_uas types is not to be considered a final version.  It is
           provided to initiate discussion of how the filter should be defined.
         type: array
         items:
           type: string
           enum:
-            - NONE
+            - NOT_SET
             - PUBLIC_SAFETY
             - SECURITY
             - NEWS_GATHERING
@@ -1215,14 +1224,12 @@ definitions:
             - PART_107X
             - RADIO_LINE_OF_SIGHT
         minItems: 1
-        example:
-          - NONE
       permitted_gufis:
         description: >-
           The specific UAS operations that are permitted within the counds of
-          the constraint.  When used in conjunction with permitted_uas, the
+          the UVR.  When used in conjunction with permitted_uas, the
           filters are an 'OR' relationship. Any operation that matches either
-          filter is allowed within the bounds of the constraint.  The protocol
+          filter is allowed within the bounds of the UVR.  The protocol
           for adding the appropriate GUFIs to this array needs to be discussed.
           This may be a chicken/egg problem that will have to be worked through.
         type: array
@@ -1232,7 +1239,7 @@ definitions:
         maxItems: 100
         example:
           - '00000000-0000-4444-8888-FEEDDEADFFFF'
-      type:
+      cause:
         type: string
         enum:
           - WEATHER
@@ -1241,49 +1248,49 @@ definitions:
           - SAFETY
           - MUNICIPALITY
           - OTHER
-      constraint_geography:
+      geography:
         $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       effective_time_begin:
         description: >-
-          The time that the constraint will begin to be in effect.
+          The time that the UVR will begin to be in effect.
         $ref: '#/definitions/timestamp'
         x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T14:11:56.118Z'
       effective_time_end:
         description: >-
-          The time that the constraint will cease to be in effect.
+          The time that the UVR will cease to be in effect.
         $ref: '#/definitions/timestamp'
         x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T15:11:56.118Z'
       actual_time_end:
         description: >-
           Time that the constaint actually ceased being in effect. This
-          value is likely used when a constraint ends early, but is not
+          value is likely used when a UVR ends early, but is not
           required.
         $ref: '#/definitions/timestamp'
         x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T14:31:56.118Z'
       min_altitude:
         description: >-
-          The minimum altitude of the constraint. altitude_value MUST be less than
+          The minimum altitude of the UVR. altitude_value MUST be less than
           max_altitude.altitude_value.
         $ref: '#/definitions/Altitude'
       max_altitude:
         description: >-
-          The maximum altitude of the constraint. altitude_value MUST be greater than
+          The maximum altitude of the UVR. altitude_value MUST be greater than
           min_altitude.altitude_value.
         $ref: '#/definitions/Altitude'
       reason:
-        description: The reason for the constraint. Meant for human consumption.
+        description: The reason for the UVR. Meant for human consumption.
         type: string
         maxLength: 1000
     example:
       message_id: '00000000-0000-4444-8888-600DCAFEF00D'
       origin: USS
       originator_id: "uss.provider321.com"
-      originator_uss_instance_id: '00000000-0000-4444-8888-FEEDDEADFFFF'
-      type: SAFETY
-      constraint_geography:
+      type: DYNAMIC_RESTRICTION
+      cause: SAFETY
+      geography:
         type: Polygon
         coordinates:
           - - - -122.062176579
@@ -1297,19 +1304,20 @@ definitions:
       effective_time_begin: '2016-11-29T01:16:41.727Z'
       effective_time_end: '2016-11-30T01:16:41.727Z'
       permitted_uas:
-        - NONE
+        - NOT_SET
       permitted_gufis:
         - '00000000-0000-4444-8888-FEEDDEADFFFF'
       actual_time_end: '2016-11-30T01:15:41.727Z'
       min_altitude:
-        altitude_value: 0
+        altitude_value: 2300
         vertical_reference: "W84"
         units_of_measure: "FT"
       max_altitude:
-        altitude_value: 400
+        altitude_value: 2700
         vertical_reference: "W84"
         units_of_measure: "FT"
       reason: A UA leaving defined volume
+
   NegotiationMessage:
     required:
       - message_id
