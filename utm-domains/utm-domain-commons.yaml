@@ -1,3 +1,4 @@
+swagger: "2.0"
 info:
   description: >-
     This file contains the core UTM models as OpenAPI 2.0 compliant definitions.
@@ -24,6 +25,16 @@ info:
       are not documented, please submit an issue report on github.
   version: v4
   title: UTM models
+
+paths:
+  '/no-paths':
+    put:
+      responses:
+        '410':
+          description: >-
+            Gone. Not implemented. Will not be implemented. Path included for
+            proper use by automated tooling.
+
 definitions:
   timestamp:
     description: >-
@@ -411,15 +422,31 @@ definitions:
         $ref: '#/definitions/PersonOrOrganization'
         x-utm-data-accessibility: SAFETY
       state:
-        description: >
+        description: >-
           The current state of the operation.  Must be maintained by the USS.
           Some additional details in the USS Specification.
+          0. PROPOSED
+            This operation is not yet ACCEPTED.  It may be awaiting information
+            from the operator, it may be in conflict with another ACCEPTED or
+            ACTIVATED operation and undergoing a negotiation process, or for
+            some other reason it is not yet able to be declared ACCEPTED.
           1. ACCEPTED
-            This operation has been deemed ACCEPTED by the supporting USS. This implies that the operation meets the requirements for operating in the airspace based on the type of operation submitted.
+            This operation has been deemed ACCEPTED by the supporting USS. This
+            implies that the operation meets the requirements for operating in
+            the airspace based on the type of operation submitted.
           2. ACTIVATED
-            This operation is active. The transition from ACCEPTED to ACTIVATED is not an announced transition. The transition is implied based on the submitted start time of the operation (i.e. the effective_time_begin of the first OperationVolume). Note that an ACTIVATED operation is not necessarily airborne, but is assumed to be "using" the OperationVolumes that it has announced.
+            This operation is active. The transition from ACCEPTED to ACTIVATED
+            is not an announced transition. The transition is implied based on
+            the submitted start time of the operation (i.e. the
+            effective_time_begin of the first OperationVolume). Note that an
+            ACTIVATED operation is not necessarily airborne, but is assumed
+            to be "using" the OperationVolumes that it has announced.
           3. CLOSED
-            This operation is closed. It is not airborne and will not become airborne again. If the UAS and the crew will fly again, it would need to be as a new operation. A USS may announce the closure of any operation, but is not required to announce unless the operation was ROGUE or NONCONFORMING.
+            This operation is closed. It is not airborne and will not become
+            airborne again. If the UAS and the crew will fly again, it would
+            need to be as a new operation. A USS may announce the closure of any
+            operation, but is not required to announce unless the operation was
+            ROGUE or NONCONFORMING.
           4. NONCONFORMING
             See USS Specification for requirements to transition to this state.
           5. ROGUE
@@ -427,10 +454,11 @@ definitions:
 
           If ordering of states is required for any purpose, they shall be
           ordered as follows:
-            ACCEPTED < ACTIVATED < CLOSED < NONCONFORMING < ROGUE
+            PROPOSED < ACCEPTED < ACTIVATED < CLOSED < NONCONFORMING < ROGUE
 
         type: string
         enum:
+          - PROPOSED
           - ACCEPTED
           - ACTIVATED
           - CLOSED
@@ -1321,9 +1349,19 @@ definitions:
   NegotiationMessage:
     required:
       - message_id
+      - negotiation_id
       - origin_uss_name
+      - type
+      - gufi_of_originator
+      - gufi_of_receiver
     properties:
       message_id:
+        $ref: '#/definitions/uuid'
+      negotiation_id:
+        description: >-
+          An identifier held constant across multiple message_ids.  This value
+          represents a single negotiation between two USSs for two specific
+          operations.
         $ref: '#/definitions/uuid'
       origin_uss_name:
         description: >-
@@ -1334,13 +1372,62 @@ definitions:
         type: string
         minLength: 4
         maxLength: 250
-      originator_uss_instance_id:
-        description: A USS instance_id value of the originator of this message.
-        $ref: '#/definitions/uuid'
       type:
         description: >-
           Placeholder for now.  Likely will be an enum.
         type: string
+        enum:
+          - REPLAN_REQUESTED
+          - REPLAN_CANCELLED
+          - INTERSECTION_REQUESTED
+          - INTERSECTION_CANCELLED
+      replan_suggestion:
+        description: >-
+          When 'type' is REPLAN_REQUESTED, the originating USS may supply a
+          suggestion as to how the receiving USS might alter the plan under
+          its management to minimize the conflict.
+
+          This field is optional in all cases.  It should not be sent with any
+          message that does not contain type = REPLAN_REQUESTED.
+
+          The suggestion is truly a suggestion.  The receiving USS may solve
+          (or not solve) a conflict in any manner it deems appropriate.
+        type: string
+        enum:
+          - ALTITUDE_CHANGE
+          - DEPART_LATER
+          - LAND_EARLIER
+          - HORIZONTAL_CHANGE    
+      v2v_for_originator:
+        description: >-
+          A boolean field indicating whether the vehicle supported by the
+          originating USS will be using the approved vehicle-to-vehicle
+          communication approach.
+
+          Required when the negotiation results in any intersection of
+          operation plans between the two operations in the negotiation.
+
+          This assumes that there is only one approved V2V approach in the
+          future operational system.  If this is not the case, this field
+          could need to be more explicit to ensure certainty that the two
+          vehicles will be able to communicate while in flight.
+        type: boolean
+        default: false
+      v2v_for_receiver:
+        description: >-
+          A boolean field indicating whether the vehicle supported by the
+          receiving USS will be using the approved vehicle-to-vehicle
+          communication approach.
+
+          Required when the negotiation results in any intersection of
+          operation plans between the two operations in the negotiation.
+
+          This assumes that there is only one approved V2V approach in the
+          future operational system.  If this is not the case, this field
+          could need to be more explicit to ensure certainty that the two
+          vehicles will be able to communicate while in flight.
+        type: boolean
+        default: false
       gufi_of_originator:
         description: >-
           The GUFI of the relevant operation of the originating USS. Note that
@@ -1350,21 +1437,11 @@ definitions:
         $ref: '#/definitions/uuid'
       gufi_of_receiver:
         description: >
-          The GUFI of the relevant operation of the receiving USS. May be empty
-          in cases of communication with ATC via FIMS.
+          The GUFI of the relevant operation of the receiving USS. Note that
+          the origin and receiver roles are strictly dependent on which USS is
+          generating this message. May be empty in the case of ATC communication
+          to USS via FIMS.
         $ref: '#/definitions/uuid'
-      reference_message_ids:
-        description: >-
-          A set of UUIDs of any previous messages related to the same
-          negotiation process. This field must not be empty when sending a
-          message of type 'REPLAN_BEGINNING_AS_SECONDARY_OPERATION'.  This set
-          of ids need not be complete. The goal is to have at least one id that
-          can be used to link this message to the set of previous messages sent
-          and received. The USS should make this list as complete as possible to
-          aid the negotiation process.
-        type: array
-        items:
-          $ref: '#/definitions/uuid'
       free_text:
         type: string
         maxLength: 1000
@@ -1654,6 +1731,7 @@ parameters:
     type: integer
     default: 0
     format: int32
+
 pathitems:
   getVersion:
     get:
