@@ -15,6 +15,7 @@ definitions:
       - event_id
       - location
       - setting
+      - test_identifiers
     properties:
       data_collection:
         description: >-

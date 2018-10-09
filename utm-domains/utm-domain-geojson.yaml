@@ -24,9 +24,9 @@
 
 info:
   description: "UTM geogrpahy model (swagger domain)"
-  version: 'v1'
+  version: 'v4'
   title: UTM Geography Model
-  
+
 #
 #Edits by joseph.rios@nasa.gov:
 #
@@ -37,15 +37,14 @@ info:
 #Commented out unsupported elements in UTM (multi*, GeometryCollection)
 #Updated externalDocs links to point to RFC
 #Improved "description" fields.
-#issmith1 trying github push , switch to yaml 
-#retrying github push to nasa repo.
-#issmith1 test whether collaborator can push to Git via API Key
+
 #jlrios: "Point2d" rendering, renamed as "Position" to align with GeoJSON spec.
 #jlrios: flattened by removing Geometry to improve codegen, simplify schema
 #issmith: debug integrations
+#jlrios: added required fileds for Polygon and LineString
 
 definitions:
-          
+
   Point:
     type: object
     description: GeoJSon Point, limited to 2D.
@@ -56,7 +55,7 @@ definitions:
         description: |
           The type of Geometry. In this case, must be 'Point' per GeoJSON spec.
         type: string
-        enum: 
+        enum:
         - Point
       coordinates:
         type: array
@@ -65,11 +64,13 @@ definitions:
         items:
           type: number
           format: double
-        example: [0.0, 0.0]  
-      
-    
+        example: [0.0, 0.0]
+
   LineString:
     type: object
+    required:
+      - type
+      - coordinates
     description: GeoJSon LineString. Positions all 2D.
     externalDocs:
       url: https://tools.ietf.org/html/rfc7946#section-3.1.4
@@ -78,7 +79,7 @@ definitions:
         description: |
           The type of Geometry. In this case, must be 'LineString' per GeoJSON spec. LineString can have 4 to 30 points.
         type: string
-        enum: 
+        enum:
         - LineString
       coordinates:
         type: array
@@ -94,24 +95,70 @@ definitions:
 
   Polygon:
     type: object
+    required:
+      - type
+      - coordinates
     description: GeoJSon Polygon. Positions all 2D.
     externalDocs:
       url: https://tools.ietf.org/html/rfc7946#section-3.1.6
     properties:
       type:
         description: |
-          The type of Geometry. In this case, must be 'Polygon' per GeoJSON spec.  Note that the "coordinates" member is validatd to be be an array of size one.
+          The type of Geometry. In this case, must be 'Polygon' per GeoJSON
+          spec.  Note that the "coordinates" member is validated to be be an
+          array of size one. This implies there are no interior rings allowed
+          currently.
         type: string
-        enum: 
+        enum:
         - Polygon
       coordinates:
         type: array
+        description: >-
+          The number of polygons allowed.  Currently 1, implying no interior
+          rings.  If this number is changes, the maxItems should be considered.
+
+          From RFC7946:
+          o  For type "Polygon", the "coordinates" member MUST be an array of
+          linear ring coordinate arrays.
+
+          o  For Polygons with more than one of these rings, the first MUST be
+          the exterior ring, and any others MUST be interior rings.  The
+          exterior ring bounds the surface, and the interior rings (if
+          present) bound holes within the surface.
+
+          Again, note we only allow a single set of coordinates, implying no
+          interior rings.
+        minItems: 1
+        maxItems: 1
         items:
           type: array
+          description: >-
+            The number of vertices in this polygon. From RFC7946:
+              o  A linear ring is a closed LineString with four or more positions.
+
+              o  The first and last positions are equivalent, and they MUST contain
+              identical values; their representation SHOULD also be identical.
+
+              o  A linear ring is the boundary of a surface or the boundary of a
+              hole in a surface.
+
+              o  A linear ring MUST follow the right-hand rule with respect to the
+              area it bounds, i.e., exterior rings are counterclockwise, and
+              holes are clockwise.  (also in the spec:  parsers SHOULD NOT reject
+              Polygons that do not follow the right-hand rule.)
+
+              https://tools.ietf.org/html/rfc7946#section-3.1.6
+
+          minItems: 4
+          maxItems: 100
           items:
             type: array
-            maxItems: 1
-            minItems: 1
+            description: >-
+              The actual coordinates for a vertex of the linear ring.  Note that
+              UTM does not allow additional elements other than long and lat in
+              this array.
+            maxItems: 2
+            minItems: 2
             items:
               type: number
               format: double

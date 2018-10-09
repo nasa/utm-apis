@@ -4,7 +4,7 @@ info:
     This API describes the minimum interface that a USS must implement to  be
     part of the USS Network.  This API allows for communication of data  between
     USS Instances and from FIMS to a USS regarding new USS Instances.
-  version: v3
+  version: v4
   title: USS Required API
   termsOfService: >
 
@@ -42,7 +42,7 @@ info:
     url: 'https://ti.arc.nasa.gov/opensource/nosa/'
 
 host: uss.defined.url
-basePath: /uss
+basePath: /
 schemes:
   - https
 securityDefinitions:
@@ -51,7 +51,6 @@ securityDefinitions:
     tokenUrl: 'https://utm.defined.host/oauth/token'
     flow: application
     scopes:
-      'utm.nasa.gov_read.operation': Subject can read operational data such as USS Instance data
       'utm.nasa.gov_write.operation': Subject can read, create, and update operational data such as USS Instance data
       'utm.nasa.gov_write.message': Subject can read, create, and update message data such as UTM Message and Negotiations
       'utm.nasa.gov_read.publicsafety': Subject can read operations that are designated public safety operations.
@@ -65,6 +64,10 @@ paths:
       tags:
         - A. Required Endpoints
       summary: Allow constraints to be submitted from authorized entities.
+      description: >-
+        Allow constraints to be submitted from authorized entities.
+        For validation purposes:
+          {message_id} in path == ConstraintMessage.message_id of body data
       security:
         - ussapi_security:
             - utm.nasa.gov_write.constraint
@@ -82,7 +85,7 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
       responses:
         '204':
           description: Constraint data received. No content returned.
@@ -90,17 +93,17 @@ paths:
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
 
 
   '/utm_messages/{message_id}':
@@ -108,7 +111,10 @@ paths:
       tags:
         - A. Required Endpoints
       summary: Allow other authorized entities to send a message to this USS.
-      description: Allows another USS or FIMS to POST a message to this USS.
+      description: >-
+        Allows another USS or FIMS to PUT a message to this USS.
+        For validation purposes:
+          {message_id} in path == UTMMessage.message_id of body data
       security:
         - ussapi_security:
             - utm.nasa.gov_write.message
@@ -126,7 +132,7 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMMessage
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMMessage
       responses:
         '204':
           description: UTMMessage received. No content returned.
@@ -134,17 +140,17 @@ paths:
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
 
   '/uss/{uss_instance_id}':
     put:
@@ -156,6 +162,9 @@ paths:
         receiving messages about the USS Network from the USS Discovery
         Service.  For example, when a new USS Instance is registered, that
         announcement would come to this endpoint.
+
+        For validation purposes:
+          {uss_instance_id} in path == UssInstance.uss_instance_id of body data
       security:
         - ussapi_security:
             - utm.nasa.gov_write.operation
@@ -173,7 +182,7 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UssInstance
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UssInstance
       responses:
         '204':
           description: USS Instance data received. No content returned.
@@ -181,17 +190,17 @@ paths:
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
 
   '/negotiations/{message_id}':
     put:
@@ -199,10 +208,13 @@ paths:
         - A. Required Endpoints
       summary: Allow other USSs to submit a negotiation request
       description: >-
-        A POST to the negotiations endpoint is interpretted as a request for
+        A PUT to the negotiations endpoint is interpreted as a request for
         alteration in an existing operation managed by the receiving USS.  The
         requesting USS supplies a GUFI that references the operation that may be
         altered if the request is granted by the receiving USS.
+
+        For validation purposes:
+          {message_id} in path == NegotiationMessage.message_id in body data
       security:
         - ussapi_security:
             - utm.nasa.gov_write.message
@@ -222,7 +234,7 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/NegotiationMessage
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/NegotiationMessage
       responses:
         '204':
           description: NegotiationMessage received. No content returned.
@@ -230,17 +242,17 @@ paths:
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
 
   '/positions/{position_id}':
     put:
@@ -250,6 +262,9 @@ paths:
       description: >-
         Providing position reports to others may allow other USSs to anticipate
         events.  The USS managing the operation has created the position ID.
+
+        For validation purposes:
+          {position_id} in path == Position.enroute_positions_id of body data
       security:
         - ussapi_security:
             - utm.nasa.gov_write.operation
@@ -262,13 +277,13 @@ paths:
           name: position_id
           required: true
           type: string
-          description: PUT by position_id
+          description: PUT by enroute_positions_id
         - in: body
           name: position
           required: true
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Position
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Position
       responses:
         '204':
           description: Position data recieved. No content returned.
@@ -276,17 +291,17 @@ paths:
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
   /operations:
     get:
       tags:
@@ -295,7 +310,7 @@ paths:
       description: Allows querying for Operation data.
       security:
         - ussapi_security:
-            - utm.nasa.gov_read.operation
+            - utm.nasa.gov_write.operation
             - utm.nasa.gov_read.publicsafety
       produces:
         - application/json
@@ -344,8 +359,6 @@ paths:
               - CLOSED
               - NONCONFORMING
               - ROGUE
-            minLength: 6
-            maxLength: 13
           collectionFormat: csv
           required: false
         - name: distance
@@ -368,8 +381,8 @@ paths:
             A single point used to find all operations within some distance from
             that point. Returns all operations that have any operation_volumes
             that interesect the 2D circle defined by distance and
-            reference_point.  When distance it excluded and reference_point is
-            included, use default value (300ft) for distance.
+            reference_point.  When distance is excluded and reference_point is
+            included, uses default value (300ft) for distance.
             Described as a GeoJSON position.  The value is equivalent to what
             would be seen in the "coordinates" field for a GeoJSON Point
             object.  See https://tools.ietf.org/html/rfc7946#section-3.1.1 for
@@ -384,12 +397,24 @@ paths:
         - name: sort
           in: query
           description: >-
-            A valid field name to use for sorting records. If multiple fields
+            Field name(s) to use for sorting records. If multiple fields
             are provided, the sorting is based on the ordered priorty of that
-            list.
+            list.  Note that the enum provided designates the required fields
+            that a USS must support. A USS may decide to support additional
+            fields, but how that USS communicates that option is out of scope
+            for this API document.
           required: false
-          type: string
-          default: time_submitted
+          type: array
+          items:
+            type: string
+            enum:
+              - submit_time
+              - gufi
+              - state
+          collectionFormat: csv
+          maxItems: 3
+          minItems: 1
+          default: submit_time
         - name: sort_increasing
           in: query
           description: >-
@@ -407,7 +432,9 @@ paths:
           type: integer
           default: 10
           maximum: 100
+          exclusiveMaximum: false
           minimum: 1
+          exclusiveMinimum: false
           format: int32
         - name: offset
           in: query
@@ -416,6 +443,7 @@ paths:
           type: integer
           default: 0
           minimum: 0
+          exclusiveMinimum: false
           format: int32
       responses:
         '200':
@@ -424,22 +452,22 @@ paths:
             type: array
             items:
               $ref: >-
-                https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Operation
+                https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Operation
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
 
   '/operations/{gufi}':
     get:
@@ -449,7 +477,7 @@ paths:
       description: Retrieve an operation by GUFI.
       security:
         - ussapi_security:
-            - utm.nasa.gov_read.operation
+            - utm.nasa.gov_write.operation
             - utm.nasa.gov_read.publicsafety
       produces:
         - application/json
@@ -462,21 +490,21 @@ paths:
           description: >-
             GUFI of the operation being requested.
       responses:
-        '201':
+        '200':
           description: OK
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Operation
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Operation
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
 
     put:
       tags:
@@ -505,11 +533,12 @@ paths:
               1. Contains a valid uss_operation_id.
               2. time_available_end value that is in the future.
               3. No date-time fields that are in the past are modified.
-              4. Other rules for a USS Operation POST are satisfied.
+              4. Other rules for a USS Operation PUT are satisfied.
+              5. {gufi} path parameter == Operation.gufi of body data
           required: true
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Operation
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Operation
       responses:
         '204':
           description: Operation data received. No content returned.
@@ -517,12 +546,12 @@ paths:
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '409':
           description: >-
             Conflict. This USS Instance has an Operation that intersects.
@@ -530,9 +559,9 @@ paths:
             at least 1 indicating the conflicting Operation(s).
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse

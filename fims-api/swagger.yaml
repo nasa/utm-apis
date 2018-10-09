@@ -4,7 +4,7 @@ info:
     This API describes the RESTful interface from a UAS Service Supplier (USS)
     to FIMS.
 
-  version: "v3"
+  version: "v4"
   title: "UTM Research Platform, FIMS-USS Interface"
   contact:
     name: NASA Ames Research Center, Aviation Systems Division
@@ -60,7 +60,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Version'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Version'
   /schema/Operation:
     get:
       tags:
@@ -76,7 +76,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Operation'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Operation'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 
@@ -95,7 +95,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 
@@ -114,7 +114,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/LineString'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/LineString'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 
@@ -133,7 +133,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 
@@ -152,7 +152,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMMessage'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMMessage'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
 
@@ -171,6 +171,6 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage'
         410:
           $ref: "#/responses/WRONG_PROTOCOL"
