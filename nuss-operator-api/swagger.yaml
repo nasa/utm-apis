@@ -916,22 +916,11 @@ paths:
       tags:
       - "Operations"
       summary: "view flights"
-      operationId: "getOperationsUsingGET"
       consumes:
       - "application/json"
       produces:
       - "application/json"
       parameters:
-      - name: "fields"
-        in: "query"
-        description: "fields"
-        required: false
-        type: "string"
-      - name: "q"
-        in: "query"
-        description: "q"
-        required: false
-        type: "string"
       - name: "sort"
         in: "query"
         description: "sort"
@@ -996,7 +985,6 @@ paths:
       - "Operations"
       summary: "view specific flight"
       description: "Your flight ID is the guGUFIfi"
-      operationId: "getOperationByGufiUsingGET"
       consumes:
       - "application/json"
       produces:
@@ -1004,12 +992,7 @@ paths:
       parameters:
       - name: "gufi"
         in: "path"
-        description: "gufi"
-        required: true
-        type: "string"
-      - name: "fields"
-        in: "query"
-        description: "fields"
+        description: "GUFI of the operation being requested."
         required: true
         type: "string"
       responses:
@@ -2267,7 +2250,7 @@ definitions:
         type: "string"
       warning_region_id:
         type: "string"
-  
+
   LineString:
     type: "object"
     required:
