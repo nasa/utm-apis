@@ -943,7 +943,23 @@ paths:
           type: "string"
           minLength: 5
           maxLength: 14
-      - name: "before"
+      - name: "effective_begin_time_before"
+        in: "query"
+        description: "Returns Operations with effective_begin_time before the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "effective_begin_time_after"
+        in: "query"
+        description: "Returns Operations with effective_begin_time after the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "effective_end_time_before"
         in: "query"
         description: "Returns Operations with effective_end_time before the given time"
         required: false
@@ -951,7 +967,7 @@ paths:
         format: date-time
         minLength: 25
         maxLength: 25
-      - name: "after"
+      - name: "effective_end_time_after"
         in: "query"
         description: "Returns Operations with effective_end_time after the given time"
         required: false
