@@ -965,9 +965,11 @@ paths:
           format: double
       - name: "sort"
         in: "query"
-        description: "sort"
+        description: "sorts the results by submit_time. Valid values - asc, desc. Default value is desc."
         required: false
         type: "string"
+        minLength: 3
+        maxLength: 4
       - name: "limit"
         in: "query"
         description: "limit"
@@ -2057,8 +2059,8 @@ definitions:
         format: "int32"
         description: "Number of satellites used in calculating the altitude_gps_wgs84_ft."
       enroute_positions_id:
-        type: "integer"
-        format: "int32"
+        type: "string"
+        format: "uuid"
       gufi:
         type: "string"
         description: "Each operation has an GUFI assigned upon submission. Required\
