@@ -926,23 +926,28 @@ paths:
         description: "Returns Operations with given states. Eg. state=ACCEPTED,ACTIVE"
         required: false
         type: array
-        maxItems: 4
-        minItems: 13
+        minItems: 1
+        maxItems: 13
         items:
           type: "string"
+          minLength: 5
+          maxLength: 14
       - name: "state_not_eq"
         in: "query"
         description: "Returns Operations with other than the given states. Eg state_not_eq=CLOSED,CANCELLED"
         required: false
         type: array
-        maxItems: 4
-        minItems: 13
+        minItems: 1
+        maxItems: 13
         items:
           type: "string"
+          minLength: 5
+          maxLength: 14
       - name: "before"
         in: "query"
         description: "Returns Operations with effective_end_time before the given time"
         required: false
+        type: string
         format: date-time
         minLength: 25
         maxLength: 25
@@ -950,6 +955,7 @@ paths:
         in: "query"
         description: "Returns Operations with effective_end_time after the given time"
         required: false
+        type: string
         format: date-time
         minLength: 25
         maxLength: 25
