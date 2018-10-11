@@ -916,27 +916,82 @@ paths:
       tags:
       - "Operations"
       summary: "view flights"
-      operationId: "getOperationsUsingGET"
       consumes:
       - "application/json"
       produces:
       - "application/json"
       parameters:
-      - name: "fields"
+      - name: "state"
         in: "query"
-        description: "fields"
+        description: "Returns Operations with given states. Eg. state=ACCEPTED,ACTIVE"
         required: false
-        type: "string"
-      - name: "q"
+        type: array
+        minItems: 1
+        maxItems: 13
+        items:
+          type: "string"
+          minLength: 5
+          maxLength: 14
+      - name: "state_not_eq"
         in: "query"
-        description: "q"
+        description: "Returns Operations with other than the given states. Eg state_not_eq=CLOSED,CANCELLED"
         required: false
-        type: "string"
+        type: array
+        minItems: 1
+        maxItems: 13
+        items:
+          type: "string"
+          minLength: 5
+          maxLength: 14
+      - name: "effective_begin_time_before"
+        in: "query"
+        description: "Returns Operations with effective_begin_time before the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "effective_begin_time_after"
+        in: "query"
+        description: "Returns Operations with effective_begin_time after the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "effective_end_time_before"
+        in: "query"
+        description: "Returns Operations with effective_end_time before the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "effective_end_time_after"
+        in: "query"
+        description: "Returns Operations with effective_end_time after the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "inside_bbox"
+        in: "query"
+        description: "Returns Operations with effective_end_time before the given time"
+        required: false
+        type: array
+        maxItems: 4
+        minItems: 4
+        items:
+          type: number
+          format: double
       - name: "sort"
         in: "query"
-        description: "sort"
+        description: "sorts the results by submit_time. Valid values - asc, desc. Default value is desc."
         required: false
         type: "string"
+        minLength: 3
+        maxLength: 4
       - name: "limit"
         in: "query"
         description: "limit"
@@ -996,7 +1051,6 @@ paths:
       - "Operations"
       summary: "view specific flight"
       description: "Your flight ID is the guGUFIfi"
-      operationId: "getOperationByGufiUsingGET"
       consumes:
       - "application/json"
       produces:
@@ -1004,14 +1058,10 @@ paths:
       parameters:
       - name: "gufi"
         in: "path"
-        description: "gufi"
+        description: "GUFI of the operation being requested."
         required: true
-        type: "string"
-      - name: "fields"
-        in: "query"
-        description: "fields"
-        required: true
-        type: "string"
+        type: string
+        format: uuid
       responses:
         200:
           description: "OK"
@@ -2031,8 +2081,8 @@ definitions:
         format: "int32"
         description: "Number of satellites used in calculating the altitude_gps_wgs84_ft."
       enroute_positions_id:
-        type: "integer"
-        format: "int32"
+        type: "string"
+        format: "uuid"
       gufi:
         type: "string"
         description: "Each operation has an GUFI assigned upon submission. Required\
@@ -2267,7 +2317,7 @@ definitions:
         type: "string"
       warning_region_id:
         type: "string"
-  
+
   LineString:
     type: "object"
     required:
