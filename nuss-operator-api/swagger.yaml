@@ -921,6 +921,48 @@ paths:
       produces:
       - "application/json"
       parameters:
+      - name: "state"
+        in: "query"
+        description: "Returns Operations with given states. Eg. state=ACCEPTED,ACTIVE"
+        required: false
+        type: array
+        maxItems: 4
+        minItems: 13
+        items:
+          type: "string"
+      - name: "state_not_eq"
+        in: "query"
+        description: "Returns Operations with other than the given states. Eg state_not_eq=CLOSED,CANCELLED"
+        required: false
+        type: array
+        maxItems: 4
+        minItems: 13
+        items:
+          type: "string"
+      - name: "before"
+        in: "query"
+        description: "Returns Operations with effective_end_time before the given time"
+        required: false
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "after"
+        in: "query"
+        description: "Returns Operations with effective_end_time after the given time"
+        required: false
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "inside_bbox"
+        in: "query"
+        description: "Returns Operations with effective_end_time before the given time"
+        required: false
+        type: array
+        maxItems: 4
+        minItems: 4
+        items:
+          type: number
+          format: double
       - name: "sort"
         in: "query"
         description: "sort"
@@ -994,7 +1036,8 @@ paths:
         in: "path"
         description: "GUFI of the operation being requested."
         required: true
-        type: "string"
+        type: string
+        format: uuid
       responses:
         200:
           description: "OK"
