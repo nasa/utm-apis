@@ -319,7 +319,7 @@ definitions:
       - gufi
       - uas_registrations
       - uss_name
-      - uss_instance_id
+      - discovery_reference
       - faa_rule
       - state
       - contact
@@ -341,9 +341,24 @@ definitions:
         minLength: 1
         x-utm-data-accessibility: PUBLIC
         example: utmbeta.arc.nasa.gov
-      uss_instance_id:
-        description: Identity of the USS Instance hosting this operation.
-        $ref: '#/definitions/uuid'
+      discovery_reference:
+        description: >-
+          An identifier that supplies information about the USS from the
+          discovery perspecitve.  This field is currently vague due to research
+          on the appropriate discovery approach.  It will be tightened when
+          an operational system decides on the approach to discovery.
+
+          For Gridded USS Discovery, this should be an x,y,z string where
+          x and y are the coords of the grid and z is the zoom level.  For
+          example:  "110,117,10"
+
+          For FIMS Discovery, this should be the uss_instance_id which is a
+          UUID.
+
+        type: string
+        minLength: 5
+        maxLength: 36
+        example: "110,117,10"
         x-utm-data-accessibility: PUBLIC
       submit_time:
         $ref: '#/definitions/timestamp'
@@ -853,7 +868,7 @@ definitions:
       - track_ground_speed
       - track_ground_speed_units
       - uss_name
-      - uss_instance_id
+      - discovery_reference
       - vdop_gps
     properties:
       altitude_gps:
@@ -1006,11 +1021,24 @@ definitions:
         minLength: 1
         maxLength: 250
         x-utm-data-accessibility: OPERATIONAL
-      uss_instance_id:
+      discovery_reference:
         description: >-
-          A USS instance_id value for the USS instance managing this operation.
-          UUIDv4.
-        $ref: '#/definitions/uuid'
+          An identifier that supplies information about the USS from the
+          discovery perspecitve.  This field is currently vague due to research
+          on the appropriate discovery approach.  It will be tightened when
+          an operational system decides on the approach to discovery.
+
+          For Gridded USS Discovery, this should be an x,y,z string where
+          x and y are the coords of the grid and z is the zoom level.  For
+          example:  "110,117,10"
+
+          For FIMS Discovery, this should be the uss_instance_id which is a
+          UUID.
+
+        type: string
+        minLength: 5
+        maxLength: 36
+        example: "110,117,10"
         x-utm-data-accessibility: OPERATIONAL
       vdop_gps:
         type: number
@@ -1047,7 +1075,7 @@ definitions:
       - message_id
       - origin
       - originator_id
-      - originator_uss_instance_id
+      - discovery_reference
       - time_sent
       - severity
       - message_type
@@ -1079,11 +1107,24 @@ definitions:
         exclusiveMinimum: false
         maxLength: 250
         exclusiveMaximum: false
-      originator_uss_instance_id:
+      discovery_reference:
         description: >-
-          A USS instance_id value of the originator of this message.  This aids
-          with certain requests such as position report requests.  UUIDv4.
-        $ref: '#/definitions/uuid'
+          An identifier that supplies information about the USS from the
+          discovery perspecitve.  This field is currently vague due to research
+          on the appropriate discovery approach.  It will be tightened when
+          an operational system decides on the approach to discovery.
+
+          For Gridded USS Discovery, this should be an x,y,z string where
+          x and y are the coords of the grid and z is the zoom level.  For
+          example:  "110,117,10"
+
+          For FIMS Discovery, this should be the uss_instance_id which is a
+          UUID.
+
+        type: string
+        minLength: 5
+        maxLength: 36
+        example: "110,117,10"
       gufi:
         description: The GUFI for the operation referenced in this message.  UUIDv4.
         $ref: '#/definitions/uuid'
