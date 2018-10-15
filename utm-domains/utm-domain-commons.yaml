@@ -1474,6 +1474,7 @@ definitions:
           - INTERSECTION
           - REPLAN
         example: "INTERSECTION"
+
   NegotiationMessage:
     required:
       - message_id
@@ -1502,7 +1503,10 @@ definitions:
         maxLength: 250
       type:
         description: >-
-          Placeholder for now.  Likely will be an enum.
+          The type of negotiation message.  Currently just requesting another
+          USS replan an operation, or request that a USS allow an intersection
+          of operations.  In addition, add ability to cancel previous agreed
+          negotiation.
         type: string
         enum:
           - REPLAN_REQUESTED
@@ -1564,7 +1568,7 @@ definitions:
           to USS via FIMS.
         $ref: '#/definitions/uuid'
       gufi_of_receiver:
-        description: >
+        description: >-
           The GUFI of the relevant operation of the receiving USS. Note that
           the origin and receiver roles are strictly dependent on which USS is
           generating this message. May be empty in the case of ATC communication
