@@ -701,8 +701,12 @@ definitions:
     type: object
     required:
       - contingency_id
+      - contingency_polygon
+      - contingency_location_description
       - contingency_cause
       - contingency_response
+      - valid_time_begin
+      - valid_time_end
     properties:
       contingency_id:
         description: >-
@@ -767,36 +771,49 @@ definitions:
             - LOST_USS
             - OTHER
             - ANY
+          example: "LOW_FUEL"
       contingency_response:
-        description: |-
+        description: >-
           The type of contingency response.
           1. LANDING
-            The operation will be landing by targeting the contingency_point.
+            The operation will be landing by targeting the contingency_polygon.
           2. LOITERING
-            The operation will loiter at the contingency_point at the specified altitude with the noted loiter_radius_ft.
+            The operation will loiter at the contingency_polygon at the specified
+            loiter_altitude.
           3. RETURN_TO_BASE
-            The operation will return to base as specified by the contingency_point. The USS may issue an update to the operation plan to support this maneuver.
+            The operation will return to base as specified by the
+            contingency_polygon. The USS may issue an update to the operation plan
+            to support this maneuver.
           4. OTHER
-            Additional details should be provided in free_text. If this gets used often for similar events, API will be updated with new enum value.
+            Additional details should be provided in free_text. If this gets
+            used often for similar events, API will be updated with new enum
+            value.
         type: string
         enum:
           - LANDING
           - LOITERING
           - RETURN_TO_BASE
-      contingency_point:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+          - OTHER
+        example: "LANDING"
+      contingency_polygon:
+        description: >-
+          If LANDING or RETURN_TO_BASE contingency_repsonse, then this is the
+          area on the ground that the UA will be targeting for a landing.  The
+          polygon should be large enough to provide high confidence (for some
+          TBD value of "high") that the vehicle will land within it, but
+          hopefully be no larger (for some TBD value of hopefully).
+
+          If LOITERING, this is the polygon the UA will stay within at the
+          loiter_altitude.
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       loiter_altitude:
         description: >-
           The altitude for this contingency. Relevant and required for the
           LOITERING contingency_type, ignored for all other types.
+
+          Note: may need to split this into a min_loiter_altitude and a
+          max_loiter_altitide in the future to provide a full 4D loiter volume.
         $ref: '#/definitions/Altitude'
-      loiter_radius_ft:
-        description: >-
-          The radius of airspace used in loitering for this contingency.
-          Relevant and required for the LOITERING contingency_type, ignored for
-          all other types. Using feet as units.
-        type: number
-        format: double
       relative_preference:
         description: >-
           Optional numerical value that can be used in ranking the preference of
@@ -811,10 +828,26 @@ definitions:
         type: number
         format: double
         minimum: 0
+        example: 2
       contingency_location_description:
-        description: Optional description of the contingency location.
+        description: >-
+          Description of the contingency location.
+
+          PREPROGRAMMED: location that is determined prior to launch and
+            programmed onto the UA
+          OPERATOR_UPDATED: location that is (or will be) updated during
+            operation by operator (e.g., sent to UA)
+          UA_IDENTIFIED: location that is identified to be safe to land by
+            the UA itself
+          OTHER: location does not fit any of the defined categories
+
         type: string
-        maxLength: 1000
+        enum:
+          - PREPROGRAMMED
+          - OPERATOR_UPDATED
+          - UA_IDENTIFIED
+          - OTHER
+        example: "PREPROGRAMMED"
       relevant_operation_volumes:
         description: >-
           In the planning stage of an operation, this array may be populated
