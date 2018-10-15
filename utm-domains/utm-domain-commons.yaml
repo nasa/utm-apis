@@ -1346,11 +1346,98 @@ definitions:
         units_of_measure: "FT"
       reason: A UA leaving defined volume
 
+  NegotiationAgreement:
+    required:
+      - message_id
+      - negotiation_id
+      - uss_name_of_originator
+      - uss_name_of_receiver
+      - gufi_originator
+      - gufi_receiver
+      - discovery_reference
+      - type
+    properties:
+      message_id:
+        description: >-
+          An identifier unique to this particular message.
+        $ref: '#/definitions/uuid'
+      negotiation_id:
+        description: >-
+          An identifier held constant across multiple message_ids.  This value
+          represents a single negotiation between two USSs for two specific
+          operations.  Will be same value as used in NegotiationMessage for this
+          particular negotiation between these operations.
+        $ref: '#/definitions/uuid'
+      uss_name_of_originator:
+        description: >-
+          Name of the USS originating the negotation. MUST be the
+          uss_name as known by the authorization server.
+          The maximum and minimum character length is based on a usable domain
+          name, and considering the maximum in RFC-1035.
+        type: string
+        minLength: 1
+        maxLength: 250
+      uss_name_of_receiver:
+        description: >-
+          Name of the USS receiving the original negotiation request. MUST be the
+          uss_name as known by the authorization server.
+          The maximum and minimum character length is based on a usable domain
+          name, and considering the maximum in RFC-1035.
+        type: string
+        minLength: 1
+        maxLength: 250
+      gufi_originator:
+        description: >-
+          The GUFI of the relevant operation of the originating USS. Note that
+          the origin and receiver roles are strictly dependent on which USS is
+          generating this message. May be empty in the case of ATC communication
+          to USS via FIMS.
+        $ref: '#/definitions/uuid'
+      gufi_receiver:
+        description: >
+          The GUFI of the relevant operation of the receiving USS. Note that
+          the origin and receiver roles are strictly dependent on which USS is
+          generating this message. May be empty in the case of ATC communication
+          to USS via FIMS.
+        $ref: '#/definitions/uuid'
+      free_text:
+        type: string
+        maxLength: 1000
+      discovery_reference:
+        description: >-
+          An identifier that supplies information about the USS from the
+          discovery perspecitve.  This field is currently vague due to research
+          on the appropriate discovery approach.  It will be tightened when
+          an operational system decides on the approach to discovery.
+
+          For Gridded USS Discovery, this should be an x,y,z string where
+          x and y are the coords of the grid and z is the zoom level.  For
+          example:  "110,117,10"
+
+          For FIMS Discovery, this should be the uss_instance_id which is a
+          UUID.
+
+        type: string
+        minLength: 5
+        maxLength: 36
+        example: "110,117,10"
+      type:
+        description: >-
+          The type of negotation result.
+
+          INTERSECTION: both USSs agreed to intersect their operation plans.
+          REPLAN: both USSs agreed on replan of receiving operation.  In this
+            case there would be no planned intersection of these operations.
+        type: string
+        enum:
+          - INTERSECTION
+          - REPLAN
+        example: "INTERSECTION"
   NegotiationMessage:
     required:
       - message_id
       - negotiation_id
-      - origin_uss_name
+      - uss_name_of_originator
       - type
       - gufi_of_originator
       - gufi_of_receiver
@@ -1363,7 +1450,7 @@ definitions:
           represents a single negotiation between two USSs for two specific
           operations.
         $ref: '#/definitions/uuid'
-      origin_uss_name:
+      uss_name_of_originator:
         description: >-
           A name identifying the originator of this message. MUST be the
           uss_name as known by the authorization server. The maximum and minimum
@@ -1397,7 +1484,7 @@ definitions:
           - ALTITUDE_CHANGE
           - DEPART_LATER
           - LAND_EARLIER
-          - HORIZONTAL_CHANGE    
+          - HORIZONTAL_CHANGE
       v2v_for_originator:
         description: >-
           A boolean field indicating whether the vehicle supported by the
@@ -1731,17 +1818,3 @@ parameters:
     type: integer
     default: 0
     format: int32
-
-pathitems:
-  getVersion:
-    get:
-      summary: API version and other data. Can be used to test whether server is up.
-      tags:
-        - A. Required Endpoints
-      security:
-        - security: []
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/Version'
