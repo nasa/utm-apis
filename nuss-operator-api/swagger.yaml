@@ -943,33 +943,33 @@ paths:
           type: "string"
           minLength: 5
           maxLength: 14
-      - name: "effective_begin_time_before"
+      - name: "effective_time_begin_before"
         in: "query"
-        description: "Returns Operations with effective_begin_time before the given time"
+        description: "Returns Operations with effective_begin_time before or equal to the given time"
         required: false
         type: string
         format: date-time
         minLength: 25
         maxLength: 25
-      - name: "effective_begin_time_after"
+      - name: "effective_time_begin_after"
         in: "query"
-        description: "Returns Operations with effective_begin_time after the given time"
+        description: "Returns Operations with effective_begin_time after or equal to the given time"
         required: false
         type: string
         format: date-time
         minLength: 25
         maxLength: 25
-      - name: "effective_end_time_before"
+      - name: "effective_time_end_before"
         in: "query"
-        description: "Returns Operations with effective_end_time before the given time"
+        description: "Returns Operations with effective_end_time before or equal to the given time"
         required: false
         type: string
         format: date-time
         minLength: 25
         maxLength: 25
-      - name: "effective_end_time_after"
+      - name: "effective_time_end_after"
         in: "query"
-        description: "Returns Operations with effective_end_time after the given time"
+        description: "Returns Operations with effective_end_time after or equal to the given time"
         required: false
         type: string
         format: date-time
@@ -977,7 +977,8 @@ paths:
         maxLength: 25
       - name: "inside_bbox"
         in: "query"
-        description: "Returns Operations with effective_end_time before the given time"
+        description: "Returns Operations with flight geographies inside or intersecting the bbox.
+          The coordinates are comma delimited (lon_min,lat_min,lon_max,lat_max). Example: -121.1133,36.5317,-121.0941,36.6530"
         required: false
         type: array
         maxItems: 4
