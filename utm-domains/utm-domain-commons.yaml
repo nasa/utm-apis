@@ -601,14 +601,31 @@ definitions:
         type: string
         description: >-
           If a PUBLIC_SAFETY operation is PUT to any endpoint, the correct
-          scope will be required. Any USS may PUT an INFLIGHT_EMERGENCY with
-          non-priority scopes.  NONE should only be used to indicate that an
+          scope will be required.
+
+          Any USS may PUT an EMERGENCY_* with non-priority scopes.
+
+          EMERGENCY_AIRBORNE_IMPACT should be used when there is significant risk
+          to other aircraft, but little risk to any people or property on the
+          ground.
+
+          EMERGENCY_GROUND_IMPACT should be used when there is significant risk
+          to people and/or property on the ground, but little risk of airborne
+          collision.
+
+          EMERGENCY_AIR_AND_GROUND_IMPACT should be used when there is significant
+          risk to aircraft AND people/property on the ground.
+
+          NONE should only be used to indicate that an
           operation that previously had a priority status now has no priority
           status.
         enum:
           - NONE
           - PUBLIC_SAFETY
-          - INFLIGHT_EMERGENCY
+          - EMERGENCY_AIRBORNE_IMPACT
+          - EMERGENCY_GROUND_IMPACT
+          - EMERGENCY_AIR_AND_GROUND_IMPACT
+          
   OperationVolume:
     type: object
     required:
