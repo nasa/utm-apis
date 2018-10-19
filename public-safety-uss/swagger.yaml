@@ -295,7 +295,7 @@ paths:
             type: array
             items:
               $ref: >-
-                https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
+                https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UASVolumeReservation
         '401':
           description: "Unauthorized"
           schema:
@@ -324,7 +324,7 @@ paths:
           description: Successful request.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UASVolumeReservation
         '401':
           description: "Unauthorized"
           schema:
@@ -350,11 +350,11 @@ paths:
           description: PUT by message_id
         - in: body
           name: constraint_message
-          description: The ConstraintMessage being sent
+          description: The UASVolumeReservation being sent
           required: true
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UASVolumeReservation
       responses:
         '204':
           description: Constraint data received. No content returned.
