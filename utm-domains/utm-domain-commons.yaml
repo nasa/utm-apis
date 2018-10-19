@@ -1267,7 +1267,6 @@ definitions:
       message_type: "OPERATION_CLOSED"
       gufi: "00000000-0000-4444-8888-FEEDDEADBEEF"
       free_text: "Cool flight, bro"
-
   UASVolumeReservation:
     description: >-
       An element defined by spatial and temporal bounds that affects UAS
