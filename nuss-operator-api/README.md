@@ -1,23 +1,25 @@
 # TCL4 NUSS-Operator Interface
 ## States
-not flying statesNotEq
- P   PROPOSED   
- A   ACCEPTED   
- R   REJECTED - terminal
- C   CLOSED  - terminal
- X   CANCELED  - terminal
- I   READIED   
- E   EXPIRED  - terminal
- G   ROGUECLOSED  - terminal
- B   ABORTCLOSED - terminal
 
-flying
- U   ROGUE
- T   ABORTING
- F   NON-CONFORMING
- V   ACTIVE
 
 ![alt text](https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/nuss-operator-api/images/tcl4states.png "TCL4 FSM")
+
+
+Abbreviation | State
+------------ | -------------
+ P   | PROPOSED
+ A  |  ACCEPTED   
+ R  | REJECTED - terminal
+ C   | CLOSED  - terminal
+ X   | CANCELED  - terminal
+ I   | READIED   
+ E   | EXPIRED  - terminal
+ G   | ROGUECLOSED  - terminal
+ B   | ABORTCLOSED - terminal
+U  | ROGUE
+ T  | ABORTING
+ F  | NON-CONFORMING
+ V  | ACTIVE
 
 ## Conformance
 
