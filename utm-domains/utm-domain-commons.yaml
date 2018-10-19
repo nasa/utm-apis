@@ -319,7 +319,6 @@ definitions:
       - gufi
       - uas_registrations
       - uss_name
-      - discovery_reference
       - faa_rule
       - state
       - contact
@@ -918,7 +917,6 @@ definitions:
       - track_ground_speed
       - track_ground_speed_units
       - uss_name
-      - discovery_reference
       - vdop_gps
     properties:
       altitude_gps:
@@ -1125,7 +1123,6 @@ definitions:
       - message_id
       - origin
       - originator_id
-      - discovery_reference
       - time_sent
       - severity
       - message_type
@@ -1445,7 +1442,6 @@ definitions:
       - uss_name_of_receiver
       - gufi_originator
       - gufi_receiver
-      - discovery_reference
       - type
     properties:
       message_id:
