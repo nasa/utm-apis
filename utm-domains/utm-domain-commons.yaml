@@ -319,7 +319,6 @@ definitions:
       - gufi
       - uas_registrations
       - uss_name
-      - discovery_reference
       - faa_rule
       - state
       - contact
@@ -625,7 +624,7 @@ definitions:
           - EMERGENCY_AIRBORNE_IMPACT
           - EMERGENCY_GROUND_IMPACT
           - EMERGENCY_AIR_AND_GROUND_IMPACT
-          
+
   OperationVolume:
     type: object
     required:
@@ -918,7 +917,6 @@ definitions:
       - track_ground_speed
       - track_ground_speed_units
       - uss_name
-      - discovery_reference
       - vdop_gps
     properties:
       altitude_gps:
@@ -1125,7 +1123,6 @@ definitions:
       - message_id
       - origin
       - originator_id
-      - discovery_reference
       - time_sent
       - severity
       - message_type
@@ -1445,7 +1442,6 @@ definitions:
       - uss_name_of_receiver
       - gufi_originator
       - gufi_receiver
-      - discovery_reference
       - type
     properties:
       message_id:
@@ -1624,6 +1620,24 @@ definitions:
           generating this message. May be empty in the case of ATC communication
           to USS via FIMS.
         $ref: '#/definitions/uuid'
+      discovery_reference:
+        description: >-
+          An identifier that supplies information about the USS from the
+          discovery perspecitve.  This field is currently vague due to research
+          on the appropriate discovery approach.  It will be tightened when
+          an operational system decides on the approach to discovery.
+
+          For Gridded USS Discovery, this should be an x,y,z string where
+          x and y are the coords of the grid and z is the zoom level.  For
+          example:  "110,117,10"
+
+          For FIMS Discovery, this should be the uss_instance_id which is a
+          UUID.
+
+        type: string
+        minLength: 5
+        maxLength: 36
+        example: "110,117,10"
       free_text:
         type: string
         maxLength: 1000
