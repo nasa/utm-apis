@@ -1289,36 +1289,7 @@ paths:
           description: "Forbidden"
         404:
           description: "Not Found"
-  /schema/GeographyFragment:
-    get:
-      tags:
-      - "Geography Data Types"
-      summary: "Geography fragment"
-      description: "A GeographyFragment is a portion (fragment) of the GeoJSON geography\
-        \ data type. Allowable values for this type are LineString, MultiPolygon,\
-        \ Point and Polygon. Since UTM supports most but not all GeoJSON data types,\
-        \ UTM defines a a portion (or fragment) of the GeoJSON specification. For\
-        \ adding or modifing an operation, only LineString and Polygon are supported.\
-        \ (For trajectory-based operations, LineString will be more appropriate.)\
-        \  MultiPolygon is not supported for Operation; rather it is used for Surveillance.\
-        \ For Position submission, the only accepted type is Point."
-      operationId: "geographyFragmentUsingGET"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/GeographyFragment"
-        401:
-          description: "Unauthorized"
-        403:
-          description: "Forbidden"
-        404:
-          description: "Not Found"
+
   /schema/InformMsgType:
     get:
       tags:
@@ -1365,59 +1336,13 @@ paths:
           description: "Forbidden"
         404:
           description: "Not Found"
-  /schema/LineString:
-    get:
-      tags:
-      - "Geography Data Types"
-      summary: "LineString geojson"
-      description: "subtype of GeographyFragment"
-      operationId: "lineStringUsingGET"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/LineString"
-        401:
-          description: "Unauthorized"
-        403:
-          description: "Forbidden"
-        404:
-          description: "Not Found"
-  /schema/MultiPolygon:
-    get:
-      tags:
-      - "Geography Data Types"
-      summary: "MultiPolygon geojson"
-      description: "subtype of GeographyFragment"
-      operationId: "multiPolygonUsingGET"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/MultiPolygon"
-        401:
-          description: "Unauthorized"
-        403:
-          description: "Forbidden"
-        404:
-          description: "Not Found"
+
+
   /schema/Point:
     get:
       tags:
       - "Geography Data Types"
       summary: "Point geojson"
-      description: "subtype of GeographyFragment"
-      operationId: "pointUsingGET"
       consumes:
       - "application/json"
       produces:
@@ -1439,8 +1364,6 @@ paths:
       tags:
       - "Geography Data Types"
       summary: "Polygon geojson"
-      description: "subtype of GeographyFragment"
-      operationId: "polygonUsingGET"
       consumes:
       - "application/json"
       produces:
@@ -1460,7 +1383,6 @@ paths:
 
   /user/<username>/utmMsg/v1:
     get:
-      deprecated: true
       tags:
       - "Subscription Points"
       summary: "Receive decisions from a queue"
@@ -2134,15 +2056,7 @@ definitions:
         format: "double"
         description: "The vertical dilultion of precision as provided by the onboard\
           \ GPS."
-  GeographyFragment:
-    type: "object"
-    description: "allowableValues for type are Point, LineString, Polygon and MultiPolygon.\
-      \ Since UTM supports most but not all Geojson datatypes, UTM defines a a portion\
-      \ (or fragment) of the Geojson spec.For most cases, “Polygon” will be more appropriate\
-      \ for describing an operation. For trajectory-based operations, LineString will\
-      \ be more appropriate. Any value other than LineString or Polygon will cause\
-      \ rejection of a submitted plan. The only accepted value for a position is Point.\
-      \ Any value other than Point will cause rejection of a position submission."
+
   OperationVolume:
     type: "object"
     required:
@@ -2319,37 +2233,7 @@ definitions:
       warning_region_id:
         type: "string"
 
-  LineString:
-    type: "object"
-    required:
-    - "coordinates"
-    properties:
-      coordinates:
-        type: "array"
-        description: "Geojson array of Points. Points are pairs of longitude-latitude\
-          \ values. If a third element is provided for altitude, it is silently ignored."
-        items:
-          type: "array"
-          items:
-            type: "number"
-            format: "double"
-  MultiPolygon:
-    type: "object"
-    required:
-    - "coordinates"
-    properties:
-      coordinates:
-        type: "array"
-        description: "Multidimensionaly array of Points, according to Geojson specification."
-        items:
-          type: "array"
-          items:
-            type: "array"
-            items:
-              type: "array"
-              items:
-                type: "number"
-                format: "double"
+
   Airport:
     type: "object"
     properties:
