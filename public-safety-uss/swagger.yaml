@@ -295,7 +295,7 @@ paths:
             type: array
             items:
               $ref: >-
-                https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
+                https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UASVolumeReservation
         '401':
           description: "Unauthorized"
           schema:
@@ -324,7 +324,7 @@ paths:
           description: Successful request.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UASVolumeReservation
         '401':
           description: "Unauthorized"
           schema:
