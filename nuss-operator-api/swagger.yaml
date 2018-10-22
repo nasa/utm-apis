@@ -468,7 +468,7 @@ paths:
           schema:
             type: "array"
             items:
-              $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage'
+              $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UASVolumeReservation'
         401:
           description: "Unauthorized"
         403:
@@ -497,7 +497,7 @@ paths:
           description: "OK"
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UASVolumeReservation
         401:
           description: "Unauthorized"
         403:
@@ -526,7 +526,7 @@ paths:
         required: true
         schema:
            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UASVolumeReservation
       responses:
         200:
           description: "OK"
@@ -916,27 +916,83 @@ paths:
       tags:
       - "Operations"
       summary: "view flights"
-      operationId: "getOperationsUsingGET"
       consumes:
       - "application/json"
       produces:
       - "application/json"
       parameters:
-      - name: "fields"
+      - name: "state"
         in: "query"
-        description: "fields"
+        description: "Returns Operations with given states. Eg. state=ACCEPTED,ACTIVE. Cannot use with state_not_eq."
         required: false
-        type: "string"
-      - name: "q"
+        type: array
+        minItems: 1
+        maxItems: 13
+        items:
+          type: "string"
+          minLength: 5
+          maxLength: 14
+      - name: "state_not_eq"
         in: "query"
-        description: "q"
+        description: "Returns Operations with other than the given states. Eg state_not_eq=CLOSED,CANCELLED. Cannot use with state."
         required: false
-        type: "string"
+        type: array
+        minItems: 1
+        maxItems: 13
+        items:
+          type: "string"
+          minLength: 5
+          maxLength: 14
+      - name: "effective_time_begin_before"
+        in: "query"
+        description: "Returns Operations with effective_begin_time before or equal to the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "effective_time_begin_after"
+        in: "query"
+        description: "Returns Operations with effective_begin_time after or equal to the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "effective_time_end_before"
+        in: "query"
+        description: "Returns Operations with effective_end_time before or equal to the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "effective_time_end_after"
+        in: "query"
+        description: "Returns Operations with effective_end_time after or equal to the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "inside_bbox"
+        in: "query"
+        description: "Returns Operations with flight geographies inside or intersecting the bbox.
+          The coordinates are comma delimited (lon_min,lat_min,lon_max,lat_max). Example: -121.1133,36.5317,-121.0941,36.6530"
+        required: false
+        type: array
+        maxItems: 4
+        minItems: 4
+        items:
+          type: number
+          format: double
       - name: "sort"
         in: "query"
-        description: "sort"
+        description: "sorts the results by submit_time. Valid values - asc, desc. Default value is desc."
         required: false
         type: "string"
+        minLength: 3
+        maxLength: 4
       - name: "limit"
         in: "query"
         description: "limit"
@@ -996,7 +1052,6 @@ paths:
       - "Operations"
       summary: "view specific flight"
       description: "Your flight ID is the guGUFIfi"
-      operationId: "getOperationByGufiUsingGET"
       consumes:
       - "application/json"
       produces:
@@ -1004,14 +1059,10 @@ paths:
       parameters:
       - name: "gufi"
         in: "path"
-        description: "gufi"
+        description: "GUFI of the operation being requested."
         required: true
-        type: "string"
-      - name: "fields"
-        in: "query"
-        description: "fields"
-        required: true
-        type: "string"
+        type: string
+        format: uuid
       responses:
         200:
           description: "OK"
@@ -1238,36 +1289,7 @@ paths:
           description: "Forbidden"
         404:
           description: "Not Found"
-  /schema/GeographyFragment:
-    get:
-      tags:
-      - "Geography Data Types"
-      summary: "Geography fragment"
-      description: "A GeographyFragment is a portion (fragment) of the GeoJSON geography\
-        \ data type. Allowable values for this type are LineString, MultiPolygon,\
-        \ Point and Polygon. Since UTM supports most but not all GeoJSON data types,\
-        \ UTM defines a a portion (or fragment) of the GeoJSON specification. For\
-        \ adding or modifing an operation, only LineString and Polygon are supported.\
-        \ (For trajectory-based operations, LineString will be more appropriate.)\
-        \  MultiPolygon is not supported for Operation; rather it is used for Surveillance.\
-        \ For Position submission, the only accepted type is Point."
-      operationId: "geographyFragmentUsingGET"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/GeographyFragment"
-        401:
-          description: "Unauthorized"
-        403:
-          description: "Forbidden"
-        404:
-          description: "Not Found"
+
   /schema/InformMsgType:
     get:
       tags:
@@ -1314,59 +1336,13 @@ paths:
           description: "Forbidden"
         404:
           description: "Not Found"
-  /schema/LineString:
-    get:
-      tags:
-      - "Geography Data Types"
-      summary: "LineString geojson"
-      description: "subtype of GeographyFragment"
-      operationId: "lineStringUsingGET"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/LineString"
-        401:
-          description: "Unauthorized"
-        403:
-          description: "Forbidden"
-        404:
-          description: "Not Found"
-  /schema/MultiPolygon:
-    get:
-      tags:
-      - "Geography Data Types"
-      summary: "MultiPolygon geojson"
-      description: "subtype of GeographyFragment"
-      operationId: "multiPolygonUsingGET"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/MultiPolygon"
-        401:
-          description: "Unauthorized"
-        403:
-          description: "Forbidden"
-        404:
-          description: "Not Found"
+
+
   /schema/Point:
     get:
       tags:
       - "Geography Data Types"
       summary: "Point geojson"
-      description: "subtype of GeographyFragment"
-      operationId: "pointUsingGET"
       consumes:
       - "application/json"
       produces:
@@ -1388,8 +1364,6 @@ paths:
       tags:
       - "Geography Data Types"
       summary: "Polygon geojson"
-      description: "subtype of GeographyFragment"
-      operationId: "polygonUsingGET"
       consumes:
       - "application/json"
       produces:
@@ -1409,7 +1383,6 @@ paths:
 
   /user/<username>/utmMsg/v1:
     get:
-      deprecated: true
       tags:
       - "Subscription Points"
       summary: "Receive decisions from a queue"
@@ -2031,8 +2004,8 @@ definitions:
         format: "int32"
         description: "Number of satellites used in calculating the altitude_gps_wgs84_ft."
       enroute_positions_id:
-        type: "integer"
-        format: "int32"
+        type: "string"
+        format: "uuid"
       gufi:
         type: "string"
         description: "Each operation has an GUFI assigned upon submission. Required\
@@ -2083,15 +2056,7 @@ definitions:
         format: "double"
         description: "The vertical dilultion of precision as provided by the onboard\
           \ GPS."
-  GeographyFragment:
-    type: "object"
-    description: "allowableValues for type are Point, LineString, Polygon and MultiPolygon.\
-      \ Since UTM supports most but not all Geojson datatypes, UTM defines a a portion\
-      \ (or fragment) of the Geojson spec.For most cases, “Polygon” will be more appropriate\
-      \ for describing an operation. For trajectory-based operations, LineString will\
-      \ be more appropriate. Any value other than LineString or Polygon will cause\
-      \ rejection of a submitted plan. The only accepted value for a position is Point.\
-      \ Any value other than Point will cause rejection of a position submission."
+
   OperationVolume:
     type: "object"
     required:
@@ -2267,38 +2232,8 @@ definitions:
         type: "string"
       warning_region_id:
         type: "string"
-  
-  LineString:
-    type: "object"
-    required:
-    - "coordinates"
-    properties:
-      coordinates:
-        type: "array"
-        description: "Geojson array of Points. Points are pairs of longitude-latitude\
-          \ values. If a third element is provided for altitude, it is silently ignored."
-        items:
-          type: "array"
-          items:
-            type: "number"
-            format: "double"
-  MultiPolygon:
-    type: "object"
-    required:
-    - "coordinates"
-    properties:
-      coordinates:
-        type: "array"
-        description: "Multidimensionaly array of Points, according to Geojson specification."
-        items:
-          type: "array"
-          items:
-            type: "array"
-            items:
-              type: "array"
-              items:
-                type: "number"
-                format: "double"
+
+
   Airport:
     type: "object"
     properties:

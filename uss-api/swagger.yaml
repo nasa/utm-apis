@@ -67,7 +67,7 @@ paths:
       description: >-
         Allow constraints to be submitted from authorized entities.
         For validation purposes:
-          {message_id} in path == ConstraintMessage.message_id of body data
+          {message_id} in path == UASVolumeReservation.message_id of body data
       security:
         - ussapi_security:
             - utm.nasa.gov_write.constraint
@@ -81,11 +81,11 @@ paths:
           description: PUT by message_id
         - in: body
           name: constraint_message
-          description: The ConstraintMessage being sent
+          description: The UASVolumeReservation being sent
           required: true
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UASVolumeReservation
       responses:
         '204':
           description: Constraint data received. No content returned.
@@ -93,17 +93,17 @@ paths:
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
 
 
   '/utm_messages/{message_id}':
@@ -132,7 +132,7 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMMessage
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMMessage
       responses:
         '204':
           description: UTMMessage received. No content returned.
@@ -140,17 +140,17 @@ paths:
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
 
   '/uss/{uss_instance_id}':
     put:
@@ -182,7 +182,7 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UssInstance
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UssInstance
       responses:
         '204':
           description: USS Instance data received. No content returned.
@@ -190,17 +190,17 @@ paths:
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
 
   '/negotiations/{message_id}':
     put:
@@ -234,7 +234,7 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/NegotiationMessage
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/NegotiationMessage
       responses:
         '204':
           description: NegotiationMessage received. No content returned.
@@ -242,17 +242,17 @@ paths:
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
 
   '/positions/{position_id}':
     put:
@@ -283,7 +283,7 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/Position
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/Position
       responses:
         '204':
           description: Position data recieved. No content returned.
@@ -291,17 +291,17 @@ paths:
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
   /operations:
     get:
       tags:
@@ -381,8 +381,8 @@ paths:
             A single point used to find all operations within some distance from
             that point. Returns all operations that have any operation_volumes
             that interesect the 2D circle defined by distance and
-            reference_point.  When distance it excluded and reference_point is
-            included, use default value (300ft) for distance.
+            reference_point.  When distance is excluded and reference_point is
+            included, uses default value (300ft) for distance.
             Described as a GeoJSON position.  The value is equivalent to what
             would be seen in the "coordinates" field for a GeoJSON Point
             object.  See https://tools.ietf.org/html/rfc7946#section-3.1.1 for
@@ -452,22 +452,32 @@ paths:
             type: array
             items:
               $ref: >-
-                https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/Operation
+                https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/Operation
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '403':
+          description: Forbidden. Do not retry with same access token. Reason not provided, but do you have the right scopes?
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '423':
+          description: The requested data are in a transition state. Please retry request.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
 
   '/operations/{gufi}':
     get:
@@ -494,17 +504,17 @@ paths:
           description: OK
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/Operation
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/Operation
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
 
     put:
       tags:
@@ -538,7 +548,7 @@ paths:
           required: true
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/Operation
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/Operation
       responses:
         '204':
           description: Operation data received. No content returned.
@@ -546,12 +556,12 @@ paths:
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '409':
           description: >-
             Conflict. This USS Instance has an Operation that intersects.
@@ -559,9 +569,9 @@ paths:
             at least 1 indicating the conflicting Operation(s).
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
