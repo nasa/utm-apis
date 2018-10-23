@@ -376,6 +376,10 @@ definitions:
           the grid, you DO NOT update the submit_time when sending to the USSs
           after that.
 
+          submt_time stays constant for this GUFI.  Any mods to the plan
+          including state updates would imply a new update_time, but submit_time
+          does not change.
+
           Similarly, for traditional discovery, if there is a delay in sending
           the data to one LUN member versus another, this field is NOT updated
           in between as we want each stakeholder to ultimately receive the same
