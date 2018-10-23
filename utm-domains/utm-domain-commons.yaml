@@ -439,6 +439,7 @@ definitions:
         description: >-
           The current state of the operation.  Must be maintained by the USS.
           Some additional details in the USS Specification.
+          
           0. PROPOSED
             This operation is not yet ACCEPTED.  It may be awaiting information
             from the operator, it may be in conflict with another ACCEPTED or

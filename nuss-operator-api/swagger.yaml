@@ -1295,8 +1295,8 @@ paths:
       tags:
       - "Message Data Types"
       summary: "Inform Message"
-      description: "This is UTM's reply to an Intent"
-      operationId: "informMsgUsingGET"
+      description: "This is UTM's reply to an Intent.
+        A message with origin CLIENT may not send Inform messages"
       consumes:
       - "application/json"
       produces:
