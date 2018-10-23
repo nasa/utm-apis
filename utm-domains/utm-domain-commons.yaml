@@ -325,6 +325,7 @@ definitions:
       - controller_location
       - operation_volumes
       - submit_time
+      - update_time
       - metadata
     properties:
       gufi:
@@ -360,24 +361,40 @@ definitions:
         example: "110,117,10"
         x-utm-data-accessibility: PUBLIC
       submit_time:
+        description: >-
+          Time that this Operation was first announced to the USS Network in any
+          way.  For GUD, this means when you first write to the grid.  For
+          traditional discovery, this means the first time you announce to your
+          LUN.
+
+          This value must remain constant for each recipient of the announcement
+          since this value is potentially part of a signature of the Operation
+          plan in some cases.  So, when data (or references to the data) are
+          written to the grid, the same data are to be sent, as required, to
+          other stakeholders (e.g. other USSs).  This means that if there is a
+          500ms difference in the time that you send and get confirmation from
+          the grid, you DO NOT update the submit_time when sending to the USSs
+          after that.
+
+          Similarly, for traditional discovery, if there is a delay in sending
+          the data to one LUN member versus another, this field is NOT updated
+          in between as we want each stakeholder to ultimately receive the same
+          data and (potentially) the same signature of the data.
         $ref: '#/definitions/timestamp'
         x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T14:11:56.118Z'
-      last_lun_update_time:
+      update_time:
         description: >-
           A timestamp set by the USS any time the state of the operation is
           updated within the USS Network. An update may be minor or major, but
           if/when te Operation is shared in the USS Network as a PUT to its LUN,
           this field MUST reflect the time that update was provided.  When the
-          operation is submitted for the first time to the LUN, this value MUST
+          operation is announced for the first time, this value MUST
           be equal to submit_time.  This value MUST be constant for each update.
-          This means that all USSs have the same value for
-          last_submitted_update_time even if, for example, one USS receives the
+          This means that all stakeholder systems have the same value for
+          update_time even if, for example, one USS receives the
           update later than others due to HTTP retrys or is provided as a GET
-          for this Operation.  Uses the ISO 8601 format conforming to pattern:
-          YYYY-MM-DDThh:mm:ss.sssZ.  Seconds may have up to millisecond accuracy
-          (three positions after decimal).  The 'Z' implies UTC times and is the
-          only timezone accepted. This field is set and maintained by the USS
+          for this Operation.  This field is set and maintained by the USS
           managing the Operation and is communicated to other USSs.
         $ref: '#/definitions/timestamp'
         x-utm-data-accessibility: OPERATIONAL
