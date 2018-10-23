@@ -596,6 +596,7 @@ definitions:
     properties:
       priority_level:
         $ref: '#/definitions/severity'
+        x-utm-data-accessibility: OPERATIONAL
       priority_status:
         type: string
         description: >-
@@ -624,6 +625,7 @@ definitions:
           - EMERGENCY_AIRBORNE_IMPACT
           - EMERGENCY_GROUND_IMPACT
           - EMERGENCY_AIR_AND_GROUND_IMPACT
+        x-utm-data-accessibility: OPERATIONAL
 
   OperationVolume:
     type: object
@@ -650,6 +652,7 @@ definitions:
         exclusiveMinimum: false
         maximum: 99999
         exclusiveMaximum: false
+        x-utm-data-accessibility: OPERATIONAL
       volume_type:
         description: >-
             More description later.
@@ -658,10 +661,12 @@ definitions:
           - TBOV
           - ABOV
         default: ABOV
+        x-utm-data-accessibility: OPERATIONAL
       near_structure:
         description: Is this operation volume within 400' of a structure?
         type: boolean
         default: false
+        x-utm-data-accessibility: SAFETY
       effective_time_begin:
         description: >-
           Earliest time the operation will use the operation volume.  It must
@@ -698,6 +703,7 @@ definitions:
             min_altitude.altitude_value < max_altitude.altitude_value
 
         $ref: '#/definitions/Altitude'
+        x-utm-data-accessibility: OPERATIONAL
       max_altitude:
         description: >-
           The maximum altitude for this operation in this operation volume.
@@ -706,13 +712,16 @@ definitions:
             min_altitude.altitude_value < max_altitude.altitude_value
 
         $ref: '#/definitions/Altitude'
+        x-utm-data-accessibility: OPERATIONAL
       operation_geography:
         $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
+        x-utm-data-accessibility: OPERATIONAL
       beyond_visual_line_of_sight:
         description: >-
           Describes whether any portion of the operation volume is beyond the
           visual line of sight of the RPIC.
         type: boolean
+        x-utm-data-accessibility: OPERATIONAL
   ContingencyPlan:
     type: object
     required:
@@ -736,6 +745,7 @@ definitions:
         maximum: 1000
         exclusiveMaximum: false
         example: 1
+        x-utm-data-accessibility: OPERATIONAL
       contingency_cause:
         type: array
         items:
@@ -788,6 +798,7 @@ definitions:
             - OTHER
             - ANY
           example: "LOW_FUEL"
+          x-utm-data-accessibility: OPERATIONAL
       contingency_response:
         description: >-
           The type of contingency response.
@@ -811,6 +822,7 @@ definitions:
           - RETURN_TO_BASE
           - OTHER
         example: "LANDING"
+        x-utm-data-accessibility: OPERATIONAL
       contingency_polygon:
         description: >-
           If LANDING or RETURN_TO_BASE contingency_repsonse, then this is the
@@ -822,6 +834,7 @@ definitions:
           If LOITERING, this is the polygon the UA will stay within at the
           loiter_altitude.
         $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
+        x-utm-data-accessibility: OPERATIONAL
       loiter_altitude:
         description: >-
           The altitude for this contingency. Relevant and required for the
@@ -830,6 +843,7 @@ definitions:
           Note: may need to split this into a min_loiter_altitude and a
           max_loiter_altitide in the future to provide a full 4D loiter volume.
         $ref: '#/definitions/Altitude'
+        x-utm-data-accessibility: OPERATIONAL
       relative_preference:
         description: >-
           Optional numerical value that can be used in ranking the preference of
@@ -845,6 +859,7 @@ definitions:
         format: double
         minimum: 0
         example: 2
+        x-utm-data-accessibility: OPERATIONAL
       contingency_location_description:
         description: >-
           Description of the contingency location.
@@ -864,6 +879,7 @@ definitions:
           - UA_IDENTIFIED
           - OTHER
         example: "PREPROGRAMMED"
+        x-utm-data-accessibility: SAFETY
       relevant_operation_volumes:
         description: >-
           In the planning stage of an operation, this array may be populated
@@ -875,6 +891,7 @@ definitions:
         items:
           type: integer
           format: int32
+        x-utm-data-accessibility: OPERATIONAL
       valid_time_begin:
         description: >-
           Optional. Time that this location is expected to be first available.
@@ -894,12 +911,13 @@ definitions:
         x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T14:41:09.651Z'
       free_text:
-          description: >-
-            To be used for additional comments as needed. For human use, not for
-            automating any process.
-          type: string
-          minLength: 0
-          maxLength: 1000
+        description: >-
+          To be used for additional comments as needed. For human use, not for
+          automating any process.
+        type: string
+        minLength: 0
+        maxLength: 1000
+        x-utm-data-accessibility: OPERATIONAL
   Position:
     type: object
     required:
