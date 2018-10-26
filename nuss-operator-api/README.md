@@ -6,7 +6,7 @@ If an active operation violates its conformance geography, there will be a trigg
 
 The UTM System will define an additional region around the conformance geography called the protected geography. This volume will be used by the UTM System to strategically deconflict operations from each other and other constraints in the system.
 
-![alt text](https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/nuss-operator-api/images/conformance-regions.png "geometries")
+![alt text](https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/nuss-operator-api/images/conformance-regions.jpg  "geometries")
 
 **Figure 1: Geometries of Flight, Conformance and Protected
 **
