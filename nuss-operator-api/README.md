@@ -5,7 +5,7 @@
 If an active operation violates its conformance geography, operation as nonconforming.
 NUSS defines an additional region around the conformance geography called the protected geography. This volume is used to strategically deconflict operations from each other as well as from airspace constraints.
 
-![alt text](https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/nuss-operator-api/images/conformance-regions.jpg  "geometries")
+![alt text](https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/nuss-operator-api/images/opVol-tcl4.png  "geometries")
 
 **Figure 1: Geometries of Flight, Conformance and Protected**
 
