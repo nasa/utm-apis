@@ -5,7 +5,7 @@
 If an active operation violates its conformance geography, that operation is transitioned to the nonconforming state, and it could eventually be transitioned to
 the rogue state.
 
-NUSS defines additional regions around the flight volumes called conformance and protected volumes. The protected volume is used to strategically deconflict operations from each other as well as from airspace constraints.  
+NUSS defines additional regions around the flight volumes called conformance and protected volumes. The protected volume is used to strategically deconflict operations from each other as well as from airspace constraints.
 
 Since the USS-API OperationVolume model defines validation requirements, the converted model needs to be validated before the first USS-API data exchange.
 
@@ -70,11 +70,11 @@ Operator-API Operation States are shown in Figure 1.  Note that Non-conforming t
 Abbreviation | State
 ------------ | -------------
  P  | PROPOSED
- A  |  ACCEPTED   
+ A  |  ACCEPTED
  R  | REJECTED - terminal
  C   | CLOSED  - terminal
  X   | CANCELED  - terminal
- I   | READIED   
+ I   | READIED
  E   | EXPIRED  - terminal
  G   | ROGUECLOSED  - terminal
  B   | ABORTCLOSED - terminal
