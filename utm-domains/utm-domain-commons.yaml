@@ -24,6 +24,16 @@ info:
       are not documented, please submit an issue report on github.
   version: v4
   title: UTM models
+
+paths:
+  '/no-paths':
+    put:
+      responses:
+        '410':
+          description: >-
+            Gone. Not implemented. Will not be implemented. Path included for
+            proper use by automated tooling.
+
 definitions:
   timestamp:
     description: >-
@@ -308,7 +318,6 @@ definitions:
       - gufi
       - uas_registrations
       - uss_name
-      - uss_instance_id
       - faa_rule
       - state
       - contact
@@ -335,12 +344,24 @@ definitions:
         minLength: 1
         x-utm-data-accessibility: PUBLIC
         example: utmbeta.arc.nasa.gov
-      uss_instance_id:
-        description: Identity of the USS Instance hosting this operation.
+      discovery_reference:
+        description: >-
+          An identifier that supplies information about the USS from the
+          discovery perspecitve.  This field is currently vague due to research
+          on the appropriate discovery approach.  It will be tightened when
+          an operational system decides on the approach to discovery.
+
+          For Gridded USS Discovery, this should be an x,y,z string where
+          x and y are the coords of the grid and z is the zoom level.  For
+          example:  "110,117,10"
+
+          For FIMS Discovery, this should be the uss_instance_id which is a
+          UUID.
+
         type: string
-        format: uuid
+        minLength: 5
         maxLength: 36
-        minLength: 36
+        example: "110,117,10"
         x-utm-data-accessibility: PUBLIC
       submit_time:
         description: >-
@@ -444,15 +465,32 @@ definitions:
         $ref: '#/definitions/PersonOrOrganization'
         x-utm-data-accessibility: SAFETY
       state:
-        description: >
+        description: >-
           The current state of the operation.  Must be maintained by the USS.
           Some additional details in the USS Specification.
+          
+          0. PROPOSED
+            This operation is not yet ACCEPTED.  It may be awaiting information
+            from the operator, it may be in conflict with another ACCEPTED or
+            ACTIVATED operation and undergoing a negotiation process, or for
+            some other reason it is not yet able to be declared ACCEPTED.
           1. ACCEPTED
-            This operation has been deemed ACCEPTED by the supporting USS. This implies that the operation meets the requirements for operating in the airspace based on the type of operation submitted.
+            This operation has been deemed ACCEPTED by the supporting USS. This
+            implies that the operation meets the requirements for operating in
+            the airspace based on the type of operation submitted.
           2. ACTIVATED
-            This operation is active. The transition from ACCEPTED to ACTIVATED is not an announced transition. The transition is implied based on the submitted start time of the operation (i.e. the effective_time_begin of the first OperationVolume). Note that an ACTIVATED operation is not necessarily airborne, but is assumed to be "using" the OperationVolumes that it has announced.
+            This operation is active. The transition from ACCEPTED to ACTIVATED
+            is not an announced transition. The transition is implied based on
+            the submitted start time of the operation (i.e. the
+            effective_time_begin of the first OperationVolume). Note that an
+            ACTIVATED operation is not necessarily airborne, but is assumed
+            to be "using" the OperationVolumes that it has announced.
           3. CLOSED
-            This operation is closed. It is not airborne and will not become airborne again. If the UAS and the crew will fly again, it would need to be as a new operation. A USS may announce the closure of any operation, but is not required to announce unless the operation was ROGUE or NONCONFORMING.
+            This operation is closed. It is not airborne and will not become
+            airborne again. If the UAS and the crew will fly again, it would
+            need to be as a new operation. A USS may announce the closure of any
+            operation, but is not required to announce unless the operation was
+            ROGUE or NONCONFORMING.
           4. NONCONFORMING
             See USS Specification for requirements to transition to this state.
           5. ROGUE
@@ -460,10 +498,11 @@ definitions:
 
           If ordering of states is required for any purpose, they shall be
           ordered as follows:
-            ACCEPTED < ACTIVATED < CLOSED < NONCONFORMING < ROGUE
+            PROPOSED < ACCEPTED < ACTIVATED < CLOSED < NONCONFORMING < ROGUE
 
         type: string
         enum:
+          - PROPOSED
           - ACCEPTED
           - ACTIVATED
           - CLOSED
@@ -471,10 +510,10 @@ definitions:
           - ROGUE
         x-utm-data-accessibility: OPERATIONAL
       controller_location:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
         x-utm-data-accessibility: SAFETY
       gcs_location:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
         x-utm-data-accessibility: SAFETY
       contingency_plans:
         description: >-
@@ -567,7 +606,7 @@ definitions:
         x-utm-data-accessibility: OPERATIONAL
       metadata:
         $ref: >-
-          https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-metadata.yaml#/definitions/EventMetadata
+          https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-metadata.yaml#/definitions/EventMetadata
         x-utm-data-accessibility: OPERATIONAL
   PriorityElements:
     description: >-
@@ -591,14 +630,30 @@ definitions:
         type: string
         description: >-
           If a PUBLIC_SAFETY operation is PUT to any endpoint, the correct
-          scope will be required. Any USS may PUT an INFLIGHT_EMERGENCY with
-          non-priority scopes.  NONE should only be used to indicate that an
+          scope will be required.
+
+          Any USS may PUT an EMERGENCY_* with non-priority scopes.
+
+          EMERGENCY_AIRBORNE_IMPACT should be used when there is significant risk
+          to other aircraft, but little risk to any people or property on the
+          ground.
+
+          EMERGENCY_GROUND_IMPACT should be used when there is significant risk
+          to people and/or property on the ground, but little risk of airborne
+          collision.
+
+          EMERGENCY_AIR_AND_GROUND_IMPACT should be used when there is significant
+          risk to aircraft AND people/property on the ground.
+
+          NONE should only be used to indicate that an
           operation that previously had a priority status now has no priority
           status.
         enum:
           - NONE
           - PUBLIC_SAFETY
-          - INFLIGHT_EMERGENCY
+          - EMERGENCY_AIRBORNE_IMPACT
+          - EMERGENCY_GROUND_IMPACT
+          - EMERGENCY_AIR_AND_GROUND_IMPACT
   OperationVolume:
     type: object
     required:
@@ -693,7 +748,7 @@ definitions:
 
         $ref: '#/definitions/Altitude'
       operation_geography:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       beyond_visual_line_of_sight:
         description: >-
           Describes whether any portion of the operation volume is beyond the
@@ -703,8 +758,12 @@ definitions:
     type: object
     required:
       - contingency_id
+      - contingency_polygon
+      - contingency_location_description
       - contingency_cause
       - contingency_response
+      - valid_time_begin
+      - valid_time_end
     properties:
       contingency_id:
         description: >-
@@ -769,36 +828,49 @@ definitions:
             - LOST_USS
             - OTHER
             - ANY
+          example: "LOW_FUEL"
       contingency_response:
-        description: |-
+        description: >-
           The type of contingency response.
           1. LANDING
-            The operation will be landing by targeting the contingency_point.
+            The operation will be landing by targeting the contingency_polygon.
           2. LOITERING
-            The operation will loiter at the contingency_point at the specified altitude with the noted loiter_radius_ft.
+            The operation will loiter at the contingency_polygon at the specified
+            loiter_altitude.
           3. RETURN_TO_BASE
-            The operation will return to base as specified by the contingency_point. The USS may issue an update to the operation plan to support this maneuver.
+            The operation will return to base as specified by the
+            contingency_polygon. The USS may issue an update to the operation plan
+            to support this maneuver.
           4. OTHER
-            Additional details should be provided in free_text. If this gets used often for similar events, API will be updated with new enum value.
+            Additional details should be provided in free_text. If this gets
+            used often for similar events, API will be updated with new enum
+            value.
         type: string
         enum:
           - LANDING
           - LOITERING
           - RETURN_TO_BASE
-      contingency_point:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+          - OTHER
+        example: "LANDING"
+      contingency_polygon:
+        description: >-
+          If LANDING or RETURN_TO_BASE contingency_repsonse, then this is the
+          area on the ground that the UA will be targeting for a landing.  The
+          polygon should be large enough to provide high confidence (for some
+          TBD value of "high") that the vehicle will land within it, but
+          hopefully be no larger (for some TBD value of hopefully).
+
+          If LOITERING, this is the polygon the UA will stay within at the
+          loiter_altitude.
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       loiter_altitude:
         description: >-
           The altitude for this contingency. Relevant and required for the
           LOITERING contingency_type, ignored for all other types.
+
+          Note: may need to split this into a min_loiter_altitude and a
+          max_loiter_altitide in the future to provide a full 4D loiter volume.
         $ref: '#/definitions/Altitude'
-      loiter_radius_ft:
-        description: >-
-          The radius of airspace used in loitering for this contingency.
-          Relevant and required for the LOITERING contingency_type, ignored for
-          all other types. Using feet as units.
-        type: number
-        format: double
       relative_preference:
         description: >-
           Optional numerical value that can be used in ranking the preference of
@@ -813,10 +885,26 @@ definitions:
         type: number
         format: double
         minimum: 0
+        example: 2
       contingency_location_description:
-        description: Optional description of the contingency location.
+        description: >-
+          Description of the contingency location.
+
+          PREPROGRAMMED: location that is determined prior to launch and
+            programmed onto the UA
+          OPERATOR_UPDATED: location that is (or will be) updated during
+            operation by operator (e.g., sent to UA)
+          UA_IDENTIFIED: location that is identified to be safe to land by
+            the UA itself
+          OTHER: location does not fit any of the defined categories
+
         type: string
-        maxLength: 1000
+        enum:
+          - PREPROGRAMMED
+          - OPERATOR_UPDATED
+          - UA_IDENTIFIED
+          - OTHER
+        example: "PREPROGRAMMED"
       relevant_operation_volumes:
         description: >-
           In the planning stage of an operation, this array may be populated
@@ -878,7 +966,6 @@ definitions:
       - track_ground_speed
       - track_ground_speed_units
       - uss_name
-      - uss_instance_id
       - vdop_gps
     properties:
       altitude_gps:
@@ -929,7 +1016,7 @@ definitions:
         minimum: 0
         x-utm-data-accessibility: SAFETY
       location:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
         x-utm-data-accessibility: PUBLIC
       time_measured:
         description: >-
@@ -1049,17 +1136,25 @@ definitions:
         minLength: 1
         maxLength: 250
         x-utm-data-accessibility: OPERATIONAL
-      uss_instance_id:
+      discovery_reference:
         description: >-
-          A USS instance_id value for the USS instance managing this operation.
-          UUIDv4.
+          An identifier that supplies information about the USS from the
+          discovery perspecitve.  This field is currently vague due to research
+          on the appropriate discovery approach.  It will be tightened when
+          an operational system decides on the approach to discovery.
+
+          For Gridded USS Discovery, this should be an x,y,z string where
+          x and y are the coords of the grid and z is the zoom level.  For
+          example:  "110,117,10"
+
+          For FIMS Discovery, this should be the uss_instance_id which is a
+          UUID.
+
         type: string
-        format: uuid
+        minLength: 5
         maxLength: 36
-        minLength: 36
+        example: "110,117,10"
         x-utm-data-accessibility: OPERATIONAL
-        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
-        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       vdop_gps:
         type: number
         format: double
@@ -1095,7 +1190,6 @@ definitions:
       - message_id
       - origin
       - originator_id
-      - originator_uss_instance_id
       - time_sent
       - severity
       - message_type
@@ -1132,16 +1226,24 @@ definitions:
         exclusiveMinimum: false
         maxLength: 250
         exclusiveMaximum: false
-      originator_uss_instance_id:
+      discovery_reference:
         description: >-
-          A USS instance_id value of the originator of this message.  This aids
-          with certain requests such as position report requests.  UUIDv4.
+          An identifier that supplies information about the USS from the
+          discovery perspecitve.  This field is currently vague due to research
+          on the appropriate discovery approach.  It will be tightened when
+          an operational system decides on the approach to discovery.
+
+          For Gridded USS Discovery, this should be an x,y,z string where
+          x and y are the coords of the grid and z is the zoom level.  For
+          example:  "110,117,10"
+
+          For FIMS Discovery, this should be the uss_instance_id which is a
+          UUID.
+
         type: string
-        format: uuid
+        minLength: 5
         maxLength: 36
-        minLength: 36
-        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
-        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+        example: "110,117,10"
       gufi:
         description: The GUFI for the operation referenced in this message.  UUIDv4.
         type: string
@@ -1188,9 +1290,9 @@ definitions:
           10. PERIODIC_POSITION_REPORTS_END
             The requestor wants previously requested position reports to end. If this message is received without a corresponding PERIODIC_POSITION_REPORTS_START, the message response is TBD (200, 400, 401, 404, etc.). Must be sent with severity NOTICE.
           11. UNAUTHORIZED_AIRSPACE_PROXIMITY
-            An operation is within 3038 feet (almost 0.5nmi) from the boundary of unauthorized airspace (e.g., Dynamic Restriction/TFR, controlled airspace, airspace constraint)
+            An operation is within 3038 feet (almost 0.5nmi) from the boundary of unauthorized airspace (e.g., UVR/TFR, controlled airspace, airspace constraint)
           12. UNAUTHORIZED_AIRSPACE_ENTRY
-            An operation has breached the boundary and entered into unauthorized airspace (e.g., Dynamic Restriction/TFR, controlled airspace, airspace constraint)
+            An operation has breached the boundary and entered into unauthorized airspace (e.g., UVR/TFR, controlled airspace, airspace constraint)
           13. OTHER_SEE_FREE_TEXT
             Messages that do not fit any of the otherwise defined categories. Should be used sparingly or with additional out-of-band description.
         type: string
@@ -1251,15 +1353,16 @@ definitions:
       message_type: "OPERATION_CLOSED"
       gufi: "00000000-0000-4444-8888-FEEDDEADBEEF"
       free_text: "Cool flight, bro"
-
-  ConstraintMessage:
+  UASVolumeReservation:
     description: >-
       An element defined by spatial and temporal bounds that affects UAS
       operations by limiting access to that 4D bounded volume.
+
+      Formerly "ConstraintMessage".
     required:
       - message_id
-      - type
-      - constraint_geography
+      - cause
+      - geography
       - min_altitude
       - max_altitude
       - effective_time_begin
@@ -1292,27 +1395,32 @@ definitions:
         exclusiveMinimum: false
         maxLength: 250
         exclusiveMaximum: false
-      originator_uss_instance_id:
-        description: A USS instance_id value of the originator of this message.
+      type:
+        description: >-
+          The type of UVR.  It is expected this list will grow as use cases are
+          identified and cataloged.
+
+          Currently there is only a differentiation between a dynamic restriction
+          and a static advisory.  There is no official guidance on the difference
+          as of today.  Roughly, the assumption is that static advisories would
+          have a longer lead time and/or longer duration than a dynamic restriction.
         type: string
-        format: uuid
-        maxLength: 36
-        minLength: 36
-        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
-        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+        enum:
+          - DYNAMIC_RESTRICTION
+          - STATIC_ADVISORY
       permitted_uas:
         description: >-
           The types of UAS operations that are permitted within the bound of
-          the constraint. When used in conjunction with permitted_gufis, the
+          the UVR. When used in conjunction with permitted_gufis, the
           filters are an 'OR' relationship. Any operation that matches either
-          filter is allowed within the bounds of the constraint.  This list of
+          filter is allowed within the bounds of the UVR.  This list of
           permitted_uas types is not to be considered a final version.  It is
           provided to initiate discussion of how the filter should be defined.
         type: array
         items:
           type: string
           enum:
-            - NONE
+            - NOT_SET
             - PUBLIC_SAFETY
             - SECURITY
             - NEWS_GATHERING
@@ -1321,16 +1429,13 @@ definitions:
             - PART_101E
             - PART_107X
             - RADIO_LINE_OF_SIGHT
-        default:
-          - NONE
-        example:
-          - NONE
+        minItems: 1
       permitted_gufis:
         description: >-
           The specific UAS operations that are permitted within the counds of
-          the constraint.  When used in conjunction with permitted_uas, the
+          the UVR.  When used in conjunction with permitted_uas, the
           filters are an 'OR' relationship. Any operation that matches either
-          filter is allowed within the bounds of the constraint.  The protocol
+          filter is allowed within the bounds of the UVR.  The protocol
           for adding the appropriate GUFIs to this array needs to be discussed.
           This may be a chicken/egg problem that will have to be worked through.
         type: array
@@ -1345,7 +1450,7 @@ definitions:
         maxItems: 100
         example:
           - '00000000-0000-4444-8888-FEEDDEADFFFF'
-      type:
+      cause:
         type: string
         enum:
           - WEATHER
@@ -1354,11 +1459,11 @@ definitions:
           - SAFETY
           - MUNICIPALITY
           - OTHER
-      constraint_geography:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
+      geography:
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       effective_time_begin:
         description: >-
-          The time that the constraint will begin to be in effect.
+          The time that the UVR will begin to be in effect.
         type: string
         format: date-time
         minLength: 24
@@ -1368,7 +1473,7 @@ definitions:
         example: '2015-08-20T14:11:56.118Z'
       effective_time_end:
         description: >-
-          The time that the constraint will cease to be in effect.
+          The time that the UVR will cease to be in effect.
         type: string
         format: date-time
         minLength: 24
@@ -1379,7 +1484,7 @@ definitions:
       actual_time_end:
         description: >-
           Time that the constaint actually ceased being in effect. This
-          value is likely used when a constraint ends early, but is not
+          value is likely used when a UVR ends early, but is not
           required.
         type: string
         format: date-time
@@ -1390,25 +1495,25 @@ definitions:
         example: '2015-08-20T14:11:56.118Z'
       min_altitude:
         description: >-
-          The minimum altitude of the constraint. altitude_value MUST be less than
+          The minimum altitude of the UVR. altitude_value MUST be less than
           max_altitude.altitude_value.
         $ref: '#/definitions/Altitude'
       max_altitude:
         description: >-
-          The maximum altitude of the constraint. altitude_value MUST be greater than
+          The maximum altitude of the UVR. altitude_value MUST be greater than
           min_altitude.altitude_value.
         $ref: '#/definitions/Altitude'
       reason:
-        description: The reason for the constraint. Meant for human consumption.
+        description: The reason for the UVR. Meant for human consumption.
         type: string
         maxLength: 1000
     example:
       message_id: '00000000-0000-4444-8888-600DCAFEF00D'
       origin: USS
       originator_id: "uss.provider321.com"
-      originator_uss_instance_id: '00000000-0000-4444-8888-FEEDDEADFFFF'
-      type: SAFETY
-      constraint_geography:
+      type: DYNAMIC_RESTRICTION
+      cause: SAFETY
+      geography:
         type: Polygon
         coordinates:
           - - - -122.062176579
@@ -1422,32 +1527,154 @@ definitions:
       effective_time_begin: '2016-11-29T01:16:41.727Z'
       effective_time_end: '2016-11-30T01:16:41.727Z'
       permitted_uas:
-        - NONE
+        - NOT_SET
       permitted_gufis:
         - '00000000-0000-4444-8888-FEEDDEADFFFF'
       actual_time_end: '2016-11-30T01:15:41.727Z'
       min_altitude:
-        altitude_value: 0
+        altitude_value: 2300
         vertical_reference: "W84"
         units_of_measure: "FT"
       max_altitude:
-        altitude_value: 400
+        altitude_value: 2700
         vertical_reference: "W84"
         units_of_measure: "FT"
       reason: A UA leaving defined volume
-  NegotiationMessage:
+  NegotiationAgreement:
     required:
       - message_id
-      - origin_uss_name
+      - negotiation_id
+      - uss_name_of_originator
+      - uss_name_of_receiver
+      - gufi_originator
+      - gufi_receiver
+      - type
     properties:
       message_id:
+        description: >-
+          An identifier unique to this particular message.
         type: string
         format: uuid
         maxLength: 36
         minLength: 36
         pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
         example: "00000000-0000-4444-8888-FEEDDEADBEEF"
-      origin_uss_name:
+      negotiation_id:
+        description: >-
+          An identifier held constant across multiple message_ids.  This value
+          represents a single negotiation between two USSs for two specific
+          operations.  Will be same value as used in NegotiationMessage for this
+          particular negotiation between these operations.
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+      uss_name_of_originator:
+        description: >-
+          Name of the USS originating the negotation. MUST be the
+          uss_name as known by the authorization server.
+          The maximum and minimum character length is based on a usable domain
+          name, and considering the maximum in RFC-1035.
+        type: string
+        minLength: 1
+        maxLength: 250
+      uss_name_of_receiver:
+        description: >-
+          Name of the USS receiving the original negotiation request. MUST be the
+          uss_name as known by the authorization server.
+          The maximum and minimum character length is based on a usable domain
+          name, and considering the maximum in RFC-1035.
+        type: string
+        minLength: 1
+        maxLength: 250
+      gufi_originator:
+        description: >-
+          The GUFI of the relevant operation of the originating USS. Note that
+          the origin and receiver roles are strictly dependent on which USS is
+          generating this message. May be empty in the case of ATC communication
+          to USS via FIMS.
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+      gufi_receiver:
+        description: >
+          The GUFI of the relevant operation of the receiving USS. Note that
+          the origin and receiver roles are strictly dependent on which USS is
+          generating this message. May be empty in the case of ATC communication
+          to USS via FIMS.
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+      free_text:
+        type: string
+        maxLength: 1000
+      discovery_reference:
+        description: >-
+          An identifier that supplies information about the USS from the
+          discovery perspecitve.  This field is currently vague due to research
+          on the appropriate discovery approach.  It will be tightened when
+          an operational system decides on the approach to discovery.
+
+          For Gridded USS Discovery, this should be an x,y,z string where
+          x and y are the coords of the grid and z is the zoom level.  For
+          example:  "110,117,10"
+
+          For FIMS Discovery, this should be the uss_instance_id which is a
+          UUID.
+
+        type: string
+        minLength: 5
+        maxLength: 36
+        example: "110,117,10"
+      type:
+        description: >-
+          The type of negotation result.
+
+          INTERSECTION: both USSs agreed to intersect their operation plans.
+          REPLAN: both USSs agreed on replan of receiving operation.  In this
+            case there would be no planned intersection of these operations.
+        type: string
+        enum:
+          - INTERSECTION
+          - REPLAN
+        example: "INTERSECTION"
+
+  NegotiationMessage:
+    required:
+      - message_id
+      - negotiation_id
+      - uss_name_of_originator
+      - type
+      - gufi_of_originator
+      - gufi_of_receiver
+    properties:
+      message_id:
+         type: string
+         format: uuid
+         maxLength: 36
+         minLength: 36
+         pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+         example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+      negotiation_id:
+        description: >-
+          An identifier held constant across multiple message_ids.  This value
+          represents a single negotiation between two USSs for two specific
+          operations.
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+      uss_name_of_originator:
         description: >-
           A name identifying the originator of this message. MUST be the
           uss_name as known by the authorization server. The maximum and minimum
@@ -1456,18 +1683,65 @@ definitions:
         type: string
         minLength: 4
         maxLength: 250
-      originator_uss_instance_id:
-        description: A USS instance_id value of the originator of this message.
-        type: string
-        format: uuid
-        maxLength: 36
-        minLength: 36
-        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
-        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       type:
         description: >-
-          Placeholder for now.  Likely will be an enum.
+          The type of negotiation message.  Currently just requesting another
+          USS replan an operation, or request that a USS allow an intersection
+          of operations.  In addition, add ability to cancel previous agreed
+          negotiation.
         type: string
+        enum:
+          - REPLAN_REQUESTED
+          - REPLAN_CANCELLED
+          - INTERSECTION_REQUESTED
+          - INTERSECTION_CANCELLED
+      replan_suggestion:
+        description: >-
+          When 'type' is REPLAN_REQUESTED, the originating USS may supply a
+          suggestion as to how the receiving USS might alter the plan under
+          its management to minimize the conflict.
+
+          This field is optional in all cases.  It should not be sent with any
+          message that does not contain type = REPLAN_REQUESTED.
+
+          The suggestion is truly a suggestion.  The receiving USS may solve
+          (or not solve) a conflict in any manner it deems appropriate.
+        type: string
+        enum:
+          - ALTITUDE_CHANGE
+          - DEPART_LATER
+          - LAND_EARLIER
+          - HORIZONTAL_CHANGE
+      v2v_for_originator:
+        description: >-
+          A boolean field indicating whether the vehicle supported by the
+          originating USS will be using the approved vehicle-to-vehicle
+          communication approach.
+
+          Required when the negotiation results in any intersection of
+          operation plans between the two operations in the negotiation.
+
+          This assumes that there is only one approved V2V approach in the
+          future operational system.  If this is not the case, this field
+          could need to be more explicit to ensure certainty that the two
+          vehicles will be able to communicate while in flight.
+        type: boolean
+        default: false
+      v2v_for_receiver:
+        description: >-
+          A boolean field indicating whether the vehicle supported by the
+          receiving USS will be using the approved vehicle-to-vehicle
+          communication approach.
+
+          Required when the negotiation results in any intersection of
+          operation plans between the two operations in the negotiation.
+
+          This assumes that there is only one approved V2V approach in the
+          future operational system.  If this is not the case, this field
+          could need to be more explicit to ensure certainty that the two
+          vehicles will be able to communicate while in flight.
+        type: boolean
+        default: false
       gufi_of_originator:
         description: >-
           The GUFI of the relevant operation of the originating USS. Note that
@@ -1481,32 +1755,35 @@ definitions:
         pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
         example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       gufi_of_receiver:
-        description: >
-          The GUFI of the relevant operation of the receiving USS. May be empty
-          in cases of communication with ATC via FIMS.
-        type: string
-        format: uuid
-        maxLength: 36
-        minLength: 36
-        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
-        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
-      reference_message_ids:
         description: >-
-          A set of UUIDs of any previous messages related to the same
-          negotiation process. This field must not be empty when sending a
-          message of type 'REPLAN_BEGINNING_AS_SECONDARY_OPERATION'.  This set
-          of ids need not be complete. The goal is to have at least one id that
-          can be used to link this message to the set of previous messages sent
-          and received. The USS should make this list as complete as possible to
-          aid the negotiation process.
-        type: array
-        items:
+          The GUFI of the relevant operation of the receiving USS. Note that
+          the origin and receiver roles are strictly dependent on which USS is
+          generating this message. May be empty in the case of ATC communication
+          to USS via FIMS.
         type: string
         format: uuid
         maxLength: 36
         minLength: 36
         pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
         example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+      discovery_reference:
+        description: >-
+          An identifier that supplies information about the USS from the
+          discovery perspective.  This field is currently vague due to research
+          on the appropriate discovery approach.  It will be tightened when
+          an operational system decides on the approach to discovery.
+
+          For Gridded USS Discovery, this should be an x,y,z string where
+          x and y are the coords of the grid and z is the zoom level.  For
+          example:  "110,117,10"
+
+          For FIMS Discovery, this should be the uss_instance_id which is a
+          UUID.
+
+        type: string
+        minLength: 5
+        maxLength: 36
+        example: "110,117,10"
       free_text:
         type: string
         maxLength: 1000
@@ -1609,7 +1886,7 @@ definitions:
         pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
         example: '2015-08-20T14:11:56.118Z'
       coverage_area:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       time_last_modified:
         description: >-
           The last time there was an update to the data regarding this USS
@@ -1841,16 +2118,3 @@ parameters:
     type: integer
     default: 0
     format: int32
-pathitems:
-  getVersion:
-    get:
-      summary: API version and other data. Can be used to test whether server is up.
-      tags:
-        - A. Required Endpoints
-      security:
-        - security: []
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/Version'

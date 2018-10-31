@@ -55,7 +55,7 @@ paths:
         '501':
           description: Not Implemented
           schema:
-            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse'
   /token:
     post:
       tags:
@@ -104,41 +104,8 @@ paths:
       responses:
         '200':
           description: OK
-          # TODO update ref to correct object when we have it defined.
           schema:
             $ref: '#/definitions/TokenKeyResponse'
-
-  /introspect:
-    get:
-      tags:
-        - 'A. Required Endpoints'
-      summary: |
-        Check a token.This is the RFC 7662 required endpoint which is not implemented yet. The current implementation is named /check_token.
-      consumes:
-        - application/x-www-form-urlencoded
-      produces:
-        - application/json
-      parameters:
-        - name: token
-          in: formData
-          type: string
-          format: jwt
-          required: true
-          description: >-
-            The string value of the token.  For access tokens, this is the "access_token" value returned from the token endpoint defined in OAuth 2.0 [RFC6749], Section 5.1.  For refresh tokens, this is the "refresh_token" value returned from the token endpoint as defined in OAuth 2.0 [RFC6749], Section 5.1.
-        - name: token_type_hint
-          in: formData
-          type: string
-          enum:
-          - access_token
-          - refresh_token
-          description: >-
-            A hint about the type of the token submitted for introspection.  The protected resource MAY pass this parameter to help the authorization server optimize the token lookup.  If the server is unable to locate the token using the given hint, it MUST extend its search across all of its supported token types.  An authorization server MAY ignore this parameter, particularly if it is able to detect the token type automatically.  Values for this field are defined in the "OAuth Token Type Hints" registry defined in OAuth Token Revocation [RFC7009].
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/IntrospectionResponse'
 
   /check_token:
     get:
@@ -148,10 +115,8 @@ paths:
       summary: |
         Current name for the RFC 7662 /introspect implementation.
       responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/IntrospectionResponse'
+        '410':
+          description: Gone. This endpoint is deprecated and will not be re-enabled.
 
   # Needs work.  See RFC 7009
   /revoke:
@@ -207,7 +172,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Version'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/Version'
 
 definitions:
   TokenResponse:
@@ -297,18 +262,6 @@ definitions:
         description: >-
           A key signed by the algorithm noted in 'alg' property.  The key is preceded by '-----BEGIN PUBLIC KEY-----\n' without the single quotes and appended with '\n-----END PUBLIC KEY-----' without the single quotes.
 
-
-  # From RFC 7662
-  IntrospectionResponse:
-    type: object
-    required:
-      - active
-    properties:
-      active:
-        type: boolean
-        description: >-
-          Boolean indicator of whether or not the presented token is currently active.  The specifics of a token's "active" state will vary depending on the implementation of the authorization server and the information it keeps about its tokens, but a "true" value return for the "active" property will generally indicate that a given token has been issued by this authorization server, has not been revoked by the resource owner, and is within its given time window of validity (e.g., after its issuance time and before its expiration time).  See Section 4 for information on implementation of such checks.
-
   JwtClaimsSet:
     type: object
     properties:
@@ -374,7 +327,7 @@ definitions:
       scopes_supported:
         type: array
         items:
-          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Version'
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/Version'
         description: >-
           JSON array containing a list of the OAuth 2.0 [RFC6749] "scope" values that this authorization server supports. Servers MAY choose not to advertise some supported scope values even when this parameter is used.
 # Currently no response types supported, return empty array

@@ -67,7 +67,7 @@ paths:
       description: >-
         Allow constraints to be submitted from authorized entities.
         For validation purposes:
-          {message_id} in path == ConstraintMessage.message_id of body data
+          {message_id} in path == UASVolumeReservation.message_id of body data
       security:
         - ussapi_security:
             - utm.nasa.gov_write.constraint
@@ -81,11 +81,11 @@ paths:
           description: PUT by message_id
         - in: body
           name: constraint_message
-          description: The ConstraintMessage being sent
+          description: The UASVolumeReservation being sent
           required: true
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/ConstraintMessage
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UASVolumeReservation
       responses:
         '204':
           description: Constraint data received. No content returned.
@@ -93,7 +93,7 @@ paths:
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           schema:
@@ -381,7 +381,7 @@ paths:
             A single point used to find all operations within some distance from
             that point. Returns all operations that have any operation_volumes
             that interesect the 2D circle defined by distance and
-            reference_point.  When distance it excluded and reference_point is
+            reference_point.  When distance is excluded and reference_point is
             included, use default value (300ft) for distance.
             Described as a GeoJSON position.  The value is equivalent to what
             would be seen in the "coordinates" field for a GeoJSON Point
@@ -460,6 +460,16 @@ paths:
               https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '403':
+          description: Forbidden. Do not retry with same access token. Reason not provided, but do you have the right scopes?
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '423':
+          description: The requested data are in a transition state. Please retry request.
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
