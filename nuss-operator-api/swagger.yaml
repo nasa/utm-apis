@@ -1887,7 +1887,7 @@ definitions:
         type: "string"
         enum:
         - "UNKWN"
-        - "LOST_COMM AND CONTROL"
+        - "LOST_COMM_AND_CONTROL"
         - "WEATHER"
         - "SECURITY"
         - "OPERATIONS"
