@@ -14,9 +14,9 @@ tags:
 - name: "Positions, Messages"
   description: "Manage flying operations"
 - name: "Geography Data Types"
-  description: "Geography representations"
+  description: "Geographies"
 - name: "Subscription Points"
-  description: "Subscribe to notifications and position reports"
+  description: "Subscribe to notifications"
 schemes:
 - "https"
 paths:
@@ -26,6 +26,7 @@ paths:
       tags:
       - "Positions, Messages"
       summary: "Get Operator Messages."
+      description: "One can specify ASC and DESC as follows: https://host.nasa.gov/nuss/operator/messages?sort=DESC"
       consumes:
       - "application/json"
       produces:
@@ -602,7 +603,7 @@ paths:
     get:
       tags:
       - "Subscription Points"
-      summary: "Receive events from a queue"
+      summary: "Subscribe to event queue"
       description: "Provides InformMessage data related to the specified operator's\
         \ operations. For example, after an operator POSTs an operation to the /operations\
         \  endpoint, that operator will receive InformMessage ACCEPTED or REJECTED.\
