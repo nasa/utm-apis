@@ -1342,6 +1342,7 @@ definitions:
       message_type: "OPERATION_CLOSED"
       gufi: "00000000-0000-4444-8888-FEEDDEADBEEF"
       free_text: "Cool flight, bro"
+
   UASVolumeReservation:
     description: >-
       An element defined by spatial and temporal bounds that affects UAS
@@ -1357,7 +1358,6 @@ definitions:
       - effective_time_begin
       - effective_time_end
       - permitted_uas
-      - permitted_gufis
     properties:
       message_id:
         $ref: '#/definitions/uuid'
@@ -1400,6 +1400,10 @@ definitions:
           filter is allowed within the bounds of the UVR.  This list of
           permitted_uas types is not to be considered a final version.  It is
           provided to initiate discussion of how the filter should be defined.
+
+          Duplicate strings not allowed in this array.
+
+          If NOT_SET is included, then no other strings allowed in the array.
         type: array
         items:
           type: string
@@ -1414,6 +1418,7 @@ definitions:
             - PART_107X
             - RADIO_LINE_OF_SIGHT
         minItems: 1
+        maxItems: 8
       permitted_gufis:
         description: >-
           The specific UAS operations that are permitted within the counds of
@@ -1425,11 +1430,13 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/uuid'
-        minItems: 0
+        minItems: 1
         maxItems: 100
         example:
           - '00000000-0000-4444-8888-FEEDDEADFFFF'
       cause:
+        description: >-
+          The cause for the UVR.
         type: string
         enum:
           - WEATHER
@@ -1443,12 +1450,16 @@ definitions:
       effective_time_begin:
         description: >-
           The time that the UVR will begin to be in effect.
+
+          Must satisfy effective_time_begin < effective_time_end.
         $ref: '#/definitions/timestamp'
         x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T14:11:56.118Z'
       effective_time_end:
         description: >-
           The time that the UVR will cease to be in effect.
+
+          Must satisfy effective_time_begin < effective_time_end.
         $ref: '#/definitions/timestamp'
         x-utm-data-accessibility: OPERATIONAL
         example: '2015-08-20T15:11:56.118Z'
@@ -1462,13 +1473,15 @@ definitions:
         example: '2015-08-20T14:31:56.118Z'
       min_altitude:
         description: >-
-          The minimum altitude of the UVR. altitude_value MUST be less than
-          max_altitude.altitude_value.
+          The minimum altitude of the UVR.
+
+          Must satisfy min_altitude.altitude_value < max_altitude.altitude_value.
         $ref: '#/definitions/Altitude'
       max_altitude:
         description: >-
-          The maximum altitude of the UVR. altitude_value MUST be greater than
-          min_altitude.altitude_value.
+          The maximum altitude of the UVR.
+
+          Must satisfy min_altitude.altitude_value < max_altitude.altitude_value.
         $ref: '#/definitions/Altitude'
       reason:
         description: The reason for the UVR. Meant for human consumption.
