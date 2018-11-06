@@ -468,7 +468,7 @@ definitions:
         description: >-
           The current state of the operation.  Must be maintained by the USS.
           Some additional details in the USS Specification.
-          
+
           0. PROPOSED
             This operation is not yet ACCEPTED.  It may be awaiting information
             from the operator, it may be in conflict with another ACCEPTED or
@@ -510,10 +510,10 @@ definitions:
           - ROGUE
         x-utm-data-accessibility: OPERATIONAL
       controller_location:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
         x-utm-data-accessibility: SAFETY
       gcs_location:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
         x-utm-data-accessibility: SAFETY
       contingency_plans:
         description: >-
@@ -606,7 +606,7 @@ definitions:
         x-utm-data-accessibility: OPERATIONAL
       metadata:
         $ref: >-
-          https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-metadata.yaml#/definitions/EventMetadata
+          https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-metadata.yaml#/definitions/EventMetadata
         x-utm-data-accessibility: OPERATIONAL
   PriorityElements:
     description: >-
@@ -748,7 +748,7 @@ definitions:
 
         $ref: '#/definitions/Altitude'
       operation_geography:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       beyond_visual_line_of_sight:
         description: >-
           Describes whether any portion of the operation volume is beyond the
@@ -862,7 +862,7 @@ definitions:
 
           If LOITERING, this is the polygon the UA will stay within at the
           loiter_altitude.
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       loiter_altitude:
         description: >-
           The altitude for this contingency. Relevant and required for the
@@ -1016,7 +1016,7 @@ definitions:
         minimum: 0
         x-utm-data-accessibility: SAFETY
       location:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
         x-utm-data-accessibility: PUBLIC
       time_measured:
         description: >-
@@ -1460,7 +1460,7 @@ definitions:
           - MUNICIPALITY
           - OTHER
       geography:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       effective_time_begin:
         description: >-
           The time that the UVR will begin to be in effect.
@@ -1886,7 +1886,7 @@ definitions:
         pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
         example: '2015-08-20T14:11:56.118Z'
       coverage_area:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       time_last_modified:
         description: >-
           The last time there was an update to the data regarding this USS
