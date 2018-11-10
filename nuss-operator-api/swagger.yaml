@@ -26,7 +26,9 @@ paths:
       tags:
       - "Positions, Messages"
       summary: "Get Operator Messages."
-      description: "One can specify ASC and DESC as follows: https://host.nasa.gov/nuss/operator/messages?sort=DESC"
+      description: "You can specify ASC and DESC as follows: https://host.nasa.gov/nuss/operator/messages?sort=DESC
+        You can also specify LIMIT and OFFSET.
+        "
       consumes:
       - "application/json"
       produces:
@@ -242,7 +244,6 @@ paths:
       tags:
       - "Operations"
       summary: "add a flight"
-      operationId: "addOperationUsingPOST"
       consumes:
       - "application/json"
       produces:
@@ -297,7 +298,6 @@ paths:
       tags:
       - "Operations"
       summary: "modify a flight"
-      operationId: "modifyOperationUsingPUT"
       consumes:
       - "application/json"
       produces:
@@ -331,22 +331,15 @@ paths:
     get:
       tags:
       - "Positions, Messages"
-      summary: "get Positions"
+      summary: "GET Positions"
+      description: "You can specify ASC and DESC as follows: https://host.nasa.gov/nuss/operator/positions?sort=DESC
+        You can also specify LIMIT and OFFSET.
+        "
       consumes:
       - "application/json"
       produces:
       - "application/json"
       parameters:
-      - name: "fields"
-        in: "query"
-        description: "fields"
-        required: false
-        type: "string"
-      - name: "q"
-        in: "query"
-        description: "q"
-        required: false
-        type: "string"
       - name: "sort"
         in: "query"
         description: "sort"
@@ -367,7 +360,7 @@ paths:
         format: "int32"
       responses:
         200:
-          description: "returns positions.  The return list can be large so use LIMIT\
+          description: "returns empty list if no positions are found.  The return list can be large so use LIMIT\
             \ and OFFSET."
           schema:
             type: "array"
@@ -377,13 +370,10 @@ paths:
           description: "Unauthorized"
         403:
           description: "Forbidden"
-        404:
-          description: "Not Found"
     post:
       tags:
       - "Positions, Messages"
       summary: "addPosition"
-      operationId: "addPositionUsingPOST"
       consumes:
       - "application/json"
       produces:
@@ -411,7 +401,6 @@ paths:
       tags:
       - "Positions, Messages"
       summary: "getPositionsForGufi"
-      operationId: "getPositionsForGufiUsingGET"
       consumes:
       - "application/json"
       produces:
@@ -467,7 +456,6 @@ paths:
       - "Message Data Types"
       summary: "Alert Message"
       description: "Alerts to clients and UTM Managers"
-      operationId: "alertMsgUsingGET"
       consumes:
       - "application/json"
       produces:
@@ -490,7 +478,6 @@ paths:
       - "Message Data Types"
       summary: "Free Message"
       description: "free text"
-      operationId: "freeMsgUsingGET"
       consumes:
       - "application/json"
       produces:
@@ -537,7 +524,6 @@ paths:
       - "Message Data Types"
       summary: "Intent Message"
       description: "Your Intent generates a UTM Inform"
-      operationId: "intentMsgUsingGET"
       consumes:
       - "application/json"
       produces:
