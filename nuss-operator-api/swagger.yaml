@@ -3,6 +3,9 @@ swagger: "2.0"
 info:
   version: "v4"
   title: "NUSS UAS Operator API"
+  description: "For GETTERs with query parameters, the parameter names must be lower case.  String parmeter values are case insensitive.
+
+    (todo) GET-list APIs return an empty list if nothing is found.  GET-single API will return 404 if the item is not found."
 host: "some.host"
 basePath: "/operator"
 tags:
@@ -26,8 +29,8 @@ paths:
       tags:
       - "Positions, Messages"
       summary: "Get Operator Messages."
-      description: "You can specify ASC and DESC as follows: https://host.nasa.gov/nuss/operator/messages?sort=DESC
-        You can also specify LIMIT and OFFSET.
+      description: "You can specify ASC and DESC (or asc/desc) as follows: https://host.nasa.gov/nuss/operator/messages?sort=DESC
+        You can also specify limit and offset.
         "
       consumes:
       - "application/json"
@@ -52,6 +55,22 @@ paths:
         required: false
         type: "integer"
         format: "int32"
+      - name: "sent_time_before"
+        in: "query"
+        description: "Returns Message with sent_time before or equal to the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "sent_time_after"
+        in: "query"
+        description: "Returns Messages with sent_time after or equal to the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
       responses:
         200:
           description: "OK"
@@ -135,7 +154,7 @@ paths:
     get:
       tags:
       - "Operations"
-      summary: "view flights"
+      summary: "GET operation list with query"
       consumes:
       - "application/json"
       produces:
@@ -143,7 +162,11 @@ paths:
       parameters:
       - name: "state"
         in: "query"
-        description: "Returns Operations with and OR list given states. Eg. state=A,V
+        description: "You can specify ASC and DESC (or asc/desc) as follows: https://host.nasa.gov/nuss/operator/messages?sort=DESC
+
+          You can also specify limit and offset.
+
+          Returns Operations with an OR list given states. Eg. state=A,V
            returns operations in A or V states. Cannot use with state_not_eq."
         required: false
         type: array
@@ -243,7 +266,7 @@ paths:
     post:
       tags:
       - "Operations"
-      summary: "add a flight"
+      summary: "add an operation"
       consumes:
       - "application/json"
       produces:
@@ -270,8 +293,7 @@ paths:
     get:
       tags:
       - "Operations"
-      summary: "view specific flight"
-      description: "Your flight ID is the guGUFIfi"
+      summary: "view operation by GUFI"
       consumes:
       - "application/json"
       produces:
@@ -297,7 +319,7 @@ paths:
     put:
       tags:
       - "Operations"
-      summary: "modify a flight"
+      summary: "modify an operation"
       consumes:
       - "application/json"
       produces:
@@ -332,8 +354,8 @@ paths:
       tags:
       - "Positions, Messages"
       summary: "GET Positions"
-      description: "You can specify ASC and DESC as follows: https://host.nasa.gov/nuss/operator/positions?sort=DESC
-        You can also specify LIMIT and OFFSET.
+      description: "You can specify ASC and DESC (or asc/desc) as follows: https://host.nasa.gov/nuss/operator/positions?sort=DESC
+        You can also specify limit and offset.
         "
       consumes:
       - "application/json"
@@ -360,8 +382,8 @@ paths:
         format: "int32"
       responses:
         200:
-          description: "returns empty list if no positions are found.  The return list can be large so use LIMIT\
-            \ and OFFSET."
+          description: "returns empty list if no positions are found.  The return list can be large so use limit\
+            \ and offset."
           schema:
             type: "array"
             items:
@@ -860,8 +882,7 @@ definitions:
           \ time of the last operation volume."
       extra_contact_info:
         type: "string"
-        description: "Any additional contact information that may be useful (hours\
-          \ of availability, fax number, communication limitations, etc.)."
+        description: "Any additional contact information."
       flight_comments:
         type: "string"
         description: "Informative text about the operation. Not used by the UTM System."
