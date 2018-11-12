@@ -1,20 +1,24 @@
 # UTM APIs
 
-This repository contains the collection of OpenAPI specification APIs within the NASA's research version of the UTM System.  Many of UTM's data models are common and these are maintained using Swagger's "Domain" references.
+This repository contains the collection of OpenAPI specification APIs for the UTM research platform.
 
 ## References
 
 - [UTM Home Page](https://utm.arc.nasa.gov/)
 - [UTM Publications](https://utm.arc.nasa.gov/documents.shtml)
 - [UTM Swaggerhub](https://app.swaggerhub.com/organizations/utm)
+- [TCL4 production Authz Server](https://utmalpha.arc.nasa.gov/fimsAuthServer/api)
 
 
-## Sandbox and RELEASE branch
+##  Server and API versions
 
-utm-apis commits pinned to our Sandbox are represented in the RELEASE branch, and the master branch is our development branch.  You will generally find the master branch to be ahead of the Sandbox.  The tags in RELEASE correspond with our sandbox releases.
+UTM server versions are returned by the 'api' endpoint.  For example the TCL4 production Authz Server ['apis' endpoint](https://utmalpha.arc.nasa.gov/fimsAuthServer/api) will show the server version is 'v18.08.02'.  This endpoint also returns a list of implemented APIs.
 
-For codegen you generally will point to RELEASE.  
+API versions are defined by a utm-apis repo commit ID corresponding to either the tip of a branch or a tag.
 
+For swagger-codegen, the branch/tag strategy is specified elsewhere, likely slack.  Possible TCL4 branch/tag strategies are:
+* codegen from tip of the development branch 'v4-draft'
+* codegen from a tag  (which is likely on the v4-draft branch)
 
 ## Viewing Local Swagger Spec files
 
@@ -31,28 +35,23 @@ You have choices to edit/view local swagger files. IMO option 1 is better for vi
 
 ## Codegen
 
-You can generate code from OpenAPI Specifications (swagger).  
+You can generate code from OpenAPI Specifications (swagger).
 
-Swagger Hub has a feature where the site will generate code into a zip file which is downloaded.  This is a great first checkout, however, it uses the default language-specific configurations.
+Swagger Hub has a feature where the site will generate code into a zip file which is downloaded.  This is a great first glance, however, it uses the default language-specific configurations.
 
-One option (which we use) is to generate all the data models into a library.
-Note that codegen parses only from API Specifications, not directly from Swagger Domains.  
-An approach to creating a model-only library is to codegen against all the APIs whereby the generation
-output is filtered for model-only.
-The argument to the input spec can be a local file or internet
+We generate all the data models into a library.  The swagger-codegen triggers through API Spec files, not directly from Swagger Domain files. Thus to create a model-only library we codegen against all the API specs whereby the generation
+output is filtered for model-only. The argument to the input spec can be a local file or internet
 
 ````````
 GENERATE="java  -Dmodels -DmodelDocs=false -DapiDocs=false -jar $CODEGEN generate  -l spring --config config.json"
 
 $GENERATE -i ${SWREPO}/fims-uss-api/swagger.yaml   #localfile input
 or
-$GENERATE -i https://raw.githubusercontent.com/nasa/utm-apis/master/uss-api/swagger.yaml
+$GENERATE -i https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/uss-api/swagger.yaml
 
 ````````
 
-Your language-specific configurations can also generate model-specific data validations.
-For example using swagger-codegen's 'Spring server' language you can codegen bean validations
-and java8's OffsetDateTime class for date-time using this language-specific config.
+Your language-specific configurations can also generate model-specific data validations. For example using swagger-codegen's 'Spring server' language you can codegen bean validations and java8's OffsetDateTime class for date-time using this language-specific config.
 
 ````````
 
