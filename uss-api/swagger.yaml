@@ -621,7 +621,7 @@ paths:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
 
-  '/enchanced/operations/{gufi}':
+  '/enhanced/operations/{gufi}':
     get:
       tags:
         - A. Required Endpoints
