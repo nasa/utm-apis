@@ -620,3 +620,166 @@ paths:
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+
+  '/enchanced/operations/{gufi}':
+    get:
+      tags:
+        - A. Required Endpoints
+      summary: Retrieve an operation by GUFI, including details relevant to safety and security.
+      description: >-
+        Retrieve an operation by GUFI.  Similar to '/operations/{gufi}' except
+        all data tagged x-utm-data-accessibility <= SAFETY is returned.
+
+        Note that there is currently no GET on '/enhanced/operations/' without
+        specifying a GUFI.  If general seraching for operations is required, then
+        a GET on '/operations' may be performed, followed by individual GETs to
+        this endpoint for enhanced data access.
+      security:
+        - ussapi_security:
+            - utm.nasa.gov_read.publicsafety
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: gufi
+          required: true
+          type: string
+          format: uuid
+          description: >-
+            GUFI of the operation being requested.
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Operation
+        '400':
+          description: Bad request. Typically validation error. Fix your request and retry.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '401':
+          description: Invalid or missing access_token provided.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '403':
+          description: Forbidden. Do not retry with same access token. Reason not provided, but do you have the right scopes?
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '404':
+          description: Resource not found.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '423':
+          description: The requested data are in a transition state. Please retry request.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+    put:
+      tags:
+        - A. Required Endpoints
+      summary: 'Announce a new, or update an already announced ENHANCED operation.'
+      description: >-
+        Announce an Operation to another USS, either initial Operation or an
+        update to the Operation. The Operation's owner creates the ID.
+
+        This is the ENHANCED version of the nominal /operations/{gufi} endpoint.
+
+        In the future there may be several use cases for the this endpoint.
+        Currently a single use case is required to be supported by USSs.
+
+        ## Writing a public safety operation
+
+        Public safety operations can only be operated by authorized agencies.  The
+        identitiy management of those agencies and individuals within them will
+        have more requirements than are levied on nominal USSs.  Thus the ability
+        to manage those operations is limited to USSs that undergo additional
+        checkout processes.  Successful completion of those processes allows for
+        a USS to earn an additional Role (USS_PUBLIC_SAFETY) within UTM managing
+        public safety ops.
+
+        This role provides access to additional scopes, including utm.nasa.gov_write.publicsafety
+        which is required to write to this endpoint.
+
+        Within this use case for this endpoint, it is a requirement
+        PriorityElements.status == PUBLIC_SAFETY with an appropriate severity.
+
+        A public safety operation that ceases to be a public safety operation
+        should CLOSE the operation as announced on this endpoint after creating
+        a non-public safety operation on the nominal endpoint.  Note this means
+        that the operation would be already be in the air when becoming a "new"
+        nominal operation.  In addition, there will be a period of time during
+        which this operation will have 2 GUFIs and 2 plans. The USS should aid
+        the operator in minimizing this period of time (ideally to less than, say,
+        10 seconds).  This approach ensures that all operations announced on this
+        PUT endpoint have the same PriorityElement requirements.
+
+        A nominal operation that becomes a public safety operation should
+        follow a similar procedure as above.  CLOSE the nominal operation after
+        announcing a new public safety operation on this endpoint.
+
+        Non-PUBLIC_SAFETY operations must not be accepted at this endpoint.
+
+      security:
+        - ussapi_security:
+            - utm.nasa.gov_write.publicsafety
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: gufi
+          required: true
+          type: string
+          description: PUT operation by gufi
+        - in: body
+          name: operation
+          description: |
+            Operational plan with the following properties:
+              1. Contains a valid uss_operation_id.
+              2. time_available_end value that is in the future.
+              3. No date-time fields that are in the past are modified.
+              4. Other rules for a USS Operation PUT are satisfied.
+              5. {gufi} path parameter == Operation.gufi of body data
+              6. Operation.uss_id == access_token.sub
+              6. Operation.priority_elements.status == PUBLIC_SAFETY
+              7. Operation.priority_elements.severity >= CRITICAL
+          required: true
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Operation
+      responses:
+        '204':
+          description: Operation data received. No content returned.
+        '400':
+          description: Bad request. Typically validation error. Fix your request and retry.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '401':
+          description: Invalid or missing access_token provided.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '403':
+          description: Forbidden. Do not retry with same access token. Reason not provided, but do you have the right scopes?
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '409':
+          description: >-
+            Conflict. This USS Instance has an Operation that intersects.
+            'Resource' field in UTMRestResponse will contain list of GUFIs of length
+            at least 1 indicating the conflicting Operation(s).
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '429':
+          description: Too many recent requests from you. Wait to make further queries.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
