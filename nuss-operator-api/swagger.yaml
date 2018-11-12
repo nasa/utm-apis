@@ -3,9 +3,25 @@ swagger: "2.0"
 info:
   version: "v4"
   title: "NUSS UAS Operator API"
-  description: "For GETTERs with query parameters, the parameter names must be lower case.  String parmeter values are case insensitive.
+  description: "Manage Operator Operations.
 
-    (todo) GET-list APIs return an empty list if nothing is found.  GET-single API will return 404 if the item is not found."
+
+  Here is info that applies to most APIs, otherwise see each API for details.
+
+
+  For GETTERs with query parameters, the parameter names must be lower case, however
+  string parmeter values are case insensitive.
+
+
+  Example of the GET-list using time window:
+
+      /messages/?sent_time_after=2038-01-01T07:58:20.000Z&sent_time_before=2038-01-01T07:58:30.000Z
+
+
+  (todo) GET-list for Positions is not yet in.
+
+  (todo) GET-list returns an empty list if nothing is found.
+  GET-by-gufi returns 404 if the item is not found."
 host: "some.host"
 basePath: "/operator"
 tags:
@@ -29,8 +45,10 @@ paths:
       tags:
       - "Positions, Messages"
       summary: "Get Operator Messages."
-      description: "You can specify ASC and DESC (or asc/desc) as follows: https://host.nasa.gov/nuss/operator/messages?sort=DESC
-        You can also specify limit and offset.
+      description: "You can specify ASC and DESC (or asc/desc) as follows:
+        /operator/messages?sort=DESC
+        You can specify a time window as follows:
+        /operator/messages/?limit=44&sent_time_after=2038-01-01T07:58:20.000Z&sent_time_before=2038-01-01T07:58:30.000Z
         "
       consumes:
       - "application/json"
