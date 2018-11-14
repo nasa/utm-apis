@@ -1177,9 +1177,8 @@ definitions:
         $ref: '#/definitions/uuid'
       uss_name:
         description: >-
-          A name identifying the originator of this message. If a USS is the
-          originator, then this field MUST be the uss_name as known by the
-          authorization server. The maximum and minimum character length is
+          A name identifying the originator of this message. The maximum and
+          minimum character length is
           based on a usable domain name, and considering the maximum in
           RFC-1035.
         type: string
@@ -1374,14 +1373,13 @@ definitions:
         example: "https://superutm.uss/nuss/uss"
     example:
       message_id: "00000000-0000-4444-8888-CAFEBEEFF00D"
-      origin: "USS"
-      originator_id: "uss.provider321.net"
-      originator_uss_instance_id: "00000000-0000-4444-8888-BAADBAADBAAD"
+      uss_name: "uss.provider321.net"
       time_sent: "2015-08-20T14:11:57.345Z"
       severity: "NOTICE"
       message_type: "OPERATION_CLOSED"
       gufi: "00000000-0000-4444-8888-FEEDDEADBEEF"
       free_text: "Cool flight, bro"
+      callback: "https://uss.provider321.net/uss"
 
   UASVolumeReservation:
     description: >-
@@ -1390,6 +1388,7 @@ definitions:
 
       Formerly "ConstraintMessage".
     required:
+      - uss_name
       - message_id
       - cause
       - geography
@@ -1401,17 +1400,10 @@ definitions:
     properties:
       message_id:
         $ref: '#/definitions/uuid'
-      origin:
-        description: The user or process that generated this message
-        type: string
-        enum:
-          - FIMS
-          - USS
-      originator_id:
+      uss_name:
         description: >-
-          A name identifying the originator of this message. If a USS is the
-          originator, then this field MUST be the uss_name as known by the
-          authorization server. The maximum and minimum character length is
+          A name identifying the originator of this message. The maximum and
+          minimum character length is
           based on a usable domain name, and considering the maximum in
           RFC-1035.
         type: string
@@ -1529,8 +1521,7 @@ definitions:
         maxLength: 1000
     example:
       message_id: '00000000-0000-4444-8888-600DCAFEF00D'
-      origin: USS
-      originator_id: "uss.provider321.com"
+      uss_name: "uss.provider321.com"
       type: DYNAMIC_RESTRICTION
       cause: SAFETY
       geography:
