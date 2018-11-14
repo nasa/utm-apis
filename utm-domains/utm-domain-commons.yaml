@@ -1161,11 +1161,11 @@ definitions:
   UTMMessage:
     required:
       - message_id
-      - origin
-      - originator_id
+      - uss_name
       - time_sent
       - severity
       - message_type
+      - callback
     type: object
     description: >-
       A UTM message. Used to make other stakeholders aware about an issue.  The
@@ -1175,14 +1175,7 @@ definitions:
     properties:
       message_id:
         $ref: '#/definitions/uuid'
-      origin:
-        description: The user or process that generated this message.
-        type: string
-        enum:
-          - FIMS
-          - USS
-          - OTHER
-      originator_id:
+      uss_name:
         description: >-
           A name identifying the originator of this message. If a USS is the
           originator, then this field MUST be the uss_name as known by the
@@ -1359,14 +1352,26 @@ definitions:
         maxLength: 1000
       callback:
         description: >-
-          A complete URL that the receiver would need to complete a
-          communication request.  The only current example is a position report
-          request from one USS to another.  In that case, the callback should
-          contain the complete URL to the requesting USSs positions endpoint.
-          This field is required when 'message_type' is
-          PERIODIC_POSITION_REPORTS_START.
+          A base URL that the receiver would need to conduct further USS-USS
+          communications in relation to the data provided in this message.
+
+          Sample of use cases:
+            1. PERIODIC_POSITION_REPORTS_START:  need to know where to send positions.
+            2. OPERATION_ROGUE:  need to know where to request op and pos data.
+            3. CONTINGENCY_PLAN_INITIATED: need to know where to request op data.
+
+          Since these use cases may require hitting different endpoints, only
+          the base url is required in the callback field.  The receiver would
+          be responsible for determining which endpoint to use for follow up
+          data exchanges.
+
+          Note that "base URL" here implies the full path with protocol (only
+          HTTPS allowed) upto where trailing USS-API endpoints would be applied.
+
+          See example.
         type: string
         format: url
+        example: "https://superutm.uss/nuss/uss"
     example:
       message_id: "00000000-0000-4444-8888-CAFEBEEFF00D"
       origin: "USS"
