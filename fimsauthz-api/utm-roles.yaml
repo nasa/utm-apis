@@ -38,11 +38,12 @@ FIMS_SME:
         - "An airspace Subject Matter Expert composes an airspace constraint and submits this constraint to FIMS_OPS."
 
 FIMS_AUTHZ:
-    description: This is the service role supporting the FIMS Authorization server.
-    This role cannot create, modify or delete UTM Identity data, rather access is read-only.
+    description: >-
+      This is the service role supporting the FIMS Authorization server.
+      This role cannot create, modify or delete UTM Identity data, rather access is read-only.
     authority: UTM_AUTHORITY
     examples:
-        - "When FIMS AZ services the token endpoint, it reads a data table containing USS identities and their scopes."
+      - "When FIMS AZ services the token endpoint, it reads a data table containing USS identities and their scopes."
 
 VEHICLE_AUTHORITY:
     authority: TBD; May be a set of trusted commercial entities
@@ -96,11 +97,25 @@ USS_BASIC:
 
 USS_PUBLIC_SAFETY:
     description: |
-       A USS with the capability to support public safety queries.
+       A USS with the capability to support public safety operations and queries.
        This role can be assigned only to a USS that has the
        USS_BASIC role. The UTM Authority assigns this role after out-of-band
        vetting, which includes some testing mechanism and liability
        assumptions TBD.
+    authority: UTM_AUTHORITY
+    examples:
+        - "A Public Safety USS queries other USSs to determine which USS is operating a particular vehicle."
+        - "A Public Safety USS queries vehicle registration using its pubsafe scopes to learn the vehicle's owner."
+        - "A Public Safety USS supports a public safety operation within the USS Network."
+    scopes:
+        - utm.nasa.gov_write.publicsafety
+
+USS_PUBLIC_SAFETY_READ:
+    description: |
+       A USS with the capability to support public safety queries.
+       This role can be assigned only to a USS that has the
+       USS_BASIC role. The UTM Authority assigns this role after out-of-band
+       vetting.
     authority: UTM_AUTHORITY
     examples:
         - "A Public Safety USS queries other USSs to determine which USS is operating a particular vehicle."
