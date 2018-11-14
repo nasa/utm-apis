@@ -513,7 +513,7 @@ definitions:
           needed/required during operation. Aids in planning and communication
           during the execution of a contingency.
         type: array
-        maxItems: 12
+        maxItems: 250
         minItems: 1
         items:
           $ref: '#/definitions/ContingencyPlan'
