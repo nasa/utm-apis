@@ -1231,11 +1231,13 @@ definitions:
           1. UNPLANNED_LANDING
             This operation had to land earlier than expected and/or at a
             location other than was originally planned. Must be sent with
-            severity CRITICAL unless there is any damage other than to the UAS.
+            severity ALERT if any damage or potential damage or injury other
+            than to the UAS itselft.  CRITICAL otherwise.
           2. UNCONTROLLED_LANDING
             This operation had an uncontrolled landing either at the originally
             planned landing location or another location. Must be sent with
-            severity CRITICAL unless there is any damage other than to the UAS.
+            severity ALERT if any damage or potential damage or injury other
+            than to the UAS itselft.  CRITICAL otherwise.
           3. OPERATION_NONCONFORMING
             This operation has entered the NONCONFORMING state. Must be sent to
             LUN anytime operation transitions to this state. Must be sent with
@@ -1281,14 +1283,47 @@ definitions:
           11. UNAUTHORIZED_AIRSPACE_PROXIMITY
             An operation is within 3038 feet (almost 0.5nmi) from the boundary
             of unauthorized airspace (e.g., UVR/TFR, controlled airspace,
-            airspace constraint)
+            airspace constraint).  Must be sent with severity WARNING.
           12. UNAUTHORIZED_AIRSPACE_ENTRY
             An operation has breached the boundary and entered into
             unauthorized airspace (e.g., UVR/TFR, controlled airspace, airspace
-            constraint)
+            constraint).  Must be sent with severity CRITICAL.
           13. OTHER_SEE_FREE_TEXT
             Messages that do not fit any of the otherwise defined categories.
             Should be used sparingly or with additional out-of-band description.
+            Severity must be INFORMATIONAL or ALERT.  Only use ALERT if there
+            is some risk of injury or damage that would not be captured with
+            any of the other enums.
+
+          The following table summarizes the appropriate message_type-severity
+          combinations.  If a combination is not in the table, then it is not
+          an allowable combination and must not be used within the USS Network.
+
+          | message_type                    	| severity      	| when                                                                        	|
+          |---------------------------------	|---------------	|-----------------------------------------------------------------------------	|
+          | UNPLANNED_LANDING               	| ALERT         	| Damage to people or property (other than the UAS).                          	|
+          | UNPLANNED_LANDING               	| CRITICAL      	| If not ALERT.                                                               	|
+          | UNCONTROLLED_LANDING            	| ALERT         	| Damage to people or property (other than the UAS).                          	|
+          | UNCONTROLLED_LANDING            	| CRITICAL      	| If not ALERT.                                                               	|
+          | OPERATION_NONCONFORMING         	| EMERGENCY     	| Operation intersecting another op plan or unauthz'ed airspace.              	|
+          | OPERATION_NONCONFORMING         	| ALERT         	| Operation expected to intersect another op plan or unauthz'ed airspace.     	|
+          | OPERATION_NONCONFORMING         	| CRITICAL      	| If not EMERGENCY nor ALERT.                                                 	|
+          | OPERATION_ROGUE                 	| EMERGENCY     	| Current/impending intersection with another op plan or unauthz'ed airspace. 	|
+          | OPERATION_ROGUE                 	| ALERT         	| If not EMERGENCY.                                                           	|
+          | OPERATION_CONFORMING            	| NOTICE        	| Always.                                                                     	|
+          | OPERATION_CLOSED                	| CRITICAL      	| If operation was ROGUE or NONCONFORMING at any time.                        	|
+          | OPERATION_CLOSED                	| NOTICE        	| If not CRITICAL.                                                            	|
+          | CONTINGENCY_PLAN_INITIATED      	| ALERT         	| If operation expected to intersect another op plan or unauthz'ed airspace.  	|
+          | CONTINGENCY_PLAN_INITIATED      	| CRITICAL      	| If not ALERT.                                                               	|
+          | CONTINGENCY_PLAN_CANCELLED      	| CRITICAL      	| Always.                                                                     	|
+          | PERIODIC_POSITION_REPORTS_START 	| NOTICE        	| Always.                                                                     	|
+          | PERIODIC_POSITION_REPORTS_END   	| NOTICE        	| Always.                                                                     	|
+          | UNAUTHORIZED_AIRSPACE_PROXIMITY 	| WARNING       	| Always.                                                                     	|
+          | UNAUTHORIZED_AIRSPACE_ENTRY     	| CRITICAL      	| Always.                                                                     	|
+          | OTHER_SEE_FREE_TEXT             	| ALERT         	| Potential risk of damage to people or property other than this UAS.         	|
+          | OTHER_SEE_FREE_TEXT             	| INFORMATIONAL 	| If not ALERT.                                                               	|
+
+
         type: string
         enum:
           - UNPLANNED_LANDING
