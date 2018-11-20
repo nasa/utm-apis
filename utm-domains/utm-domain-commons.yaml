@@ -1058,7 +1058,6 @@ definitions:
         x-utm-data-accessibility: PUBLIC
         pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
         example: '2015-08-20T14:11:56.118Z'
-        x-utm-data-accessibility: PUBLIC
       time_sent:
         description: >-
           The time the position was sent by the USS as measured by that USS's
@@ -1481,6 +1480,17 @@ definitions:
         minLength: 36
         pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
         example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+      uss_name:
+        description: >-
+          A name identifying the originator of this message. The maximum and
+          minimum character length is
+          based on a usable domain name, and considering the maximum in
+          RFC-1035.
+        type: string
+        minLength: 4
+        exclusiveMinimum: false
+        maxLength: 250
+        exclusiveMaximum: false
       type:
         description: >-
           The type of UVR.  It is expected this list will grow as use cases are
@@ -1670,6 +1680,21 @@ definitions:
         minLength: 36
         pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
         example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+      uss_name:
+        description: >-
+          A name identifying the originator of this message. The maximum and
+          minimum character length is
+          based on a usable domain name, and considering the maximum in
+          RFC-1035.
+
+          This name MUST be a duplicate of either uss_name_of_originator or
+          uss_name_of_receiver.  This field is required for security and
+          data quality purposes.
+        type: string
+        minLength: 4
+        exclusiveMinimum: false
+        maxLength: 250
+        exclusiveMaximum: false
       uss_name_of_originator:
         description: >-
           Name of the USS originating the negotation. MUST be the
@@ -1727,7 +1752,8 @@ definitions:
           example:  "110,117,10"
 
           For FIMS Discovery, this should be the uss_instance_id which is a
-          UUID.
+          UUID and represents the instance id tied to the USS identified
+          by the uss_name field's instance in this negotiation.
 
         type: string
         minLength: 5
