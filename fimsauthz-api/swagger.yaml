@@ -55,7 +55,7 @@ paths:
         '501':
           description: Not Implemented
           schema:
-            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse'
   /token:
     post:
       tags:
@@ -172,7 +172,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Version'
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/Version'
 
 definitions:
   TokenResponse:
@@ -327,7 +327,7 @@ definitions:
       scopes_supported:
         type: array
         items:
-          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Version'
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/Version'
         description: >-
           JSON array containing a list of the OAuth 2.0 [RFC6749] "scope" values that this authorization server supports. Servers MAY choose not to advertise some supported scope values even when this parameter is used.
 # Currently no response types supported, return empty array
