@@ -24,6 +24,7 @@ info:
       are not documented, please submit an issue report on github.
   version: v4
   title: UTM models
+swagger: "2.0"
 
 paths:
   '/no-paths':
@@ -248,6 +249,7 @@ definitions:
         type: string
         maxLength: 1000
         minLength: 1
+
   Altitude:
     type: object
     required:
