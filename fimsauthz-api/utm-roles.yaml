@@ -38,11 +38,12 @@ FIMS_SME:
         - "An airspace Subject Matter Expert composes an airspace constraint and submits this constraint to FIMS_OPS."
 
 FIMS_AUTHZ:
-    description: This is the service role supporting the FIMS Authorization server.
-    This role cannot create, modify or delete UTM Identity data, rather access is read-only.
+    description: >-
+      This is the service role supporting the FIMS Authorization server.
+      This role cannot create, modify or delete UTM Identity data, rather access is read-only.
     authority: UTM_AUTHORITY
     examples:
-        - "When FIMS AZ services the token endpoint, it reads a data table containing USS identities and their scopes."
+      - "When FIMS AZ services the token endpoint, it reads a data table containing USS identities and their scopes."
 
 VEHICLE_AUTHORITY:
     authority: TBD; May be a set of trusted commercial entities
@@ -64,19 +65,6 @@ VEHICLE_REGISTRATION_CHECKER:
       - "USS queries a vehicle data provider using its uvin scopes to check whethter a UVIN is registered."
       - "A Public Safety USS queries a vehicle data provider using its uvin scopes to learn the vehicle's owner."
 
-CONFLICT_MANAGEMENT:
-    description: |
-       This is the service role supporting USS Confict Management data providers.
-       These data providers can be pull-based such as Grid Cell data, or a push-and-pull based
-       such as NASA's Discovery Service.
-    authority: USS Network
-    examples:
-       - "NASA's USS Discovery Service PUTs USSInstance data to USS-API endpoints protected by write.conflictmanagement scope."
-       - "USS Discovery service protects its endpoints with read.conflictmanagement scope."
-       - "The Grid Cell Conflict Management service protects its endpoints with read.conflictmanagement scope."
-    scopes:
-       - utm.nasa.gov_write.conflictmanagement
-
 USS_BASIC:
     description: A USS. The UTM Authority assigns role after
        out-of-band vetting. Vetting includes some testing mechanism and liability assumptions TBD.
@@ -96,11 +84,25 @@ USS_BASIC:
 
 USS_PUBLIC_SAFETY:
     description: |
-       A USS with the capability to support public safety queries.
+       A USS with the capability to support public safety operations and queries.
        This role can be assigned only to a USS that has the
        USS_BASIC role. The UTM Authority assigns this role after out-of-band
        vetting, which includes some testing mechanism and liability
        assumptions TBD.
+    authority: UTM_AUTHORITY
+    examples:
+        - "A Public Safety USS queries other USSs to determine which USS is operating a particular vehicle."
+        - "A Public Safety USS queries vehicle registration using its pubsafe scopes to learn the vehicle's owner."
+        - "A Public Safety USS supports a public safety operation within the USS Network."
+    scopes:
+        - utm.nasa.gov_write.publicsafety
+
+USS_PUBLIC_SAFETY_READ:
+    description: |
+       A USS with the capability to support public safety queries.
+       This role can be assigned only to a USS that has the
+       USS_BASIC role. The UTM Authority assigns this role after out-of-band
+       vetting.
     authority: UTM_AUTHORITY
     examples:
         - "A Public Safety USS queries other USSs to determine which USS is operating a particular vehicle."
@@ -110,14 +112,14 @@ USS_PUBLIC_SAFETY:
 
 CONSTRAINT_MANAGER:
     description: |
-       A USS with this role can publish airspace constraints and
+       A USS with this role can publish airspace constraints such as UASVolumeReservations (UVRs) and
        other aeronautical data. This role can be assigned only to a USS that has the
        USS_BASIC role. The UTM Authority assigns this role after out-of-band
        vetting, which includes some testing mechanism and liability
        assumptions TBD.
     authority: UTM_AUTHORITY
     examples:
-        - "FIMS_OPS has the USS_CONSTRAINT_MANAGER role and can publish a constraint to the USS Network."
+        - "FIMS_OPS has the USS_CONSTRAINT_MANAGER role and can publish airspace constraints such as UASVolumeReservations to the USS Network."
         - "A USS with Constraint Management role publishes an airspace constraint to the USS Network."
         - "All USSs protect their PUT Constraint endpoint with these scopes."
     scopes:

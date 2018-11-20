@@ -8,6 +8,7 @@ definitions:
     type: object
     required:
       - data_collection
+      - scenario
       - test_card
       - call_sign
       - test_type
@@ -15,7 +16,7 @@ definitions:
       - event_id
       - location
       - setting
-      - test_identifiers
+      - test_run
     properties:
       data_collection:
         description: >-
@@ -32,29 +33,31 @@ definitions:
           Will be used to select a set of rules for validation.
         minLength: 1
         maxLength: 100
+      scenario:
+        description: >-
+          Proper formatting for SOW scenarios is "SCENARIO_n" where n is 1-5.
+
+          For other scenarios, the appropriate value should be provided by the
+          POC for that activity.
+        type: string
+        minLength: 1
+        maxLength: 100
       test_card:
-        description: The name or number of the test card.
+        description: >-
+          The name or number of the test card.  In many cases, a scenario will
+          have only one test_card, but it is possible that there are multiple
+          test_cards for a given scenario.
         minLength: 1
         maxLength: 100
         type: string
-      test_identifiers:
+      test_run:
         description: >-
-          Specific tests ids supported by these data. These ids should map to
-          specific tests as outlined in the overall event description. As
-          an example, Event "TCL3_Demonstration" at a test site may have a
-          test_card called "CARD_44". The operation associated with this
-          metadata block may support "DAT2", "CNS1", and "CON4" specific tests.
-          If any one of those elements are missing (event_id, test_card,
-          test_identifiers), then data analysis may become difficult if not
-          impossible.
-        type: array
-        items:
-          type: string
-          minLength: 1
-          maxLength: 30
-        maxItems: 20
-        minItems: 1
-        uniqueItems: true
+          An identifier for a specific run of a test_card.  In many cases, a
+          test_card may be only run once.  However, it is possible that a
+          test_card is run multiple times.
+        minLength: 1
+        maxLength: 100
+        type: string
       call_sign:
         type: string
         minLength: 1
@@ -66,9 +69,15 @@ definitions:
           emanating from one location on a test card, this data element could
           include further information to link the operation to the test card
           flight, such as GCS1A.
+
+          Every operation requires a call_sign that is pre-determined in the
+          full test card description.
       test_type:
         type: string
-        description: Test type.
+        description: >-
+          Test type. Note a GROUND test may use a physical vehicle and a FLIGHT
+          test may use a simulated vehicle.  This is the reason for separating
+          test_type from source.
         enum:
           - GROUND
           - FLIGHT
@@ -97,8 +106,7 @@ definitions:
         description: >-
           Test setting. Note that a LAB setting may involve HWITL source and
           FIELD settings may involve SWITL sources.  LAB settings may have
-          GROUND or FLIGHT tests, same with FIELD settings.  This is some
-          insight into the reason for these various fields.
+          GROUND or FLIGHT tests, same with FIELD settings.
         enum:
           - LAB
           - FIELD
@@ -118,12 +126,19 @@ definitions:
           individuals modify this metadata, this field will only hold the
           last such individual.  In that case, the engineer should make an
           effort to document as much as possible in the free_text field.
+
+          SHOULD NOT be included wth an operation.  This element is populated
+          by NASA as needed.
         maxLength: 150
       modified:
         type: boolean
         description: >-
           This metadata was modified from its original submission by a
           data_quality_engineer.
+
+          SHOULD NOT be included wth an operation.  This element is populated
+          by NASA as needed.
+        default: false
 
 
     example:
