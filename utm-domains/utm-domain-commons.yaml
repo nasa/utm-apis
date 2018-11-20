@@ -269,12 +269,12 @@ definitions:
         exclusiveMaximum: false
       vertical_reference:
         description: >-
-          A code indicating the reference for a vertical distance. See AIXM 5.1
-          and FIXM 4.1.0.
+         A code indicating the reference for a vertical distance. See AIXM 5.1
+         and FIXM 4.1.0.
 
-          Currently, UTM only allows WGS84 with no immediate plans to allow
-          other options. FIXM and AIXM allow for 'SFC' which is equivalent to
-          AGL.
+         Currently, UTM only allows WGS84 with no immediate plans to allow
+         other options. FIXM and AIXM allow for 'SFC' which is equivalent to
+         AGL.
         externalDocs:
           description: See FIXM 4.1.0 for further information.
           url: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/Measures_xsd.html#VerticalReferenceType
@@ -285,7 +285,7 @@ definitions:
           attribute: false
         type: string
         enum:
-          - W84
+        - W84
       units_of_measure:
         description: >-
           The reference quantities used to express the value of altitude. See
@@ -294,8 +294,8 @@ definitions:
           Currently, UTM only allows feet with no immediate plans to allow
           other options.  FIXM allows for feet or meters.
         externalDocs:
-          description: See FIXM 4.1.0 for further information.
-          url: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/UnitsOfMeasure_xsd.html#UomHeightType
+           description: See FIXM 4.1.0 for further information.
+           url: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/UnitsOfMeasure_xsd.html#UomHeightType
         xml:
           name: UomHeightType
           namespace: https://www.fixm.aero/nas/4.1
@@ -303,15 +303,16 @@ definitions:
           attribute: false
         type: string
         enum:
-          - FT
+        - FT
       source:
         description: >-
           Experimental field for testing and discussion to determine
           applicability.
         type: string
         enum:
-          - ONBOARD_SENSOR
-          - OTHER
+        - ONBOARD_SENSOR
+        - OTHER
+
   Operation:
     type: object
     required:
