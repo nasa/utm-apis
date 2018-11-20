@@ -59,13 +59,13 @@ securityDefinitions:
 
 
 paths:
-  '/constraints/{message_id}':
+  '/uvrs/{message_id}':
     put:
       tags:
         - A. Required Endpoints
-      summary: Allow constraints to be submitted from authorized entities.
+      summary: Allow UAS Volume Reservations (UVRs) to be submitted from authorized entities.
       description: >-
-        Allow constraints to be submitted from authorized entities.
+        Allow UAS Volume Reservations (UVRs) to be submitted from authorized entities.
         For validation purposes:
           {message_id} in path == UASVolumeReservation.message_id of body data
       security:
@@ -88,7 +88,7 @@ paths:
               https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UASVolumeReservation
       responses:
         '204':
-          description: Constraint data received. No content returned.
+          description: UVR data received. No content returned.
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           schema:
@@ -96,6 +96,11 @@ paths:
               https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '403':
+          description: Forbidden. Data and or token do not meet security requirements.
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
@@ -143,6 +148,11 @@ paths:
               https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '403':
+          description: Forbidden. Data and or token do not meet security requirements.
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
@@ -255,6 +265,11 @@ paths:
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '403':
+          description: Forbidden. Data and or token do not meet security requirements.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '409':
           description: Conflicting operation will not accommodate new operation.
           schema:
@@ -306,6 +321,11 @@ paths:
               https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '403':
+          description: Forbidden. Data and or token do not meet security requirements.
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
@@ -527,6 +547,11 @@ paths:
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '403':
+          description: Forbidden. Data and or token do not meet security requirements.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
 
     put:
       tags:
@@ -571,6 +596,11 @@ paths:
               https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '403':
+          description: Forbidden. Data and or token do not meet security requirements.
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
@@ -733,10 +763,10 @@ paths:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '403':
-          description: Forbidden. Do not retry with same access token. Reason not provided, but do you have the right scopes?
+          description: Forbidden. Data and or token do not meet security requirements.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft-alt-dev/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '409':
           description: >-
             Conflict. This USS Instance has an Operation that intersects.
