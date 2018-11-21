@@ -54,6 +54,7 @@ securityDefinitions:
       'utm.nasa.gov_write.operation': Subject can read, create, and update operational data such as USS Instance data
       'utm.nasa.gov_write.message': Subject can read, create, and update message data such as UTM Message and Negotiations
       'utm.nasa.gov_read.publicsafety': Subject can read operations that are designated public safety operations.
+      'utm.nasa.gov_write.publicsafety': Subject can write operations that are designated public safety operations.
       'utm.nasa.gov_write.constraint': Subject can read, create, and update UTM constraint data. This means that the Subject can define areas that restrict other operations.
       'utm.nasa.gov_write.conflictmanagement':  Subject can read and write conflict management data.
 
