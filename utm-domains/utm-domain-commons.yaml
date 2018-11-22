@@ -101,7 +101,8 @@ definitions:
     format: "uuidv4"
     minLength: 36
     maxLength: 36
-    pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+    pattern: >-
+      "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
     example: "00000000-0000-4444-8888-FEEDDEADBEEF"
   data_accessibility:
     description: >-
@@ -135,17 +136,30 @@ definitions:
       **EMERGENCY > ALERT > CRITICAL > WARNING > NOTICE > INFORMATIONAL**
       In relation to a UTMMessage, the severities may be interpreted as follows.
       1. **EMERGENCY**
-        There is an *immediate* impact to the safety of other air operations, the safety of people, or the safety of structures on the ground. Actions to mitigate required by other operations.
+        There is an *immediate* impact to the safety of other air operations,
+        the safety of people, or the safety of structures on the ground.
+        Actions to mitigate required by other operations.
       2. **ALERT**
-        There may be an impact to the safety of other air operations, the safety of people, or the safety of structures on the ground. Actions to mitigate required by other operations.
+        There may be an impact to the safety of other air operations, the
+        safety of people, or the safety of structures on the ground. Actions to
+        mitigate required by other operations.
       3. **CRITICAL**
-        Without mitigations by the affected operation, the situation may rise to an emergency in the near future.
+        Without mitigations by the affected operation, the situation may rise to
+         an emergency in the near future.
       4. **WARNING**
-        There is a contained issue that may result in the loss of aircraft. No immediate or likely effect to other operations, people on the ground, or structures.
+        There is a contained issue that may result in the loss of aircraft. No
+        immediate or likely effect to other operations, people on the ground,
+        or structures.
       5. **NOTICE**
-        This issue is provided for situational awareness. Planning by operators and USSs may be affected.
+        This issue is provided for situational awareness. Planning by operators
+        and USSs may be affected.
       6. **INFORMATIONAL**
-          This issue is provided for situational awareness. Note that this approach leverages RFC 5424: "The Syslog Protocol." By taking this approach, there is the possibility of formalizing UTMMessaging with more elements of the RFC to allow for compatibility with other logging systems. https://tools.ietf.org/html/rfc5424
+          This issue is provided for situational awareness.
+
+      Note that this approach leverages RFC 5424: "The Syslog Protocol." By
+      taking this approach, there is the possibility of formalizing
+      UTMMessaging with more elements of the RFC to allow for compatibility
+      with other logging systems. https://tools.ietf.org/html/rfc5424
 
     type: string
     enum:
