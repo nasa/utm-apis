@@ -18,7 +18,7 @@ schemes:
 - "https"
 security:
 - urep_security:
-  - "utm.nasa.gov_read.sdsp"
+  - "utm.nasa.gov_write.message"
 paths:
   /ureps:
     get:
