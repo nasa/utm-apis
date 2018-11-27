@@ -16,9 +16,7 @@ tags:
   description: "Non-REST endpoints for asynchronous communications with UREP."
 schemes:
 - "https"
-security:
-- urep_security:
-  - "utm.nasa.gov_write.message"
+
 paths:
   /ureps:
     get:
@@ -137,6 +135,9 @@ paths:
       - "A. Required Endpoints"
       summary: "Add UREP"
       operationId: "addUrepUsingPOST"
+      security:
+         - urep_security:
+            - "utm.nasa.gov_write.message"
       consumes:
       - "application/json"
       produces:
