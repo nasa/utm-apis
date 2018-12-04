@@ -1480,8 +1480,9 @@ definitions:
 
       Formerly "ConstraintMessage".
     required:
-      - uss_name
       - message_id
+      - uss_name  
+      - type
       - cause
       - geography
       - min_altitude
