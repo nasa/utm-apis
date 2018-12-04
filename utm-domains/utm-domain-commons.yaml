@@ -553,6 +553,16 @@ definitions:
         items:
           $ref: '#/definitions/ContingencyPlan'
         x-utm-data-accessibility: OPERATIONAL
+      negotiation_agreements:
+        description: >-
+          An array of NegotiationAgreements to which the USS supporting this
+          operation (in conjunction with the operator) has agreed.
+        type: array
+        maxItems: 250
+        minItems: 1
+        items:
+          $ref: '#/definitions/NegotiationAgreement'
+        x-utm-data-accessibility: OPERATIONAL
       faa_rule:
         description: |-
           1. PART_107
@@ -1481,7 +1491,7 @@ definitions:
       Formerly "ConstraintMessage".
     required:
       - message_id
-      - uss_name  
+      - uss_name
       - type
       - cause
       - geography
