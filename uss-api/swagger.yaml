@@ -399,9 +399,10 @@ paths:
           description: >-
             Distance from reference_point to find operations. Ignored if
             reference_point is not provided.  Units are feet.  Returns all
-            operations that have any operation_volumes that interesect the 2D
-            circle defined by distance and reference_point.  Default value only
-            has meaning when reference_point parameter is provided.
+            operations that have any operation_volumes whose 2D horizontal
+            dimensions interesect the 2D circle defined by distance and
+            reference_point.  Default value only has meaning when
+            reference_point parameter is provided.
           type: integer
           format: int32
           maximum: 60762
@@ -412,8 +413,9 @@ paths:
           in: query
           description: >-
             A single point used to find all operations within some distance from
-            that point. Returns all operations that have any operation_volumes
-            that interesect the 2D circle defined by distance and
+            that point. Returns all
+            operations that have any operation_volumes whose 2D horizontal
+            dimensions interesect the 2D circle defined by distance and
             reference_point.  When distance is excluded and reference_point is
             included, uses default value (300ft) for distance.
             Described as a GeoJSON position.  The value is equivalent to what
