@@ -79,19 +79,20 @@ paths:
           - client_credentials
         - name: scope
           in: formData
-          description: list of requested oauth2 scopes
+          description: Scope (one and only one) to be associated with the access token being requested. An error code of 400 will be returned if no scope, incorrect scope or more than one scope is specified.
           type: string
           enum:
-          - scope1 # These should match one of securityDefinitions scopes value in this spec
-          - scope2 # See https://github.com/OAI/OpenAPI-Specification/issues/300
-          - scope3 # Maybe solved in v3.0 OpenAPI spec, maybe stuck until then.
+          - scope  # This should match one of securityDefinitions scopes value in this spec
+            	   # See https://github.com/OAI/OpenAPI-Specification/issues/300
+          	   # Maybe solved in v3.0 OpenAPI spec, maybe stuck until then.
       responses:
         # TODO: add appropriate JSON response.  Model needs to be written.
         '200':
           description: OK
           schema:
             $ref: '#/definitions/TokenResponse'
-
+        '400':
+          description: 'Bad Request'
 # This should align with our Spring configuration
 # (http://projects.spring.io/spring-security-oauth/docs/oauth2.html)
   /token_key:
