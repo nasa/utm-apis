@@ -1553,15 +1553,40 @@ definitions:
             - SECURITY
             - NEWS_GATHERING
             - VLOS
+            - SUPPORT_LEVEL
             - PART_107
             - PART_101E
             - PART_107X
             - RADIO_LINE_OF_SIGHT
         minItems: 1
         maxItems: 8
+      required_support:
+        description: >-
+          If the permitted_uas array contains "SUPPORT_LEVEL" this
+          required_support field is required.  This field describes the support
+          required by an operation to continue to operate within or to enter
+          the UVR.  By remaining within or entering a UVR with the listed
+          required support, the operator is attesting that it is using all
+          elements listed in the required support array.
+
+          To restate:  the array of values in this field is an AND relationship,
+          thus all elements must be utilized by each operation within such a
+          UVR.  If an operator does not have every support elements listed,
+          then its operation must exit or avoid entry to the UVR.
+        type: array
+        items:
+          type: string
+          enum:
+            - V2V
+            - DAA
+            - ADSB_OUT
+            - ADSB_IN
+            - CONSPICUITY
+            - ENHANCED_NAVIGATION
+            - ENHANCED_SAFE_LANDING
       permitted_gufis:
         description: >-
-          The specific UAS operations that are permitted within the counds of
+          The specific UAS operations that are permitted within the bounds of
           the UVR.  When used in conjunction with permitted_uas, the
           filters are an 'OR' relationship. Any operation that matches either
           filter is allowed within the bounds of the UVR.  The protocol
