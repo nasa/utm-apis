@@ -397,11 +397,11 @@ definitions:
           500ms difference in the time that you send and get confirmation from
           the grid, you DO NOT update the submit_time when sending to the USSs
           after that.
-
-          submt_time stays constant for this GUFI.  Any mods to the plan
-          including state updates would imply a new update_time, but submit_time
-          does not change.
-
+          submt_time stays constant for this GUFI.
+          When the operation is announced for the first time, update_time MUST
+          be equal to submit_time.
+          When an operation is modified (updated), update_time MUST
+          be greater than submit_time.
           Similarly, for traditional discovery, if there is a delay in sending
           the data to one LUN member versus another, this field is NOT updated
           in between as we want each stakeholder to ultimately receive the same
@@ -418,9 +418,12 @@ definitions:
           A timestamp set by the USS any time the state of the operation is
           updated within the USS Network. An update may be minor or major, but
           if/when te Operation is shared in the USS Network as a PUT to its LUN,
-          this field MUST reflect the time that update was provided.  When the
-          operation is announced for the first time, this value MUST
-          be equal to submit_time.  This value MUST be constant for each update.
+          this field MUST reflect the time that update was provided.
+          When the operation is announced for the first time, update_time MUST
+          be equal to submit_time.
+          When an operation is modified (updated), update_time MUST
+          be greater than submit_time.
+          This value MUST be constant for each update.
           This means that all stakeholder systems have the same value for
           update_time even if, for example, one USS receives the
           update later than others due to HTTP retrys or is provided as a GET
@@ -765,7 +768,7 @@ definitions:
           Time that the operational volume was freed for use by other
           operations.  Should be populated and stored by the USS.
 
-          This value must satisfy:  actual_time_end > effective_time_begin
+          This value MUST satisfy:  actual_time_end > effective_time_begin
           whenever actual_time_end is not null.
         type: string
         format: date-time
@@ -778,8 +781,7 @@ definitions:
         description: >-
           The minimum altitude for this operation in this operation volume.
 
-          The following must hold:
-            min_altitude.altitude_value < max_altitude.altitude_value
+          The following MUST hold: min_altitude.altitude_value < max_altitude.altitude_value
 
         $ref: '#/definitions/Altitude'
         x-utm-data-accessibility: OPERATIONAL
@@ -1101,7 +1103,9 @@ definitions:
         format: double
         description: >-
           The direction of travel relative to track_bearing_reference in
-          degrees. Value must be >= 0.0 and < 360.0.  Note that FIXM allows for
+          degrees.
+          track_bearing value MUST be >= 0.0 and < 360.0.
+          Note that FIXM allows for
           the value of 360.0, while UTM does not.  The reason is for clarity by
           not allowing two numbers (0.0 and 360.0) to represent the same
           measurement.
@@ -1319,12 +1323,12 @@ definitions:
           field is required for all message_types except OTHER_SEE_FREE_TEXT.
           1. UNPLANNED_LANDING
             This operation had to land earlier than expected and/or at a
-            location other than was originally planned. Must be sent with
+            location other than was originally planned. MUST be sent with
             severity ALERT if any damage or potential damage or injury other
             than to the UAS itselft.  CRITICAL otherwise.
           2. UNCONTROLLED_LANDING
             This operation had an uncontrolled landing either at the originally
-            planned landing location or another location. Must be sent with
+            planned landing location or another location. MUST be sent with
             severity ALERT if any damage or potential damage or injury other
             than to the UAS itselft.  CRITICAL otherwise.
           3. OPERATION_NONCONFORMING
