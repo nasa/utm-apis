@@ -8,20 +8,26 @@ info:
       how and when to use the various endpoints and provides more details on
       security features that cannot be captured in the API docs.
       2. There is not a unified time synchronization approach in UTM currently.
-      As such, times provided from one server MUST NOT be validated against
-      each other.  For example, if a sending server states that a data element
+      As such, times provided from one server MUST NOT be validated against each other.
+      For example, if a sending server states that a data element
       was sent at 10:00:23, but the receiving server thinks it is currently
-      10:00:22, the receiving server MUST NOT reject the data submission.  As
+      10:00:22, the receiving server must not reject the data submission.  As
       we develop and roll out the time synchronization scheme for the USS
       Network, we will add appropriate validation requirements to the API
       documentation.
-      3. On the contrary, times MUST be validated for consistency within a
+      3. On the contrary, times must be validated for consistency within a
       given data submission.  For example, if a server states that it sends
       a data instance at 10:00:23 and one of the other data elements states
       that a measurement was performed at 10:00:24, then the receiving server
-      MUST reject that data submission. Some of these checks are explictly
+      must reject that data submission. Some of these checks are explictly
       stated in the descriptions below. If you recognize any such checks that
       are not documented, please submit an issue report on github.
+      4. These token SUBJECT validations are required for security.
+      For PUT Operation to modify an existing operation, the token SUBJECT claim upon modification MUST equal the token SUBJECT claim for the initial Operation.
+      For PUT Message associated with an Operation gufi, the token SUBJECT claim used for PUT Message MUST equal the token SUBJECT claim for the initial operation.
+        This check is performed if the initial operation exists, so as to not preclude receiving emergency messages.
+      For PUT Position associated with an Operation gufi, the token SUBJECT claim used for PUT Position MUST equal the token SUBJECT claim for the initial operation.
+        This check is performed only if the initial operation exists, so as to not preclude receiving emergency position reports.
   version: v4
   title: UTM models
 swagger: "2.0"
@@ -38,8 +44,8 @@ paths:
 definitions:
   timestamp:
     description: >-
-      Timestamps must follow the guidance set forth in RFC3339.  This RFC
-      defines a profile for ISO8601 forcused on interoperability of Internet
+      Timestamps MUST follow the guidance set forth in RFC3339.
+      This RFC defines a profile for ISO8601 forcused on interoperability of Internet
       based systems.  This profile makes certain design decisions based on
       reducing rarely used options, elimination of redundant information, and
       overall simplicity.
@@ -389,7 +395,7 @@ definitions:
           traditional discovery, this means the first time you announce to your
           LUN.
 
-          This value must remain constant for each recipient of the announcement
+          The submit_time value MUST remain constant for each recipient of the announcement
           since this value is potentially part of a signature of the Operation
           plan in some cases.  So, when data (or references to the data) are
           written to the grid, the same data are to be sent, as required, to
@@ -397,10 +403,8 @@ definitions:
           500ms difference in the time that you send and get confirmation from
           the grid, you DO NOT update the submit_time when sending to the USSs
           after that.
-
-          submt_time stays constant for this GUFI.  Any mods to the plan
-          including state updates would imply a new update_time, but submit_time
-          does not change.
+          When the operation is announced for the first time, update_time MUST be equal to submit_time.
+          When an operation is modified (updated), update_time MUST be greater than submit_time.
 
           Similarly, for traditional discovery, if there is a delay in sending
           the data to one LUN member versus another, this field is NOT updated
@@ -418,9 +422,12 @@ definitions:
           A timestamp set by the USS any time the state of the operation is
           updated within the USS Network. An update may be minor or major, but
           if/when te Operation is shared in the USS Network as a PUT to its LUN,
-          this field MUST reflect the time that update was provided.  When the
-          operation is announced for the first time, this value MUST
-          be equal to submit_time.  This value MUST be constant for each update.
+          update_time must reflect the time that update was provided.
+
+          When the operation is announced for the first time, update_time MUST be equal to submit_time.
+          When an operation is modified (updated), update_time MUST be greater than submit_time.
+          THe update_time value MUST be constant for each update data exchange.
+
           This means that all stakeholder systems have the same value for
           update_time even if, for example, one USS receives the
           update later than others due to HTTP retrys or is provided as a GET
@@ -461,8 +468,10 @@ definitions:
         description: >-
           The registration data for the vehicle(s) to be used in this Operation.
           Note that this is an array to allow for future operations involving
-          multiple vehicles (e.g. 'swarms' or tandem inspections).  This array
-          MUST NOT be used as a list of potential vehicles for this Operation.
+          multiple vehicles (e.g. 'swarms' or tandem inspections).
+
+          The uas_registrations array MUST NOT be used as a list of potential vehicles for this Operation.
+
           If the vehicle data changes prior to an Operation, an update to the
           plan may be submitted with the updated vehicle information. Providing
           multiple uas_registrations in this manner implies that all vehicles
@@ -595,10 +604,10 @@ definitions:
               https://postgis.net/docs/ST_Intersects.html
 
           Validation of the array must include the following checks:
-            1. The array of operation volumes must have minimum length of 1.
-            2. The array of operation volumes must have maximum length of 250.
-            3.  Each operation volume must have non-zero 4D volume (i.e. each of
-             the 4 dimensions much be > 0 in magnitude).
+            1. The array of operation volumes MUST have minimum length of 1.
+            2. The array of operation volumes MUST have maximum length of 250.
+            3.  Each operation volume MUST have non-zero 4D volume
+              (i.e. each of the 4 dimensions much be > 0 in magnitude).
             4. Volume intersection must pass the following checks:
               a. When ordered by ordinal values, a succeeding operation volume
               must have a 2D or 3D intersection in 3D space with its immediately
@@ -652,10 +661,7 @@ definitions:
       'priority_status' of PUBLIC_SAFETY or INFLIGHT_EMERGENCY accepts 'priority_level' values EMERGENCY, ALERT and
       CRITICAL only. 'priority_status' of NONE accepts 'priority_level' values WARNING, NOTICE and INFORMATIONAL only.
       The 'priority_level' values EMERGENCY, ALERT and CRITICAL should be used based on impact to other operations
-      and safety of people and property on the ground.  Further guidance on the appropriate severity levels to apply
-      in which situations to be provided in the future and potential in a separate document. For testing, it is
-      sufficeint to agree a priori on the severity levels to be used such that all stakeholders are aware ahead
-      of time.
+      and safety of people and property on the ground.
     type: object
     required:
       - priority_level
@@ -765,7 +771,7 @@ definitions:
           Time that the operational volume was freed for use by other
           operations.  Should be populated and stored by the USS.
 
-          This value must satisfy:  actual_time_end > effective_time_begin
+          actual_time_end MUST satisfy:  actual_time_end > effective_time_begin
           whenever actual_time_end is not null.
         type: string
         format: date-time
@@ -778,8 +784,7 @@ definitions:
         description: >-
           The minimum altitude for this operation in this operation volume.
 
-          The following must hold:
-            min_altitude.altitude_value < max_altitude.altitude_value
+          The following MUST hold: min_altitude.altitude_value < max_altitude.altitude_value
 
         $ref: '#/definitions/Altitude'
         x-utm-data-accessibility: OPERATIONAL
@@ -787,8 +792,7 @@ definitions:
         description: >-
           The maximum altitude for this operation in this operation volume.
 
-          The following must hold:
-            min_altitude.altitude_value < max_altitude.altitude_value
+          The following MUST hold: min_altitude.altitude_value < max_altitude.altitude_value
 
         $ref: '#/definitions/Altitude'
         x-utm-data-accessibility: OPERATIONAL
@@ -1077,7 +1081,8 @@ definitions:
       time_measured:
         description: >-
           The time the position was measured. Likely the time provided with the
-          GPS position reading.  time_measured < time_sent MUST be true.
+          GPS position reading.
+          Position time_measured < time_sent MUST be true.
         type: string
         format: date-time
         minLength: 24
@@ -1088,7 +1093,8 @@ definitions:
       time_sent:
         description: >-
           The time the position was sent by the USS as measured by that USS's
-          system time.  time_measured <= time_sent MUST be true.
+          system time.
+          Position time_measured <= time_sent MUST be true.
         type: string
         format: date-time
         minLength: 24
@@ -1101,7 +1107,9 @@ definitions:
         format: double
         description: >-
           The direction of travel relative to track_bearing_reference in
-          degrees. Value must be >= 0.0 and < 360.0.  Note that FIXM allows for
+          degrees.
+          Position track_bearing value MUST be >= 0.0 and < 360.0.
+          Note that FIXM allows for
           the value of 360.0, while UTM does not.  The reason is for clarity by
           not allowing two numbers (0.0 and 360.0) to represent the same
           measurement.
@@ -1158,8 +1166,8 @@ definitions:
         type: number
         format: double
         description: >-
-          Ground speed int the direction of travel. Value must be >= 0.0. In
-          units as specifed by track_ground_speed_units.
+          Ground speed int the direction of travel, in units as specifed by track_ground_speed_units.
+          Position track_ground_speed MUST be >= 0.0.
         minimum: 0
         exclusiveMinimum: false
         x-utm-data-accessibility: OPERATIONAL
@@ -1314,73 +1322,64 @@ definitions:
         $ref: '#/definitions/severity'
       message_type:
         description: >-
-          The type of message. An enum to constrain messages and allow better
-          interoperability. 'gufi'
-          field is required for all message_types except OTHER_SEE_FREE_TEXT.
+          The type of message. THe 'gufi' field is required for all
+          message_types except OTHER_SEE_FREE_TEXT.
           1. UNPLANNED_LANDING
             This operation had to land earlier than expected and/or at a
-            location other than was originally planned. Must be sent with
-            severity ALERT if any damage or potential damage or injury other
-            than to the UAS itselft.  CRITICAL otherwise.
+            location other than was originally planned.
+            UNPLANNED_LANDING MUST have severity ALERT if any damage or potential damage or injury other than to the UAS itself.  CRITICAL otherwise.
           2. UNCONTROLLED_LANDING
             This operation had an uncontrolled landing either at the originally
-            planned landing location or another location. Must be sent with
-            severity ALERT if any damage or potential damage or injury other
-            than to the UAS itselft.  CRITICAL otherwise.
+            planned landing location or another location.
+            UNCONTROLLED_LANDING MUST be sent with severity ALERT if any damage or potential damage or injury other than to the UAS itselft.  CRITICAL otherwise.
           3. OPERATION_NONCONFORMING
             This operation has entered the NONCONFORMING state. Must be sent to
-            LUN anytime operation transitions to this state. Must be sent with
-            severity ALERT if the operation is expected to intersect another
-            operation plan or unauthorized airspace.  Must be sent with severity
-            EMERGENCY if already intersecting another operation or if already
-            entered unauthorized airspace. Otherwise, must be sent with severity
-            CRITICAL.
+            LUN anytime operation transitions to this state.
+            OPERATION_NONCONFORMING MUST be sent with severity ALERT if the operation is expected to intersect another operation plan or unauthorized airspace.
+            OPERATION_NONCONFORMING MUST be sent with severity EMERGENCY if already intersecting another operation or if already entered unauthorized airspace. Otherwise CRITICAL.
           4. OPERATION_ROGUE
-            This operation has entered the ROGUE state. Must be sent to LUN
-            anytime operation transitions to ROGUE state. Must be sent with
-            severity ALERT if no current or immediate intersection with another
-            operation or unauthorized airspace. Must be sent with severity
-            EMERGENCY otherwise.
+            This operation has entered the ROGUE state.
+            OPERATION_ROGUE MUST be sent anytime operation transitions to ROGUE state.
+            OPERATION_ROGUE MUST be sent with severity ALERT if no current or immediate intersection with another operation or unauthorized airspace. EMERGENCY otherwise.
           5. OPERATION_CONFORMING
             This operation was previously in the NONCONFORMING state and has
             transitioned back to the ACTIVE state. 'gufi' field is required with
             this message_type.
           6. OPERATION_CLOSED
-            This operation has entered the terminal CLOSED state. The operation
-            will not again be active or in flight. This message is not required
-            if the operation is transitioned to the CLOSED state from the ACTIVE
-            state, but may be provided at the USS's discretion. This message is
-            required when the operation transitioned from any state other than
-            the ACTIVE state to the CLOSED state. If transitioning an operation
-            from ACCEPTED to CLOSED, this message must have a severity of
-            NOTICE. If transitioning from NONCONFORMING or ROGUE, this message
-            must have a severity of CRITICAL.
+            OPERATION_CLOSED MUST be sent when and operation has entered the terminal CLOSED state.
+            The operation will not again be active or in flight.
+            OPERATION_CLOSED MUST be sent with severity NOTICE if transitioning from ACCEPTED to CLOSED.
+            OPERATION_CLOSED MUST be sent with severity CRITICAL if transitioning from NONCONFORMING or ROGUE.
           7. CONTINGENCY_PLAN_INITIATED
             Description TBD.
           8. CONTINGENCY_PLAN_CANCELLED
             Description TBD.
           9. PERIODIC_POSITION_REPORTS_START
             The requestor wants position reports provided for the operation
-            referenced in the 'gufi' field of this request. Reports MUST be
-            provided as per the USS Specification. Must be sent with severity
-            NOTICE.
+            referenced in the 'gufi' field of this request. Reports must be
+            provided as per the USS Specification.
+            PERIODIC_POSITION_REPORTS_START MUST be sent with severity NOTICE.
           10. PERIODIC_POSITION_REPORTS_END
             The requestor wants previously requested position reports to end.
             If this message is received without a corresponding
             PERIODIC_POSITION_REPORTS_START, the message response is TBD (200,
-            400, 401, 404, etc.). Must be sent with severity NOTICE.
+            400, 401, 404, etc.).
+            PERIODIC_POSITION_REPORTS_END MUST be sent with severity NOTICE.
           11. UNAUTHORIZED_AIRSPACE_PROXIMITY
             An operation is within 3038 feet (almost 0.5nmi) from the boundary
             of unauthorized airspace (e.g., UVR/TFR, controlled airspace,
-            airspace constraint).  Must be sent with severity WARNING.
+            airspace constraint).
+            UNAUTHORIZED_AIRSPACE_PROXIMITY MUST be sent with severity WARNING.
           12. UNAUTHORIZED_AIRSPACE_ENTRY
             An operation has breached the boundary and entered into
             unauthorized airspace (e.g., UVR/TFR, controlled airspace, airspace
-            constraint).  Must be sent with severity CRITICAL.
+            constraint).
+            UNAUTHORIZED_AIRSPACE_ENTRY MUST be sent with severity CRITICAL.
           13. OTHER_SEE_FREE_TEXT
             Messages that do not fit any of the otherwise defined categories.
             Should be used sparingly or with additional out-of-band description.
-            Severity must be INFORMATIONAL or ALERT.  Only use ALERT if there
+            OTHER_SEE_FREE_TEXT severity MUST be INFORMATIONAL or ALERT.
+            Only use ALERT if there
             is some risk of injury or damage that would not be captured with
             any of the other enums.
 
@@ -1620,8 +1619,7 @@ definitions:
       effective_time_begin:
         description: >-
           The time that the UVR will begin to be in effect.
-
-          Must satisfy effective_time_begin < effective_time_end.
+          UASVolumeReservation MUST satisfy effective_time_begin < effective_time_end.
         type: string
         format: date-time
         minLength: 24
@@ -1632,8 +1630,7 @@ definitions:
       effective_time_end:
         description: >-
           The time that the UVR will cease to be in effect.
-
-          Must satisfy effective_time_begin < effective_time_end.
+          UASVolumeReservation MUST satisfy effective_time_begin < effective_time_end.
         type: string
         format: date-time
         minLength: 24
@@ -1656,14 +1653,12 @@ definitions:
       min_altitude:
         description: >-
           The minimum altitude of the UVR.
-
-          Must satisfy min_altitude.altitude_value < max_altitude.altitude_value.
+          UVR MUST satisfy min_altitude.altitude_value < max_altitude.altitude_value.
         $ref: '#/definitions/Altitude'
       max_altitude:
         description: >-
           The maximum altitude of the UVR.
-
-          Must satisfy min_altitude.altitude_value < max_altitude.altitude_value.
+          UVR MUST satisfy min_altitude.altitude_value < max_altitude.altitude_value.
         $ref: '#/definitions/Altitude'
       reason:
         description: The reason for the UVR. Meant for human consumption.
@@ -1737,12 +1732,9 @@ definitions:
         description: >-
           A name identifying the originator of this message. The maximum and
           minimum character length is
-          based on a usable domain name, and considering the maximum in
-          RFC-1035.
-
-          This name MUST be a duplicate of either uss_name_of_originator or
-          uss_name_of_receiver.  This field is required for security and
-          data quality purposes.
+          based on a usable domain name, and considering the maximum in RFC-1035.
+          NegotiationAgreement uss_name MUST be a duplicate of either uss_name_of_originator or uss_name_of_receiver.
+          This field is required for security and data quality purposes.
         type: string
         minLength: 4
         exclusiveMinimum: false
@@ -1750,8 +1742,8 @@ definitions:
         exclusiveMaximum: false
       uss_name_of_originator:
         description: >-
-          Name of the USS originating the negotation. MUST be the
-          uss_name as known by the authorization server.
+          Name of the USS originating the negotation.
+          NegotiationAgreement uss_name_of_originator MUST be the uss_name as known by FIMS authorization server.
           The maximum and minimum character length is based on a usable domain
           name, and considering the maximum in RFC-1035.
         type: string
@@ -1759,8 +1751,8 @@ definitions:
         maxLength: 250
       uss_name_of_receiver:
         description: >-
-          Name of the USS receiving the original negotiation request. MUST be the
-          uss_name as known by the authorization server.
+          Name of the USS receiving the original negotiation request.
+          NegotiationAgreement uss_name_of_receiver MUST be the uss_name as known by FIMS authorization server.
           The maximum and minimum character length is based on a usable domain
           name, and considering the maximum in RFC-1035.
         type: string
@@ -1854,9 +1846,9 @@ definitions:
         example: "00000000-0000-4444-8888-FEEDDEADBEEF"
       uss_name_of_originator:
         description: >-
-          A name identifying the originator of this message. MUST be the
-          uss_name as known by the authorization server. The maximum and minimum
-          character length is based on a usable domain name, and considering the
+          A name identifying the originator of this message.
+          NegotiationMessage uss_name_of_originator MUST be the uss_name as known by the authorization server.
+          The maximum and minimum character length is based on a usable domain name, and considering the
           maximum in RFC-1035.
         type: string
         minLength: 4
@@ -2020,7 +2012,8 @@ definitions:
         description: >-
           The name of the entity providing UAS Support Services. Populated by
           the service discovery system based on credential information provided
-          by the USS. MUST be the uss_name as known by the authorization server.
+          by the USS.
+          UssInstance uss_name MUST be the uss_name as known by the authorization server.
           The maximum and minimum character length is based on a usable domain
           name, and considering the maximum in RFC-1035.
         type: string
