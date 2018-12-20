@@ -22,6 +22,12 @@ info:
       must reject that data submission. Some of these checks are explictly
       stated in the descriptions below. If you recognize any such checks that
       are not documented, please submit an issue report on github.
+      4. These token SUBJECT validations are required for security.
+      For PUT Operation to modify an existing operation, the token SUBJECT claim upon modification MUST equal the token SUBJECT claim for the initial Operation.
+      For PUT Message associated with an Operation gufi, the token SUBJECT claim used for PUT Message MUST equal the token SUBJECT claim for the initial operation.
+        This check is performed if the initial operation exists, so as to not preclude receiving emergency messages.
+      For PUT Position associated with an Operation gufi, the token SUBJECT claim used for PUT Position MUST equal the token SUBJECT claim for the initial operation.
+        This check is performed only if the initial operation exists, so as to not preclude receiving emergency position reports.
   version: v4
   title: UTM models
 swagger: "2.0"
@@ -655,10 +661,7 @@ definitions:
       'priority_status' of PUBLIC_SAFETY or INFLIGHT_EMERGENCY accepts 'priority_level' values EMERGENCY, ALERT and
       CRITICAL only. 'priority_status' of NONE accepts 'priority_level' values WARNING, NOTICE and INFORMATIONAL only.
       The 'priority_level' values EMERGENCY, ALERT and CRITICAL should be used based on impact to other operations
-      and safety of people and property on the ground.  Further guidance on the appropriate severity levels to apply
-      in which situations to be provided in the future and potential in a separate document. For testing, it is
-      sufficeint to agree a priori on the severity levels to be used such that all stakeholders are aware ahead
-      of time.
+      and safety of people and property on the ground.
     type: object
     required:
       - priority_level
@@ -1319,73 +1322,64 @@ definitions:
         $ref: '#/definitions/severity'
       message_type:
         description: >-
-          The type of message. An enum to constrain messages and allow better
-          interoperability. 'gufi'
-          field is required for all message_types except OTHER_SEE_FREE_TEXT.
+          The type of message. THe 'gufi' field is required for all
+          message_types except OTHER_SEE_FREE_TEXT.
           1. UNPLANNED_LANDING
             This operation had to land earlier than expected and/or at a
-            location other than was originally planned. MUST be sent with
-            severity ALERT if any damage or potential damage or injury other
-            than to the UAS itselft.  CRITICAL otherwise.
+            location other than was originally planned.
+            UNPLANNED_LANDING MUST have severity ALERT if any damage or potential damage or injury other than to the UAS itself.  CRITICAL otherwise.
           2. UNCONTROLLED_LANDING
             This operation had an uncontrolled landing either at the originally
-            planned landing location or another location. MUST be sent with
-            severity ALERT if any damage or potential damage or injury other
-            than to the UAS itselft.  CRITICAL otherwise.
+            planned landing location or another location.
+            UNCONTROLLED_LANDING MUST be sent with severity ALERT if any damage or potential damage or injury other than to the UAS itselft.  CRITICAL otherwise.
           3. OPERATION_NONCONFORMING
             This operation has entered the NONCONFORMING state. Must be sent to
-            LUN anytime operation transitions to this state. Must be sent with
-            severity ALERT if the operation is expected to intersect another
-            operation plan or unauthorized airspace.  Must be sent with severity
-            EMERGENCY if already intersecting another operation or if already
-            entered unauthorized airspace. Otherwise, must be sent with severity
-            CRITICAL.
+            LUN anytime operation transitions to this state.
+            OPERATION_NONCONFORMING MUST be sent with severity ALERT if the operation is expected to intersect another operation plan or unauthorized airspace.
+            OPERATION_NONCONFORMING MUST be sent with severity EMERGENCY if already intersecting another operation or if already entered unauthorized airspace. Otherwise CRITICAL.
           4. OPERATION_ROGUE
-            This operation has entered the ROGUE state. Must be sent to LUN
-            anytime operation transitions to ROGUE state. Must be sent with
-            severity ALERT if no current or immediate intersection with another
-            operation or unauthorized airspace. Must be sent with severity
-            EMERGENCY otherwise.
+            This operation has entered the ROGUE state.
+            OPERATION_ROGUE MUST be sent anytime operation transitions to ROGUE state.
+            OPERATION_ROGUE MUST be sent with severity ALERT if no current or immediate intersection with another operation or unauthorized airspace. EMERGENCY otherwise.
           5. OPERATION_CONFORMING
             This operation was previously in the NONCONFORMING state and has
             transitioned back to the ACTIVE state. 'gufi' field is required with
             this message_type.
           6. OPERATION_CLOSED
-            This operation has entered the terminal CLOSED state. The operation
-            will not again be active or in flight. This message is not required
-            if the operation is transitioned to the CLOSED state from the ACTIVE
-            state, but may be provided at the USS's discretion. This message is
-            required when the operation transitioned from any state other than
-            the ACTIVE state to the CLOSED state. If transitioning an operation
-            from ACCEPTED to CLOSED, this message must have a severity of
-            NOTICE. If transitioning from NONCONFORMING or ROGUE, this message
-            must have a severity of CRITICAL.
+            OPERATION_CLOSED MUST be sent when and operation has entered the terminal CLOSED state.
+            The operation will not again be active or in flight.
+            OPERATION_CLOSED MUST be sent with severity NOTICE if transitioning from ACCEPTED to CLOSED.
+            OPERATION_CLOSED MUST be sent with severity CRITICAL if transitioning from NONCONFORMING or ROGUE.
           7. CONTINGENCY_PLAN_INITIATED
             Description TBD.
           8. CONTINGENCY_PLAN_CANCELLED
             Description TBD.
           9. PERIODIC_POSITION_REPORTS_START
             The requestor wants position reports provided for the operation
-            referenced in the 'gufi' field of this request. Reports MUST be
-            provided as per the USS Specification. Must be sent with severity
-            NOTICE.
+            referenced in the 'gufi' field of this request. Reports must be
+            provided as per the USS Specification.
+            PERIODIC_POSITION_REPORTS_START MUST be sent with severity NOTICE.
           10. PERIODIC_POSITION_REPORTS_END
             The requestor wants previously requested position reports to end.
             If this message is received without a corresponding
             PERIODIC_POSITION_REPORTS_START, the message response is TBD (200,
-            400, 401, 404, etc.). Must be sent with severity NOTICE.
+            400, 401, 404, etc.).
+            PERIODIC_POSITION_REPORTS_END MUST be sent with severity NOTICE.
           11. UNAUTHORIZED_AIRSPACE_PROXIMITY
             An operation is within 3038 feet (almost 0.5nmi) from the boundary
             of unauthorized airspace (e.g., UVR/TFR, controlled airspace,
-            airspace constraint).  Must be sent with severity WARNING.
+            airspace constraint).
+            UNAUTHORIZED_AIRSPACE_PROXIMITY MUST be sent with severity WARNING.
           12. UNAUTHORIZED_AIRSPACE_ENTRY
             An operation has breached the boundary and entered into
             unauthorized airspace (e.g., UVR/TFR, controlled airspace, airspace
-            constraint).  Must be sent with severity CRITICAL.
+            constraint).
+            UNAUTHORIZED_AIRSPACE_ENTRY MUST be sent with severity CRITICAL.
           13. OTHER_SEE_FREE_TEXT
             Messages that do not fit any of the otherwise defined categories.
             Should be used sparingly or with additional out-of-band description.
-            Severity must be INFORMATIONAL or ALERT.  Only use ALERT if there
+            OTHER_SEE_FREE_TEXT severity MUST be INFORMATIONAL or ALERT.
+            Only use ALERT if there
             is some risk of injury or damage that would not be captured with
             any of the other enums.
 
