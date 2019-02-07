@@ -366,7 +366,7 @@ definitions:
           RFC-1035.
         type: string
         maxLength: 250
-        minLength: 1
+        minLength: 4
         x-utm-data-accessibility: PUBLIC
         example: utmbeta.arc.nasa.gov
       discovery_reference:
@@ -1197,7 +1197,7 @@ definitions:
           by the USS. The maximum and minimum character length is based on a
           usable domain name, and considering the maximum in RFC-1035.
         type: string
-        minLength: 1
+        minLength: 4
         maxLength: 250
         x-utm-data-accessibility: OPERATIONAL
       discovery_reference:
@@ -1747,7 +1747,7 @@ definitions:
           The maximum and minimum character length is based on a usable domain
           name, and considering the maximum in RFC-1035.
         type: string
-        minLength: 1
+        minLength: 4
         maxLength: 250
       uss_name_of_receiver:
         description: >-
@@ -1756,7 +1756,7 @@ definitions:
           The maximum and minimum character length is based on a usable domain
           name, and considering the maximum in RFC-1035.
         type: string
-        minLength: 1
+        minLength: 4
         maxLength: 250
       gufi_originator:
         description: >-
@@ -2017,7 +2017,7 @@ definitions:
           The maximum and minimum character length is based on a usable domain
           name, and considering the maximum in RFC-1035.
         type: string
-        minLength: 1
+        minLength: 4
         maxLength: 250
       time_submitted:
         description: >-
@@ -2166,7 +2166,7 @@ definitions:
       uss_name:
         type: string
         maxLength: 250
-        minLength: 1
+        minLength: 4
         example: "utmbeta.arc.nasa.gov"
       uss_instance_id:
         type: string
