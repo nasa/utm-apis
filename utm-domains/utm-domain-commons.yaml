@@ -556,6 +556,7 @@ definitions:
           An array of ContingencyPlans wherein this operation may land if
           needed/required during operation. Aids in planning and communication
           during the execution of a contingency.
+          An Operation MUST have least one Contingency Plan (CP) per Operation Volume, therefore the CP list size must be greater than or equal to the OpVol list size.
         type: array
         maxItems: 250
         minItems: 1
@@ -969,7 +970,11 @@ definitions:
           with ordinals that correspond to the ordinal values supplied with each
           OperationVolume. This is an indicator that this particular
           ContingencyPlan is valid for use when the operation is active in any
-          of the particular noted OperationVolumes.
+          of the particular noted OperationVolumes. For example, you may define
+          1 operation volume and 3 different contingency plans specifying the
+          causes that would transition the operation into LANDING, LOITERING or
+          RETURN_TO_BASE. See also ContingencyPlan.relevant_preference
+          and Operation.contingency_plans.
         type: array
         items:
           type: integer
@@ -977,7 +982,7 @@ definitions:
         x-utm-data-accessibility: OPERATIONAL
       valid_time_begin:
         description: >-
-          Optional. Time that this location is expected to be first available.
+          Time that this location is expected to be first available.
           For example, if an operation begins at 1100, but this location is not
           available until 1105 at the earliest, then this field could indicate
           that fact.
@@ -990,7 +995,7 @@ definitions:
         example: '2015-08-20T14:11:56.118Z'
       valid_time_end:
         description: >-
-          Optional. Time that this location is expected to become unavailable.
+          Time that this location is expected to become unavailable.
           For example, if an operation begins at 1100, but this location becomes
           closed for some reason at 1105, then this field could indicate that
           fact.
