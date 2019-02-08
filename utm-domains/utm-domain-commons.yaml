@@ -1356,9 +1356,9 @@ definitions:
             OPERATION_CLOSED MUST be sent with severity NOTICE if transitioning from ACCEPTED to CLOSED.
             OPERATION_CLOSED MUST be sent with severity CRITICAL if transitioning from NONCONFORMING or ROGUE.
           7. CONTINGENCY_PLAN_INITIATED
-            Description TBD.
+            A USS MUST send this message type to its LUN when a Contingency Plan begins.
           8. CONTINGENCY_PLAN_CANCELLED
-            Description TBD.
+            A USS MUST send this message type to its LUN when a Contingency Plan ends or changes.
           9. PERIODIC_POSITION_REPORTS_START
             The requestor wants position reports provided for the operation
             referenced in the 'gufi' field of this request. Reports must be
