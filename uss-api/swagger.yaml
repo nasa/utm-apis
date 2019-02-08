@@ -340,7 +340,7 @@ paths:
       tags:
         - A. Required Endpoints
       summary: Request information regarding Operations
-      description: Allows querying for Operation data.
+      description: Allows querying for Operation data. Returns an empty list if the query returns nothing.
       security:
         - ussapi_security:
             - utm.nasa.gov_write.operation
@@ -519,7 +519,7 @@ paths:
       tags:
         - A. Required Endpoints
       summary: Retrieve an operation by GUFI.
-      description: Retrieve an operation by GUFI.
+      description: Retrieve an operation by GUFI.  Returns 404 if gufi is not found.
       security:
         - ussapi_security:
             - utm.nasa.gov_write.operation
@@ -551,7 +551,17 @@ paths:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '403':
-          description: Forbidden. Data and or token do not meet security requirements.
+          description: Forbidden. Do not retry with same access token. Reason not provided, but do you have the right scopes?
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '404':
+          description: Resource not found.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        '423':
+          description: The requested data are in a transition state. Please retry request.
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
@@ -609,8 +619,8 @@ paths:
               https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '409':
           description: >-
-            Conflict. This USS Instance has an Operation that intersects.
-            'Resource' field in UTMRestResponse will contain list of GUFIs of length
+            Conflict. This USS has an Operation that intersects.
+            'messages' field in UTMRestResponse will contain list of GUFIs of length
             at least 1 indicating the conflicting Operation(s).
           schema:
             $ref: >-
@@ -627,7 +637,8 @@ paths:
         - A. Required Endpoints
       summary: Retrieve an operation by GUFI, including details relevant to safety and security.
       description: >-
-        Retrieve an operation by GUFI.  Similar to '/operations/{gufi}' except
+        Retrieve an operation by GUFI.  Returns 404 if gufi is not found.
+        Similar to '/operations/{gufi}' except
         all data tagged x-utm-data-accessibility <= SAFETY is returned.
 
         Note that there is currently no GET on '/enhanced/operations/' without
