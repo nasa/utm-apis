@@ -403,8 +403,9 @@ definitions:
           500ms difference in the time that you send and get confirmation from
           the grid, you DO NOT update the submit_time when sending to the USSs
           after that.
-          When the operation is announced for the first time, update_time MUST be equal to submit_time.
-          When an operation is modified (updated), update_time MUST be greater than submit_time.
+          
+          When the operation is announced for the first time, the sending USS SHOULD set update_time equal to submit_time.
+          A USS receiving an operation announcement MUST validate that update_time is greater than or equal to submit_time.
 
           Similarly, for traditional discovery, if there is a delay in sending
           the data to one LUN member versus another, this field is NOT updated
@@ -424,8 +425,8 @@ definitions:
           if/when te Operation is shared in the USS Network as a PUT to its LUN,
           update_time must reflect the time that update was provided.
 
-          When the operation is announced for the first time, update_time MUST be equal to submit_time.
-          When an operation is modified (updated), update_time MUST be greater than submit_time.
+          When the operation is announced for the first time, the sending USS SHOULD set update_time equal to submit_time.
+          A USS receiving an operation announcement MUST validate that update_time is greater than or equal to submit_time.
           THe update_time value MUST be constant for each update data exchange.
 
           This means that all stakeholder systems have the same value for
