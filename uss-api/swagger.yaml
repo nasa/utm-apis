@@ -597,7 +597,8 @@ paths:
               5. A USS receiving an Operation at this endpoint MUST validate that submit_time is less than or equal to update_time.
               5. {gufi} path parameter MUST equal Operation.gufi of the body data
               6. Operation.uss_id == access_token.sub
-              7. Other rules for a USS Operation PUT are satisfied.
+              7. Operation.priority_elements.status MUST NOT be PUBLIC_SAFETY.
+              8. Other rules for a USS Operation PUT are satisfied.
 
           required: true
           schema:
