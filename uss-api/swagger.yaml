@@ -715,8 +715,7 @@ paths:
         This role provides access to additional scopes, including utm.nasa.gov_write.publicsafety
         which is required to write to this endpoint.
 
-        Within this use case for this endpoint, it is a requirement
-        PriorityElements.status == PUBLIC_SAFETY with an appropriate severity.
+        All Operations accepted at the enhanced endpoint MUST have PriorityElements.status == PUBLIC_SAFETY with an appropriate severity.
 
         A public safety operation that ceases to be a public safety operation
         should CLOSE the operation as announced on this endpoint after creating
@@ -732,7 +731,7 @@ paths:
         follow a similar procedure as above.  CLOSE the nominal operation after
         announcing a new public safety operation on this endpoint.
 
-        Non-PUBLIC_SAFETY operations must not be accepted at this endpoint.
+        Non-PUBLIC_SAFETY operations MUST NOT be accepted at the enhanced endpoint.
 
       security:
         - ussapi_security:
@@ -753,7 +752,7 @@ paths:
             Operational plan with the following properties:
               1. Contains a valid uss_operation_id.
               2. time_available_end value that is in the future.
-              3. No date-time fields that are in the past are modified.
+              3. Date-time fields that are in the past MUST NOT be modified.
               4. Other rules for a USS Operation PUT are satisfied.
               5. {gufi} path parameter == Operation.gufi of body data
               6. Operation.uss_id == access_token.sub
