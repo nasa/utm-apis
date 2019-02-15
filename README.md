@@ -9,13 +9,6 @@ This repository contains the collection of OpenAPI specification APIs within the
 - [UTM Swaggerhub](https://app.swaggerhub.com/organizations/utm)
 
 
-## Sandbox and RELEASE branch
-
-utm-apis commits pinned to our Sandbox are represented in the RELEASE branch, and the master branch is our development branch.  You will generally find the master branch to be ahead of the Sandbox.  The tags in RELEASE correspond with our sandbox releases.
-
-For codegen you generally will point to RELEASE.  
-
-
 ## Viewing Local Swagger Spec files
 
 You have choices to edit/view local swagger files. IMO option 1 is better for viewing all files.  A local swagger editor is good if you want rendering.
@@ -64,4 +57,9 @@ and java8's OffsetDateTime class for date-time using this language-specific conf
   "useBeanValidation":"true"
 }
 
+````````
+## Filtering for Requirements
+````````
+curl --silent  -o commons.yml  https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml && grep  MUST commons.yml
+This is a swagger JSON built by the [swagger-codegen](https://github.com/swagger-api/swagger-codegen) project.
 ````````

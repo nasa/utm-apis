@@ -593,8 +593,8 @@ paths:
               1. Contains a valid uss_operation_id.
               2. time_available_end value that is in the future.
               3. For and update to an Operation, date-time fields that are in the past MUST NOT be modified.
-              4. For an initial Operation, the sending USS SHOULD set update_time equal to submit_time.
-              5. A USS receiving an Operation at this endpoint MUST validate that submit_time is less than or equal to update_time.
+              4. On the first announcement of an Operation, submit_time SHOULD be equal to update_time.
+              5. submit_time MUST be less than or equal to update_time.
               5. {gufi} path parameter MUST equal Operation.gufi of the body data
               6. Operation.uss_id == access_token.sub
               7. Operation.priority_elements.status MUST NOT be PUBLIC_SAFETY.

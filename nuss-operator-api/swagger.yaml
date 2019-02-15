@@ -1235,7 +1235,6 @@ definitions:
         format: "date-time"
         description: "Latest time the operation will done with the operation volume."
       flight_geography:
-        description: "The flight georgraphy MUST be a Polygon.  Linestring is not supported"
         $ref: "#/definitions/Polygon"
       gufi:
         type: "string"
