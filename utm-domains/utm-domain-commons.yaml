@@ -1935,6 +1935,7 @@ definitions:
           the origin and receiver roles are strictly dependent on which USS is
           generating this message. May be empty in the case of ATC communication
           to USS via FIMS.
+          The receiving USS MUST return 400 if it does not own this GUFI.
         type: string
         format: uuid
         maxLength: 36
