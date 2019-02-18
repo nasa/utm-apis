@@ -91,8 +91,6 @@ USS_PUBLIC_SAFETY:
        assumptions TBD.
     authority: UTM_AUTHORITY
     examples:
-        - "A Public Safety USS queries other USSs to determine which USS is operating a particular vehicle."
-        - "A Public Safety USS queries vehicle registration using its pubsafe scopes to learn the vehicle's owner."
         - "A Public Safety USS supports a public safety operation within the USS Network."
     scopes:
         - utm.nasa.gov_write.publicsafety
