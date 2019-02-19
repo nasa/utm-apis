@@ -51,14 +51,16 @@ securityDefinitions:
     tokenUrl: 'https://utm.defined.host/oauth/token'
     flow: application
     scopes:
+      'utm.nasa.gov_read.operation': Subject can read operational data such as USS Instance data
       'utm.nasa.gov_write.operation': Subject can read, create, and update operational data such as USS Instance data
+      'utm.nasa.gov_read.message': Subject can read message data such as UTM Message and Negotiations
       'utm.nasa.gov_write.message': Subject can read, create, and update message data such as UTM Message and Negotiations
       'utm.nasa.gov_read.publicsafety': Subject can read operations that are designated public safety operations.
-      'utm.nasa.gov_write.publicsafety': Subject can write operations that are designated public safety operations.
+      'utm.nasa.gov_write.publicsafety': Subject can read, create, and update operations that are designated public safety operations.
+      'utm.nasa.gov_read.constraint': Subject can read UTM constraint data
       'utm.nasa.gov_write.constraint': Subject can read, create, and update UTM constraint data. This means that the Subject can define areas that restrict other operations.
+      'utm.nasa.gov_read.conflictmanagement':  Subject can read conflict management data.
       'utm.nasa.gov_write.conflictmanagement':  Subject can read and write conflict management data.
-
-
 paths:
   '/uvrs/{message_id}':
     put:
@@ -257,7 +259,7 @@ paths:
             NegotiationMessage received. No content returned. USS receiving this
             NegotiationMessage will move to accommodate the new operation.
         '400':
-          description: Bad request. Typically validation error. Fix your request and retry.
+          description: Bad request. Typically validation error.  Fix your request and retry.
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
@@ -344,7 +346,7 @@ paths:
       security:
         - ussapi_security:
             - utm.nasa.gov_write.operation
-            - utm.nasa.gov_read.publicsafety
+            - utm.nasa.gov_read.operation
       produces:
         - application/json
       parameters:
@@ -523,7 +525,7 @@ paths:
       security:
         - ussapi_security:
             - utm.nasa.gov_write.operation
-            - utm.nasa.gov_read.publicsafety
+            - utm.nasa.gov_read.operation
       produces:
         - application/json
       parameters:
@@ -592,9 +594,14 @@ paths:
             Operational plan with the following properties:
               1. Contains a valid uss_operation_id.
               2. time_available_end value that is in the future.
-              3. No date-time fields that are in the past are modified.
-              4. Other rules for a USS Operation PUT are satisfied.
-              5. {gufi} path parameter == Operation.gufi of body data
+              3. For and update to an Operation, date-time fields that are in the past MUST NOT be modified.
+              4. On the first announcement of an Operation, submit_time SHOULD be equal to update_time.
+              5. submit_time MUST be less than or equal to update_time.
+              5. {gufi} path parameter MUST equal Operation.gufi of the body data
+              6. Operation.uss_id == access_token.sub
+              7. Operation.priority_elements.status MUST NOT be PUBLIC_SAFETY.
+              8. Other rules for a USS Operation PUT are satisfied.
+
           required: true
           schema:
             $ref: >-
@@ -645,9 +652,11 @@ paths:
         specifying a GUFI.  If general seraching for operations is required, then
         a GET on '/operations' may be performed, followed by individual GETs to
         this endpoint for enhanced data access.
+
       security:
         - ussapi_security:
             - utm.nasa.gov_read.publicsafety
+            - utm.nasa.gov_write.publicsafety
       produces:
         - application/json
       parameters:
@@ -698,6 +707,7 @@ paths:
         update to the Operation. The Operation's owner creates the ID.
 
         This is the ENHANCED version of the nominal /operations/{gufi} endpoint.
+        A USS receiving an operation on this endpoint MUST validate that PriorityElements.status == PUBLIC_SAFETY with an appropriate severity.
 
         In the future there may be several use cases for the this endpoint.
         Currently a single use case is required to be supported by USSs.
@@ -715,9 +725,6 @@ paths:
         This role provides access to additional scopes, including utm.nasa.gov_write.publicsafety
         which is required to write to this endpoint.
 
-        Within this use case for this endpoint, it is a requirement
-        PriorityElements.status == PUBLIC_SAFETY with an appropriate severity.
-
         A public safety operation that ceases to be a public safety operation
         should CLOSE the operation as announced on this endpoint after creating
         a non-public safety operation on the nominal endpoint.  Note this means
@@ -731,8 +738,6 @@ paths:
         A nominal operation that becomes a public safety operation should
         follow a similar procedure as above.  CLOSE the nominal operation after
         announcing a new public safety operation on this endpoint.
-
-        Non-PUBLIC_SAFETY operations must not be accepted at this endpoint.
 
       security:
         - ussapi_security:
@@ -751,14 +756,8 @@ paths:
           name: operation
           description: |
             Operational plan with the following properties:
-              1. Contains a valid uss_operation_id.
-              2. time_available_end value that is in the future.
-              3. No date-time fields that are in the past are modified.
-              4. Other rules for a USS Operation PUT are satisfied.
-              5. {gufi} path parameter == Operation.gufi of body data
-              6. Operation.uss_id == access_token.sub
-              6. Operation.priority_elements.status == PUBLIC_SAFETY
-              7. Operation.priority_elements.severity >= CRITICAL
+              1. All requirements for the non-enhanced PUT Operation endpoint, as stated in this spec.
+              2. Operation.priority_elements.status == PUBLIC_SAFETY and its corresponding severity.
           required: true
           schema:
             $ref: >-
