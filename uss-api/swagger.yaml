@@ -48,6 +48,7 @@ schemes:
 securityDefinitions:
   ussapi_security:
     type: oauth2
+    description: A write scope allows reading.
     tokenUrl: 'https://utm.defined.host/oauth/token'
     flow: application
     scopes:
