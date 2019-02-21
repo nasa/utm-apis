@@ -595,7 +595,7 @@ paths:
             Operational plan with the following properties:
               1. Contains a valid uss_operation_id.
               2. time_available_end value that is in the future.
-              3. For and update to an Operation, date-time fields that are in the past MUST NOT be modified.
+              3. For an update to an Operation, date-time fields that are in the past MUST NOT be modified.
               4. On the first announcement of an Operation, submit_time SHOULD be equal to update_time.
               5. submit_time MUST be less than or equal to update_time.
               5. {gufi} path parameter MUST equal Operation.gufi of the body data
