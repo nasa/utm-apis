@@ -1,13 +1,9 @@
 ---
 swagger: "2.0"
 info:
-  version: "v4"
-  title: "NUSS UAS Operator API"
+  version: "v2.1"
+  title: "NUSS UAS Operator API v2.1"
   description: "Manage Operator Operations.
-
-
-  Here is info that applies to most APIs, otherwise see each API for details.
-
 
   For GETTERs with query parameters, the parameter names must be lower case, however
   string parmeter values are case insensitive.
