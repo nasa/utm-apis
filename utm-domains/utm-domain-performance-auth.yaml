@@ -87,14 +87,103 @@ definitions:
         format: double
         minimum: 0.0
         maximum: 30000.0
+        example: 5800.0
+      v2v_equipped:
+        description: >-
+          This property asks:  Must the vehicle be equipped to meet the
+          accepted V2V standard?
+
+          This could be an enumeration of choices or a generic string depending
+          on the level of detail desired in this property.
+        type: boolean
+        example: true
 
   MissionCharacteristics:
     type: object
     properties:
-      
+      minimum_operation_altitude:
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
+      maximum_operation_altitude:
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
+      minimum_aircraft_weight_lbs:
+        type: number
+        format: float
+        minimum: 0.0
+      maximum_aircraft_weight_lbs:
+        type: number
+        format: float
+        minimum: 0.0
+        exclusiveMinimum: true
+      minimum_aircraft_endurance_minutes:
+        type: integer
+        format: int32
+      maximum_mission_duration_minutes:
+        type: integer
+        format: int32
+
+
   AreaOfOperation:
     type: object
+    required:
+      - area_of_operation_label
+      - effective_date_begin
+      - effective_date_end
+      - min_altitude
+      - max_altitude
+      - operation_geography
     properties:
+      area_of_operation_label:
+        description: >-
+          A label to indicate this area of operation object within this performance
+          authorization.  Must be distinct from all other area of operation
+          labels within this performance authorization.
+        $ref: '#/definitions/PerformanceAuthorizationLabel'
+      effective_date_begin:
+        description: >-
+          Earliest date (inclusive) that operations under this Performance Authorization
+          would be allowed within the geographical boundaries of this
+          AreaOfOperation object.
+
+          effective_date_begin <= effective_date_end MUST be true.
+
+          This is a 'full-date' as described within RFC3339:
+            https://tools.ietf.org/html/rfc3339#section-5.6
+        type: string
+        format: date
+        minLength: 10
+        maxLength: 10
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])$"
+        example: '2015-08-20'
+      effective_date_end:
+        description: >-
+          Latest date (inclusive) that operations under this Performance Authorization
+          would be allowed within the geographical boundaries of this
+          AreaOfOperation object.
+
+          effective_date_begin <= effective_date_end MUST be true.
+
+          This is a 'full-date' as described within RFC3339:
+            https://tools.ietf.org/html/rfc3339#section-5.6
+        type: string
+        format: date-time
+        minLength: 10
+        maxLength: 10
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])$"
+        example: '2015-08-20'
+      min_altitude:
+        description: >-
+          The minimum altitude for this operation in this operation volume.
+          The following MUST hold: min_altitude.altitude_value < max_altitude.altitude_value
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
+      max_altitude:
+        description: >-
+          The maximum altitude for this operation in this operation volume.
+          The following MUST hold: min_altitude.altitude_value < max_altitude.altitude_value
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
+      operation_geography:
+        description:
+          The polygon encompassing the operational area.
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
 
   StandardProvisions:
     type: object
