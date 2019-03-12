@@ -67,12 +67,79 @@ definitions:
         maxItems: 5
         items:
           $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/PersonOrOrganization'
+      date_of_validity:
+        description: >-
+          Date (inclusive) that any operations under this Performance Authorization
+          would be authorized.
+
+          date_of_validity <= date_of_expiration MUST be true.
+
+        $ref: '#/definitions/PerformanceAuthorizationDate'
+      date_of_expiration:
+        description: >-
+          Date (inclusive) after which any operations under this Performance Authorization
+          would be unauthorized.
+
+          date_of_validity <= date_of_expiration MUST be true.
+
+        $ref: '#/definitions/PerformanceAuthorizationDate'
       operation_types:
         description: >-
-          asdf
+          An array of OperationType objects.  Each OperationType contains a
+          formal specification of the types of operations allowed including
+          elements related to the geogrpahical location, the vehicle
+          capabilities, the mission characteristics, and other elements.
+
+          Since this is an array, multiple OperationTypes are allowed to account
+          for variations in any of the elements under a single Performance
+          Authorization.
         type: array
         items:
           $ref: '#/definitions/OperationType'
+
+  OperationType:
+    type: object
+    properties:
+      base_operating_rule:
+        type: string
+        enum:
+          - 107
+          - 107X
+      operation_type_label:
+        description: >-
+          A label to indicate this operation type within this performance
+          authorization.  Must be distinct from all other operation type
+          labels within this performance authorization.
+        $ref: '#/definitions/PerformanceAuthorizationLabel'
+      equipment_specification_reference:
+        description: >-
+          A reference to the equipment specification to be associated with this
+          operation type.
+        $ref: '#/definitions/PerformanceAuthorizationLabel'
+      mission_characteristics_reference:
+        description: >-
+          A reference to the mission characteristics to be associated with this
+          operation type.
+        $ref: '#/definitions/PerformanceAuthorizationLabel'
+      area_of_operation_references:
+        description: >-
+          A reference to the area of operations to be associated with this
+          operation type.
+        type: array
+        minItems: 1
+        maxItems: 100
+        items:
+          $ref: '#/definitions/PerformanceAuthorizationLabel'
+      standard_provisions_reference:
+        description: >-
+          A reference to the standard provisions to be associated with this
+          operation type.
+        $ref: '#/definitions/PerformanceAuthorizationLabel'
+      special_provisions_reference:
+        description: >-
+          A reference to the special provisions to be associated with this
+          operation type.
+        $ref: '#/definitions/PerformanceAuthorizationLabel'
 
 
   EquipmentSpecification:
@@ -146,14 +213,7 @@ definitions:
 
           effective_date_begin <= effective_date_end MUST be true.
 
-          This is a 'full-date' as described within RFC3339:
-            https://tools.ietf.org/html/rfc3339#section-5.6
-        type: string
-        format: date
-        minLength: 10
-        maxLength: 10
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])$"
-        example: '2015-08-20'
+        $ref: '#/definitions/PerformanceAuthorizationDate'
       effective_date_end:
         description: >-
           Latest date (inclusive) that operations under this Performance Authorization
@@ -162,14 +222,7 @@ definitions:
 
           effective_date_begin <= effective_date_end MUST be true.
 
-          This is a 'full-date' as described within RFC3339:
-            https://tools.ietf.org/html/rfc3339#section-5.6
-        type: string
-        format: date-time
-        minLength: 10
-        maxLength: 10
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])$"
-        example: '2015-08-20'
+        $ref: '#/definitions/PerformanceAuthorizationDate'
       min_altitude:
         description: >-
           The minimum altitude for this operation in this operation volume.
@@ -187,55 +240,76 @@ definitions:
 
   StandardProvisions:
     type: object
+    required:
+      - standard_provisions_label
     properties:
+      standard_provisions_label:
+        description: >-
+          A label to indicate this set of standard provisions within this performance
+          authorization.  Must be distinct from all other standard provisions
+          labels within this performance authorization.
+        $ref: '#/definitions/PerformanceAuthorizationLabel'
+      airworthiness_certificate_designation_number:
+        type: string
+        minLength: 3
+        maxLength: 70
+      maximum_uas_per_rpic:
+        type: integer
+        format: int32
+        minimum: 1
+        example: 2
+      minimum_gcs_per_uas:
+        type: integer
+        format: int32
+        minimum: 0
+        example: 1
+      maximum_gcs_per_uas:
+        type: integer
+        format: int32
+        minimum: 0
+        example: 1
+      maximum_concurrent_rpic_per_uas:
+        type: integer
+        format: int32
+        minimum: 0
+        example: 1
+
 
   SpecialProvisions:
     type: object
+    required:
+      - special_provisions_label
     properties:
-
-  OperationType:
-    type: object
-    properties:
-      base_operating_rule:
-        type: string
-        enum:
-          - 107
-          - 107X
-      operation_type_label:
+      special_provisions_label:
         description: >-
-          A label to indicate this operation type within this performance
-          authorization.  Must be distinct from all other operation type
+          A label to indicate this set of special provisions within this performance
+          authorization.  Must be distinct from all other special provisions
           labels within this performance authorization.
         $ref: '#/definitions/PerformanceAuthorizationLabel'
-      equipment_specification_reference:
-        description: >-
-          A reference to the equipment specification to be associated with this
-          operation type.
-        $ref: '#/definitions/PerformanceAuthorizationLabel'
-      mission_characteristics_reference:
-        description: >-
-          A reference to the mission characteristics to be associated with this
-          operation type.
-        $ref: '#/definitions/PerformanceAuthorizationLabel'
-      area_of_operation_references:
-        description: >-
-          A reference to the area of operations to be associated with this
-          operation type.
-        type: array
-        minItems: 1
-        maxItems: 100
-        items:
-          $ref: '#/definitions/PerformanceAuthorizationLabel'
-      standard_provisions_reference:
-        description: >-
-          A reference to the standard provisions to be associated with this
-          operation type.
-        $ref: '#/definitions/PerformanceAuthorizationLabel'
-      special_provisions_reference:
-        description: >-
-          A reference to the special provisions to be associated with this
-          operation type.
-        $ref: '#/definitions/PerformanceAuthorizationLabel'
+      allow_moving_gcs_operations:
+        type: boolean
+        default: false
+      allow_night_operations:
+        type: boolean
+        default: false
+      allow_bvlos_operations:
+        type: boolean
+        default: false
+      allow_ops_over_people:
+        type: boolean
+        default: false
+      allow_operations_near_aircraft:
+        type: boolean
+        default: false
+      allow_multi_uas_operations:
+        type: boolean
+        default: false
+      allow_tactical_observers:
+        type: boolean
+        default: false
+      allow_expanding_operating_limits:
+        type: boolean
+        default: false
 
   PerformanceAuthorizationLabel:
     description: >-
@@ -246,9 +320,24 @@ definitions:
     minLength: 1
     maxLength: 30
   PerformanceAuthorizationUUID:
+    description: >-
+      A valid version 4 Universally Unique Identifier as described within
+      RFC4122:
+
+        https://tools.ietf.org/html/rfc4122
     type: string
     format: uuid
     pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
     example: 'd7126818-d280-475f-aaee-c16e9c6f04e0'
     maxLength: 36
     minLength: 36
+  PerformanceAuthorizationDate:
+    description: >-
+        This is a 'full-date' as described within RFC3339:
+          https://tools.ietf.org/html/rfc3339#section-5.6
+    type: string
+    format: date
+    minLength: 10
+    maxLength: 10
+    pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])$"
+    example: '2015-08-20'
