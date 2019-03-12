@@ -1,74 +1,165 @@
+swagger: '2.0'
 info:
-  description: "Performance Authorization long descripttion..."
-  version: 'v4'
   title: Performance Authorization
+  description: >-
+    The following definition is from:
+
+    FAA NextGen UTM Concept of Operations v1.0
+
+    https://utm.arc.nasa.gov/docs/2018-UTM-ConOps-v1.0.pdf
+
+    NOTE: THIS IS A CONCEPTUAL DEFINITION. IT IS NOT CURRENT POLICY NOR A CURRENT RULE.
+
+    'All BVLOS Operators are required to obtain a Performance Authorization from the FAA prior to
+    conducting a UTM operation. A Performance Authorization is a FAA regulatory approval for BVLOS
+    Operators to perform a specific type of operation in a specified geographical area. The FAA grants a
+    Performance Authorization when a UAS Operator’s proposed ground and air assets are sufficient to
+    meet an established level of performance in the airspace in which they intend to operate.'
+  version: 'v1'
+  contact:
+    name: 'NASA Ames Research Center, Aviation Systems Division'
+    url: 'https://utm.arc.nasa.gov/'
+    email: joseph.rios@nasa.gov
+  license:
+    name: NASA Open Source Agreement
+    url: 'https://ti.arc.nasa.gov/opensource/nosa/'
+
+paths:
+  '/no-paths':
+    put:
+      responses:
+        '410':
+          description: >-
+            Gone. Not implemented. Will not be implemented. Path included for
+            proper use by automated tooling.  Tools sometimes do not like
+            when there are no paths, but domains do not contain paths.
 
 definitions:
-  PerformanceAuthorizationSchema:
+  PerformanceAuthorization:
     type: object
     required:
-      - event_id
-      - data_quality_engineer
+      - performance_authorization_id
+      - state
+      - contacts
     properties:
-      event_id:
+      performance_authorization_id:
+        description: >-
+          A universally unique identifier for this performance authorization.
+        $ref: '#/definitions/PerformanceAuthorizationUUID'
+      state:
+        description: >-
+          The current state of this Performance Authorization.
         type: string
+        enum:
+          - DEVELOPMENT
+          - APPLICATION
+          - REVIEW
+          - APPROVED
+          - REJECTED
+      organization:
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/PersonOrOrganization'
+      contacts:
         description: >-
-          A string tag indicating which event this operation is associated.
-          Will be used to select a set of rules for validation.
-        minLength: 1
-        maxLength: 100
-      test_identifiers:
+          List of individual(s) at the applying serving as primary contacts for
+          this performance authorization.
+        type: array
+        minItems: 1
+        maxItems: 5
+        items:
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/PersonOrOrganization'
+      operation_types:
         description: >-
-          Specific tests ids supported by these data. These ids should map to
-          specific tests as outlined in the overall event description. As
-          an example, Event "TCL3_Demonstration" at a test site may have a
-          test_card called "CARD_44". The operation associated with this
-          metadata block may support "DAT2", "CNS1", and "CON4" specific tests.
-          If any one of those elements are missing (event_id, test_card,
-          test_identifiers), then data analysis may become difficult if not
-          impossible.
+          asdf
         type: array
         items:
-          type: string
-          minLength: 1
-          maxLength: 30
-        maxItems: 20
-        minItems: 1
-        uniqueItems: true
-      test_type:
+          $ref: '#/definitions/OperationType'
+
+
+  EquipmentSpecification:
+    type: object
+    properties:
+      equipment_specifiation_label:
+        $ref: '#/definitions/PerformanceAuthorizationLabel'
+      flight_crew_comm_freq:
+        description: >-
+          add descp.  MHz?  Fix bounds.
+        type: number
+        format: double
+        minimum: 0.0
+        maximum: 30000.0
+
+  MissionCharacteristics:
+    type: object
+    properties:
+      
+  AreaOfOperation:
+    type: object
+    properties:
+
+  StandardProvisions:
+    type: object
+    properties:
+
+  SpecialProvisions:
+    type: object
+    properties:
+
+  OperationType:
+    type: object
+    properties:
+      base_operating_rule:
         type: string
-        description: Test type.
         enum:
-          - GROUND
-          - FLIGHT
-      free_text:
-        type: string
+          - 107
+          - 107X
+      operation_type_label:
         description: >-
-          Free text may be included with the original submission and/or added
-          by a data_quality_engineer.  In the latter case, all previous
-          free_text should be preserved, i.e. the data_quality_engineer should
-          only append to the free_text field.
-        maxLength: 3000
-      data_quality_engineer:
-        type: string
-        format: email_address
+          A label to indicate this operation type within this performance
+          authorization.  Must be distinct from all other operation type
+          labels within this performance authorization.
+        $ref: '#/definitions/PerformanceAuthorizationLabel'
+      equipment_specification_reference:
         description: >-
-          Email address of author handling data quality issue. If multiple
-          individuals modify this metadata, this field will only hold the
-          last such individual.  In that case, the engineer should make an
-          effort to document as much as possible in the free_text field.
-        maxLength: 150
-      modified:
-        type: boolean
+          A reference to the equipment specification to be associated with this
+          operation type.
+        $ref: '#/definitions/PerformanceAuthorizationLabel'
+      mission_characteristics_reference:
         description: >-
-          This metadata was modified from its original submission by a
-          data_quality_engineer.
+          A reference to the mission characteristics to be associated with this
+          operation type.
+        $ref: '#/definitions/PerformanceAuthorizationLabel'
+      area_of_operation_references:
+        description: >-
+          A reference to the area of operations to be associated with this
+          operation type.
+        type: array
+        minItems: 1
+        maxItems: 100
+        items:
+          $ref: '#/definitions/PerformanceAuthorizationLabel'
+      standard_provisions_reference:
+        description: >-
+          A reference to the standard provisions to be associated with this
+          operation type.
+        $ref: '#/definitions/PerformanceAuthorizationLabel'
+      special_provisions_reference:
+        description: >-
+          A reference to the special provisions to be associated with this
+          operation type.
+        $ref: '#/definitions/PerformanceAuthorizationLabel'
 
-
-    example:
-      event_id: TCL3_FD
-      test_identifiers: ["CNS1", "DAT3", "CON5" ]
-      test_type: FLIGHTD
-      free_text: "shakedown with Larry"
-      data_quality_engineer: data_quality@test-site.com
-      modfied: false
+  PerformanceAuthorizationLabel:
+    description: >-
+      A reusable field describing a label with a performance authorization.  Used
+      by the various components of the performance authorization to efficiently
+      reference each other as needed.
+    type: string
+    minLength: 1
+    maxLength: 30
+  PerformanceAuthorizationUUID:
+    type: string
+    format: uuid
+    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+    example: 'd7126818-d280-475f-aaee-c16e9c6f04e0'
+    maxLength: 36
+    minLength: 36
