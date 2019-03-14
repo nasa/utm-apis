@@ -55,32 +55,3 @@ reportingFrequency.minimum.hz specifies the max interval between position report
           protected.time.ms:60000
 
 **Figure 2: Default Conformance Values**
-
-
-## Operator Operation States
-
-Operator-API Operation States are shown in Figure 1.  Note that Non-conforming to Closed is a valid state transition but is not captured this diagram.
-
-
-![alt text](https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/nuss-operator-api/images/tcl4states.png "TCL4 FSM")
-
-**Figure 4: Operator-API Operation States**
-
-
-Abbreviation | State
------------- | -------------
- P  | PROPOSED
- A  |  ACCEPTED
- R  | REJECTED - terminal
- C   | CLOSED  - terminal
- X   | CANCELED  - terminal
- I   | READIED
- E   | EXPIRED  - terminal
- G   | ROGUECLOSED  - terminal
- B   | ABORTCLOSED - terminal
- U  | ROGUE
- T  | ABORTING
- F  | NON-CONFORMING
- V  | ACTIVE
-
- **Table 2: Operator-API Operation State Abbreviations**
