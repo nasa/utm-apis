@@ -9,11 +9,7 @@ info:
   string parmeter values are case insensitive.
 
   Example of the GET-list using time window:
-      /messages/?sent_time_after=2038-01-01T07:58:20.000Z&sent_time_before=2038-01-01T07:58:30.000Z
-
-  (todo) GET-list for Positions is not yet in.
-  (todo) GET-list returns an empty list if nothing is found.
-  GET-by-gufi returns 404 if the item is not found."
+      /messages/?sent_time_after=2038-01-01T07:58:20.000Z&sent_time_before=2038-01-01T07:58:30.000Z"
 
 host: "some.host"
 basePath: "/operator/v4"
