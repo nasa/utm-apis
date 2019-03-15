@@ -16,7 +16,7 @@ info:
   GET-by-gufi returns 404 if the item is not found."
 
 host: "some.host"
-basePath: "/v4/operator"
+basePath: "/operator/v4"
 tags:
 
 - name: "Message Data Types"
