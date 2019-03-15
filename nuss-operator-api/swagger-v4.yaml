@@ -8,18 +8,15 @@ info:
   For GETTERs with query parameters, the parameter names must be lower case, however
   string parmeter values are case insensitive.
 
-
   Example of the GET-list using time window:
-
       /messages/?sent_time_after=2038-01-01T07:58:20.000Z&sent_time_before=2038-01-01T07:58:30.000Z
 
-
   (todo) GET-list for Positions is not yet in.
-
   (todo) GET-list returns an empty list if nothing is found.
   GET-by-gufi returns 404 if the item is not found."
+
 host: "some.host"
-basePath: "/operator"
+basePath: "/v4/operator"
 tags:
 
 - name: "Message Data Types"
@@ -34,8 +31,8 @@ tags:
   description: "Subscribe to notifications"
 schemes:
 - "https"
-paths:
 
+paths:
   /messages:
     get:
       tags:
