@@ -2,13 +2,26 @@
 swagger: "2.0"
 info:
   version: "v4"
-  title: "NUSS UAS V4-Operator API"
-  description: >
-   "This Operator API ("operapi") is used by a NUSS Operator to manage flights.  It has Outbound and Inbound endpoints based on the utm-commons models."
+  title: "NUSS Operator API v4"
+  description: "Manage Operator Operations.
 
+  For GETTERs with query parameters, the parameter names must be lower case, however
+  string parmeter values are case insensitive.
+
+
+  Example of the GET-list using time window:
+
+      /messages/?sent_time_after=2038-01-01T07:58:20.000Z&sent_time_before=2038-01-01T07:58:30.000Z
+
+
+  (todo) GET-list for Positions is not yet in.
+
+  (todo) GET-list returns an empty list if nothing is found.
+  GET-by-gufi returns 404 if the item is not found."
 host: "some.host"
-basePath: "/v4/operator"
+basePath: "/operator"
 tags:
+
 - name: "Message Data Types"
   description: "Intent, Inform, Alert and Free message schemas"
 - name: "Operations"
@@ -19,17 +32,15 @@ tags:
   description: "Geographies"
 - name: "Subscription Points"
   description: "Subscribe to notifications"
-
 schemes:
 - "https"
-- "ws"
-
 paths:
+
   /messages:
     get:
       tags:
       - "Positions, Messages"
-      summary: "Get Messages."
+      summary: "Get Operator Messages."
       description: "You can specify ASC and DESC (or asc/desc) as follows:
         /operator/messages?sort=DESC
         You can specify a time window as follows:
@@ -100,8 +111,8 @@ paths:
         description: "msg"
         required: true
         schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMMessage
+          $ref: >-
+            https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMMessage
       responses:
         201:
           description: "Created"
@@ -150,8 +161,8 @@ paths:
           schema:
             type: "array"
             items:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMMessage
+              $ref: >-
+                https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMMessage
         401:
           description: "Unauthorized"
         403:
@@ -168,7 +179,7 @@ paths:
       parameters:
       - name: "state"
         in: "query"
-        description: "You can specify ASC and DESC (or asc/desc) as follows: https://host.nasa.gov/nuss/v4/operator/operations?sort=DESC
+        description: "You can specify ASC and DESC (or asc/desc) as follows: https://host.nasa.gov/nuss/operator/messages?sort=DESC
 
           You can also specify limit and offset.
 
@@ -284,8 +295,8 @@ paths:
         description: "model"
         required: true
         schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Operation
+          $ref: >-
+            https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Operation
       responses:
         201:
           description: "Created"
@@ -364,7 +375,7 @@ paths:
       tags:
       - "Positions, Messages"
       summary: "GET Positions"
-      description: "You can specify ASC and DESC (or asc/desc) as follows: https://host.nasa.gov/nuss/v4/operator/positions?sort=DESC
+      description: "You can specify ASC and DESC (or asc/desc) as follows: https://host.nasa.gov/nuss/operator/positions?sort=DESC
         You can also specify limit and offset.
         "
       consumes:
@@ -397,8 +408,8 @@ paths:
           schema:
             type: "array"
             items:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Position
+              $ref: >-
+                https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Position
         401:
           description: "Unauthorized"
         403:
@@ -485,21 +496,6 @@ paths:
           description: "Forbidden"
         404:
           description: "Not Found"
-
-  /positionstream:
-    get:
-      tags:
-      - "Subscription Points"
-      summary: "Subscribe to event topic"
-      description: "Provides InformMessage data related to the specified operator's\
-        \ operations. For example, after an operator POSTs an operation to the /operations\
-        \  endpoint, that operator will receive InformMessage ACCEPTED or REJECTED.\
-        \  The connection URL is wss://{host}/uss/NotificationProvider/utm\n"
-      parameters: []
-      responses:
-        410:
-          description: "WRONG_PROTOCOL - A RESTful call was made to this endpoint\
-            \ but this is not a REST endpoint."
 
 definitions:
   UTMRestResponse:
