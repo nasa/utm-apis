@@ -3,7 +3,7 @@
 ## Operational States
 
 
-![alt text](diagrams/tcl4-statemachine.png "Operational States")
+![alt text](../diagrams/tcl4-statemachine.png "Operational States")
 
 ## Finding validations from swagger spec which are stated in free text with a MUST.
 
