@@ -1,6 +1,6 @@
 # V4 Operator API
 
-The V2.1 API can be found here: ![alt text](README-v2-1.md  "v4")
+The V2.1 API can be found in ![README-v2-1.md](README-v2-1.md  "v4")
 
 
 ## V4 Operator States
