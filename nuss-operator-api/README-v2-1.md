@@ -1,5 +1,6 @@
 # V2.1 NUSS-Operator Interface
 
+This is the V2.1 API.  Go here for the V4 API. !["V4 README.md"](README.md  "v4")
 
 ## Conformance Monitoring
 If an active operation violates its conformance geography, that operation is transitioned to the nonconforming state, and it could eventually be transitioned to
