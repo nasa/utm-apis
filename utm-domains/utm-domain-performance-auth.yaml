@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   title: Performance Authorization
-  description: >-
+  description: |
     The following definition is from:
 
     FAA NextGen UTM Concept of Operations v1.0
@@ -15,6 +15,7 @@ info:
     Operators to perform a specific type of operation in a specified geographical area. The FAA grants a
     Performance Authorization when a UAS Operator’s proposed ground and air assets are sufficient to
     meet an established level of performance in the airspace in which they intend to operate.'
+    
   version: 'v1'
   contact:
     name: 'NASA Ames Research Center, Aviation Systems Division'
