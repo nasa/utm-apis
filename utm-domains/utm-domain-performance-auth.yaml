@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   title: Performance Authorization
-  description: >-
+  description: |
     The following definition is from:
 
     FAA NextGen UTM Concept of Operations v1.0
@@ -15,6 +15,7 @@ info:
     Operators to perform a specific type of operation in a specified geographical area. The FAA grants a
     Performance Authorization when a UAS Operator’s proposed ground and air assets are sufficient to
     meet an established level of performance in the airspace in which they intend to operate.'
+    
   version: 'v1'
   contact:
     name: 'NASA Ames Research Center, Aviation Systems Division'
@@ -47,8 +48,17 @@ definitions:
           A universally unique identifier for this performance authorization.
         $ref: '#/definitions/PerformanceAuthorizationUUID'
       state:
-        description: >-
+        description: |
           The current state of this Performance Authorization.
+
+          | State       	| Description                                       	|
+          |-------------	|---------------------------------------------------	|
+          | DEVELOPMENT 	| PA in development. Internal to the applicant.     	|
+          | APPLICATION 	| PA is ready for submission.                       	|
+          | REVIEW      	| PA is in review status with the ANSP.             	|
+          | APPROVED    	| PA is approved, ready for use per data within PA. 	|
+          | REJECTED    	| PA is rejected.                                   	|
+
         type: string
         enum:
           - DEVELOPMENT
@@ -76,11 +86,11 @@ definitions:
 
         $ref: '#/definitions/PerformanceAuthorizationDate'
       date_of_expiration:
-        description: >-
+        description: |
           Date (inclusive) after which any operations under this Performance Authorization
           would be unauthorized.
 
-          date_of_validity <= date_of_expiration MUST be true.
+          `date_of_validity <= date_of_expiration` MUST be true.
 
         $ref: '#/definitions/PerformanceAuthorizationDate'
       operation_types:
@@ -99,8 +109,21 @@ definitions:
 
   OperationType:
     type: object
+    required:
+      - base_operating_rule
+      - operation_type_label
+      - equipment_specification_reference
+      - mission_characteristics_reference
+      - area_of_operation_references
+      - standard_provisions_reference
+      - special_provisions_reference
+
     properties:
       base_operating_rule:
+        description: |
+
+          Flight rule providing base operating rules.
+
         type: string
         enum:
           - 107
@@ -141,9 +164,12 @@ definitions:
           operation type.
         $ref: '#/definitions/PerformanceAuthorizationLabel'
 
-
   EquipmentSpecification:
     type: object
+    required:
+      - equipment_specifiation_label
+      - flight_crew_comm_freq
+      - v2v_equipped
     properties:
       equipment_specifiation_label:
         $ref: '#/definitions/PerformanceAuthorizationLabel'
@@ -166,8 +192,26 @@ definitions:
         example: true
 
   MissionCharacteristics:
+    description: >-
+      Mission Characteristics.
     type: object
+    required:
+      - minimum_operation_altitude
+      - maximum_operation_altitude
+      - minimum_aircraft_weight_lbs
+      - maximum_aircraft_weight_lbs
+      - minimum_aircraft_endurance_minutes
+      - maximum_mission_duration_minutes
     properties:
+      mission_type:
+        type: string
+        enum:
+          - AGRICULTURE
+          - INSPECTION
+          - PUBLIC_SAFETY
+          - JOURNALISM
+          - REMOTE_SENSING
+          - OTHER
       minimum_operation_altitude:
         $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
       maximum_operation_altitude:
@@ -176,20 +220,45 @@ definitions:
         type: number
         format: float
         minimum: 0.0
+        exclusiveMinimum: false
       maximum_aircraft_weight_lbs:
         type: number
         format: float
         minimum: 0.0
         exclusiveMinimum: true
+      minimum_operation_speed_kts:
+        type: number
+        format: float
+        minimum: 0.0
+        exclusiveMinimum: true
+      maximum_operation_speed_kts:
+        type: number
+        format: float
+        minimum: 0.0
+        exclusiveMinimum: false
       minimum_aircraft_endurance_minutes:
         type: integer
         format: int32
+        minimum: 0
+        exclusiveMinimum: false
       maximum_mission_duration_minutes:
         type: integer
         format: int32
+        minimum: 0
+        exclusiveMinimum: true
+      contingency_plans:
+        description: >-
+          This is just a placeholder. Details needed for schema dev.
 
+          This is probably not going to be a string. Likely an array of some
+          currently undefined model.  May leverage UTM Operation Plan models.
+        type: string
+        maxLength: 200
 
   AreaOfOperation:
+    description: >-
+      A 4D volume describing where operations are allowed.  Multiple
+      AreaOfOperations are allowed in each OperationType.
     type: object
     required:
       - area_of_operation_label
@@ -239,6 +308,8 @@ definitions:
         $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
 
   StandardProvisions:
+    description: >-
+      Standard provisions for an OperationType.
     type: object
     required:
       - standard_provisions_label
@@ -276,6 +347,8 @@ definitions:
 
 
   SpecialProvisions:
+    description: >-
+      Special provisions for an OperationType.
     type: object
     required:
       - special_provisions_label
@@ -319,6 +392,7 @@ definitions:
     type: string
     minLength: 1
     maxLength: 30
+
   PerformanceAuthorizationUUID:
     description: >-
       A valid version 4 Universally Unique Identifier as described within
@@ -331,6 +405,7 @@ definitions:
     example: 'd7126818-d280-475f-aaee-c16e9c6f04e0'
     maxLength: 36
     minLength: 36
+
   PerformanceAuthorizationDate:
     description: >-
         This is a 'full-date' as described within RFC3339:
