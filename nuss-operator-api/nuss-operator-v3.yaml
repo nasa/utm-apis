@@ -1,8 +1,8 @@
 ---
 swagger: "2.0"
 info:
-  version: "v2.2"
-  title: "NUSS UAS Operator API v2.2"
+  version: "v3"
+  title: "NUSS UAS Operator API v3"
   description: "Manage Operator Operations.
 
   For GETTERs with query parameters, the parameter names must be lower case, however
@@ -41,11 +41,11 @@ paths:
       tags:
       - "Positions, Messages"
       summary: |
-        "Get messages related to other operations in the LUN."
-      description: |
-        "This endpoint will return messages related to operations that are not
+        Get messages related to other operations in the LUN.
+      description: >
+        This endpoint will return messages related to operations that are not
         managed by NUSS.  Specifically it will return messages for operations
-        managed by other USSs that are in the same LUN as the client's operation."
+        managed by other USSs that are in the same LUN as the client's operation.
       produces:
       - "application/json"
       parameters:
@@ -100,10 +100,10 @@ paths:
       tags:
       - "Operations"
       summary: |
-        "Get other operations in LUN."
-      description: |
-        "This endpoint will return operations that are not
-        managed by NUSS."
+        Get other operations in LUN.
+      description: >
+        This endpoint will return operations that are not
+        managed by NUSS.
       produces:
       - "application/json"
       parameters:
