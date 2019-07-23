@@ -36,6 +36,53 @@ schemes:
 - "https"
 paths:
 
+  /lun-messages:
+    get:
+      tags:
+      - "Positions, Messages"
+      summary: |
+        "Get messages related to other operations in the LUN."
+      description: |
+        "This endpoint will return messages related to operations that are not
+        managed by NUSS.  Specifically it will return messages for operations
+        managed by other USSs that are in the same LUN as the client's operation."
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: >-
+                https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMMessage
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+  /lun-operations:
+    get:
+      tags:
+      - "Operations"
+      summary: |
+        "Get other operations in LUN."
+      description: |
+        "This endpoint will return operations that are not
+        managed by NUSS."
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: >-
+                https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Operation
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
   /messages:
     get:
       tags:
