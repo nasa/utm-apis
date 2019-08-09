@@ -1,0 +1,1523 @@
+---
+swagger: "2.0"
+info:
+  version: "v3"
+  title: "NUSS UAS Operator API v3"
+  description: "Manage Operator Operations.
+
+  For GETTERs with query parameters, the parameter names must be lower case, however
+  string parmeter values are case insensitive.
+
+
+  Example of the GET-list using time window:
+
+      /messages/?sent_time_after=2038-01-01T07:58:20.000Z&sent_time_before=2038-01-01T07:58:30.000Z
+
+
+  (todo) GET-list for Positions is not yet in.
+
+  (todo) GET-list returns an empty list if nothing is found.
+  GET-by-gufi returns 404 if the item is not found."
+host: "some.host"
+basePath: "/operator"
+tags:
+
+- name: "Message Data Types"
+  description: "Intent, Inform, Alert and Free message schemas"
+- name: "Operations"
+  description: "Add and view operations"
+- name: "Positions, Messages"
+  description: "Manage flying operations"
+- name: "Geography Data Types"
+  description: "Geographies"
+- name: "Subscription Points"
+  description: "Subscribe to notifications"
+schemes:
+- "https"
+paths:
+
+  /lun-messages:
+    get:
+      tags:
+      - "Positions, Messages"
+      summary: |
+        Get messages related to other operations in the LUN.
+      description: >
+        This endpoint will return messages related to operations that are not
+        managed by NUSS.  Specifically it will return messages for operations
+        managed by other USSs that are in the same LUN as the client's operation.
+      produces:
+      - "application/json"
+      parameters:
+      - name: "sort"
+        in: "query"
+        description: "sort"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      - name: "sent_time_before"
+        in: "query"
+        description: "Returns Message with sent_time before or equal to the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "sent_time_after"
+        in: "query"
+        description: "Returns Messages with sent_time after or equal to the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: >-
+                https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMMessage
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+  /lun-operations:
+    get:
+      tags:
+      - "Operations"
+      summary: |
+        Get other operations in LUN.
+      description: >
+        This endpoint will return operations that are not
+        managed by NUSS.
+      produces:
+      - "application/json"
+      parameters:
+      - name: "state"
+        in: "query"
+        description: "You can specify ASC and DESC (or asc/desc) as follows: https://host.nasa.gov/nuss/operator/messages?sort=DESC
+
+          You can also specify limit and offset.
+
+          Returns Operations with an OR list given states. Eg. state=A,V
+           returns operations in A or V states. Cannot use with state_not_eq."
+        required: false
+        type: array
+        minItems: 1
+        maxItems: 13
+        items:
+          type: "string"
+          minLength: 5
+          maxLength: 14
+      - name: "state_not_eq"
+        in: "query"
+        description: "Returns Operations with other than the given states. Eg state_not_eq=X,C. Cannot use with state."
+        required: false
+        type: array
+        minItems: 1
+        maxItems: 13
+        items:
+          type: "string"
+          minLength: 5
+          maxLength: 14
+      - name: "effective_time_begin_before"
+        in: "query"
+        description: "Returns Operations with effective_begin_time before or equal to the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "effective_time_begin_after"
+        in: "query"
+        description: "Returns Operations with effective_begin_time after or equal to the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "effective_time_end_before"
+        in: "query"
+        description: "Returns Operations with effective_end_time before or equal to the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "effective_time_end_after"
+        in: "query"
+        description: "Returns Operations with effective_end_time after or equal to the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "inside_bbox"
+        in: "query"
+        description: "Returns Operations with flight geographies inside or intersecting the bbox.
+          The coordinates are comma delimited (lon_min,lat_min,lon_max,lat_max). Example: -121.1133,36.5317,-121.0941,36.6530"
+        required: false
+        type: array
+        maxItems: 4
+        minItems: 4
+        items:
+          type: number
+          format: double
+      - name: "sort"
+        in: "query"
+        description: "sorts the results by submit_time. Valid values - asc, desc. Default value is desc."
+        required: false
+        type: "string"
+        minLength: 3
+        maxLength: 4
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: >-
+                https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Operation
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+  /messages:
+    get:
+      tags:
+      - "Positions, Messages"
+      summary: "Get Operator Messages."
+      description: "You can specify ASC and DESC (or asc/desc) as follows:
+        /operator/messages?sort=DESC
+        You can specify a time window as follows:
+        /operator/messages/?limit=44&sent_time_after=2038-01-01T07:58:20.000Z&sent_time_before=2038-01-01T07:58:30.000Z
+        "
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "sort"
+        in: "query"
+        description: "sort"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      - name: "sent_time_before"
+        in: "query"
+        description: "Returns Message with sent_time before or equal to the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "sent_time_after"
+        in: "query"
+        description: "Returns Messages with sent_time after or equal to the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Message"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+    post:
+      tags:
+      - "Positions, Messages"
+      summary: "add Message for a Gufi"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "msg"
+        description: "msg"
+        required: true
+        schema:
+          $ref: "#/definitions/Message"
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+  /messages/{gufi}:
+    get:
+      tags:
+      - "Positions, Messages"
+      summary: "get Messages for a Gufi"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "gufi"
+        in: "path"
+        description: "gufi"
+        required: true
+        type: "string"
+      - name: "sort"
+        in: "query"
+        description: "sort"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Message"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+  /operations:
+    get:
+      tags:
+      - "Operations"
+      summary: "GET operation list with query"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "state"
+        in: "query"
+        description: "You can specify ASC and DESC (or asc/desc) as follows: https://host.nasa.gov/nuss/operator/messages?sort=DESC
+
+          You can also specify limit and offset.
+
+          Returns Operations with an OR list given states. Eg. state=A,V
+           returns operations in A or V states. Cannot use with state_not_eq."
+        required: false
+        type: array
+        minItems: 1
+        maxItems: 13
+        items:
+          type: "string"
+          minLength: 5
+          maxLength: 14
+      - name: "state_not_eq"
+        in: "query"
+        description: "Returns Operations with other than the given states. Eg state_not_eq=X,C. Cannot use with state."
+        required: false
+        type: array
+        minItems: 1
+        maxItems: 13
+        items:
+          type: "string"
+          minLength: 5
+          maxLength: 14
+      - name: "effective_time_begin_before"
+        in: "query"
+        description: "Returns Operations with effective_begin_time before or equal to the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "effective_time_begin_after"
+        in: "query"
+        description: "Returns Operations with effective_begin_time after or equal to the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "effective_time_end_before"
+        in: "query"
+        description: "Returns Operations with effective_end_time before or equal to the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "effective_time_end_after"
+        in: "query"
+        description: "Returns Operations with effective_end_time after or equal to the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "inside_bbox"
+        in: "query"
+        description: "Returns Operations with flight geographies inside or intersecting the bbox.
+          The coordinates are comma delimited (lon_min,lat_min,lon_max,lat_max). Example: -121.1133,36.5317,-121.0941,36.6530"
+        required: false
+        type: array
+        maxItems: 4
+        minItems: 4
+        items:
+          type: number
+          format: double
+      - name: "sort"
+        in: "query"
+        description: "sorts the results by submit_time. Valid values - asc, desc. Default value is desc."
+        required: false
+        type: "string"
+        minLength: 3
+        maxLength: 4
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Operation"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+    post:
+      tags:
+      - "Operations"
+      summary: "add an operation"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "model"
+        description: "model"
+        required: true
+        schema:
+          $ref: "#/definitions/Operation"
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /operations/{gufi}:
+    get:
+      tags:
+      - "Operations"
+      summary: "view operation by GUFI"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "gufi"
+        in: "path"
+        description: "GUFI of the operation being requested."
+        required: true
+        type: string
+        format: uuid
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Operation"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+    put:
+      tags:
+      - "Operations"
+      summary: "modify an operation"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "modifiedOp"
+        description: "modifiedOp"
+        required: true
+        schema:
+          $ref: "#/definitions/Operation"
+      - name: "gufi"
+        in: "path"
+        description: "gufi"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        201:
+          description: "Created"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /positions:
+    get:
+      tags:
+      - "Positions, Messages"
+      summary: "GET Positions"
+      description: "You can specify ASC and DESC (or asc/desc) as follows: https://host.nasa.gov/nuss/operator/positions?sort=DESC
+        You can also specify limit and offset.
+        "
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "sort"
+        in: "query"
+        description: "sort"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "returns empty list if no positions are found.  The return list can be large so use limit\
+            \ and offset."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Position"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+    post:
+      tags:
+      - "Positions, Messages"
+      summary: "addPosition"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "pos"
+        description: "pos"
+        required: true
+        schema:
+          $ref: "#/definitions/Position"
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/UTMRestResponse"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /positions/{gufi}:
+    get:
+      tags:
+      - "Positions, Messages"
+      summary: "getPositionsForGufi"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "gufi"
+        in: "path"
+        description: "gufi"
+        required: true
+        type: "string"
+      - name: "fields"
+        in: "query"
+        description: "fields"
+        required: false
+        type: "string"
+      - name: "q"
+        in: "query"
+        description: "q"
+        required: false
+        type: "string"
+      - name: "sort"
+        in: "query"
+        description: "sort"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "returns positions for GUFI"
+          schema:
+            $ref: "#/definitions/Position"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /schema/AlertMsgType:
+    get:
+      tags:
+      - "Message Data Types"
+      summary: "Alert Message"
+      description: "Alerts to clients and UTM Managers"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/AlertMsgType"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /schema/FreeMsgType:
+    get:
+      tags:
+      - "Message Data Types"
+      summary: "Free Message"
+      description: "free text"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/FreeMsgType"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+
+  /schema/InformMsgType:
+    get:
+      tags:
+      - "Message Data Types"
+      summary: "Inform Message"
+      description: "This is UTM's reply to an Intent.
+        A message with origin CLIENT may not send Inform messages"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/InformMsgType"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /schema/IntentMsgType:
+    get:
+      tags:
+      - "Message Data Types"
+      summary: "Intent Message"
+      description: "Your Intent generates a UTM Inform"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/IntentMsgType"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+
+
+  /schema/Point:
+    get:
+      tags:
+      - "Geography Data Types"
+      summary: "Point geojson"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Point"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /schema/Polygon:
+    get:
+      tags:
+      - "Geography Data Types"
+      summary: "Polygon geojson"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Polygon"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+
+  /user/<username>/utmMsg/v1:
+    get:
+      tags:
+      - "Subscription Points"
+      summary: "Subscribe to event queue"
+      description: "Provides InformMessage data related to the specified operator's\
+        \ operations. For example, after an operator POSTs an operation to the /operations\
+        \  endpoint, that operator will receive InformMessage ACCEPTED or REJECTED.\
+        \  The connection URL is wss://{host}/uss/NotificationProvider/utm\n"
+      parameters: []
+      responses:
+        410:
+          description: "WRONG_PROTOCOL - A RESTful call was made to this endpoint\
+            \ but this is not a REST endpoint."
+
+
+definitions:
+  Violation:
+    type: "object"
+    required:
+    - "type"
+    properties:
+      constraining_id:
+        type: "string"
+        description: "Unique identifier for this constraint."
+      constraining_ids:
+        type: "array"
+        description: "(For backward compatibility only, see constraining_id"
+        items:
+          type: "string"
+      constraining_volume:
+        type: "integer"
+        format: "int32"
+        description: "The ordinal of the volume that conflicts with another operation,\
+          \ eg, the first volume of an existing flight acts as a constraint against\
+          \ proposed flights"
+      problemReport:
+        type: "string"
+        description: "A report that a problem occurred thus Violation could not be\
+          \ determined."
+      type:
+        type: "string"
+        description: "The constraint type. eg, This is a gufi for OperationViolation\
+          \ (constraint is an existing flight), or an ID of a national park"
+      violating_volume:
+        type: "integer"
+        format: "int32"
+        description: "Set for OperationViolations, VolumeViolations, RogueViolations.\
+          \ The ordinal of the volume that is violating this constraint, eg, the proposed\
+          \ flight's second volume violated this constraint"
+
+  InformMsgType:
+    type: "object"
+    required:
+    - "gufi"
+    properties:
+      ack_time:
+        type: "string"
+        description: "The time client acknowledged this message."
+      disclaimer:
+        type: "string"
+      free_text:
+        type: "string"
+        description: "Not used by UTM System. May be formated using Message.Tag"
+      gufi:
+        type: "string"
+        description: "The assigned GUFI for the operation UUID referenced by the message."
+      inform_message:
+        type: "string"
+        enum:
+        - "UNKWN"
+        - "ACTIVATED"
+        - "CLOSED"
+        - "CANCELED"
+        - "ACCEPTED"
+        - "REJECTED"
+        - "NONCONFORMING"
+        - "EXPIRED"
+        - "OP_NOT_SUCCESSFUL"
+        - "NOT_ACTIVATED"
+        - "ROGUE"
+        - "ROGUECLOSED"
+        - "ABORTING"
+        - "ABORTCLOSED"
+        - "CREATE_SUCCESS"
+        - "CREATE_FAIL"
+        - "UPDATE_SUCCESS"
+        - "UPDATE_FAIL"
+        - "INVALIDATED"
+      message_id:
+        type: "string"
+        description: "The identifier"
+      origin:
+        type: "string"
+        description: "CLIENT: Message is from a UTM Client to the UTM System.UTM:\
+          \ Message was automatically generated by the UTM System. MANAGER: Message\
+          \ was generated by a UTM Manager (a human)."
+        enum:
+        - "CLIENT"
+        - "UTM"
+        - "MANAGER"
+      reason:
+        type: "string"
+      sent_time:
+        type: "string"
+        description: "Either the time the message was sent by the UTM System or the\
+          \ time it was received by the UTM System."
+      surveillance_operation_id:
+        type: "string"
+      user:
+        type: "string"
+      violations:
+        type: "array"
+        description: "Included with messages from the INFORM category with inform_message\
+          \ = REJECTED. The array is of pairs of types and constraining_id. The type\
+          \ refers to a constraint in the system (national parks, airports, a volume\
+          \ in an existing operation, wrong registration ID, etc.). The constraining_id\
+          \ is the UUID associated with each constraint; constraining_volume augments\
+          \ it  when applicable.  When applicable, violating_volume indicates which\
+          \ volume is in violation. This allows for querying UTM for more information\
+          \ about those particular constraints."
+        items:
+          $ref: "#/definitions/Violation"
+      warning_region_id:
+        type: "string"
+      warnings:
+        type: "array"
+        items:
+          $ref: "#/definitions/Warning"
+  Warning:
+    type: "object"
+    required:
+    - "type"
+    properties:
+      message:
+        type: "string"
+      type:
+        type: "string"
+        enum:
+        - "Obstacles"
+        - "Tfr"
+        - "Decision"
+      warning_ids:
+        type: "array"
+        items:
+          type: "string"
+  Message:
+    type: "object"
+    required:
+    - "gufi"
+    discriminator: "category"
+    properties:
+      ack_time:
+        type: "string"
+        description: "The time client acknowledged this message."
+      free_text:
+        type: "string"
+        description: "Not used by UTM System. May be formated using Message.Tag"
+      gufi:
+        type: "string"
+        description: "The assigned GUFI for the operation UUID referenced by the message."
+      message_id:
+        type: "string"
+        description: "The identifier"
+      origin:
+        type: "string"
+        description: "CLIENT: Message is from a UTM Client to the UTM System.UTM:\
+          \ Message was automatically generated by the UTM System. MANAGER: Message\
+          \ was generated by a UTM Manager (a human)."
+        enum:
+        - "CLIENT"
+        - "UTM"
+        - "MANAGER"
+      sent_time:
+        type: "string"
+        description: "Either the time the message was sent by the UTM System or the\
+          \ time it was received by the UTM System."
+      surveillance_operation_id:
+        type: "string"
+      user:
+        type: "string"
+      warning_region_id:
+        type: "string"
+      category:
+        type: "string"
+        description: "Category of Message. ALERT, FREE, INFORM, INTENT, RESPONSE"
+  FreeMsgType:
+    type: "object"
+    required:
+    - "gufi"
+    properties:
+      ack_time:
+        type: "string"
+        description: "The time client acknowledged this message."
+      free_text:
+        type: "string"
+        description: "Not used by UTM System. May be formated using Message.Tag"
+      gufi:
+        type: "string"
+        description: "The assigned GUFI for the operation UUID referenced by the message."
+      message_id:
+        type: "string"
+        description: "The identifier"
+      origin:
+        type: "string"
+        description: "CLIENT: Message is from a UTM Client to the UTM System.UTM:\
+          \ Message was automatically generated by the UTM System. MANAGER: Message\
+          \ was generated by a UTM Manager (a human)."
+        enum:
+        - "CLIENT"
+        - "UTM"
+        - "MANAGER"
+      sent_time:
+        type: "string"
+        description: "Either the time the message was sent by the UTM System or the\
+          \ time it was received by the UTM System."
+      surveillance_operation_id:
+        type: "string"
+      user:
+        type: "string"
+      warning_region_id:
+        type: "string"
+  Operation:
+    type: "object"
+    required:
+    - "operation_volumes"
+    - "primary_contact_email"
+    - "primary_contact_name"
+    - "primary_contact_phone"
+    - "registration"
+    - "unmanned"
+    - "user_id"
+    properties:
+      aircraft_comments:
+        type: "string"
+        description: "Informative text about the aircraft. Not used by the UTM System."
+      aircraft_type:
+        type: "string"
+        description: "read-only. Vehicle type propery derived from vehicle registration\
+          \ ID."
+      color_markings:
+        type: "string"
+      conformance_time_begin:
+        type: "string"
+        format: "date-time"
+        description: "The conformance begin time of the operation. Derived from the\
+          \ begin time of the first operation volume."
+      conformance_time_end:
+        type: "string"
+        format: "date-time"
+        description: "The conformance end time of the operation. Derived from the\
+          \ end time of the last operation volume."
+      created_by:
+        type: "string"
+        description: "The user that created the operation. It is possible that an\
+          \ operation is created on behalf of an operator by, say, a manager. Nominally,\
+          \ this field will be equal to user_id."
+      decision_time:
+        type: "string"
+        format: "date-time"
+        description: "A timestamp set by the UTM System any time the state of the\
+          \ operation is updated, for example when the flight goes from PROPOSING\
+          \ to ACCEPTED (see Section 4.1)"
+      effective_time_begin:
+        type: "string"
+        format: "date-time"
+        description: "The effective begin time of the operation. Same value as the\
+          \ begin time of the first operation volume."
+      effective_time_end:
+        type: "string"
+        format: "date-time"
+        description: "The effective end time of the operation. Same value as the end\
+          \ time of the last operation volume."
+      extra_contact_info:
+        type: "string"
+        description: "Any additional contact information."
+      flight_comments:
+        type: "string"
+        description: "Informative text about the operation. Not used by the UTM System."
+      flight_geography_description:
+        type: "string"
+        description: "Informative text about the operation. Not used by the UTM System."
+      flight_number:
+        type: "string"
+        description: "Optional. Currently unused by the UTM System, may be useful\
+          \ to the operator for identification purposes."
+      gufi:
+        type: "string"
+        description: "has a GUFI assigned upon submission. It is a JSON string that\
+          \ conforms to the UUID version 4 specification (see Section 3.1)"
+      operation_volumes:
+        type: "array"
+        description: "Editable"
+        items:
+          $ref: "#/definitions/OperationVolume"
+      primary_contact_email:
+        type: "string"
+        description: "Same as primary contact name"
+      primary_contact_name:
+        type: "string"
+        description: "These are required fields but are not currently checked for\
+          \ validity, but clients should endeavor to provide useful, appropriate information\
+          \ in these fields. Validity will be checked in the future. These values\
+          \ should represent the contact that should be used in case of an issue with\
+          \ the operation before, during, or after that operation."
+      primary_contact_phone:
+        type: "string"
+        description: "Same as primary contact name"
+      protected_time_begin:
+        type: "string"
+        format: "date-time"
+        description: "The protected begin time of the operation. This is derived from\
+          \ the begin time of the first operation volume."
+      protected_time_end:
+        type: "string"
+        format: "date-time"
+        description: "The protected end time of the operation. This is derived from\
+          \ the end time of the last operation volume."
+      registration_detail:
+        type: "string"
+        description: "See 'registration' field. This contains details such as the\
+          \ source of the registration ID."
+      registration:
+        type: "string"
+        description: "The registration ID of the vehicle flying this operation. Note\
+          \ the UTM System assumes a single vehicle per operation currently. This\
+          \ registration value is provided to operators upon manual registration of\
+          \ their vehicle with NASA."
+      secondary_contact_email:
+        type: "string"
+        description: "Same as secondary contact name"
+      secondary_contact_name:
+        type: "string"
+        description: "These are optional fields. They are not currently checked for\
+          \ validity, but clients should endeavor to provide useful, appropriate information\
+          \ in these fields. Validity will be checked in the future. These values\
+          \ should represent the back-up contact that should be used in case of an\
+          \ issue with the operation before, during, or after that operation."
+      secondary_contact_phone:
+        type: "string"
+        description: "Same as secondary contact name"
+      state:
+        type: "string"
+        description: "The current state of the operation. Not required for submission,\
+          \ will be assigned by the UTM System."
+        enum:
+        - "P"
+        - "A"
+        - "R"
+        - "C"
+        - "X"
+        - "I"
+        - "E"
+        - "G"
+        - "B"
+        - "U"
+        - "T"
+        - "F"
+        - "V"
+      submit_time:
+        type: "string"
+        format: "date-time"
+        description: "Time the operation submission was received by UTM System."
+      unmanned:
+        type: "boolean"
+        example: false
+        description: "Must be set to 'true' with all submissions."
+      user_id:
+        type: "string"
+        description: "This field is populated based on provided credentials in the\
+          \ HTTPS header."
+      controller_location:
+        $ref: "#/definitions/Point"
+      gcs_location:
+        $ref: "#/definitions/Point"
+      faa_rule:
+        type: "string"
+        description: "Indication whether this operation is under Part 101-E, Part\
+          \ 107, Part 107 waiver, or a Part TBD.  Part TBD is a potential future rule\
+          \ that may cover operations such as those under test by UTM."
+        enum:
+        - "PART_107"
+        - "PART_107W"
+        - "PART_101E"
+        - "PART_TBD"
+      waiver_certificate_number:
+        type: "string"
+        description: "If a waiver has been obtained for the Part 107 rules, then the\
+          \ operator would have a waiver certificate number. For any operation submissions\
+          \ with faa_rule=PART_107W, this field is required."
+      priority_op:
+        type: "boolean"
+        description: "if true this operation is managed as a priority operation"
+        default: false
+  Polygon:
+    type: "object"
+    required:
+    - "coordinates"
+    properties:
+      coordinates:
+        type: "array"
+        description: "Geojson array of array of Points. Points are pairs of longitude-\
+          \ latitude values. If a third element is provided for altitude, it is silently\
+          \ ignored. For Polygon, the first and last long-lat pair must be equal;\
+          \ this closes the polygon according to the Geojson specification.  If the\
+          \ ‘type’ is specified as ‘Polygon’ and the first and last points are not\
+          \ equal, the data will not be accepted."
+        items:
+          type: "array"
+          items:
+            type: "array"
+            items:
+              type: "number"
+              format: "double"
+
+  AlertMsgType:
+    type: "object"
+    required:
+    - "gufi"
+    properties:
+      ack_time:
+        type: "string"
+        description: "The time client acknowledged this message."
+      alert_message:
+        type: "string"
+        enum:
+        - "UNKWN"
+        - "LOST_COMM_AND_CONTROL"
+        - "WEATHER"
+        - "SECURITY"
+        - "OPERATIONS"
+        - "SYSTEM"
+      alert_severity:
+        type: "string"
+        enum:
+        - "UNKWN"
+        - "INFORMATIONAL"
+        - "NOTICE"
+        - "WARNING"
+        - "CRITICAL"
+        - "EMERGENCY"
+      free_text:
+        type: "string"
+        description: "Not used by UTM System. May be formated using Message.Tag"
+      gufi:
+        type: "string"
+        description: "The assigned GUFI for the operation UUID referenced by the message."
+      message_id:
+        type: "string"
+        description: "The identifier"
+      origin:
+        type: "string"
+        description: "CLIENT: Message is from a UTM Client to the UTM System.UTM:\
+          \ Message was automatically generated by the UTM System. MANAGER: Message\
+          \ was generated by a UTM Manager (a human)."
+        enum:
+        - "CLIENT"
+        - "UTM"
+        - "MANAGER"
+      sent_time:
+        type: "string"
+        description: "Either the time the message was sent by the UTM System or the\
+          \ time it was received by the UTM System."
+      surveillance_operation_id:
+        type: "string"
+      user:
+        type: "string"
+      warning_region_id:
+        type: "string"
+      warnings:
+        type: "array"
+        items:
+          $ref: "#/definitions/Warning"
+  UTMRestResponse:
+    type: "object"
+    properties:
+      http_status_code:
+        type: "string"
+      msg:
+        type: "string"
+      uri:
+        type: "string"
+      url:
+        type: "string"
+      violationMap:
+        type: "object"
+        properties: {}
+  Position:
+    type: "object"
+    required:
+    - "altitude_gps_wgs84_ft"
+    - "altitude_num_gps_satellites"
+    - "gufi"
+    - "hdop_gps"
+    - "location"
+    - "time_measured"
+    - "time_sent"
+    - "track_ground_speed_kn"
+    - "track_true_north_deg"
+    - "vdop_gps"
+    properties:
+      air_speed_source:
+        type: "string"
+        description: " Required if air_speed_track_kn is submitted. No requirements\
+          \ yet on the values here, but suggestions include ESTIMATED or MEASURED."
+      air_speed_track_kn:
+        type: "number"
+        format: "double"
+        description: "Air speed in relation to the direction of travel of the aircraft.\
+          \ Value may be negative."
+      altitude_gps_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The altitude as measured via a GPS device on the aircraft. Units\
+          \ in feet using the WGS84 reference system.\n"
+      altitude_num_gps_satellites:
+        type: "integer"
+        format: "int32"
+        description: "Number of satellites used in calculating the altitude_gps_wgs84_ft."
+      enroute_positions_id:
+        type: "string"
+        format: "uuid"
+      gufi:
+        type: "string"
+        description: "Each operation has an GUFI assigned upon submission. Required\
+          \ upon POSTing a new position. It is a JSON string, but conforms to the\
+          \ UUID version 4 specification"
+      hdop_gps:
+        type: "number"
+        format: "double"
+        description: "The horizontal dilution of precision as provided by the onboard\
+          \ GPS."
+      location:
+        $ref: "#/definitions/Point"
+      time_measured:
+        type: "string"
+        format: "date-time"
+        description: "The time the position was measured. Likely the time provided\
+          \ with the GPS position reading."
+      time_received:
+        type: "string"
+        format: "date-time"
+        description: "Not required for submission, assigned by the UTM System. The\
+          \ time the position was received by the UTM System."
+      time_sent:
+        type: "string"
+        format: "date-time"
+        description: "The time the position was sent."
+      track_ground_speed_kn:
+        type: "number"
+        format: "double"
+        description: "Ground speed int the direction of travel. Value must be >= 0.0.\
+          \ In knots."
+      track_magnetic_north_deg:
+        type: "number"
+        format: "double"
+        description: "The direction of travel relative to magnetic north in degrees.\
+          \ Value must be >= 0.0 and < 360.0."
+      track_true_north_deg:
+        type: "number"
+        format: "double"
+        description: "The direction of travel relative to true north in degrees. Value\
+          \ must be >= 0.0 and < 360.0."
+      user_id:
+        type: "string"
+        description: "Not required for submission. This field is populated based on\
+          \ the provided credentials in the HTTPS header."
+      vdop_gps:
+        type: "number"
+        format: "double"
+        description: "The vertical dilultion of precision as provided by the onboard\
+          \ GPS."
+
+  OperationVolume:
+    type: "object"
+    required:
+    - "effective_time_begin"
+    - "effective_time_end"
+    - "flight_geography"
+    - "line_of_sight"
+    - "max_altitude_wgs84_ft"
+    - "min_altitude_wgs84_ft"
+    - "ordinal"
+    properties:
+      actual_time_end:
+        type: "string"
+        format: "date-time"
+        description: "Time that the operational volume was freed for use by other\
+          \ operations."
+      conformance_geography:
+        $ref: "#/definitions/Polygon"
+      conformance_time_begin:
+        type: "string"
+        format: "date-time"
+        description: "Assigned by UTM System. Conformance time buffer before the submitted\
+          \ begin time."
+      conformance_time_end:
+        type: "string"
+        format: "date-time"
+        description: "Assigned by UTM System. Conformance time buffer after the submitted\
+          \ end time."
+      effective_time_begin:
+        type: "string"
+        format: "date-time"
+        description: "Earliest time the operation will use the operation volume."
+      effective_time_end:
+        type: "string"
+        format: "date-time"
+        description: "Latest time the operation will done with the operation volume."
+      flight_geography:
+        $ref: "#/definitions/Polygon"
+      gufi:
+        type: "string"
+      id:
+        type: "string"
+      line_of_sight:
+        type: "boolean"
+        example: false
+        description: "Whether this volume is fully seen by the operatoer."
+      max_altitude_conform_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The maximum altitude assigned and used by the UTM System to\
+          \ check vertical conformance of an operation. Based on UTM Client-provided\
+          \ max altitude."
+      max_altitude_protected_wgs84_ft:
+        type: "number"
+        format: "double"
+      max_altitude_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The maximum altitude for this operation in this operation volume.\
+          \ In WGS84 reference system using feet as units."
+      min_altitude_conform_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The minimum altitude assigned and used by the UTM System to\
+          \ check vertical conformance of an operation. Based on UTM Client-provided\
+          \ min altitude."
+      min_altitude_protected_wgs84_ft:
+        type: "number"
+        format: "double"
+      min_altitude_wgs84_ft:
+        type: "number"
+        format: "double"
+        description: "The minimum altitude for this operation in this operation volume.\
+          \ In WGS84 reference system using feet as units."
+      near_structure:
+        type: "boolean"
+        description: "Is this operation volume within 400' of a structure?"
+        default: false
+      ordinal:
+        type: "integer"
+        format: "int32"
+        description: "This integer represents the ordering of the operation volume\
+          \ within the set of operation volumes. Need not be consecutive integers."
+      protected_geography:
+        $ref: "#/definitions/Polygon"
+      protected_time_begin:
+        type: "string"
+        format: "date-time"
+        description: "Assigned by UTM System. Protected time buffer before the submitted\
+          \ begin time."
+      protected_time_end:
+        type: "string"
+        format: "date-time"
+        description: "Assigned by UTM System. Protected time buffer after the submitted\
+          \ end time."
+  Point:
+    type: "object"
+    required:
+    - "coordinates"
+    properties:
+      coordinates:
+        type: "array"
+        description: "Pairs of longitude-latitude values. If a third element is provided\
+          \ for altitude, it is silently ignored."
+        items:
+          type: "number"
+          format: "double"
+      type:
+        type: "string"
+  IntentMsgType:
+    type: "object"
+    required:
+    - "gufi"
+    - "intent_message"
+    properties:
+      ack_time:
+        type: "string"
+        description: "The time client acknowledged this message."
+      free_text:
+        type: "string"
+        description: "Not used by UTM System. May be formated using Message.Tag"
+      gufi:
+        type: "string"
+        description: "The assigned GUFI for the operation UUID referenced by the message."
+      intent_message:
+        type: "string"
+        enum:
+        - "UNKWN"
+        - "ALL_CLEAR"
+        - "CLOSE"
+        - "CANCEL"
+        - "ABORT"
+      message_id:
+        type: "string"
+        description: "The identifier"
+      origin:
+        type: "string"
+        description: "CLIENT: Message is from a UTM Client to the UTM System.UTM:\
+          \ Message was automatically generated by the UTM System. MANAGER: Message\
+          \ was generated by a UTM Manager (a human)."
+        enum:
+        - "CLIENT"
+        - "UTM"
+        - "MANAGER"
+      sent_time:
+        type: "string"
+        description: "Either the time the message was sent by the UTM System or the\
+          \ time it was received by the UTM System."
+      surveillance_operation_id:
+        type: "string"
+      user:
+        type: "string"
+      warning_region_id:
+        type: "string"
