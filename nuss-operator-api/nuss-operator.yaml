@@ -189,33 +189,50 @@ paths:
         managed by NUSS.
       produces:
       - "application/json"
-        parameters:
-          - in: path
-            name: position_id
-            required: true
-            type: string
-            description: PUT by enroute_positions_id
-          - in: body
-            name: position
-            required: true
-            schema:
+      parameters:
+      - name: "sort"
+        in: "query"
+        description: "sort"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "limit"
+        required: false
+        type: "integer"
+        default: 10
+        format: "int32"
+      - name: "offset"
+        in: "query"
+        description: "offset"
+        required: false
+        type: "integer"
+        format: "int32"
+      - name: "sent_time_before"
+        in: "query"
+        description: "Returns Message with sent_time before or equal to the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      - name: "sent_time_after"
+        in: "query"
+        description: "Returns Messages with sent_time after or equal to the given time"
+        required: false
+        type: string
+        format: date-time
+        minLength: 25
+        maxLength: 25
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
               $ref: >-
                 https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Position
-        responses:
-          '204':
-            description: Position data recieved. No content returned.
-          '400':
-            description: Bad request. Typically validation error. Fix your request and retry.
-            schema:
-              $ref: >-
-                https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-          '401':
-            description: Invalid or missing access_token provided.
-            schema:
-              $ref: >-
-                https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
-          '403':
-            description: Forbidden. Data and or token do not meet security requirements.
-            schema:
-              $ref: >-
-                https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
