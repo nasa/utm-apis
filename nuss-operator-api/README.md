@@ -1,6 +1,7 @@
-# V2.1 NUSS-Operator Interface
+# NUSS-Operator Interface
 
-This is the V2.1 API.  Go here for the V4 API. !["V4 README.md"](README.md  "v4")
+The NUSS-Operator interface is defined two OpenAPI specs. First, V2.1 OpenAPI spec is based on V2.1 data models and is defined in !["swagger.yaml"](swagger.yaml  "v2.1").  Additional endpoints, based on the V4 data models are defined in !["nuss-operator.yaml"](snuss-operator.yaml  "v4"). 
+
 
 ## Conformance Monitoring
 If an active operation violates its conformance geography, that operation is transitioned to the nonconforming state, and it could eventually be transitioned to
@@ -10,7 +11,7 @@ NUSS defines additional regions around the flight volumes called conformance and
 
 Since the USS-API OperationVolume model defines validation requirements, the converted model needs to be validated before the first USS-API data exchange.
 
-![alt text](https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/nuss-operator-api/images/opVol-tcl4.png  "geometries")
+![alt text](images/conformance-regions.png  "geometries")
 
 **Figure 1: Volumes of Flight, Conformance and Protected**
 
@@ -29,6 +30,7 @@ utm-commons | Operator Volume
 Operation Volume   | Protected Volume
 not specified   | Conformance Volume
 not specified   | Flight Volume
+
 **Table 2: Mapping from Operator OperationVolume to UTM Commons**
 
 ---
@@ -41,12 +43,12 @@ The conformance expand the operator's geography to a 4d conformance volume.  A p
 
 minimum.altitude.feet is global to NUSS to define the a total minimum.
 
-reportingFrequency.minimum.hz specifies the max interval between position reports. This interval will trigger Active to Non-conformat, and eventually Non-conformant to Rogue.
+reportingFrequency.minimum.hz specifies the max interval between position reports. This interval will trigger Active to Non-conforming, and eventually to Rogue.
 
 ---
 
 
-          reportingFrequency.minimum.hz
+          reportingFrequency.minimum.hz:0.33
           minimum.altitude.feet:-250
           conformance.lateral.feet:30
           conformance.altitude.feet:20
@@ -63,7 +65,7 @@ reportingFrequency.minimum.hz specifies the max interval between position report
 Operator-API Operation States are shown in Figure 1.  Note that Non-conforming to Closed is a valid state transition but is not captured this diagram.
 
 
-![alt text](https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/nuss-operator-api/images/tcl4states.png "TCL4 FSM")
+![alt text](images/state-v2-1.png "TCL4 FSM")
 
 **Figure 4: Operator-API Operation States**
 
