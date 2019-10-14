@@ -1,6 +1,6 @@
 # NUSS-Operator Interface
 
-The NUSS-Operator interface is defined two OpenAPI specs. First, V2.1 OpenAPI spec is based on V2.1 data models and is defined in !["swagger.yaml"](swagger.yaml  "v2.1").  Additional endpoints, based on the V4 data models are defined in !["nuss-operator.yaml"](snuss-operator.yaml  "v4"). 
+The NUSS-Operator interface is defined by this README and theses OpenAPI specs. V2.1 OpenAPI spec is based on V2.1 data models and is defined in !["swagger.yaml"](swagger.yaml  "v2.1").  
 
 
 ## Conformance Monitoring
