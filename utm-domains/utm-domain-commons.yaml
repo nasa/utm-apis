@@ -1326,7 +1326,7 @@ definitions:
       severity:
         $ref: '#/definitions/severity'
       message_type:
-        description: >-
+        description: |
           The type of message. THe 'gufi' field is required for all
           message_types except OTHER_SEE_FREE_TEXT.
           1. UNPLANNED_LANDING
