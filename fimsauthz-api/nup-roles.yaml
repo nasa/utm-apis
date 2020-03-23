@@ -1,8 +1,5 @@
-# UTM roles and, when applicatble, their scopes.
-#   This is the master data for the Role and Scopes for the
-#   FIMS Authorization Server (FIMS AZ).
-#   See the FIMS AZ API Spec for scope definitions.  Note that a write scope
-#   allows reading.
+# NUP Roles -- work in progress
+# TODO change utm to nup
 
 UTM_AUTHORITY:
     description: |
