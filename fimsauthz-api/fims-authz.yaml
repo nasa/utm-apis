@@ -1,11 +1,11 @@
 openapi: 3.0.0
 info:
   version: v1
-  title: Flight Information Management System (FIMS) Authorization (Authz) Server
+  title: Flight Information Management System (FIMS) Authorization (AZ) Server
   description: >
 
-    FIMS_Authz provides authorization services for FIMS stakeholders
-    within UTM.  Written to the UAS Service Supplier Framework (UFAA) for
+    THe FIMS AZ service (aka "fims-az-sig") provides authorization services for FIMS stakeholders
+    within UTM.  It is written to the UAS Service Supplier Framework (UFAA) for
     Authentication and Authorization" at
     https://utm.arc.nasa.gov/docs/2019-UTM_Framework-NASA-TM220364.pdf
 
@@ -23,19 +23,8 @@ info:
 
       # Scopes
 
-        utm.nasa.gov_read.fimsadmin: Subject can read data internal to FIMS.
-        utm.nasa.gov_write.fimsadmin: Subject can read, create, and update data internal to FIMS.
-        utm.nasa.gov_read.operation: Subject can read operational data such as USS Instance data
-        utm.nasa.gov_write.operation: Subject can read, create, and update operational data such as USS Instance data
-        utm.nasa.gov_read.message: Subject can read message data such as UTM Message and Negotiations
-        utm.nasa.gov_write.message: Subject can read, create, and update message data such as UTM Message and Negotiations
-        utm.nasa.gov_read.publicsafety: Subject can read operations that are designated public safety operations.
-        utm.nasa.gov_write.publicsafety: Subject can read, create, and update operations that are designated public safety operations.
-        utm.nasa.gov_read.constraint: Subject can read UTM constraint data
-        utm.nasa.gov_write.constraint: Subject can read, create, and update UTM constraint data to define areas that restrict other operations.
-        utm.nasa.gov_read.conflictmanagement: Subject can read conflict management data.
-        utm.nasa.gov_write.conflictmanagement: Subject can read and write conflict management data.
-
+        This serves both UAM-* and UTM-* scopes.
+        
 paths:
   /.well-known/oauth-authorization-server:
     get:
@@ -325,8 +314,8 @@ components:
             URL of the authorization server's token endpoint [RFC6749].  This is
             REQUIRED unless only the implicit grant type is used.
         jwks_uri:
-          type: string 
-          format: uri 
+          type: string
+          format: uri
           description: |
             URL of the authorization server's JWK Set
             document.  The referenced document contains the signing key(s) the
@@ -394,7 +383,7 @@ components:
             enum: [HS256, RS256, ES256]
           minItems: 3
           maxItems: 3
-          uniqueItems: true 
+          uniqueItems: true
           description: |-
             JSON array containing a list of the JWS signing algorithms (alg
             values) supported by the token endpoint for the signature on the JWT
@@ -415,11 +404,10 @@ components:
         jwt_claims:
           $ref: '#/components/schemas/JwtClaimsSet'
         signed_metadata:
-          type: string 
-          format: JWT 
+          type: string
+          format: JWT
           description: |
             A JWT containing metadata values about the authorization server as
             claims.  This is a string value consisting of the entire signed
             JWT.  A "signed_metadata" metadata value SHOULD NOT appear as a
             claim in the JWT.
-
