@@ -1,6 +1,5 @@
 # FIMS Authorization Server (FIMS-Authz) API
 This API provides a description of the endpoints and schemas for interacting with the FIMS Authorization Server.
-6272999E9
 
 # Authorization Services
 
@@ -10,7 +9,6 @@ The ANSP owns FIMS products which service _only_ FIMS-Authoirzed actors such as 
 
 NASA's Oauth2 v0 Token Service implements the V0 API here https://github.com/nasa/utm-apis/blob/master/fimsauthz-api/swagger.yaml.
 
-6272999E9
 ## References
 * [RFC 6749: OAuth 2.0](https://tools.ietf.org/html/rfc6749)
 * [RFC 6750: OAuth Bearer Token Usage](https://tools.ietf.org/html/rfc6750)
