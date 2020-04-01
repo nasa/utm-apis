@@ -82,8 +82,8 @@ paths:
           type: string
           enum:
           - scope  # This should match one of securityDefinitions scopes value in this spec
-            	   # See https://github.com/OAI/OpenAPI-Specification/issues/300
-          	   # Maybe solved in v3.0 OpenAPI spec, maybe stuck until then.
+                   # See https://github.com/OAI/OpenAPI-Specification/issues/300
+                   # Maybe solved in v3.0 OpenAPI spec, maybe stuck until then.
       responses:
         # TODO: add appropriate JSON response.  Model needs to be written.
         '200':
