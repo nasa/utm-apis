@@ -1,0 +1,1292 @@
+openapi: 3.0.0
+info:
+  title: NUP Operator API
+  version: v4
+  description: Endpoints for managing Operational Data with models based on the
+     v4 operator-api models.
+tags:
+  - name: Message Data Types
+    description: 'Intent, Inform, Alert and Free message schemas'
+  - name: Operations
+    description: Add and view operations
+  - name: Positions
+    description: Add and view operation positions
+  - name: Messages
+    description: Add and view operation messages
+  - name: Geography Data Types
+    description: Geographies
+  - name: Subscription Points
+    description: Subscribe to notifications
+paths:
+  /messages:
+    get:
+      tags:
+        - Messages
+      summary: Get Operator Messages.
+      description: >-
+        You can specify ASC and DESC (or asc/desc) as follows:
+        /operator/messages?sort=DESC You can specify a time window as follows:
+        /operator/messages/?limit=44&sent_time_after=2038-01-01T07:58:20.000Z&sent_time_before=2038-01-01T07:58:30.000Z
+      parameters:
+        - name: sort
+          in: query
+          description: sort
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: limit
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+        - name: offset
+          in: query
+          description: offset
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: sent_time_before
+          in: query
+          description: Returns Message with sent_time before or equal to the given time
+          required: false
+          schema:
+            type: string
+            format: date-time
+            minLength: 25
+            maxLength: 25
+        - name: sent_time_after
+          in: query
+          description: Returns Messages with sent_time after or equal to the given time
+          required: false
+          schema:
+            type: string
+            format: date-time
+            minLength: 25
+            maxLength: 25
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+    post:
+      tags:
+        - Messages
+      summary: add Message for a Gufi
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+        description: msg
+        required: true
+  '/messages/{gufi}':
+    get:
+      tags:
+        - Messages
+      summary: get Messages for a Gufi
+      parameters:
+        - name: gufi
+          in: path
+          description: gufi
+          required: true
+          schema:
+            type: string
+        - name: sort
+          in: query
+          description: sort
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: limit
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+        - name: offset
+          in: query
+          description: offset
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /operations:
+    get:
+      tags:
+        - Operations
+      summary: GET operation list with query
+      parameters:
+        - name: state
+          in: query
+          description: >-
+            You can specify ASC and DESC (or asc/desc) as follows:
+            https://host.nasa.gov/nuss/operator/messages?sort=DESC
+
+            You can also specify limit and offset.
+
+            Returns Operations with an OR list given states. Eg. state=A,V
+            returns operations in A or V states. Cannot use with state_not_eq.
+          required: false
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+              minLength: 5
+              maxLength: 14
+            minItems: 1
+            maxItems: 13
+        - name: state_not_eq
+          in: query
+          description: >-
+            Returns Operations with other than the given states. Eg
+            state_not_eq=X,C. Cannot use with state.
+          required: false
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+              minLength: 5
+              maxLength: 14
+            minItems: 1
+            maxItems: 13
+        - name: effective_time_begin_before
+          in: query
+          description: >-
+            Returns Operations with effective_begin_time before or equal to the
+            given time
+          required: false
+          schema:
+            type: string
+            format: date-time
+            minLength: 25
+            maxLength: 25
+        - name: effective_time_begin_after
+          in: query
+          description: >-
+            Returns Operations with effective_begin_time after or equal to the
+            given time
+          required: false
+          schema:
+            type: string
+            format: date-time
+            minLength: 25
+            maxLength: 25
+        - name: effective_time_end_before
+          in: query
+          description: >-
+            Returns Operations with effective_end_time before or equal to the
+            given time
+          required: false
+          schema:
+            type: string
+            format: date-time
+            minLength: 25
+            maxLength: 25
+        - name: effective_time_end_after
+          in: query
+          description: >-
+            Returns Operations with effective_end_time after or equal to the
+            given time
+          required: false
+          schema:
+            type: string
+            format: date-time
+            minLength: 25
+            maxLength: 25
+        - name: inside_bbox
+          in: query
+          description: >-
+            Returns Operations with flight geographies inside or intersecting
+            the bbox. The coordinates are comma delimited
+            (lon_min,lat_min,lon_max,lat_max). Example:
+            -121.1133,36.5317,-121.0941,36.6530
+          required: false
+          explode: true
+          schema:
+            type: array
+            items:
+              type: number
+              format: double
+            minItems: 4
+            maxItems: 4
+        - name: sort
+          in: query
+          description: >-
+            sorts the results by submit_time. Valid values - asc, desc. Default
+            value is desc.
+          required: false
+          schema:
+            type: string
+            minLength: 3
+            maxLength: 4
+        - name: limit
+          in: query
+          description: limit
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+        - name: offset
+          in: query
+          description: offset
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Operation'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    post:
+      tags:
+        - Operations
+      summary: add an operation
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Operation'
+        description: model
+        required: true
+  '/operations/{gufi}':
+    get:
+      tags:
+        - A. Required Endpoints
+      summary: Retrieve an operation by GUFI.
+      description: Retrieve an operation by GUFI.  Returns 404 if gufi is not found.
+      parameters:
+        - in: path
+          name: gufi
+          required: true
+          description: GUFI of the operation being requested.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Operation'
+        '400':
+          description: Bad request. Typically validation error. Fix your request and retry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperResponse'
+        '401':
+          description: Invalid or missing access_token provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperResponse'
+        '403':
+          description: >-
+            Forbidden. Do not retry with same access token. Reason not provided,
+            but do you have the right scopes?
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperResponse'
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperResponse'
+        '423':
+          description: The requested data are in a transition state. Please retry request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperResponse'
+    put:
+      tags:
+        - A. Required Endpoints
+      summary: 'Announce a new, or update an already announced operation.'
+      description: >-
+        Announce an Operation to another USS, either initial Operation or an
+        update to the Operation. The Operation's owner creates the ID.
+      parameters:
+        - in: path
+          name: gufi
+          required: true
+          description: PUT operation by gufi
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperResponse'
+        '400':
+          description: Bad request. Typically validation error. Fix your request and retry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperResponse'
+        '401':
+          description: Invalid or missing access_token provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperResponse'
+        '403':
+          description: Forbidden. Data and or token do not meet security requirements.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperResponse'
+        '409':
+          description: >-
+            Conflict. This USS has an Operation that intersects. 'messages'
+            field in UTMRestResponse will contain list of GUFIs of length at
+            least 1 indicating the conflicting Operation(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperResponse'
+        '429':
+          description: Too many recent requests from you. Wait to make further queries.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Operation'
+        description: >-
+          Operational plan with the following properties:
+          1. Contains a valid uss_operation_id.
+          2. time_available_end value that is in the future.
+          3. For and update to an Operation, date-time fields that are in the past MUST NOT be modified.
+          4. On the first announcement of an Operation, submit_time SHOULD be equal to update_time.
+          5. submit_time MUST be less than or equal to update_time.
+          5. {gufi} path parameter MUST equal Operation.gufi of the body data
+          6. Operation.uss_id == access_token.sub
+          7. Operation.priority_elements.status MUST NOT be PUBLIC_SAFETY.
+          8. Other rules for a USS Operation PUT are satisfied.
+        required: true
+  /positions:
+    get:
+      tags:
+        - Positions
+      summary: GET Positions
+      description: >-
+        You can specify ASC and DESC (or asc/desc) as follows:
+        https://host.nasa.gov/nuss/operator/positions?sort=DESC You can also
+        specify limit and offset.
+      parameters:
+        - name: sort
+          in: query
+          description: sort
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: limit
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+        - name: offset
+          in: query
+          description: offset
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: >-
+            returns empty list if no positions are found.  The return list can
+            be large so use limit and offset.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Position'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+    post:
+      tags:
+        - Positions
+      summary: addPosition
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Position'
+        description: flight position from operator
+        required: true
+  '/positions/{gufi}':
+    get:
+      tags:
+        - Positions
+      summary: getPositionsForGufi
+      parameters:
+        - name: gufi
+          in: path
+          description: gufi
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          description: fields
+          required: false
+          schema:
+            type: string
+        - name: q
+          in: query
+          description: q
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          description: sort
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: limit
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+        - name: offset
+          in: query
+          description: offset
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: >-
+            returns positions for GUFI. returns empty list if no positions are
+            found.  The return list can be large so use limit and offset.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Position'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+servers:
+  - url: 'https://some.host/operator/v4'
+components:
+  schemas:
+    Operation:
+      required:
+      - contact
+      - operation_volumes
+      type: object
+      properties:
+        gufi:
+          maxLength: 36
+          minLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-4[0-9a-fA-F]{3}\-[8-b][0-9a-fA-F]{3}\-[0-9a-fA-F]{12}$
+          type: string
+          format: uuid
+          example: 00000000-0000-4444-8888-feeddeadbeef
+          x-utm-data-accessibility: PUBLIC
+        api_version:
+          type: string
+          description: version # of api endpoint.
+          x-utm-data-accessibility: OPERATIONAL
+        user_id:
+          type: string
+          description: operator user id.
+          x-utm-data-accessibility: OPERATIONAL
+        submit_time:
+          maxLength: 24
+          minLength: 24
+          pattern: ^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]{3})Z$
+          type: string
+          description: |-
+            Time that this Operation was first announced to the USS Network in any way.  For GUD, this means when you first write to the grid.  For traditional discovery, this means the first time you announce to your LUN.
+            The submit_time value MUST remain constant for each recipient of the announcement since this value is potentially part of a signature of the Operation plan in some cases.  So, when data (or references to the data) are written to the grid, the same data are to be sent, as required, to other stakeholders (e.g. other USSs).  This means that if there is a 500ms difference in the time that you send and get confirmation from the grid, you DO NOT update the submit_time when sending to the USSs after that. When the operation is announced for the first time, update_time MUST be equal to submit_time. When an operation is modified (updated), update_time MUST be greater than submit_time.
+            Similarly, for traditional discovery, if there is a delay in sending the data to one LUN member versus another, this field is NOT updated in between as we want each stakeholder to ultimately receive the same data and (potentially) the same signature of the data.
+          format: date-time
+          example: 2015-08-20T14:11:56.118Z
+          x-utm-data-accessibility: OPERATIONAL
+        update_time:
+          description: >-
+            A timestamp set by the USS any time the state of the operation is
+            updated within the USS Network. An update may be minor or major, but
+            if/when te Operation is shared in the USS Network as a PUT to its
+            LUN, update_time must reflect the time that update was provided.
+
+            When the operation is announced for the first time, update_time MUST
+            be equal to submit_time. When an operation is modified (updated),
+            update_time MUST be greater than submit_time. THe update_time value
+            MUST be constant for each update data exchange.
+
+            This means that all stakeholder systems have the same value for
+            update_time even if, for example, one USS receives the update later
+            than others due to HTTP retrys or is provided as a GET for this
+            Operation.  This field is set and maintained by the USS managing the
+            Operation and is communicated to other USSs.
+          type: string
+          format: date-time
+          minLength: 24
+          maxLength: 24
+          x-utm-data-accessibility: OPERATIONAL
+          pattern: >-
+            ^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]{3})Z$
+          example: '2015-08-20T14:11:56.118Z'
+        effective_time_begin:
+          type: string
+          format: date-time
+          description: >-
+            The effective begin time of the operation. Same value as the begin
+            time of the first operation volume.
+        effective_time_end:
+          type: string
+          format: date-time
+          description: >-
+            The effective end time of the operation. Same value as the end time
+            of the last operation volume.
+        aircraft_comments:
+          maxLength: 1000
+          type: string
+          description: Informative text about the aircraft. Not used by the UTM System.
+            Only for human stakeholders.
+          default: NOT PROVIDED
+          x-utm-data-accessibility: SAFETY
+        flight_comments:
+          maxLength: 1000
+          type: string
+          description: Informative text about the operation. Not used by the UTM System.
+            Only for human stakeholders.
+          default: NOT PROVIDED
+          x-utm-data-accessibility: SAFETY
+        volumes_description:
+          maxLength: 1000
+          type: string
+          description: Informative text about the operational volumes. Not used by
+            the UTM System. Only for human stakeholders.
+          default: NOT PROVIDED
+          x-utm-data-accessibility: SAFETY
+        uas_registrations:
+          maxItems: 1000
+          minItems: 1
+          type: array
+          description: |-
+            The registration data for the vehicle(s) to be used in this Operation. Note that this is an array to allow for future operations involving multiple vehicles (e.g. 'swarms' or tandem inspections).
+            The uas_registrations array MUST NOT be used as a list of potential vehicles for this Operation.
+            If the vehicle data changes prior to an Operation, an update to the plan may be submitted with the updated vehicle information. Providing multiple uas_registrations in this manner implies that all vehicles will conform to the provided operation volumes.
+          items:
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UasRegistration'
+          x-utm-data-accessibility: SAFETY
+        airspace_authorization:
+          maxLength: 36
+          minLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-4[0-9a-fA-F]{3}\-[8-b][0-9a-fA-F]{3}\-[0-9a-fA-F]{12}$
+          type: string
+          format: uuid
+          example: 00000000-0000-4444-8888-feeddeadbeef
+          x-utm-data-accessibility: SAFETY
+        flight_number:
+          maxLength: 100
+          type: string
+          description: Optional. For use by USS for identification purposes.
+          x-utm-data-accessibility: OPERATIONAL
+        contact:
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/PersonOrOrganization'
+        state:
+          type: string
+          description: |-
+            The current state of the operation.  Must be maintained by the USS. Some additional details in the USS Specification.
+            0. PROPOSED
+              This operation is not yet ACCEPTED.  It may be awaiting information
+              from the operator, it may be in conflict with another ACCEPTED or
+              ACTIVATED operation and undergoing a negotiation process, or for
+              some other reason it is not yet able to be declared ACCEPTED.
+            1. ACCEPTED
+              This operation has been deemed ACCEPTED by the supporting USS. This
+              implies that the operation meets the requirements for operating in
+              the airspace based on the type of operation submitted.
+            2. ACTIVATED
+              This operation is active. The transition from ACCEPTED to ACTIVATED
+              is not an announced transition. The transition is implied based on
+              the submitted start time of the operation (i.e. the
+              effective_time_begin of the first OperationVolume). Note that an
+              ACTIVATED operation is not necessarily airborne, but is assumed
+              to be "using" the OperationVolumes that it has announced.
+            3. CLOSED
+              This operation is closed. It is not airborne and will not become
+              airborne again. If the UAS and the crew will fly again, it would
+              need to be as a new operation. A USS may announce the closure of any
+              operation, but is not required to announce unless the operation was
+              ROGUE or NONCONFORMING.
+            4. NONCONFORMING
+              See USS Specification for requirements to transition to this state.
+            5. ROGUE
+              See USS Specification for requirements to transition to this state.
+
+            If ordering of states is required for any purpose, they shall be ordered as follows:
+              PROPOSED < ACCEPTED < ACTIVATED < CLOSED < NONCONFORMING < ROGUE
+          enum:
+          - PROPOSED
+          - ACCEPTED
+          - ACTIVATED
+          - CLOSED
+          - NONCONFORMING
+          - ROGUE
+          x-utm-data-accessibility: OPERATIONAL
+        controller_location:
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+        gcs_location:
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+        contingency_plans:
+          maxItems: 250
+          minItems: 1
+          type: array
+          description: An array of ContingencyPlans wherein this operation may land
+            if needed/required during operation. Aids in planning and communication
+            during the execution of a contingency. An Operation MUST have least one
+            Contingency Plan (CP) per Operation Volume, therefore the CP list size
+            must be greater than or equal to the OpVol list size.
+          items:
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ContingencyPlan'
+          x-utm-data-accessibility: OPERATIONAL
+        faa_rule:
+          type: string
+          description: |-
+            1. PART_107
+              The operation follows FAA rule 107. Submission of such operations is mandatory
+            2. PART_107X
+              In general, operations are 107X if they are doing something that would require a waiver under current 107 rules. Submission of such operations is mandatory.
+            3. PART_101E
+              Submission of 101E would be required if operation is within 5 statute miles of an airport. Optional otherwise.
+            4. OTHER
+              Placeholder for other types of operations.
+          enum:
+          - PART_107
+          - PART_107X
+          - PART_101E
+          - OTHER
+          x-utm-data-accessibility: OPERATIONAL
+        priority_elements:
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/PriorityElements'
+        operation_volumes:
+          maxItems: 250
+          minItems: 1
+          type: array
+          description: |-
+            The actual geographical information for the operation.
+            A note on "intersection":
+              Note 2: All of the terms "crosses", "within", "touches" imply
+              intersection. I can track down a source for this definition
+              (probably OGC), but for now, you can see it illustrated in the
+              description for PostGIS intersection:
+                https://postgis.net/docs/ST_Intersects.html
+
+            Validation of the array must include the following checks:
+              1. The array of operation volumes MUST have minimum length of 1.
+              2. The array of operation volumes MUST have maximum length of 250.
+              3.  Each operation volume MUST have non-zero 4D volume
+                (i.e. each of the 4 dimensions much be > 0 in magnitude).
+              4. Volume intersection must pass the following checks:
+                a. When ordered by ordinal values, a succeeding operation volume
+                must have a 2D or 3D intersection in 3D space with its immediately
+                preceding operation volume.  Note that a 2D intersection in 3D
+                space implies two volumes that "touch" and the intersection has 2D
+                area.  Sharing just an edge would not qualify.  3D volumes that
+                don't touch at all would not qualify, even if they would intersect
+                when projected into 2D space (e.g. if "looking down" on the two
+                volumes).
+                b. When ordered by ordinal values, a succeeding operation volume
+                must have a non-negative temporal intersection with its
+                immediately preceding operation volume (Note we'd calculate this
+                by t1-t2 where t1 is the preceding operation volume end time and
+                t2 is the succeeding operation volume start time.).
+                c. When ordered by ordinal values, a succeeding operation volume
+                must have either a non-zero volume (3D) intersection OR a positive
+                temporal intersection. (Note this is a logical "OR" so it may have
+                 both intersection types... i.e. it is not an "exclusive OR").
+              5. Each spatial dimension of an op vol's bounding box must have
+              length less than 100000ft (should discuss with partners this value).
+              This is a sanity check against excessively large volumes. Need to
+              be careful here as there may be legitimate use cases wherein large
+              volumes are required/allowed, but we want to encourage efficient
+              planning and protect against misuse of the shared airspace.
+              6. The planned duration of an op vol must be less than 120 minutes. Again,
+              need to be careful to not damage legitimate use cases, but need to
+              protect against misuse/poor planning. For long duration missions,
+              it may be reasonable to have them replan or to have volumes with
+              the same geog and long time values that slightly intersect.
+              7. The start time of an operation volume other than the first in the
+              array must be greater than or equal to the start time of its
+              immediately preceding operation volume.
+              (note this probalby should be #4 or so, bumping the others down,
+              but I didn't want to cause confusion in case implementers are
+              referencing these checks somewhere by number.)
+          items:
+            $ref: '#/components/schemas/OperationVolume'
+          x-utm-data-accessibility: OPERATIONAL
+        metadata:
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-metadata.yaml#/definitions/EventMetadata'
+    OperationVolume:
+      required:
+      - beyond_visual_line_of_sight
+      - effective_time_begin
+      - effective_time_end
+      - max_altitude
+      - min_altitude
+      - operation_geography
+      - ordinal
+      - volume_type
+      type: object
+      properties:
+        ordinal:
+          maximum: 99999
+          exclusiveMaximum: false
+          minimum: -1000
+          exclusiveMinimum: false
+          type: integer
+          description: This integer represents the ordering of the operation volume
+            within the set of operation volumes. Need not be consecutive integers.
+            Note that the max and min are larger than the allowed number of op vols.
+            This is by design to allow implementers to use this field in a flexible
+            manner. For example, in replanning, it may be useful to have a larger
+            set of integers available and to space them by large offsets.
+          x-utm-data-accessibility: OPERATIONAL
+        volume_type:
+          type: string
+          description: More description later.
+          default: ABOV
+          enum:
+          - TBOV
+          - ABOV
+          x-utm-data-accessibility: OPERATIONAL
+        near_structure:
+          type: boolean
+          description: Is this operation volume within 400' of a structure?
+          default: false
+          x-utm-data-accessibility: SAFETY
+        operation_geography:
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
+        min_altitude:
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
+        max_altitude:
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
+        effective_time_begin:
+          maxLength: 24
+          minLength: 24
+          pattern: ^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]{3})Z$
+          type: string
+          description: |-
+            Earliest time the operation will use the operation volume.  It must be less than effective_time_end.
+            effective_time_begin < effective_time_end MUST be true.
+          format: date-time
+          example: 2015-08-20T14:11:56.118Z
+          x-utm-data-accessibility: OPERATIONAL
+        effective_time_end:
+          maxLength: 24
+          minLength: 24
+          pattern: ^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]{3})Z$
+          type: string
+          description: |-
+            Latest time the operation will done with the operation volume. It must be greater than effective_time_begin.
+            effective_time_begin < effective_time_end MUST be true.
+          format: date-time
+          example: 2015-08-20T14:11:56.118Z
+          x-utm-data-accessibility: OPERATIONAL
+        actual_time_end:
+          maxLength: 24
+          minLength: 24
+          pattern: ^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]{3})Z$
+          type: string
+          description: |-
+            Time that the operational volume was freed for use by other operations.  Should be populated and stored by the USS.
+            actual_time_end MUST satisfy:  actual_time_end > effective_time_begin whenever actual_time_end is not null.
+          format: date-time
+          example: 2015-08-20T14:11:56.118Z
+          x-utm-data-accessibility: OPERATIONAL
+        conformance_geography:
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
+        conformance_min_altitude:
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
+        conformance_max_altitude:
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
+        conformance_time_begin:
+          maxLength: 24
+          minLength: 24
+          pattern: ^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]{3})Z$
+          type: string
+          description: |-
+            Earliest time the operation will use the conformance volume.  It must be less than conformance_time_end.
+            conformance_time_begin < conformance_time_end MUST be true.
+          format: date-time
+          example: 2015-08-20T14:11:56.118Z
+          x-utm-data-accessibility: OPERATIONAL
+        conformance_time_end:
+          maxLength: 24
+          minLength: 24
+          pattern: ^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]{3})Z$
+          type: string
+          description: |-
+            Latest time the operation will done with the conformance volume. It must be greater than effective_time_begin.
+            conformance_time_begin < conformance_time_end MUST be true.
+          format: date-time
+          example: 2015-08-20T14:11:56.118Z
+          x-utm-data-accessibility: OPERATIONAL
+        protected_geography:
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
+        protected_min_altitude:
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
+        protected_max_altitude:
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
+        protected_time_begin:
+          maxLength: 24
+          minLength: 24
+          pattern: ^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]{3})Z$
+          type: string
+          description: |-
+            Earliest time the operation will use the protected volume.  It must be less than protected_time_end.
+            protected_time_begin < protected_time_end MUST be true.
+          format: date-time
+          example: 2015-08-20T14:11:56.118Z
+          x-utm-data-accessibility: OPERATIONAL
+        protected_time_end:
+          maxLength: 24
+          minLength: 24
+          pattern: ^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]{3})Z$
+          type: string
+          description: |-
+            Latest time the operation will done with the protected volume. It must be greater than protected_time_begin.
+            protected_time_begin < protected_time_end MUST be true.
+          format: date-time
+          example: 2015-08-20T14:11:56.118Z
+          x-utm-data-accessibility: OPERATIONAL
+        beyond_visual_line_of_sight:
+          type: boolean
+          description: Describes whether any portion of the operation volume is beyond
+            the visual line of sight of the RPIC.
+          x-utm-data-accessibility: OPERATIONAL
+    Position:
+      required:
+      - gufi
+      - time_measured
+      - time_sent
+      - location
+      - altitude_gps
+      - altitude_num_gps_satellites
+      - hdop_gps
+      - vdop_gps
+      - track_bearing
+      - track_bearing_reference
+      - track_bearing_uom
+      - track_ground_speed
+      - track_ground_speed_units
+      type: object
+      properties:
+        gufi:
+          maxLength: 36
+          minLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-4[0-9a-fA-F]{3}\-[8-b][0-9a-fA-F]{3}\-[0-9a-fA-F]{12}$
+          type: string
+          description: Each operation has an GUFI assigned upon submission. Required
+            upon PUTting a new position. It is a JSON string, but conforms to the
+            UUID version 4 specification
+          format: uuid
+          example: 00000000-0000-4444-8888-feeddeadbeef
+          x-utm-data-accessibility: PUBLIC
+        time_measured:
+          maxLength: 24
+          minLength: 24
+          pattern: ^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]{3})Z$
+          type: string
+          description: The time the position was measured. Likely the time provided
+            with the GPS position reading. Position time_measured < time_sent MUST
+            be true.
+          format: date-time
+          example: 2015-08-20T14:11:56.118Z
+          x-utm-data-accessibility: PUBLIC
+        time_sent:
+          maxLength: 24
+          minLength: 24
+          pattern: ^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]{3})Z$
+          type: string
+          description: The time the position was sent by the USS as measured by that
+            USS's system time. Position time_measured <= time_sent MUST be true.
+          format: date-time
+          example: 2015-08-20T14:11:56.118Z
+          x-utm-data-accessibility: OPERATIONAL
+        enroute_positions_id:
+          type: string
+          format: uuid
+        location:
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+        altitude_gps:
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
+        altitude_num_gps_satellites:
+          minimum: 0
+          exclusiveMinimum: false
+          type: integer
+          description: Number of satellites used in calculating the altitude.
+          format: int32
+          x-utm-data-accessibility: SAFETY
+        hdop_gps:
+          minimum: 0
+          type: number
+          description: The horizontal dilution of precision as provided by the onboard GPS.
+          format: double
+          x-utm-data-accessibility: SAFETY
+        vdop_gps:
+          minimum: 0
+          type: number
+          description: The vertical dilution of precision as provided by the onboard
+            GPS.
+          format: double
+          x-utm-data-accessibility: SAFETY
+        track_bearing:
+          maximum: 360
+          exclusiveMaximum: true
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+          description: The direction of travel relative to track_bearing_reference
+            in degrees. Position track_bearing value MUST be >= 0.0 and < 360.0. Note
+            that FIXM allows for the value of 360.0, while UTM does not.  The reason
+            is for clarity by not allowing two numbers (0.0 and 360.0) to represent
+            the same measurement.
+          format: double
+          xml:
+            name: BearingType
+            namespace: https://www.fixm.aero/nas/4.1
+            prefix: fb
+            attribute: false
+          x-utm-fixm-reference: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/Measures_xsd.html#BearingType
+          x-utm-data-accessibility: OPERATIONAL
+        track_bearing_reference:
+          type: string
+          description: |-
+            A code indicating the direction of the zero bearing.
+            TRUE_NORTH  This value indicates that the direction is relative to True North. MAGNETIC_NORTH  This value indicates that the direction is relative to Magnetic North.
+            This field is equivalent to
+          xml:
+            name: ZeroBearingTypeType
+            namespace: https://www.fixm.aero/nas/4.1
+            prefix: fb
+            attribute: true
+          default: TRUE_NORTH
+          enum:
+          - TRUE_NORTH
+          - MAGNETIC_NORTH
+          x-utm-fixm-reference: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/Measures_xsd.html#BearingType
+          x-utm-data-accessibility: OPERATIONAL
+        track_bearing_uom:
+          type: string
+          description: |-
+            The reference quantities used to express the value of angles. [ISO 19103, chapter 6.5.7.10]
+            As in FIXM, only a single option is provided (degrees). Including this field allows for clarity in the data provided and allows for the potential of other units of measure in the future.
+          xml:
+            name: UomAngleType
+            namespace: https://www.fixm.aero/nas/4.1
+            prefix: fb
+            attribute: true
+          enum:
+          - DEG
+          x-utm-fixm-reference: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/UnitsOfMeasure_xsd.html#UomAngleType
+          x-utm-data-accessibility: OPERATIONAL
+        track_ground_speed:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+          description: Ground speed int the direction of travel, in units as specifed
+            by track_ground_speed_units. Position track_ground_speed MUST be >= 0.0.
+          format: double
+          x-utm-data-accessibility: OPERATIONAL
+        track_ground_speed_units:
+          type: string
+          description: |-
+            The reference quantities used to express the value of ground speed as provided in track_ground_speed.
+            KT: Knots.
+            FIXM allows KT (knots) and KM_H (kilometers per hour) but we only allow the KT choice.
+          xml:
+            name: UomGroundSpeedType
+            namespace: https://www.fixm.aero/nas/4.1
+            prefix: fb
+            attribute: true
+          enum:
+          - KT
+          x-utm-fixm-reference: https://www.fixm.aero/releases/US_Ext-4.2.0/doc/schema_documentation_us_extension/UnitsOfMeasure_xsd.html#UomGroundSpeedType
+          x-utm-data-accessibility: OPERATIONAL
+        comments:
+          maxLength: 1000
+          minLength: 0
+          type: string
+          x-utm-data-accessibility: OPERATIONAL
+      example:
+        gufi: 00000000-0000-4444-8888-000000000000
+        time_measured: 2016-10-04T09:15:40.727Z
+        time_sent: 2016-10-04T09:15:40.727Z
+        location:
+          type: Point
+          coordinates:
+          - -122.05635935068132
+          - 37.41436490284069
+        altitude_gps:
+          altitude_value: 1239.77
+          vertical_reference: W84
+          units_of_measure: FT
+          source: ONBOARD_SENSOR
+        altitude_num_gps_satellites: 22
+        hdop_gps: 1.117
+        vdop_gps: 0.932
+        track_bearing: 33.44
+        track_bearing_reference: MAGNETIC_NORTH
+        track_bearing_uom: DEG
+        track_ground_speed: 33.33
+        track_ground_speed_units: KT  
+    Message:
+      type: object
+      required:
+        - oper_message_type
+      properties:
+        message_id:
+          type: string
+          format: uuid
+          example: 00000000-0000-4444-8888-FEEDDEADBEEF
+          minLength: 36
+          maxLength: 36
+          pattern: >-
+            ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-4[0-9a-fA-F]{3}\-[8-b][0-9a-fA-F]{3}\-[0-9a-fA-F]{12}$
+        gufi:
+          type: string
+          format: uuid
+          example: 00000000-0000-4444-8888-FEEDDEADBEEF
+          description: The GUFI for the operation referenced in this message.  UUIDv4.
+          minLength: 36
+          maxLength: 36
+          pattern: >-
+            ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-4[0-9a-fA-F]{3}\-[8-b][0-9a-fA-F]{3}\-[0-9a-fA-F]{12}$
+        origin:
+          type: string
+          description: >-
+            CLIENT: Message is from a UTM Client to the UTM System.UTM: Message
+            was automatically generated by the UTM System. MANAGER: Message was
+            generated by a UTM Manager (a human).
+          enum:
+            - CLIENT
+            - UTM
+            - MANAGER
+        time_sent:
+          type: string
+          format: date-time
+          example: '2015-08-20T14:11:56.118Z'
+          description: Time the message was generated by the origin.
+          x-utm-data-accessibility: OPERATIONAL
+        severity:
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/severity'
+        message_type:
+          type: string
+          description: |-
+            1. OPERATOR_INFORM_ACCEPTED
+              This operation was in PROPOSED state and has transitioned to the
+              ACCEPTED state.
+            2. OPERATOR_INFORM_REJECTED
+              This operation was in PROPOSED state and has rejected to the
+              CLOSED state due to reasons like intersecting existing operations
+              or failed negotiations.
+          enum:
+            - OPERATOR_INFORM_ACCEPTED
+            - OPERATOR_INFORM_REJECTED
+            - OPERATOR_INFORM_ACTIVATED
+            - OPERATOR_INFORM_NONCONFORMING
+            - OPERATOR_INFORM_ROGUE
+            - OPERATOR_INFORM_CLOSED
+            - OPERATOR_INTENT_ALL_CLEAR
+            - OPERATOR_INTENT_CLOSE
+            - OPERATOR_INTENT_CANCEL
+            - OPERATOR_INTENT_ABORT
+            - OPERATOR_ALERT_LOST_COMM
+        reason:
+          type: string
+        violations:
+          type: array
+          description: >-
+            Included with messages from the INFORM category with inform_message
+            = REJECTED. The array is of pairs of types and constraining_id. The
+            type refers to a constraint in the system (national parks, airports,
+            a volume in an existing operation, wrong registration ID, etc.). The
+            constraining_id is the UUID associated with each constraint;
+            constraining_volume augments it  when applicable.  When applicable,
+            violating_volume indicates which volume is in violation. This allows
+            for querying UTM for more information about those particular
+            constraints.
+          items:
+            $ref: '#/components/schemas/Violation'
+        last_known_position_id:
+          type: string
+          format: uuid
+        contingency:
+          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ContingencyPlan'
+        free_text:
+          type: string
+          description: >-
+            Any additional information. Note that this is for human consumption.
+            All time critical elements should be captured in the other data
+            fields for easier consumption by other automated systems.
+          maxLength: 1000
+      description: >-
+        A UTM operator message. Used to make other stakeholders aware about an
+        issue.  The noted required fields are required for all UtmOperMessages,
+        however there are fields that are contextually required depending on the
+        type of message. Please see the descriptions provided with each field.
+      example:
+        message_id: 00000000-0000-4444-8888-CAFEBEEFF00D
+        time_sent: '2015-08-20T14:11:57.345Z'
+        severity: NOTICE
+        message_type: OPERATION_CLOSED
+        gufi: 00000000-0000-4444-8888-FEEDDEADBEEF
+        free_text: 'Cool flight, bro'
+    Violation:
+      type: object
+      required:
+        - type
+      properties:
+        constraining_id:
+          type: string
+          description: Unique identifier for this constraint.
+        constraining_volume:
+          type: integer
+          format: int32
+          description: >-
+            The ordinal of the volume that conflicts with another operation, eg,
+            the first volume of an existing flight acts as a constraint against
+            proposed flights
+        problemReport:
+          type: string
+          description: >-
+            A report that a problem occurred thus Violation could not be
+            determined.
+        type:
+          type: string
+          description: >-
+            The constraint type. eg, This is a gufi for OperationViolation
+            (constraint is an existing flight), or an ID of a national park
+        violating_volumes:
+          type: array
+          description: >-
+            Set for OperationViolations, VolumeViolations, RogueViolations. The
+            ordinal of the volumes that are violating this constraint, eg, the
+            proposed flight's second volume violated this constraint
+          items:
+            type: integer
+            format: int32
+    OperResponse:
+      type: object
+      properties:
+        http_status_code:
+          type: string
+        msg:
+          type: string
+        uri:
+          type: string
+        url:
+          type: string
+        violationMap:
+          type: object
+          properties: {}
+
