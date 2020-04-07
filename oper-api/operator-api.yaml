@@ -1182,25 +1182,30 @@ components:
         message_type:
           type: string
           description: |-
-            1. OPERATOR_INFORM_ACCEPTED
+            1. INFORM_ACCEPTED
               This operation was in PROPOSED state and has transitioned to the
               ACCEPTED state.
-            2. OPERATOR_INFORM_REJECTED
+            2. INFORM_REJECTED
               This operation was in PROPOSED state and has rejected to the
               CLOSED state due to reasons like intersecting existing operations
               or failed negotiations.
           enum:
-            - OPERATOR_INFORM_ACCEPTED
-            - OPERATOR_INFORM_REJECTED
-            - OPERATOR_INFORM_ACTIVATED
-            - OPERATOR_INFORM_NONCONFORMING
-            - OPERATOR_INFORM_ROGUE
-            - OPERATOR_INFORM_CLOSED
-            - OPERATOR_INTENT_ALL_CLEAR
-            - OPERATOR_INTENT_CLOSE
-            - OPERATOR_INTENT_CANCEL
-            - OPERATOR_INTENT_ABORT
-            - OPERATOR_ALERT_LOST_COMM
+            - INFORM_ACCEPTED
+            - INFORM_REJECTED
+            - INFORM_ACTIVATED
+            - INFORM_NONCONFORMING
+            - INFORM_ROGUE
+            - INFORM_CLOSED
+            - INTENT_ALL_CLEAR
+            - INTENT_CLOSE
+            - INTENT_CANCEL
+            - INTENT_ABORT
+            - ALERT_UNKWN
+            - ALERT_WEATHER
+            - ALERT_SECURITY
+            - ALERT_OPERATIONS
+            - ALERT_SYSTEM
+            - ALERT_LOST_COMM
         reason:
           type: string
         violations:
@@ -1289,4 +1294,3 @@ components:
         violationMap:
           type: object
           properties: {}
-
