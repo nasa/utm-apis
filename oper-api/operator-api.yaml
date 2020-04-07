@@ -1142,7 +1142,7 @@ components:
     Message:
       type: object
       required:
-        - oper_message_type
+        - message_type
       properties:
         message_id:
           type: string
