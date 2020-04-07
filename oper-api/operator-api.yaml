@@ -1193,19 +1193,21 @@ components:
             - INFORM_ACCEPTED
             - INFORM_REJECTED
             - INFORM_ACTIVATED
+            - INFORM_CLOSED
             - INFORM_NONCONFORMING
             - INFORM_ROGUE
-            - INFORM_CLOSED
+            - INFORM_UPDATE_SUCCESS
+            - INFORM_UPDATE_FAIL
             - INTENT_ALL_CLEAR
             - INTENT_CLOSE
             - INTENT_CANCEL
             - INTENT_ABORT
-            - ALERT_UNKWN
             - ALERT_WEATHER
             - ALERT_SECURITY
             - ALERT_OPERATIONS
             - ALERT_SYSTEM
             - ALERT_LOST_COMM
+            - ALERT_UNKWN
         reason:
           type: string
         violations:
@@ -1214,9 +1216,8 @@ components:
             Included with messages from the INFORM category with inform_message
             = REJECTED. The array is of pairs of types and constraining_id. The
             type refers to a constraint in the system (national parks, airports,
-            a volume in an existing operation, wrong registration ID, etc.). The
-            constraining_id is the UUID associated with each constraint;
-            constraining_volume augments it  when applicable.  When applicable,
+            an existing operation, wrong registration ID, etc.). The constraining_id 
+            is the UUID associated with each constraint; When applicable,
             violating_volume indicates which volume is in violation. This allows
             for querying UTM for more information about those particular
             constraints.
