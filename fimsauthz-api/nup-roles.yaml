@@ -22,6 +22,8 @@ FIMS_ADMIN:
     examples:
         - "An IT admin manages FIMS-AZ logfiles."
         - "An IT admin reads the master USS list to update FIMS-AZ's data table containing the USSs, their scopes and their credentials."
+    scopes:
+        - utm.nasa.gov_read.fimsadmin
 
 FIMS_SME:
     description: |
