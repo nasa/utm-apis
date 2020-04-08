@@ -369,10 +369,9 @@ paths:
     put:
       tags:
         - A. Required Endpoints
-      summary: 'Announce a new, or update an already announced operation.'
+      summary: 'Update an already existing operation.'
       description: >-
-        Announce an Operation to another USS, either initial Operation or an
-        update to the Operation. The Operation's owner creates the ID.
+        Update an already existing operation which is identified by gufi
       parameters:
         - in: path
           name: gufi
@@ -427,15 +426,7 @@ paths:
               $ref: '#/components/schemas/Operation'
         description: >-
           Operational plan with the following properties:
-          1. Contains a valid uss_operation_id.
-          2. time_available_end value that is in the future.
-          3. For and update to an Operation, date-time fields that are in the past MUST NOT be modified.
-          4. On the first announcement of an Operation, submit_time SHOULD be equal to update_time.
-          5. submit_time MUST be less than or equal to update_time.
-          5. {gufi} path parameter MUST equal Operation.gufi of the body data
-          6. Operation.uss_id == access_token.sub
-          7. Operation.priority_elements.status MUST NOT be PUBLIC_SAFETY.
-          8. Other rules for a USS Operation PUT are satisfied.
+          1. Contains a valid operation gufi.
         required: true
   /positions:
     get:
@@ -444,7 +435,7 @@ paths:
       summary: GET Positions
       description: >-
         You can specify ASC and DESC (or asc/desc) as follows:
-        https://host.nasa.gov/nuss/operator/positions?sort=DESC You can also
+        https://host.nasa.gov/nuss/operator/v4/positions?sort=DESC You can also
         specify limit and offset.
       parameters:
         - name: sort
@@ -601,29 +592,20 @@ components:
           pattern: ^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]{3})Z$
           type: string
           description: |-
-            Time that this Operation was first announced to the USS Network in any way.  For GUD, this means when you first write to the grid.  For traditional discovery, this means the first time you announce to your LUN.
-            The submit_time value MUST remain constant for each recipient of the announcement since this value is potentially part of a signature of the Operation plan in some cases.  So, when data (or references to the data) are written to the grid, the same data are to be sent, as required, to other stakeholders (e.g. other USSs).  This means that if there is a 500ms difference in the time that you send and get confirmation from the grid, you DO NOT update the submit_time when sending to the USSs after that. When the operation is announced for the first time, update_time MUST be equal to submit_time. When an operation is modified (updated), update_time MUST be greater than submit_time.
-            Similarly, for traditional discovery, if there is a delay in sending the data to one LUN member versus another, this field is NOT updated in between as we want each stakeholder to ultimately receive the same data and (potentially) the same signature of the data.
+            Time that this Operation was first submitted to NUSS.  For GUD, this means when you first write to the grid.
+            The submit_time value MUST remain constant for the life cycle of the operation.
           format: date-time
           example: 2015-08-20T14:11:56.118Z
           x-utm-data-accessibility: OPERATIONAL
         update_time:
           description: >-
             A timestamp set by the USS any time the state of the operation is
-            updated within the USS Network. An update may be minor or major, but
-            if/when te Operation is shared in the USS Network as a PUT to its
-            LUN, update_time must reflect the time that update was provided.
+            updated within the USS Network. 
 
-            When the operation is announced for the first time, update_time MUST
+            When the operation is submitted for the first time, update_time MUST
             be equal to submit_time. When an operation is modified (updated),
             update_time MUST be greater than submit_time. THe update_time value
             MUST be constant for each update data exchange.
-
-            This means that all stakeholder systems have the same value for
-            update_time even if, for example, one USS receives the update later
-            than others due to HTTP retrys or is provided as a GET for this
-            Operation.  This field is set and maintained by the USS managing the
-            Operation and is communicated to other USSs.
           type: string
           format: date-time
           minLength: 24
@@ -853,7 +835,7 @@ components:
         volume_type:
           type: string
           description: More description later.
-          default: ABOV
+          default: TBOV
           enum:
           - TBOV
           - ABOV
@@ -1062,8 +1044,8 @@ components:
           type: string
           description: |-
             A code indicating the direction of the zero bearing.
-            TRUE_NORTH  This value indicates that the direction is relative to True North. MAGNETIC_NORTH  This value indicates that the direction is relative to Magnetic North.
-            This field is equivalent to
+            TRUE_NORTH  This value indicates that the direction is relative to True North. 
+            MAGNETIC_NORTH  This value indicates that the direction is relative to Magnetic North.
           xml:
             name: ZeroBearingTypeType
             namespace: https://www.fixm.aero/nas/4.1
@@ -1164,9 +1146,9 @@ components:
         origin:
           type: string
           description: >-
-            CLIENT: Message is from a UTM Client to the UTM System.UTM: Message
-            was automatically generated by the UTM System. MANAGER: Message was
-            generated by a UTM Manager (a human).
+            CLIENT: Message is from a UTM Client to the UTM System.
+            UTM: Message was automatically generated by the UTM System. 
+            MANAGER: Message was generated by a UTM Manager (a human).
           enum:
             - CLIENT
             - UTM
@@ -1237,14 +1219,14 @@ components:
           maxLength: 1000
       description: >-
         A UTM operator message. Used to make other stakeholders aware about an
-        issue.  The noted required fields are required for all UtmOperMessages,
+        issue.  The noted required fields are required for all messages,
         however there are fields that are contextually required depending on the
         type of message. Please see the descriptions provided with each field.
       example:
         message_id: 00000000-0000-4444-8888-CAFEBEEFF00D
         time_sent: '2015-08-20T14:11:57.345Z'
         severity: NOTICE
-        message_type: OPERATION_CLOSED
+        message_type: INFORM_CLOSED
         gufi: 00000000-0000-4444-8888-FEEDDEADBEEF
         free_text: 'Cool flight, bro'
     Violation:
