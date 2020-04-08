@@ -1,0 +1,42 @@
+# Operator roles supporting privileges for USS and PSU Operator Services as well as
+# Federal use cases such as a federal-logical USS sub-network.
+
+UAM_OPERATOR:
+    description: |
+       todo analog to UTM_OPERATOR
+
+UAM_FEDERAL_OPERATOR:
+    description: |
+       todo analog to UTM_FEDERAL_OPERATOR
+
+UTM_FEDERAL_OPERATOR:
+    description: |
+       An actor with this role can use a USS to create and modify
+       Operations, Positions and Messages in the federal UTM subnet.
+    authority: ANSP
+    examples:
+        - "An actor with the UTM_FEDERAL_OPERATOR role can manage Operations in the federal subnet"
+    scopes:
+        - nup.federal_write.operation  #all operational data (op, msg, posn)
+        
+UTM_OPERATOR:
+    description: |
+       An actor with this role can use a USS to create and modify
+       Operations, Positions and Messages, read UVRs and other basic fuctions.
+    authority: UTM Service Provider
+    examples:
+        - "An actor with the UTM_OPERATOR read active UASVolumeReservations in the USS Network."
+    scopes:
+        - nup_write.operation
+        - nup_read.uvr
+
+CONSTRAINT_MANAGER:
+    description: |
+       An actor with this role can author and submit airspace constraints such as UASVolumeReservations (UVRs).
+       The authority assigns this role after out-of-band
+       vetting TBD.
+    authority: ANSP
+    examples:
+        - "An actor with CONSTRAINT_MANAGER role and can publish airspace constraints such as UASVolumeReservations to the USS Network."
+    scopes:
+        - nup_write.constraint

@@ -1,0 +1,34 @@
+# injected into Operator Service at build time.
+        - user:
+            id: johnhop1
+            secret: 34jid33zj4Mj1byFh1v2g0
+            roles:
+                - UTM_OPERATOR
+            deployment:
+                - production
+        - user:
+            id: federal1
+            secret: 3jid33zj9Mj1byFh1v2g0
+            roles:
+                - UAM_FEDERAL_OPERATOR
+                - CONSTRAINT_MANAGER
+            deployment:
+                - production
+
+        - user:
+            id: devtest_basic
+            secret: Mj1byFh1v2g0Mj1byFh1v2g0
+            roles:
+                - UTM_OPERATOR
+                - UAM_OPERATOR
+            deployment:
+                - devtest
+        - user:
+              id: devtest_ep
+              secret: xh1v2g0h1v2g0h1v2g0
+              roles:
+                  - UTM_OPERATOR
+                  - UAM_OPERATOR
+                  - CONSTRAINT_MANAGER
+              deployment:
+                  - devtest
