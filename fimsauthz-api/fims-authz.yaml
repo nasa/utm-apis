@@ -32,7 +32,7 @@ paths:
     get:
       tags:
         - A. Required Endpoints
-      summary:  Provides metadata related to use of this authorization server
+      summary: Provides metadata related to use of this authorization server
       description: |
         Per RFC8414, this endpoint provides metadata related to use of this authorization
         server. See https://tools.ietf.org/html/rfc8414#section-3 for more details.
@@ -110,7 +110,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/TokenResponse"
 
-        "400": 
+        "400":
           description: >-
             - Request did not conform to the API specification or failed validation.
           content:
@@ -118,7 +118,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
-        "401": 
+        "401":
           description: >-
             - Request used invalid or incorrect credentials.
           content:
@@ -126,7 +126,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
-        "429": 
+        "429":
           description: >-
             - [NOT IMPLEMENTED] Client has been timed-out for making too many requests.
           content:
