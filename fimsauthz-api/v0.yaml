@@ -1,0 +1,215 @@
+openapi: 3.0.1
+info:
+  title: NUP OAuth2 Authorization Service API Documentation
+  description: |
+    NUP OAuth2 Authorization Service
+  version: v0
+servers:
+  - url: https://future.url.uam/nup-oauth2/oauth
+
+paths:
+  /token:
+    post:
+      tags:
+        - A. Required Endpoints
+      summary: Obtain an access token.
+      description: |
+        This endpoint is required as per RFC 6749.  A POST to this endpoint acts as a request for an access token.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+                - grant_type
+              properties:
+                grant_type:
+                  type: string
+                  description: Type of grant. Must be 'client_credentials'.
+                  enum:
+                    - client_credentials
+                scope:
+                  type: string
+                  description:
+                    Scope (one and only one) to be associated with the
+                    access token being requested. An error code of 400 will be returned
+                    if no scope, incorrect scope or more than one scope is specified.
+                  enum:
+                    - scope
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        400:
+          description: Bad Request
+          content: {}
+      security:
+        - authenticate_using_client_credentials: []
+  /api:
+    get:
+      tags:
+        - B. Version and Health
+      summary: get server info.  Can be used to check health.
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Version"
+components:
+  schemas:
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: see definitions/JwsCompactSerialization in this spec
+          format: JwsCompactSerialization
+        scope:
+          type: string
+          description: white space separated list of scopes
+        token_type:
+          type: string
+          enum:
+            - bearer
+        expires_in:
+          type: number
+          description: see definitions/JwtClaimsSet.exp property in this spec
+          format: integer
+        sub:
+          type: string
+          description: see definitions/JwtClaimsSet in this spec
+        jti:
+          type: string
+          description: see definitions/JwtClaimsSet in this spec
+          format: uuid
+        iss:
+          type: string
+          description: see definitions/JwtClaimsSet in this spec
+        nbf:
+          type: number
+          description: see definitions/JwtClaimsSet in this spec
+      example:
+        access_token: tokenstring
+        token_type: bearer
+        expires_in: 3599
+        scope: utm.nasa.gov_write.operation
+        sub: nuss1.testing.nasa.gov
+        nbf: 1509470774
+        iss: fims.arc.nasa.gov/fimsAuthServer
+        jti: 4d4c1a63-0959-48cc-885a-3648fd582db7
+    JwtClaimsSet:
+      type: object
+      properties:
+        iss:
+          type: string
+          description:
+            The "iss" (issuer) claim identifies the principal that issued
+            the JWT. The URL of the FIMS Authorization Server.
+          format: URL
+        sub:
+          type: string
+          description:
+            The "sub" (suv4-draft identifies the principal that is the
+            subject of the JWT.
+        exp:
+          type: integer
+          description:
+            The "exp" (expiration time) claim identifies the expiration
+            time on or after which the JWT MUST NOT be accepted for processing.  The
+            processing of the "exp" claim requires that the current date/time MUST
+            be before the expiration date/time listed in the "exp" claim.
+          format: unix-time
+        nbf:
+          type: integer
+          description:
+            The "nbf" (not before) claim identifies the time before which
+            the JWT MUST NOT be accepted for processing.  The processing of the "nbf"
+            claim requires that the current date/time MUST be after or equal to the
+            not-before date/time listed in the "nbf" claim.
+          format: unix-time
+        iat:
+          type: integer
+          description:
+            The "iat" (issued at) claim identifies the time at which the
+            JWT was issued.  This claim can be used to determine the age of the JWT.
+          format: unix-time
+        jti:
+          type: string
+          description:
+            The "jti" (JWT ID) claim provides a unique identifier for the
+            JWT. For this server, this is satisfied by the use of a UUID.
+          format: uuid
+        scope:
+          type: object
+          description: See securityDefinitions section in this spec.
+    Version:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Title of the API
+        version:
+          type: string
+          description: Version number for the API
+        build_time:
+          type: string
+          description: Time of the latest build
+          format: date-time
+          example: 2015-08-20T14:11:56.118Z
+          x-utm-data-accessibility: PUBLIC
+        api_docs:
+          type: array
+          description: URL(s) for API Documentation
+          items:
+            type: string
+  securitySchemes:
+    application:
+      type: oauth2
+      description: A write scope allows reading.
+      flows:
+        clientCredentials:
+          tokenUrl: https://utm.defined.host/oauth/token
+          scopes:
+            utm.nasa.gov_read.fimsadmin: Subject can read data internal to FIMS.
+            utm.nasa.gov_write.fimsadmin:
+              Subject can read, create, and update data
+              internal to FIMS.
+            utm.nasa.gov_read.operation:
+              Subject can read operational data such as
+              USS Instance data
+            utm.nasa.gov_write.operation:
+              Subject can read, create, and update operational
+              data such as USS Instance data
+            utm.nasa.gov_read.message:
+              Subject can read message data such as UTM Message
+              and Negotiations
+            utm.nasa.gov_write.message:
+              Subject can read, create, and update message
+              data such as UTM Message and Negotiations
+            utm.nasa.gov_read.publicsafety:
+              Subject can read operations that are designated
+              public safety operations.
+            utm.nasa.gov_write.publicsafety:
+              Subject can read, create, and update
+              operations that are designated public safety operations.
+            utm.nasa.gov_read.constraint: Subject can read UTM constraint data
+            utm.nasa.gov_write.constraint:
+              Subject can read, create, and update UTM
+              constraint data. This means that the Subject can define areas that restrict
+              other operations.
+            utm.nasa.gov_read.conflictmanagement:
+              Subject can read conflict management
+              data.
+            utm.nasa.gov_write.conflictmanagement:
+              Subject can read and write conflict
+              management data.
+    authenticate_using_client_credentials:
+      type: http
+      description: |
+        The FIMS AZ server authenticates clients using the HTTP Authorization header with the Basic keyword and the oauth2 client secret. Note that the FIMS Authorization Server facilitates the RFC-6749 Client Credentials flow for UTM components that are Oauth2 Resources servers.
+      scheme: basic
