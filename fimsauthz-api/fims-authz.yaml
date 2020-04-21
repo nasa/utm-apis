@@ -65,15 +65,15 @@ paths:
                 - grant_type
                 - client_id
                 - scope
-                - timestamp
               additionalProperties: false
               properties:
                 grant_type:
                   type: string
+                  description: Type of grant. Must be 'client_credentials'.
                   enum:
                     - client_credentials
                 client_id:
-                  description: the client_id (uss_name) of the requesting USS.
+                  description: The client_id (uss_name) of the requesting USS.
                   type: string
                 scope:
                   description: |
@@ -86,6 +86,8 @@ paths:
                     definition of a timestamp (i.e. UTC only, millisecond precision).
 
                     May be used by the authorization server to validate the request.
+
+                    [NOT IMPLEMENTED as of 1.0.1]
                   type: string
                   format: date-time
                 salt:
@@ -101,6 +103,8 @@ paths:
 
                     NOTE3: If a salt value is used in multiple requests, FIMS AZ may 
                     reject duplicated salt requests beyond the first.
+
+                    [NOT IMPLEMENTED as of 1.0.1]
                   type: string
                   format: uuid
       responses:
