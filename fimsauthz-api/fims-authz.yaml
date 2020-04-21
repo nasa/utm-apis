@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: v1
+  version: 1.0.1
   title: Flight Information Management System (FIMS) Authorization (AZ) Server
   description: >
 
