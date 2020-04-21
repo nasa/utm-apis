@@ -3,7 +3,7 @@ info:
   title: NUP OAuth2 Authorization Service API Documentation
   description: |
     NUP OAuth2 Authorization Service
-  version: v0
+  version: 0.1.0
 servers:
   - url: https://future.url.uam/nup-oauth2/oauth
 
