@@ -4,43 +4,43 @@ info:
   title: Flight Information Management System (FIMS) Authorization (AZ) Server
   description: >
 
-    THe FIMS AZ service (aka "fims-az-sig") provides authorization services for FIMS stakeholders
-    within UTM.  It is written to the UAS Service Supplier Framework (UFAA) for
-    Authentication and Authorization" at
-    https://utm.arc.nasa.gov/docs/2019-UTM_Framework-NASA-TM220364.pdf
+    The FIMS AZ service provides authorization services for FIMS stakeholders 
+    within UTM.  It is written to the UAS Service Supplier Framework (UFAA) 
+    for Authentication and Authorization" at `https://utm.arc.nasa.gov/docs/2019-UTM_Framework-NASA-TM220364.pdf`.
 
-     The FIMS Authorization Server facilitates the RFC-6749 Client
-        Credentials flow for UTM components that are Oauth2 Resources servers.
+    The FIMS Authorization Server facilitates the RFC-6749 Client
+    Credentials flow for UTM components that are Oauth2 Resources servers.
 
-      # Authentication using Message Signing
+    # Authentication using Message Signing
 
-      As detailed in the UFAA, the authentication method is designed to provide
-        message integrity, non-repudiation, and message authentication.
-        Clients authenticate by providing a JWS signature of the HTTP request body's x-www-form-urlencoded data. The signature is provided in the
-        'x-utm-message-signature' HTTP header of the HTTP Request.
-        As specified in the UFAA, the signature is performed using the private key
-        associated with the certifcate specified by 'x5u' in the JOSE Header.
+    As detailed in the UFAA, the authentication method is designed to provide
+    message integrity, non-repudiation, and message authentication.
+    Clients authenticate by providing a JWS signature of the HTTP request body's 
+    `x-www-form-urlencoded` data. The signature is provided in the
+    `x-utm-message-signature` HTTP header of the HTTP Request.
+    As specified in the UFAA, the signature is performed using the private key
+    associated with the certifcate specified by `x5u` in the JOSE Header.
 
-      # Scopes
+    # Scopes
 
-        This serves both UAM-* and UTM-* scopes.
-        
+    This serves both UAM-* and UTM-* scopes.
+
 paths:
   /.well-known/oauth-authorization-server:
     get:
       tags:
         - A. Required Endpoints
-      summary: Get API Info.  Can be used to check health.
+      summary: Provides metadata related to use of this authorization server
       description: |
         Per RFC8414, this endpoint provides metadata related to use of this authorization
         server. See https://tools.ietf.org/html/rfc8414#section-3 for more details.
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Metadata'
+                $ref: "#/components/schemas/Metadata"
 
   /token:
     post:
@@ -53,7 +53,7 @@ paths:
 
         Implemented per https://tools.ietf.org/html/rfc6749#section-3.2 .
       security:
-      - fims-jws: []
+        - fims-jws: []
       requestBody:
         description: Data supplied by the client for a token request.
         required: true
@@ -98,17 +98,44 @@ paths:
 
                     NOTE2: This is a suggested/experimental field at the moment. Needs
                     discussion.
+
+                    NOTE3: If a salt value is used in multiple requests, FIMS AZ may 
+                    reject duplicated salt requests beyond the first.
                   type: string
                   format: uuid
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TokenResponse'
+                $ref: "#/components/schemas/TokenResponse"
+
+        "400":
+          description: >-
+            - Request did not conform to the API specification or failed validation.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+        "401":
+          description: >-
+            - Request used invalid or incorrect credentials.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+        "429":
+          description: >-
+            - [NOT IMPLEMENTED] Client has been timed-out for making too many requests.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 servers:
-  - url: 'https://ansp-authority-baseurl/oauth/{info.version}'
+  - url: "https://ansp-authority-baseurl/oauth/{info.version}"
 
 components:
   securitySchemes:
@@ -189,9 +216,9 @@ components:
       additionalProperties: false
       properties:
         jose_header:
-          $ref: '#/components/schemas/JoseHeader'
+          $ref: "#/components/schemas/JoseHeader"
         jws_payload:
-          $ref: '#/components/schemas/JwtClaimsSet'
+          $ref: "#/components/schemas/JwtClaimsSet"
         jws_signature:
           type: string
           description: See RFC 7515 for details.
@@ -200,6 +227,9 @@ components:
       properties:
         alg:
           type: string
+          enum:
+            - RSA
+            - EC
         typ:
           type: string
           enum:
@@ -207,23 +237,6 @@ components:
           description: >-
             The FIMS Authorization Server only support 'JWT' (JSON Web Token) as
             the algorithm type.
-    TokenKeyResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        alg:
-          type: string
-          description: >-
-            A designator for the algorithm used to sign the key.  Values defined
-            by a Java specfication from Oracle
-            (http://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html).
-        value:
-          type: string
-          description: >-
-            A key signed by the algorithm noted in 'alg' property.  The key is
-            preceded by '-----BEGIN PUBLIC KEY-----\n' without the single quotes
-            and appended with '\n-----END PUBLIC KEY-----' without the single
-            quotes.
     JwtClaimsSet:
       type: object
       required:
@@ -402,7 +415,7 @@ components:
             Client Registration, then information on how to register clients
             needs to be provided in this documentation.
         jwt_claims:
-          $ref: '#/components/schemas/JwtClaimsSet'
+          $ref: "#/components/schemas/JwtClaimsSet"
         signed_metadata:
           type: string
           format: JWT
@@ -411,3 +424,14 @@ components:
             claims.  This is a string value consisting of the entire signed
             JWT.  A "signed_metadata" metadata value SHOULD NOT appear as a
             claim in the JWT.
+
+            Refer to RFC8414 - https://tools.ietf.org/html/rfc8414#section-2.1
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Error Title"
+        error_description:
+          type: string
+          example: "Human readable description of the error."
