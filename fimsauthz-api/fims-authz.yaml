@@ -73,7 +73,7 @@ paths:
                   enum:
                     - client_credentials
                 client_id:
-                  description: the client_id (uss_name) of the reqeusting USS.
+                  description: the client_id (uss_name) of the requesting USS.
                   type: string
                 scope:
                   description: |
@@ -229,7 +229,6 @@ components:
           type: string
           enum:
             - RSA
-            - EC
         typ:
           type: string
           enum:
@@ -291,7 +290,23 @@ components:
             For this server, this is satisfied by the use of a UUID.
         scope:
           description: See securityDefinitions section in this spec.
+          type: array
+          items:
+            type: string
+            example: "example.scope.name.read"
+          maxItems: 1
+          minItems: 1
+        authorities:
+          description: An array of all authorities that the client is associated with.
+          type: array
+          items:
+            type: string
+            example: "USS_BASIC"
+          minItems: 1
+        client_id:
+          description: The client_id (uss_name) of the requesting USS.
           type: string
+          example: "uss.example.xyz"
     Metadata:
       type: object
       description: Information provided at the `/.well-known/oauth-authorization-server` endpoint.
