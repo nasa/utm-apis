@@ -1,13 +1,5 @@
 # FIMS Authorization Server (FIMS-Authz) API
-This API provides a description of the endpoints and schemas for interacting with the FIMS Authorization Server.
-
-# Authorization Services
-
-The TCL4 FIMS AZ is _retired_.
-
-The ANSP owns FIMS products which service _only_ FIMS-Authoirzed actors such as PSU and USS.  The FIMS AZ Sig service implements the v1 API here https://github.com/nasa/utm-apis/blob/master/fimsauthz-api/fims-authz.yaml.  This service provide Signature Authentication.
-
-NASA's Oauth2 v0 Token Service implements the V0 API here https://github.com/nasa/utm-apis/blob/master/fimsauthz-api/swagger.yaml.
+This API provides an oauth2 token and other endpoints for the FIMS Authorization Server. The FIMS AZ Sig service implements the v1 API here https://github.com/nasa/utm-apis/blob/master/fimsauthz-api/fims-authz.yaml.  This service provide Signature Authentication.
 
 ## References
 * [RFC 6749: OAuth 2.0](https://tools.ietf.org/html/rfc6749)
