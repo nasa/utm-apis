@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: v1
+  version: 1.0.2
   title: Flight Information Management System (FIMS) Authorization (AZ) Server
   description: >
 
@@ -26,26 +26,10 @@ info:
     This serves both UAM-* and UTM-* scopes.
 
 paths:
-  /.well-known/oauth-authorization-server:
-    get:
-      tags:
-        - A. Required Endpoints
-      summary: Provides metadata related to use of this authorization server
-      description: |
-        Per RFC8414, this endpoint provides metadata related to use of this authorization
-        server. See https://tools.ietf.org/html/rfc8414#section-3 for more details.
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Metadata"
-
   /token:
     post:
       tags:
-        - A. Required Endpoints
+        - Token Endpoint
       summary: Request an access token.
       description: |
         The primary endpoint for this authorization server.  Used to request an access token
@@ -65,15 +49,15 @@ paths:
                 - grant_type
                 - client_id
                 - scope
-                - timestamp
               additionalProperties: false
               properties:
                 grant_type:
                   type: string
+                  description: Type of grant. Must be 'client_credentials'.
                   enum:
                     - client_credentials
                 client_id:
-                  description: the client_id (uss_name) of the reqeusting USS.
+                  description: The client_id (uss_name) of the requesting USS.
                   type: string
                 scope:
                   description: |
@@ -86,6 +70,8 @@ paths:
                     definition of a timestamp (i.e. UTC only, millisecond precision).
 
                     May be used by the authorization server to validate the request.
+
+                    [NOT IMPLEMENTED as of 1.0.1]
                   type: string
                   format: date-time
                 salt:
@@ -101,6 +87,8 @@ paths:
 
                     NOTE3: If a salt value is used in multiple requests, FIMS AZ may 
                     reject duplicated salt requests beyond the first.
+
+                    [NOT IMPLEMENTED as of 1.0.1]
                   type: string
                   format: uuid
       responses:
@@ -134,6 +122,48 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+
+  /.well-known/oauth-authorization-server:
+    get:
+      tags:
+        - /.well-known/
+      summary: Provides metadata related to use of this authorization server
+      description: |
+        Per RFC8414, this endpoint provides metadata related to use of this authorization
+        server. See https://tools.ietf.org/html/rfc8414#section-3 for more details.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Metadata"
+
+  /.well-known/jwks.json:
+    get:
+      tags:
+        - /.well-known/
+      summary: Serves the public JWKS of the authorization server
+      description: |
+        This endpoint serves the signing key(s) the client uses to validate 
+        signatures from the authorization server.
+
+        The JWK Set MAY also contain the server's encryption key or keys, 
+        which are used by clients to encrypt requests to the server.  
+
+        When both signing and encryption keys are made available, a "use" 
+        (public key use) parameter value is REQUIRED for all keys in the 
+        referenced JWK Set to indicate each key's intended usage.
+
+        Refer to RFC7517 - https://tools.ietf.org/html/rfc7517
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JsonWebKeySet"
+
 servers:
   - url: "https://ansp-authority-baseurl/oauth/{info.version}"
 
@@ -229,7 +259,6 @@ components:
           type: string
           enum:
             - RSA
-            - EC
         typ:
           type: string
           enum:
@@ -291,7 +320,23 @@ components:
             For this server, this is satisfied by the use of a UUID.
         scope:
           description: See securityDefinitions section in this spec.
+          type: array
+          items:
+            type: string
+            example: "example.scope.name.read"
+          maxItems: 1
+          minItems: 1
+        authorities:
+          description: An array of all authorities that the client is associated with.
+          type: array
+          items:
+            type: string
+            example: "ASTM_USS_BASIC"
+          minItems: 1
+        client_id:
+          description: The client_id (uss_name) of the requesting USS.
           type: string
+          example: "uss.example.xyz"
     Metadata:
       type: object
       description: Information provided at the `/.well-known/oauth-authorization-server` endpoint.
@@ -435,3 +480,44 @@ components:
         error_description:
           type: string
           example: "Human readable description of the error."
+    JsonWebKeySet:
+      type: "object"
+      properties:
+        keys:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/JsonWebKey"
+    JsonWebKey:
+      type: "object"
+      description: >-
+        This schema defines what a client may expect to receive when requesting  a JWK/JWKS. 
+
+        NOTE: Not all fields defined in this schema may be returned when in operational use.
+      required:
+        - kty
+      properties:
+        kty:
+          type: "string"
+        use:
+          type: "string"
+          enum:
+            - sig
+            - enc
+        kid:
+          type: "string"
+        alg:
+          type: "string"
+        crv:
+          type: "string"
+        x:
+          type: "string"
+        "y":
+          type: "string"
+        d:
+          type: "string"
+        "n":
+          type: "string"
+        e:
+          type: "string"
+        k:
+          type: "string"
