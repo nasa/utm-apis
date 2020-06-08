@@ -331,7 +331,7 @@ components:
           type: array
           items:
             type: string
-            example: "USS_BASIC"
+            example: "ASTM_USS_BASIC"
           minItems: 1
         client_id:
           description: The client_id (uss_name) of the requesting USS.
@@ -493,11 +493,16 @@ components:
         This schema defines what a client may expect to receive when requesting  a JWK/JWKS. 
 
         NOTE: Not all fields defined in this schema may be returned when in operational use.
+      required:
+        - kty
       properties:
         kty:
           type: "string"
         use:
           type: "string"
+          enum:
+            - sig
+            - enc
         kid:
           type: "string"
         alg:
@@ -516,5 +521,3 @@ components:
           type: "string"
         k:
           type: "string"
-      required:
-        - kty
