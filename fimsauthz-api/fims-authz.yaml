@@ -13,7 +13,10 @@ info:
 
     # Authentication using Message Signing
 
-    As detailed in the UFAA, the authentication method is designed to provide
+    Concepts are detailed in the UFAA.
+    Implementation notes are in the README in this folder at `https://github.com/nasa/utm-apis/blob/master/fimsauthz-api/README.md`.
+
+    This authentication method is designed to provide
     message integrity, non-repudiation, and message authentication.
     Clients authenticate by providing a JWS signature of the HTTP request body's
     `x-www-form-urlencoded` data. The signature is provided in the
@@ -21,9 +24,11 @@ info:
     As specified in the UFAA, the signature is performed using the private key
     associated with the certifcate specified by `x5u` in the JOSE Header.
 
-    # Scopes
+    # Roles
 
-    This serves both UAM-* and UTM-* scopes.
+    Roles and their scopes are in this folder at `https://github.com/nasa/utm-apis/blob/master/fimsauthz-api/nup-roles.yaml`
+
+
 
 paths:
   /token:
@@ -64,7 +69,7 @@ paths:
                     The requested scope(s).
                     For UPP2 the scope request list size is always one, with
                     the exception for the special case of this set:
-                    [dss.read.identification_service_areas, rid.read.enhanced_details] 
+                    [dss.read.identification_service_areas, rid.read.enhanced_details]
                   type: array
                   items:
                     type: string
