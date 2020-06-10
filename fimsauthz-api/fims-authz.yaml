@@ -64,17 +64,11 @@ paths:
                 client_id:
                   description: The client_id (uss_name) of the requesting USS.
                   type: string
-                scopes:
+                scope:
                   description: |
-                    The requested scope(s).
-                    For UPP2 the scope request list size is always one, with
-                    the exception for the special case of this set:
-                    [dss.read.identification_service_areas, rid.read.enhanced_details]
-                  type: array
-                  items:
-                    type: string
-                  minItems: 1
-                  maxItems: 2
+                    White space separated list of the requested scope(s).
+                    The scope request list size is usually one.  In cases where the list size is not one, the list is verified.  Version 1.0.2 of this specificaiton verifies this set: [dss.read.identification_service_areas, rid.read.enhanced_details]
+                  type: string
 
                 current_timestamp:
                   description: |
@@ -218,7 +212,7 @@ components:
           description: see definitions/JwsCompactSerialization in this spec
         scope:
           type: string
-          description: white space separated list of scopes
+          description: white space separated list of granted scope(s)
         token_type:
           type: string
           enum:
