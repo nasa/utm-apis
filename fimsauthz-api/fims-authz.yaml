@@ -331,7 +331,7 @@ components:
           items:
             type: string
             example: "example.scope.name.read"
-          maxItems: 1
+          maxItems: 2
           minItems: 1
         authorities:
           description: An array of all authorities that the client is associated with.
