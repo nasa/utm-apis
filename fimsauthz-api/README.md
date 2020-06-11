@@ -32,6 +32,9 @@ FIMS-Authz acquires client's public key from the JoseHeader, and verifies signat
 
 ![get-pubkey](./assets/jws4-get-pubkey.png)
 
+# Roles and Scopes
+![This yaml maps scopes to roles and provides example usages.](./nup-roles.yaml)
+
 # References
 * [RFC 6749: OAuth 2.0](https://tools.ietf.org/html/rfc6749)
 * [RFC 6750: OAuth Bearer Token Usage](https://tools.ietf.org/html/rfc6750)
