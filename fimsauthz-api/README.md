@@ -5,10 +5,10 @@ This API provides an oauth2 token and other endpoints for the FIMS Authorization
 
 1. Client constructs the JWS
 
-Client generates a JoseHeader and body with relevant data.
-Client constructs the JWS by base64 encoding the header and body, assigning it to the JWS's header and payload respectively.
-Client generates the JWS signature by calculating the SHA-256 hash of the concatenated header and payload, and uses it's private key for the hashing.
-Client assigns the generated the signature as the signature of the JWS object.
+* Client generates a JoseHeader and body with relevant data.
+* Client constructs the JWS by base64 encoding the header and body, assigning it to the JWS's header and payload respectively.
+* Client generates the JWS signature by calculating the SHA-256 hash of the concatenated header and payload, and uses it's private key for the hashing.
+* Client assigns the generated the signature as the signature of the JWS object.
 
 ![Construction](./assets/jws1-construction.png)
 
@@ -37,7 +37,11 @@ FIMS-Authz acquires client's public key from the JoseHeader, and verifies signat
 ![get-pubkey](./assets/jws5-respose.png)
 
 # Roles and Scopes
-![This yaml maps scopes to roles and provides example usages.](./nup-roles.yaml)
+[./nup-roles.yaml](./nup-roles.yaml) maps scopes to roles and provides example usages.
+
+# Pseudo-Implementation
+
+A pseudo-implementation for interfacing with FIMS-AZ has been documented here - [pseudo-client.md](./pseudo-client.md)
 
 # References
 * [RFC 6749: OAuth 2.0](https://tools.ietf.org/html/rfc6749)
