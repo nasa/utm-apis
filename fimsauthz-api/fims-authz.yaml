@@ -67,10 +67,10 @@ paths:
                   type: string
                 scope:
                   description: |
-                    White space separated set of the requested scope(s).
-                    The scope request set size is usually one, with an exception.
+                    The requested scope(s), a list of space-delimited,
+                    case-sensitive names. Same as in RFC 6749.
 
-                    Version 1.0.2 of this specificaiton allows a pair of scopes for this case:
+                    Version 1.0.2 of this specificaiton allows a pair of scope for this case only:
                     [dss.read.identification_service_areas, rid.read.enhanced_details]
                   type: string
                 current_timestamp:
@@ -212,7 +212,11 @@ components:
           description: see definitions/JwsCompactSerialization in this spec
         scope:
           type: string
-          description: white space separated list of granted scope(s)
+          description:  The granted scope(s), a list of space-delimited,
+          case-sensitive names. Same as in RFC 6749.
+
+          Version 1.0.2 of this specificaiton allows a pair of scope for this case only:
+          [dss.read.identification_service_areas, rid.read.enhanced_details]
         token_type:
           type: string
           enum:
@@ -327,10 +331,9 @@ components:
             For this server, this is satisfied by the use of a UUID.
         scope:
           description: |
-            White space separated set of granted scope(s).
-            The scope request set size is usually one, with an exception.
+            The granted scope(s), a list of space-delimited, case-sensitive names. 
 
-            Version 1.0.2 of this specificaiton allows a pair of scopes for this case:
+            Version 1.0.2 of this specificaiton allows a pair of scope for this case only:
             [dss.read.identification_service_areas, rid.read.enhanced_details]
           type: string
           example: "scope1 scope2"
