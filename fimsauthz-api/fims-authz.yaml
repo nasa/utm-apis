@@ -306,6 +306,7 @@ components:
         - iat
         - jti
         - scope
+        - aud
       additionalProperties: false
       description: Claims included within access tokens provided by this authorization server.
       properties:
@@ -356,7 +357,18 @@ components:
             [dss.read.identification_service_areas, rid.read.enhanced_details]
           type: string
           example: "scope1 scope2"
-
+        aud:
+          description: |
+            The "aud" (audience) claim identifies the recipients that the JWT is
+            intended for.  Each principal intended to process the JWT MUST
+            identify itself with a value in the audience claim.  If the principal
+            processing the claim does not identify itself with a value in the
+            "aud" claim when this claim is present, then the JWT MUST be
+            rejected.  "aud" will contain exactly one URL as an identifier of 
+            the intended recipient system.
+          type: string 
+          format: url 
+          example: "https://the-dss.co"
         authorities:
           description: An array of all authorities that the client is associated with.
           type: array
