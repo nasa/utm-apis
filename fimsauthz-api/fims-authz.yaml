@@ -9,7 +9,8 @@ info:
     for Authentication and Authorization" at `https://utm.arc.nasa.gov/docs/2019-UTM_Framework-NASA-TM220364.pdf`.
 
     The FIMS Authorization Server facilitates the RFC-6749 Client
-    Credentials flow for UTM components that are Oauth2 Resources servers.
+    Credentials flow for clients to USS Network resource servers.
+    Typically these resource servers include other USSs and discovery systems.
 
     # Authentication using Message Signing
 
@@ -71,7 +72,7 @@ paths:
                     The requested scope(s), a list of space-delimited,
                     case-sensitive names. Same as in RFC 6749.
 
-                    Version 1.0.2 of this specificaiton allows a pair of scope for this case only:
+                    As of Version 1.0.2 of this specificaiton allows a pair of scope for this case only:
                     [dss.read.identification_service_areas, rid.read.enhanced_details]
                   type: string
                 resource:
@@ -101,6 +102,9 @@ paths:
                   format: date-time
                 salt:
                   description: |
+
+                    [NOT IMPLEMENTED.  FOR DISCUSSION PURPOSES ONLY.]
+
                     Additional length and randomization added to the request since this
                     HTTP body is also JWS body.
 
@@ -113,7 +117,7 @@ paths:
                     NOTE3: If a duplicate salt value is used in multiple requests, FIMS AZ may
                     reject duplicated salt requests beyond the first.
 
-                    [NOT IMPLEMENTED as of 1.0.1]
+                    
                   type: string
                   format: uuid
       responses:
