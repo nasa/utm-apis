@@ -35,7 +35,7 @@ jose_header = {
 # Define the Payload of the JWS -
 # - As defined by UFAA, the payload must be equal to the HTTP body. The request body / JWS payload must be URL encoded.
 # - current_timestamp must adhere to the timestamp model described as per - https://github.com/nasa/utm-apis/blob/master/utm-domains/utm-domain-commons.yaml#L45
-payload = "grant_type=client_credentials&client_id=example.com&scope=example.scope.read&current_timestamp=2020-06-19T13:37:52.562Z"
+payload = "grant_type=client_credentials&client_id=example.com&scope=example.scope.read&audience=the-dss.co&current_timestamp=2020-06-19T13%3A37%3A52.562Z"
 
 # Generate the JWS
 my_jws = jws.JWS(payload)
