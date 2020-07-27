@@ -37,7 +37,7 @@ paths:
       summary: Request an access token.
       description: |
         The primary endpoint for this authorization server.  Used to request an access token
-        suitbable for authorizing data exchanges within the USS Network.
+        suitable for authorizing data exchanges within the USS Network.
 
         Implemented per https://tools.ietf.org/html/rfc6749#section-3.2 .
 
