@@ -3,30 +3,30 @@ This API provides an oauth2 token and other endpoints for the FIMS Authorization
 
 ## Message Signing and Signature Authentication
 
-1. Client constructs the JWS
-
-* Client generates a JoseHeader and body with relevant data.
-* Client constructs the JWS by base64 encoding the header and body, assigning it to the JWS's header and payload respectively.
-* Client generates the JWS signature by calculating the SHA-256 hash of the concatenated header and payload, and uses it's private key for the hashing.
-* Client assigns the generated the signature as the signature of the JWS object.
+1. Client constructs a `xUtmMessageSignatureJws` -
+   * Client generates a `xUtmMessageSignatureJoseHeader` with the relevant data and assigns it as the header of the `xUtmMessageSignatureJws`.
+   * Client uses the same character string as the HTTP body and assigns it as the payload of the `xUtmMessageSignatureJws`.
+   * Client constructs the `xUtmMessageSignatureJws` by base64 encoding the header and payload.
+   * Client generated the signature of the `xUtmMessageSignatureJws` by calculating the SHA-256 hash of the concatenated header and payload, and it's private key for the hashing.
+   * Client assigns the generated the signature as the signature of the `xUtmMessageSignatureJws`.
 
 ![Construction](./assets/jws1-construction.png)
 
-2. Client requests AZ for an access_token
+2. Client requests FIMS-AZ for an access_token
 
-Client creates an HTTP request with the following configuration -
-* request body set as the previously generated body
-* request headers has a header called 'x-utm-message-signature' which is formed by concatenating the JWS's header and signature.
+   * Client creates an HTTP request with the following configuration -
+     * Request body must be the same character string as the one used for the `xUtmMessageSignatureJws`.
+     * Request headers has a header called `x-utm-message-signature` which is formed by concatenating the `xUtmMessageSignatureJws`'s header and signature.
 
-Clients sends this constructed request to FIMS-Authz
+   * Clients sends this constructed request to FIMS-Authz
 
 ![Get-token](./assets/jws2-request-token.png)
 
-3. FIMS-Authz reconstructs the JWS
+3. FIMS-Authz re-constructs the JWS
 
 ![reconstruct](./assets/jws3-reconstruct-sig.png)
 
-4. FIMS-Authz Verifies Signature
+4. FIMS-Authz Verifies the Signature
 
 FIMS-Authz acquires client's public key from the JoseHeader, and verifies signature using the acquired key
 
