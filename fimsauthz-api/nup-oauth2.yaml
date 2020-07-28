@@ -11,7 +11,7 @@ paths:
   "/token/":
     post:
       tags:
-        - A. Token Endpoints
+        - A. Client Credentials Flow
       summary: Request for an access token with params in the HTTP body.
       description: |
         This endpoint is required as per RFC 6749.  A POST to this endpoint acts as a request for an access token.
@@ -26,9 +26,127 @@ paths:
               properties:
                 grant_type:
                   type: string
-                  description: Type of grant. Must be 'client_credentials' or 'password'.
+                  description: Type of grant. Must be 'client_credentials'.
                   enum:
                     - client_credentials
+                scope:
+                  type: string
+                  description:
+                    Scope (one and only one) to be associated with the
+                    access token being requested. An error code of 400 will be returned
+                    if no scope, incorrect scope or more than one scope is specified.
+                  enum:
+                    - scope
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        "400":
+          description: >-
+            - Request did not conform to the API specification or failed validation.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: >-
+            - Request used invalid or incorrect credentials.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          description: >-
+            - [NOT IMPLEMENTED] Client has been timed-out for making too many requests.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - authenticate_using_client_credentials: []
+
+  "/token":
+    post:
+      tags:
+        - A. Client Credentials Flow
+      summary: Request for an access token with params in the HTTP URI as query params.
+      description: |
+        This endpoint is required as per RFC 6749.  A POST to this endpoint acts as a request for an access token.
+      parameters:
+        - in: query
+          name: grant_type
+          required: true
+          schema:
+            type: string
+            enum:
+              - client_credentials
+          description: Type of grant. Must be 'client_credentials'.
+        - in: query
+          name: scope
+          required: true
+          schema:
+            type: string
+          description: >-
+            Scope (one and only one) to be associated with the access token 
+            being requested. An error code of 400 will be returned if no scope, 
+            incorrect scope or more than one scope is specified.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        "400":
+          description: >-
+            - Request did not conform to the API specification or failed validation.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: >-
+            - Request used invalid or incorrect credentials.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          description: >-
+            - [NOT IMPLEMENTED] Client has been timed-out for making too many requests.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - authenticate_using_client_credentials: []
+
+
+  "/token/ ":
+    post:
+      tags:
+        - B. Password Credentials Flow
+      summary: Request for an access token with params in the HTTP body.
+      description: |
+        A POST to this endpoint acts as a request for an access token.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+                - grant_type
+                - username
+                - password
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                  description: Type of grant. Must be 'password'.
+                  enum:
                     - password
                 scope:
                   type: string
@@ -76,13 +194,13 @@ paths:
       security:
         - authenticate_using_client_credentials: []
 
-  "/token":
+  "/token ":
     post:
       tags:
-        - A. Token Endpoints
+        - B. Password Credentials Flow
       summary: Request for an access token with params in the HTTP URI as query params.
       description: |
-        This endpoint is required as per RFC 6749.  A POST to this endpoint acts as a request for an access token.
+        A POST to this endpoint acts as a request for an access token.
       parameters:
         - in: query
           name: grant_type
@@ -90,12 +208,10 @@ paths:
           schema:
             type: string
             enum:
-              - client_credentials
               - password
-          description: Type of grant. Must be 'client_credentials' or 'password'.
+          description: Type of grant. Must be 'password'.
         - in: query
           name: scope
-          required: true
           schema:
             type: string
           description: >-
@@ -106,6 +222,9 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
+              required:
+                - username
+                - password
               type: object
               properties:
                 username:
@@ -114,6 +233,7 @@ paths:
                 password:
                   type: string
                   description: The user’s password for the 'password' grant type.
+        required: true    
       responses:
         "200":
           description: OK
@@ -145,10 +265,11 @@ paths:
       security:
         - authenticate_using_client_credentials: []
 
+
   /api:
     get:
       tags:
-        - B. Version and Health
+        - C. Version and Health
       summary: get server info.  Can be used to check health.
       responses:
         200:
