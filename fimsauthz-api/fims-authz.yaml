@@ -23,13 +23,11 @@ info:
     `x-www-form-urlencoded` data. The signature is provided in the
     `x-utm-message-signature` HTTP header of the HTTP Request.
     As specified in the UFAA, the signature is performed using the private key
-    associated with the certifcate specified by `x5u` in the JOSE Header.
+    associated with the certificate specified by `x5u` in the JOSE Header.
 
     # Roles
 
     Roles and their scopes are in this folder at `https://github.com/nasa/utm-apis/blob/master/fimsauthz-api/nup-roles.yaml`
-
-
 
 paths:
   /token:
@@ -39,11 +37,25 @@ paths:
       summary: Request an access token.
       description: |
         The primary endpoint for this authorization server.  Used to request an access token
-        suitbable for authorizing data exchanges within the USS Network.
+        suitable for authorizing data exchanges within the USS Network.
 
         Implemented per https://tools.ietf.org/html/rfc6749#section-3.2 .
+
       security:
         - fims-jws: []
+
+      parameters:
+        - in: header
+          name: x-utm-message-signature
+          schema:
+            type: string
+          required: true
+          description: >-
+            The `x-utm-message-signature` HTTP header is an encode string representation of the 
+            `#/components/schemas/xUtmMessageSignatureJws` with the payload field eliminated. 
+
+            Refer to UFAA's section 5.12.5. 
+
       requestBody:
         description: Data supplied by the client for a token request.
         required: true
@@ -91,7 +103,7 @@ paths:
                     See https://tools.ietf.org/html/rfc7519#section-4.1.3 for more info 
                     on how the aud claim is to be used.
                   type: string
-                  format: hostname 
+                  format: hostname
                   maxLength: 2000
                   example: "the-dss.co"
                 current_timestamp:
@@ -120,7 +132,6 @@ paths:
                     NOTE3: If a duplicate salt value is used in multiple requests, FIMS AZ may
                     reject duplicated salt requests beyond the first.
 
-                    
                   type: string
                   format: uuid
                   example: "1161281b-accb-4288-943a-d9be3fcfced4"
@@ -130,7 +141,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TokenResponse"
+                $ref: "#/components/schemas/HttpTokenResponse"
 
         "400":
           description: >-
@@ -138,7 +149,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: "#/components/schemas/HttpErrorResponse"
 
         "401":
           description: >-
@@ -146,7 +157,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: "#/components/schemas/HttpErrorResponse"
 
         "429":
           description: >-
@@ -154,7 +165,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: "#/components/schemas/HttpErrorResponse"
 
   /.well-known/oauth-authorization-server:
     get:
@@ -228,7 +239,7 @@ components:
       name: x-utm-message-signature
 
   schemas:
-    TokenResponse:
+    HttpTokenResponse:
       type: object
       additionalProperties: false
       properties:
@@ -238,11 +249,11 @@ components:
           description: see definitions/JwsCompactSerialization in this spec
         scope:
           type: string
-          description:  |
+          description: |
             The granted scope(s), a list of space-delimited,
             case-sensitive names. Same as in RFC 6749.
 
-            Version 1.0.2 of this specificaiton allows a pair of scope for this case only:
+            Version 1.0.2 of this specification allows a pair of scope for this case only:
             [dss.read.identification_service_areas, rid.read.enhanced_details]
         token_type:
           type: string
@@ -274,7 +285,61 @@ components:
         nbf: 1509470774
         iss: fims.arc.nasa.gov/fimsAuthServer
         jti: 4d4c1a63-0959-48cc-885a-3648fd582db7
-    JwsCompactSerialization:
+    xUtmMessageSignatureJws:
+      description: >-
+        A JWS constructed by the client for requesting a token from FIMS-AZ.
+        The client shall construct a JWS object with the header as specified by the 
+        `#/components/schemas/xUtmMessageSignatureJoseHeader`, and the payload 
+        as a character string of the HTTP body. The client shall sign the JWS 
+        with their private key.
+      type: object
+      additionalProperties: false
+      properties:
+        header:
+          $ref: "#/components/schemas/xUtmMessageSignatureJoseHeader"
+        payload:
+          type: object
+          description: >-
+            The payload of the JWS will be the same character string as the HTTP body.
+        signature:
+          type: string
+          description: >-
+            The signature is calculated on the payload based on the information in the header.
+    xUtmMessageSignatureJoseHeader:
+      description: >-
+        The JOSE (JSON Object Signing and Encryption) header of the JWS used in Message Signing.
+        Refer to UFAA's section 5.12.1 for additional information.
+      type: object
+      properties:
+        alg:
+          type: string
+          description: >-
+            The algorithm used to sign the JWS, which is required to be a 
+            registered JSON Web Algorithm (JWA). See RFC 7518 for details on JWA.
+          enum:
+            - RS256
+        typ:
+          type: string
+          description: >-
+            The type is used by JWS applications to declare the media type of 
+            this complete JWS. In this case, it must be “JOSE” per ​RFC 7515​.
+          enum:
+            - JOSE
+        x5u:
+          type: string
+          description: >-
+            The "x5u" (X.509 URL) Header Parameter is a URI [​RFC 3986]​ that 
+            refers to a resource for the X.509 public key certificate or 
+            certificate chain [​RFC 5280​] corresponding to the key used to 
+            digitally sign the JWS.
+          example: "https://example.com/.well-known/uas-traffic-management/public.der"
+        kid:
+          type: string
+          description: >-
+            The Key ID of the JWK used to sign. Note that the jku reference 
+            will provide a set of keys with unique key identifiers. Those 
+            identifiers will be searched to match against this kid.
+    JsonWebToken:
       description: >-
         The token provided by the FIMS Authorization Server is a JWS
         representing a JWT.  The token is actually a JWS Compact Serialization
@@ -283,14 +348,16 @@ components:
       type: object
       additionalProperties: false
       properties:
-        jose_header:
-          $ref: "#/components/schemas/JoseHeader"
-        jws_payload:
+        header:
+          $ref: "#/components/schemas/JwtHeader"
+        payload:
           $ref: "#/components/schemas/JwtClaimsSet"
-        jws_signature:
+        signature:
           type: string
           description: See RFC 7515 for details.
-    JoseHeader:
+    JwtHeader:
+      description: >-
+        The header of the JWT Bearer Token returned by FIMS-AZ.
       type: object
       properties:
         alg:
@@ -316,7 +383,7 @@ components:
         - scope
         - aud
       additionalProperties: false
-      description: Claims included within access tokens provided by this authorization server.
+      description: Claims included within JWT Bearer Token returned by FIMS-AZ.
       properties:
         iss:
           type: string
@@ -361,7 +428,7 @@ components:
           description: |
             The granted scope(s), a list of space-delimited, case-sensitive names. 
 
-            Version 1.0.2 of this specificaiton allows a pair of scope for this case only:
+            Version 1.0.2 of this specification allows a pair of scope for this case only:
             [dss.read.identification_service_areas, rid.read.enhanced_details]
           type: string
           example: "scope1 scope2"
@@ -374,8 +441,8 @@ components:
             "aud" claim when this claim is present, then the JWT MUST be
             rejected.  "aud" will contain exactly one identifier of 
             the intended recipient system.
-          type: string 
-          format: hostname 
+          type: string
+          format: hostname
           example: "the-dss.co"
         authorities:
           description: An array of all authorities that the client is associated with.
@@ -522,7 +589,7 @@ components:
             claim in the JWT.
 
             Refer to RFC8414 - https://tools.ietf.org/html/rfc8414#section-2.1
-    ErrorResponse:
+    HttpErrorResponse:
       type: object
       properties:
         error:
