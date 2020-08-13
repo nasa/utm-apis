@@ -20,6 +20,12 @@ This API provides an oauth2 token and other endpoints for the FIMS Authorization
 
    * Clients sends this constructed request to FIMS-Authz
 
+   __A note on url-encoding and signature generation__
+
+   It is important to note that when generating the signature of the `xUtmMessageSignatureJws`, the payload of the `xUtmMessageSignatureJws` must be the same character string as the HTTP request body. 
+   
+   Through testing of various of HTTP client libraries, we learnt that there maybe additional _processing_ done by the HTTP client to url-encode the HTTP request's body, which may differ it from the `xUtmMessageSignatureJws`'s payload, thus invalidating the message signing flow. A strategy to avoid this would be to explicitly url-encode the payload string prior to constructing the `xUtmMessageSignatureJws`. Refer to the [pseudo-client.md](./pseudo-client.md) for more details. 
+
 ![Get-token](./assets/jws2-request-token.png)
 
 3. FIMS-Authz re-constructs the JWS
