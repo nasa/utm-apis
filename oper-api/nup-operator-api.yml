@@ -1,0 +1,833 @@
+openapi: 3.0.0
+info:
+  title: NUP Operator API
+  version: "4.1.0"
+  description: Endpoints for managing Operational Data with data models in reference of ASTM.
+tags:
+  - name: Operations
+    description: Add and view Operations
+  - name: Messages
+    description: Add and view Operator Messages
+  - name: Positions
+    description: Add Operation Positions
+  - name: Constraints for elevated privileges
+    description: Add and view Constraints.  Constraints endpoints require elevated privileges
+
+paths:
+  "/messages":
+    post:
+      tags:
+        - Messages
+      summary: Submit Message for a GUFI
+      responses:
+        "201":
+          description: >-
+            Acknowledge that request was received. This does not guarantee that the Message was successfully processed in the PSU network.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "400":
+          description: Invalid Request was received.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Message"
+        description: msg
+        required: true
+
+  "/messages/{gufi}":
+    get:
+      tags:
+        - Messages
+      summary: Get Messages by GUFI
+      parameters:
+        - name: gufi
+          in: path
+          description: gufi
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Message"
+        "400":
+          description: Invalid Request was received.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "404":
+          description: The Operation for the GUFI is not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+  "/operations":
+    post:
+      tags:
+        - Operations
+      summary: Propose a new Operation
+      description: >-
+        If the requestBody doesn't contain a GUFI, a random GUFI shall be assigned to the
+        Operation.
+        If the requestBody contains a non-existing GUFI, then the supplied GUFI will be
+        used for the new operation.
+
+      responses:
+        "201":
+          description: >-
+            Acknowledge that request was received. This does not guarantee that the Operation was successfully added to the PSU network.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "400":
+          description: Invalid Request was received.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProposeOperationParameters"
+        description: Operational Plan
+        required: true
+    put:
+      tags:
+        - Operations
+      summary: Update an Operation
+      description: >-
+        Update an existing operation, which is specified by gufi in the request
+      responses:
+        "200":
+          description: >-
+            Acknowledge that request was received. This does not guarantee that the Operation was successfully updated in the PSU network.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "400":
+          description: Invalid Request was received.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "404":
+          description: The Operation for the gufi is not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateOperationParameters"
+        description: Operational Plan
+        required: true
+
+  "/operations/{gufi}":
+    get:
+      tags:
+        - Operations
+      summary: Retrieve an Operation by GUFI.
+      description: Retrieve an Operation by GUFI.  Returns a 404 if GUFI is not found.
+      parameters:
+        - in: path
+          name: gufi
+          required: true
+          description: GUFI of the Operation being requested.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Operation"
+        "400":
+          description: Invalid Request was received.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "404":
+          description: The Operation for the GUFI is not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+
+  "/constraints":
+    post:
+      tags:
+        - Constraints for elevated privileges
+      summary: Submit a Constraint Request to NUP
+      description: >-
+        Submit a Constraint Request. NUP shall attempt to submit the Constraint to the PSU network.
+        If the requestBody doesn't contain an id, a random id shall be assigned to the Operation.
+        If the requestBody contains a non-existing id, then the supplied id will be
+        used for the new operation.
+      operationId: postConstraint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProposeConstraintParameters"
+        description: The intended Constraint
+        required: true
+      responses:
+        "201":
+          description: >-
+            Acknowledge that Constraint Request was received. This does not guarantee that the Constraint was successfully added to the PSU network.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "400":
+          description: Invalid Constraint Request was received.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+    put:
+      tags:
+        - Constraints for elevated privileges
+      summary: Update a Constraint
+      description: >-
+        Update an existing constraint, which is specified by id in the request
+      operationId: putConstraint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateConstraintParameters"
+        description: The intended Constraint
+        required: true
+      responses:
+        "200":
+          description: >-
+            Acknowledge that Constraint Request was received. This does not guarantee that the Constraint was successfully updated in the PSU network.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "400":
+          description: Invalid Constraint Request was received.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "404":
+          description: The Constraint for the id is not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+
+  "/constraints/{id}":
+    get:
+      tags:
+        - Constraints for elevated privileges
+      summary: Get a Constraint by ID
+      description: Get a Constraints by ID
+      operationId: getConstraintById
+      parameters:
+        - name: id
+          in: path
+          description: ID of the Constraints that needs to be fetched
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: The requested Constraint
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Constraint"
+        "400":
+          description: Invalid Request was received.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "404":
+          description: The Constraint for the id is not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "500":
+          description: Error related to being unable to retrieve the Constraint from the PSU network
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+    delete:
+      tags:
+        - Constraints for elevated privileges
+      summary: Delete a Constraint by ID
+      description: Delete a Constraint by ID
+      operationId: deleteConstraintById
+      parameters:
+        - name: id
+          in: path
+          description: ID of the Constraint that needs to be deleted
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description:
+            Acknowledge that a delete Constraint Request was received. This does not guarantee that the Constraint was deleted from the PSU network.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "400":
+          description: Invalid Request was received.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "404":
+          description: The Constraint for the id is not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "500":
+          description: Error related to being unable to retrieve the Constraint from the PSU network
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+
+  "/positions":
+    post:
+      tags:
+        - Positions
+      summary: Submit a Position to NUP
+      description: >-
+        Submit a Position to NUP.
+      operationId: postPosition
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Position"
+        description: The intended Position
+        required: true
+      responses:
+        "201":
+          description: >-
+            Acknowledge that Position was received
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+        "400":
+          description: Invalid Request was received.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
+
+servers:
+  - url: "https://some.host/npsu/operator"
+
+components:
+  schemas:
+    Operation:
+      required:
+        - volumes
+      type: object
+      properties:
+        gufi:
+          type: string
+          format: uuid
+          example: 00000000-0000-4444-8888-feeddeadbeef
+        user_id:
+          type: string
+          description: operator user id.
+        update_time:
+          description: >-
+            A timestamp set by the USS any time the state of the operation is
+            updated within the USS Network.
+          type: string
+          format: date-time
+          example: "2015-08-20T14:11:56.118Z"
+        state:
+          type: string
+          description: |-
+            The current state of the operation.
+            0. Proposed
+              This operation is not yet ACCEPTED.  It may be awaiting information, it may be in conflict with another ACCEPTED or
+              ACTIVATED operation and undergoing a deconflict process, or for
+              some other reason it is not yet able to be declared ACCEPTED.
+            1. Accepted
+              This Operation was fully deconflicted from other Entities at the time it
+              changed to this state, but no aircraft associated with it are active yet.
+            2. Activated
+              One or more aircraft associated with this Operation are, or will imminently
+              be, in flight.
+            3. UpdateProposed
+              This operation is being updated and is not yet complete.  Once the update is complete, the operation will return back to the previous state.
+            4. Closed
+              This Operation has closed (due to either an Operator-induced change or flight
+              completion).
+            5. NonConforming
+              This Operation is outside of the planned volume.
+            6. Contingent
+              This Operation is executing a contingency action, either because it has been
+              NonConforming for a certain period of time, or because of operator initiation.
+              This state must transition to Ended.
+
+          enum:
+            - Proposed
+            - Accepted
+            - Activated
+            - UpdateProposed
+            - Closed
+            - NonConforming
+            - Contingent
+        volumes:
+          minItems: 1
+          type: array
+          description: The actual geographical and time information for the operation.
+          items:
+            $ref: "#/components/schemas/Volume4D"
+        comments:
+          maxLength: 1000
+          type: string
+          description:
+            Informative text about the operatkon. Not used by the UTM System.
+            Only for human stakeholders.
+          default: NOT PROVIDED
+        version:
+          description: the version number of the operation
+          type: integer
+          format: int32
+
+    ProposeOperationParameters:
+      required:
+        - volumes
+      type: object
+      properties:
+        gufi:
+          type: string
+          format: uuid
+          example: 00000000-0000-4444-8888-feeddeadbeef
+        volumes:
+          maxItems: 250
+          minItems: 1
+          type: array
+          description: >-
+            The actual geographical and time information for the operation.
+            For each operation volume, the properties of time_start and time_end are required.
+          items:
+            $ref: "#/components/schemas/Volume4D"
+        comments:
+          maxLength: 1000
+          type: string
+          description:
+            Informative text about the aircraft. Not used by the UTM System.
+            Only for human stakeholders.
+          default: NOT PROVIDED
+    UpdateOperationParameters:
+      description: >-
+        Forked from /components/schemas/ProposeOperationParameter.
+
+        Modifications Include:
+        - Make gufi required
+      required:
+        - gufi
+        - volumes
+      type: object
+      properties:
+        gufi:
+          type: string
+          format: uuid
+          example: 00000000-0000-4444-8888-feeddeadbeef
+        volumes:
+          maxItems: 250
+          minItems: 1
+          type: array
+          description: >-
+            The actual geographical and time information for the operation.
+            For each operation volume, the properties of time_start and time_end are required.
+          items:
+            $ref: "#/components/schemas/Volume4D"
+        comments:
+          maxLength: 1000
+          type: string
+          description:
+            Informative text about the aircraft. Not used by the UTM System.
+            Only for human stakeholders.
+          default: NOT PROVIDED
+
+    Message:
+      description: >-
+        A UTM operator message. Used to make other stakeholders aware about an issue.
+      type: object
+      required:
+        - message_type
+      properties:
+        message_id:
+          type: string
+          format: uuid
+        gufi:
+          type: string
+          format: uuid
+          example: 00000000-0000-4444-8888-FEEDDEADBEEF
+          description: The GUFI for the operation referenced in this message.  UUIDv4.
+        origin:
+          type: string
+          description: >-
+            CLIENT: Message is from a UTM Client to the UTM System.
+            UTM: Message was automatically generated by the UTM System.
+          enum:
+            - CLIENT
+            - UTM
+        time_sent:
+          $ref: "https://raw.githubusercontent.com/astm-utm/Protocol/implementation_2020q2/utm.yaml#/components/schemas/Time"
+        message_type:
+          type: string
+          description: |-
+            1. INFORM_OPERATION_ACCEPTED
+              This operation was in Proposed state and has transitioned to the Accepted state.
+            2. INFORM_OPERATION_REJECTED
+              This operation was in Proposed state and has been rejected and transitioned to the Closed state due to reasons such as intersecting existing operations.
+            3. INFORM_OPERATION_ACTIVATE_SUCCESS
+              This operation activation request has completed successfully.  The operation state is changed to Activated. 
+            4. INFORM_OPERATION_ACTIVATE_FAIL
+              This operation activation request has failed to complete. The operation state is not changed.
+            5. INFORM_OPERATION_CLOSE_SUCCESS
+              This operation close request has completed successfully.
+            6. INFORM_OPERATION_CLOSE_FAIL
+              This operation close request has failed to complete.  The operation state is not changed.
+            7. INFORM_OPERATION_CONTINGENCY_SUCCESS
+              This operation contingency request has completed successfully.  The operation state is changed to the contingent state.
+            8. INFORM_OPERATION_CONTINGENCY_FAIL
+              This operation contingency request has failed to complete.  The operation state is not changed.
+            9. INFORM_OPERATION_NONCONFORMING
+              The USS uses this message to inform the operator that the operation position is not conformed to the planned volumes.
+            10. INFORM_OPERATION_CONTINGENT
+              The USS uses this message to inform the operator that the operation position is in contingent state.
+            11. INFORM_OPERATION_UPDATE_SUCCESS
+              This operation update request has completed successfully.
+            12. INFORM_OPERATION_UPDATE_FAIL
+              This operation update request has failed to complete.
+            13. INFORM_CONSTRAINT_CREATE_SUCCESS
+              This constraint create request has completed successfully.
+            14. INFORM_CONSTRAINT_CREATE_FAIL
+              This constraint create request has failed to complete.
+            15. INFORM_CONSTRAINT_UPDATE_SUCCESS
+              This constraint update request has completed successfully.
+            16. INFORM_CONSTRAINT_UPDATE_FAIL
+              This constraint update request has failed to complete.
+            17. INFORM_CONSTRAINT_DELETE_SUCCESS
+              This constraint delete request has completed successfully.
+            18. INFORM_CONSTRAINT_DELETE_FAIL
+              This constraint delete request has failed to complete.
+            19. INTENT_OPERATION_ALL_CLEAR
+              This operation was in Accepted state and wants to transition to Activated state.
+            20. INTENT_OPERATION_CONTINGENCY
+              This message requests USS to change the operation to Contingent state.
+            21. INTENT_OPERATION_CLOSE
+              The operator wants to close this operation.  This will move the operation to Closed state.
+            22. ALERT_OPERATION_REPLAN
+              The USS requests the operator to replan the operation.  The reason could be either A) that USS received a constraint update from another USS or B) an update of contingent operation from another USS that overlaps with the operation, see reason field for the discription.  The operator is required to replan the operation to avoid the conflict.
+          enum:
+            - INFORM_OPERATION_ACCEPTED
+            - INFORM_OPERATION_REJECTED
+            - INFORM_OPERATION_ACTIVATE_SUCCESS
+            - INFORM_OPERATION_ACTIVATE_FAIL
+            - INFORM_OPERATION_CLOSE_SUCCESS
+            - INFORM_OPERATION_CLOSE_FAIL
+            - INFORM_OPERATION_CONTINGENCY_SUCCESS
+            - INFORM_OPERATION_CONTINGENCY_FAIL
+            - INFORM_OPERATION_UPDATE_SUCCESS
+            - INFORM_OPERATION_UPDATE_FAIL
+            - INFORM_OPERATION_NONCONFORMING
+            - INFORM_CONSTRAINT_CREATE_SUCCESS
+            - INFORM_CONSTRAINT_CREATE_FAIL
+            - INFORM_CONSTRAINT_UPDATE_SUCCESS
+            - INFORM_CONSTRAINT_UPDATE_FAIL
+            - INFORM_CONSTRAINT_DELETE_SUCCESS
+            - INFORM_CONSTRAINT_DELETE_FAIL
+            - INTENT_OPERATION_ALL_CLEAR
+            - INTENT_OPERATION_CONTINGENCY
+            - INTENT_OPERATION_CLOSE
+            - ALERT_OPERATION_REPLAN
+        reason:
+          type: string
+        violations:
+          type: array
+          description: >-
+            Included with messages of INFORM_OPERATION_REJECTED or INFORM_OPERATION_UPDATE_FAIL.
+            The violation type refers to the constriant type of violation, e.g. OPERATION
+            or CONSTRANIT.  The constraining_id is the UUID associated with each constraint;
+            When applicable, violating_volumes indicates the ordinals of volumes that are in
+            violation. This allows for querying UTM for more information details.
+          items:
+            $ref: "#/components/schemas/Violation"
+        free_text:
+          type: string
+          description: >-
+            Any additional information. Note that this is for human consumption.
+            All time critical elements should be captured in the other data
+            fields for easier consumption by other automated systems.
+          maxLength: 1000
+        request_id:
+          type: string
+          description: only set to match the request_id in the initial operator request
+      example:
+        message_id: 00000000-0000-4444-8888-CAFEBEEFF00D
+        time_sent: "2015-08-20T14:11:57.345Z"
+        message_type: INFORM_OPERATION_CLOSED
+        gufi: 00000000-0000-4444-8888-FEEDDEADBEEF
+        free_text: "Cool flight, bro"
+
+    Violation:
+      type: object
+      required:
+        - type
+      properties:
+        constraining_id:
+          type: string
+          description: Unique identifier for this constraint.
+        errorMessage:
+          type: string
+          description: >-
+            A report that a problem occurred thus Violation could not be
+            resolved.
+        type:
+          type: string
+          description: >-
+            The violation type, e.g. OPERATION (constraint is an existing
+            flight)
+        violating_volumes:
+          type: array
+          description: >-
+            The ordinal of the volumes that are violating this constraint, eg, the
+            proposed flight's second volume violated this constraint
+          items:
+            type: integer
+            format: int32
+
+    ProposeConstraintParameters:
+      description: >-
+        Operator Constraint Model
+      required:
+        - volumes
+      type: object
+      properties:
+        id:
+          $ref: >-
+            https://raw.githubusercontent.com/astm-utm/Protocol/implementation_2020q2/utm.yaml#/components/schemas/EntityUUID
+        volumes:
+          description: Volumes that wholly contain the Constraint while being as small as practical.
+          minItems: 1
+          type: array
+          items:
+            $ref: "#/components/schemas/Volume4D"
+        type:
+          $ref: >-
+            https://raw.githubusercontent.com/astm-utm/Protocol/implementation_2020q2/utm.yaml#/components/schemas/ConstraintDetails/properties/type
+
+      externalDocs:
+        url: https://raw.githubusercontent.com/astm-utm/Protocol/implementation_2020q2/utm.yaml
+
+    UpdateConstraintParameters:
+      description: >-
+        Operator Constraint Model
+      required:
+        - id
+        - volumes
+      type: object
+      properties:
+        id:
+          $ref: >-
+            https://raw.githubusercontent.com/astm-utm/Protocol/implementation_2020q2/utm.yaml#/components/schemas/EntityUUID
+        volumes:
+          description: Volumes that wholly contain the Constraint while being as small as practical.
+          minItems: 1
+          type: array
+          items:
+            $ref: "#/components/schemas/Volume4D"
+        type:
+          $ref: >-
+            https://raw.githubusercontent.com/astm-utm/Protocol/implementation_2020q2/utm.yaml#/components/schemas/ConstraintDetails/properties/type
+
+      externalDocs:
+        url: https://raw.githubusercontent.com/astm-utm/Protocol/implementation_2020q2/utm.yaml
+
+    Constraint:
+      description: >-
+        Operator Constraint Model
+      required:
+        - id
+        - volumes
+      type: object
+      properties:
+        id:
+          $ref: >-
+            https://raw.githubusercontent.com/astm-utm/Protocol/implementation_2020q2/utm.yaml#/components/schemas/EntityUUID
+        volumes:
+          description: Volumes that wholly contain the Constraint while being as small as practical.
+          minItems: 1
+          type: array
+          items:
+            $ref: "#/components/schemas/Volume4D"
+        type:
+          $ref: >-
+            https://raw.githubusercontent.com/astm-utm/Protocol/implementation_2020q2/utm.yaml#/components/schemas/ConstraintDetails/properties/type
+
+    Position:
+      description: >-
+        Forked from ASTM /components/schemas/VehicleTelemetry
+
+        Modifications Include:
+        - Add enroute_positions_id
+      required:
+        - enroute_positions_id
+        - gufi
+        - position
+        - velocity
+        - time_measured
+      type: object
+      properties:
+        enroute_positions_id:
+          type: string
+          format: uuid
+        gufi:
+          $ref: >-
+            https://raw.githubusercontent.com/astm-utm/Protocol/implementation_2020q2/utm.yaml#/components/schemas/EntityUUID
+        position:
+          $ref: >-
+            https://raw.githubusercontent.com/astm-utm/Protocol/implementation_2020q2/utm.yaml#/components/schemas/Position
+        velocity:
+          $ref: >-
+            https://raw.githubusercontent.com/astm-utm/Protocol/implementation_2020q2/utm.yaml#/components/schemas/Velocity
+        time_measured:
+          $ref: >-
+            https://raw.githubusercontent.com/astm-utm/Protocol/implementation_2020q2/utm.yaml#/components/schemas/Time
+      externalDocs:
+        url: https://raw.githubusercontent.com/astm-utm/Protocol/implementation_2020q2/utm.yaml
+
+    Volume4D:
+      description: >-
+        Contiguous block of geographic spacetime.
+
+        Forked from ASTM /components/schemas/Volume4D.
+
+        Modifications Include:
+        - Make time_start and time_end required
+      required:
+        - volume
+        - time_start
+        - time_end
+      type: object
+      properties:
+        volume:
+          $ref: "https://raw.githubusercontent.com/astm-utm/Protocol/implementation_2020q2/utm.yaml#/components/schemas/Volume3D"
+        time_start:
+          $ref: "https://raw.githubusercontent.com/astm-utm/Protocol/implementation_2020q2/utm.yaml#/components/schemas/Time"
+        time_end:
+          $ref: "https://raw.githubusercontent.com/astm-utm/Protocol/implementation_2020q2/utm.yaml#/components/schemas/Time"
+
+    OperatorResponse:
+      type: object
+      properties:
+        status_code:
+          description: the status code of the response
+          type: integer
+          format: int32
+        msg:
+          type: string
+        entity_id:
+          type: string
+          format: uuid
+        request_id:
+          type: string
