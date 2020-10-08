@@ -412,6 +412,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/OperatorResponse"
+        "404":
+          description: The Operation for the GUFI is not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperatorResponse"
 
 servers:
   - url: "https://some.host/npsu/operator"
@@ -590,33 +596,35 @@ components:
               This operation contingency request has completed successfully.  The operation state is changed to the contingent state.
             8. INFORM_OPERATION_CONTINGENCY_FAIL
               This operation contingency request has failed to complete.  The operation state is not changed.
-            9. INFORM_OPERATION_NONCONFORMING
-              The USS uses this message to inform the operator that the operation position is not conformed to the planned volumes.
-            10. INFORM_OPERATION_CONTINGENT
-              The USS uses this message to inform the operator that the operation position is in contingent state.
-            11. INFORM_OPERATION_UPDATE_SUCCESS
+            9. INFORM_OPERATION_UPDATE_SUCCESS
               This operation update request has completed successfully.
-            12. INFORM_OPERATION_UPDATE_FAIL
+            10. INFORM_OPERATION_UPDATE_FAIL
               This operation update request has failed to complete.
-            13. INFORM_CONSTRAINT_CREATE_SUCCESS
+            11. INFORM_CONSTRAINT_CREATE_SUCCESS
               This constraint create request has completed successfully.
-            14. INFORM_CONSTRAINT_CREATE_FAIL
+            12. INFORM_CONSTRAINT_CREATE_FAIL
               This constraint create request has failed to complete.
-            15. INFORM_CONSTRAINT_UPDATE_SUCCESS
+            13. INFORM_CONSTRAINT_UPDATE_SUCCESS
               This constraint update request has completed successfully.
-            16. INFORM_CONSTRAINT_UPDATE_FAIL
+            14. INFORM_CONSTRAINT_UPDATE_FAIL
               This constraint update request has failed to complete.
-            17. INFORM_CONSTRAINT_DELETE_SUCCESS
+            15. INFORM_CONSTRAINT_DELETE_SUCCESS
               This constraint delete request has completed successfully.
-            18. INFORM_CONSTRAINT_DELETE_FAIL
+            16. INFORM_CONSTRAINT_DELETE_FAIL
               This constraint delete request has failed to complete.
-            19. INTENT_OPERATION_ALL_CLEAR
+            17. INTENT_OPERATION_ALL_CLEAR
               This operation was in Accepted state and wants to transition to Activated state.
-            20. INTENT_OPERATION_CONTINGENCY
+            18. INTENT_OPERATION_CONTINGENCY
               This message requests USS to change the operation to Contingent state.
-            21. INTENT_OPERATION_CLOSE
+            19. INTENT_OPERATION_CLOSE
               The operator wants to close this operation.  This will move the operation to Closed state.
-            22. ALERT_OPERATION_REPLAN
+            20. ALERT_OPERATION_NONCONFORMING
+              The USS uses this message to alert the operator that the operation position is not conformed to the planned volumes.
+            21. ALERT_OPERATION_CONFORMING
+              The USS uses this message to alert the operator that the operation position is back to be conformed to the planned volumes.
+            22. ALERT_OPERATION_CONTINGENT
+              The USS uses this message to alert the operator that the operation position is in contingent state.
+            23. ALERT_OPERATION_REPLAN
               The USS requests the operator to replan the operation.  The reason could be either A) that USS received a constraint update from another USS or B) an update of contingent operation from another USS that overlaps with the operation, see reason field for the discription.  The operator is required to replan the operation to avoid the conflict.
           enum:
             - INFORM_OPERATION_ACCEPTED
@@ -629,7 +637,6 @@ components:
             - INFORM_OPERATION_CONTINGENCY_FAIL
             - INFORM_OPERATION_UPDATE_SUCCESS
             - INFORM_OPERATION_UPDATE_FAIL
-            - INFORM_OPERATION_NONCONFORMING
             - INFORM_CONSTRAINT_CREATE_SUCCESS
             - INFORM_CONSTRAINT_CREATE_FAIL
             - INFORM_CONSTRAINT_UPDATE_SUCCESS
@@ -639,6 +646,9 @@ components:
             - INTENT_OPERATION_ALL_CLEAR
             - INTENT_OPERATION_CONTINGENCY
             - INTENT_OPERATION_CLOSE
+            - ALERT_OPERATION_NONCONFORMING
+            - ALERT_OPERATION_CONFORMING
+            - ALERT_OPERATION_CONTINGENT
             - ALERT_OPERATION_REPLAN
         reason:
           type: string
