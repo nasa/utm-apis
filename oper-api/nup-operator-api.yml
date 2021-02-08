@@ -1,8 +1,24 @@
 openapi: 3.0.0
 info:
   title: NUP Operator API
-  version: "4.1.0"
+  version: 5.0.0
   description: Endpoints for managing Operational Data with data models in reference of ASTM.
+  
+security:
+  - Authority:
+    - operations.non-sensitive.read
+    - operations.non-sensitive.write
+    - operations.sensitive.read
+    - operations.sensitive.write
+    - operations.sensitive-protected.read
+    - operations.sensitive-protected.write
+    - uvr.non-sensitive.read
+    - uvr.non-sensitive.write
+    - uvr.sensitive.read
+    - uvr.sensitive.write
+    - uvr.sensitive-protected.read
+    - uvr.sensitive-protected.write
+      
 tags:
   - name: Operations
     description: Add and view Operations
@@ -19,6 +35,11 @@ paths:
       tags:
         - Messages
       summary: Submit Message for a GUFI
+      security:
+        - Authority:
+          - operations.non-sensitive.write
+          - operations.sensitive.write
+          - operations.sensitive-protected.write
       responses:
         "201":
           description: >-
@@ -58,6 +79,11 @@ paths:
       tags:
         - Messages
       summary: Get Messages by GUFI
+      security:
+        - Authority:
+          - operations.non-sensitive.read
+          - operations.sensitive.read
+          - operations.sensitive-protected.read
       parameters:
         - name: gufi
           in: path
@@ -104,6 +130,11 @@ paths:
       tags:
         - Operations
       summary: Propose a new Operation
+      security:
+        - Authority:
+          - operations.non-sensitive.write
+          - operations.sensitive.write
+          - operations.sensitive-protected.write
       description: >-
         If the requestBody doesn't contain a GUFI, a random GUFI shall be assigned to the
         Operation.
@@ -147,6 +178,11 @@ paths:
       tags:
         - Operations
       summary: Update an Operation
+      security:
+        - Authority:
+          - operations.non-sensitive.write
+          - operations.sensitive.write
+          - operations.sensitive-protected.write
       description: >-
         Update an existing operation, which is specified by gufi in the request
       responses:
@@ -195,6 +231,11 @@ paths:
         - Operations
       summary: Retrieve an Operation by GUFI.
       description: Retrieve an Operation by GUFI.  Returns a 404 if GUFI is not found.
+      security:
+        - Authority:
+          - operations.non-sensitive.read
+          - operations.sensitive.read
+          - operations.sensitive-protected.read
       parameters:
         - in: path
           name: gufi
@@ -245,6 +286,11 @@ paths:
         If the requestBody doesn't contain an id, a random id shall be assigned to the Operation.
         If the requestBody contains a non-existing id, then the supplied id will be
         used for the new operation.
+      security:
+        - Authority:
+          - uvr.non-sensitive.write
+          - uvr.sensitive.write
+          - uvr.sensitive-protected.write
       operationId: postConstraint
       requestBody:
         content:
@@ -273,6 +319,11 @@ paths:
       summary: Update a Constraint
       description: >-
         Update an existing constraint, which is specified by id in the request
+      security:
+        - Authority:
+          - uvr.non-sensitive.write
+          - uvr.sensitive.write
+          - uvr.sensitive-protected.write
       operationId: putConstraint
       requestBody:
         content:
@@ -308,6 +359,11 @@ paths:
         - Constraints for elevated privileges
       summary: Get a Constraint by ID
       description: Get a Constraints by ID
+      security:
+        - Authority:
+          - uvr.non-sensitive.read
+          - uvr.sensitive.read
+          - uvr.sensitive-protected.read
       operationId: getConstraintById
       parameters:
         - name: id
@@ -347,6 +403,11 @@ paths:
         - Constraints for elevated privileges
       summary: Delete a Constraint by ID
       description: Delete a Constraint by ID
+      security:
+        - Authority:
+          - uvr.non-sensitive.write
+          - uvr.sensitive.write
+          - uvr.sensitive-protected.write
       operationId: deleteConstraintById
       parameters:
         - name: id
@@ -390,6 +451,11 @@ paths:
       summary: Submit a Position to NUP
       description: >-
         Submit a Position to NUP.
+      security:
+        - Authority:
+          - operations.non-sensitive.write
+          - operations.sensitive.write
+          - operations.sensitive-protected.write
       operationId: postPosition
       requestBody:
         content:
@@ -423,6 +489,36 @@ servers:
   - url: "https://some.host/npsu/operator"
 
 components:
+  securitySchemes:
+    Authority:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://some.host/fimsAuthServer/oauth/token
+          scopes:
+            operations.non-sensitive.read: Allow read of non-sensitive operations
+            operations.non-sensitive.write: Allow write of non-sensitive operations
+            operations.sensitive.read: Allow read of sensitive operations
+            operations.sensitive.write: Allow read of sensitive operations
+            operations.sensitive-protected.read: Allow read of sensitive protected operations
+            operations.sensitive-protected.write: Allow write of sensitive protected operations
+            uvr.non-sensitive.read: Allow read of non-sensitive airspace constraints
+            uvr.non-sensitive.write: Allow write of non-sensitive airspace constraints
+            uvr.sensitive.read: Allow read of sensitive airspace constraints
+            uvr.sensitive.write: Allow write of sensitive airspace constraints
+            uvr.sensitive-protected.read: Allow read of sensitive-protected airspace constraints
+            uvr.sensitive-protected.write: Allow write of sensitive-protected airspace constraints
+      description: |-
+        Authorization from, or on behalf of, an authorization authority.  This authority shall issue access tokens that are JSON Web Tokens as defined in RFC 7519, using the `RS256` algorithm for the signature, publish to all providers the public key for verifying that signature, and implement standard OAuth server discovery mechanisms as described in RFC 8414.
+
+        The following fields shall be included in the JWT claim for access tokens issued by this authority:
+            * `iss`, with the URL at which the token generation request was received.
+            * `exp`, with a time no further than 1 hour in the future.
+            * `sub`, with unique ID of the client requesting the access token.
+            * `scope`, with an array of strings indicating the scopes granted.
+            * `jti`, according to RFC 7519.
+
+        Clients shall provide these access tokens in an `Authorization` header in the form `Bearer <token>` in accordance with RFC 6750.
   schemas:
     Operation:
       required:
@@ -436,6 +532,11 @@ components:
         user_id:
           type: string
           description: operator user id.
+        uss_name:
+          type: string
+          description: USS name that owns the operation.
+        sensitivity_type:
+          $ref: "#/components/schemas/SensitivityType"
         update_time:
           description: >-
             A timestamp set by the USS any time the state of the operation is
@@ -520,6 +621,8 @@ components:
             Informative text about the aircraft. Not used by the UTM System.
             Only for human stakeholders.
           default: NOT PROVIDED
+        sensitivity_type:
+          $ref: "#/components/schemas/SensitivityType"
     UpdateOperationParameters:
       description: >-
         Forked from /components/schemas/ProposeOperationParameter.
@@ -551,6 +654,8 @@ components:
             Informative text about the aircraft. Not used by the UTM System.
             Only for human stakeholders.
           default: NOT PROVIDED
+        sensitivity_type:
+          $ref: "#/components/schemas/SensitivityType"
 
     Message:
       description: >-
@@ -841,3 +946,13 @@ components:
           format: uuid
         request_id:
           type: string
+
+    SensitivityType:
+      description: >-
+        Sensitivity of the operation
+      type: string
+      enum:
+        - 'non-sensitive'
+        - 'sensitive'
+        - 'sensitive-protected'
+      default: 'non-sensitive'
