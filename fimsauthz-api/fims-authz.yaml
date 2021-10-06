@@ -67,7 +67,6 @@ paths:
                 - grant_type
                 - client_id
                 - scope
-                - audience
                 - current_timestamp
               additionalProperties: false
               properties:
