@@ -47,9 +47,9 @@ USS_BASIC:
     description: A USS. The UTM Authority assigns role after
         out-of-band vetting. Vetting includes some testing mechanism and liability assumptions TBD.
 
-        According to the ASTM Spec - 0.3.5
-           - Client may perform planning, strategic conflict detection, and conformance monitoring activities,
-                including reading information about Constraints.
+        According to the ASTM Spec - 1.0
+           - Client may perform planning, strategic conflict detection, conformance monitoring activities
+                (including reading information about Constraints), and set the availability of USS in DSS
 
            - Client may read Constraints from the DSS (references) and partner USSs (details).
     authority: UTM_AUTHORITY
@@ -57,7 +57,10 @@ USS_BASIC:
         - "USS queries Discovery service to discover other USSs in its 4D area."
     scopes:
         - utm.strategic_coordination
-        - utm.constraint_consumption
+        - utm.constraint_management
+        - utm.constraint_processing
+        - utm.conformance_monitoring_sa
+        - utm.availability_arbitration
 
 USS_CONSTRAINT_MANAGER:
     description: |
@@ -66,7 +69,7 @@ USS_CONSTRAINT_MANAGER:
         vetting, which includes some testing mechanism and liability
         assumptions TBD.
 
-        According to the ASTM Spec - 0.3.5
+        According to the ASTM Spec - 1.0
         - Client may manage (create, edit, and delete) Constraints they own.
 
     authority: UTM_AUTHORITY
