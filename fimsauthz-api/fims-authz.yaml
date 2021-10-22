@@ -453,7 +453,7 @@ components:
       type: object
       description: Information provided at the `/.well-known/oauth-authorization-server` endpoint.
       required:
-        - issuer
+        - iss
         - token_endpoint
         - jwks_uri
         - scopes_supported
@@ -466,7 +466,7 @@ components:
         - signed_metadata
       additionalProperties: false
       properties:
-        issuer:
+        iss:
           type: string
           format: url
           description: >-
