@@ -6,106 +6,55 @@ UTM_AUTHORITY:
         components such as USSs.
     authority: ANSP
     examples:
-        - "UTM Authority vets USS1's additional capability for Public Service, and adds the PUBLIC_SAFETY role to USS1 in the master list."
+        - "UTM Authority vets USS1's additional capability for Public Service, and adds the CONSTRAINT_MANAGER role to USS1 in the master list."
         - "UTM Authority vets USS1, then adds an entry to master USS list and assigns the USS_BASIC role."
 
-FIMS_ADMIN:
-    description: |
-        This role enables an IT admin to maintain FIMS, for example by managing
-        logfiles and servers via command line interface (CLI).  This role
-        should not, in general, allow reading FIMS business data as knowledge
-        of FIMS data is usually not needed to get the job done. Multi-Factor
-        Authentication (MFA) should be enforced users with this role,
-        and the number of users with this role should be minimized.
-        This role is typically associated with a User whose authorization is out of band WRT FIMS oauth.
-    authority: UTM_AUTHORITY
-    examples:
-        - "An IT admin manages FIMS-AZ logfiles."
-        - "An IT admin reads the master USS list to update FIMS-AZ's data table containing the USSs, their scopes and their credentials."
-    scopes:
-        - utm.nasa.gov_read.fimsadmin
-
-FIMS_SME:
-    description: |
-        A role is assigned to user who is a FIMS Subject Matter Expert (SME) who
-        manages airspace constraints and other aeronautical data
-        This user could be a client to the FIMS Ops server using a User Interface (rather than CLI).
-        This role is typically associated with a user whose authorization is out of band WRT FIMS oauth.
-    authority: ANSP
-    examples:
-        - "An airspace Subject Matter Expert composes an airspace constraint and submits this constraint to FIMS_OPS."
-
-FIMS_AUTHZ:
-    description: >-
-        This is the service role supporting the FIMS Authorization server.
-        This role cannot create, modify or delete UTM Identity data, rather access is read-only.
-    authority: UTM_AUTHORITY
-    examples:
-        - "When FIMS AZ services the token endpoint, it reads a data table containing USS identities and their scopes."
-
 USS_BASIC:
-    description: A USS. The UTM Authority assigns role after
-        out-of-band vetting. Vetting includes some testing mechanism and liability assumptions TBD.
+    description: |
+        A USS. The UTM Authority assigns role after out-of-band vetting. 
+        Vetting includes some testing mechanism and liability assumptions TBD.
 
         According to the ASTM Spec - 1.0
-           - Client may perform planning, strategic conflict detection, conformance monitoring activities
-                (including reading information about Constraints), and set the availability of USS in DSS
+           - Client may perform actions encompassed by the strategic coordination role including strategic conflict detection.
+           - Client may read constraint references from the DSS and details from the partner USSs according to the constraint processing role.
+           - Client may perform actions encompassed by the conformance monitoring for situational awareness role.
 
-           - Client may read Constraints from the DSS (references) and partner USSs (details).
     authority: UTM_AUTHORITY
     examples:
         - "USS queries Discovery service to discover other USSs in its 4D area."
     scopes:
         - utm.strategic_coordination
-        - utm.constraint_management
         - utm.constraint_processing
         - utm.conformance_monitoring_sa
-        - utm.availability_arbitration
 
-USS_CONSTRAINT_MANAGER:
+CONSTRAINT_MANAGER:
     description: |
-        A USS with this role can publish airspace constraints such as UASVolumeReservations (UVRs).
+        An user with this role can publish airspace constraints.
         The UTM Authority assigns this role after out-of-band
         vetting, which includes some testing mechanism and liability
         assumptions TBD.
 
         According to the ASTM Spec - 1.0
-        - Client may manage (create, edit, and delete) Constraints they own.
+        - Client may manage (create, edit, and delete) constraints.
 
     authority: UTM_AUTHORITY
     examples:
-        - "A Public Safety USS, acting on behalf of the ANSP, adds an ASTM Contrating (aka UVR) to the UTM Network."
+        - "A Public Safety USS, acting on behalf of the ANSP, adds an ASTM Contrating to the UTM Network."
     scopes:
         - utm.constraint_management
 
-USS_PUBLIC_SAFETY:
+AVAILABILITY_MANAGER:
     description: |
-        Not in ASTM Spec, rather driven by FAA UPP2
-        - USS may perform a correlation query on behalf of a Public Service actor authorized for this category of ANSP data.
-    authority: UTM_AUTHORITY
-    examples:
-        - "A Public Safety USS performs correlation query using an endpoint hosted by the FAA."
-    scopes:
-        - utm.faa.gov_read.publicsafety
+        An user with this role can set the availability state of USSs in the DSS.
+        The UTM Authority assigns this role after out-of-band
+        vetting, which includes some testing mechanism and liability
+        assumptions TBD.
 
-USS_RID_DISPLAY:
-    description: |
-
-       According to the RID Interface  (todo)
-    authority: UTM_AUTHORITY
-    examples:
-       - "A Public Safety USS performs Remote ID on behalf of the FAA."
-    scopes:
-       - dss.read.identification_service_areas
-
-USS_RID_DISPLAY_ENHANCED:
-    description: |
-
-       According to the RID Interface
-        
+        According to the ASTM Spec - 1.0
+        - Client may set the availability state of USSs in the DSS.
 
     authority: UTM_AUTHORITY
     examples:
-       - "A Public Safety USS performs Remote ID on behalf of the FAA."
+        - "A Public Safety USS, acting on behalf of the ANSP, sets an USS availability status to be DOWN to the UTM Network."
     scopes:
-       - rid.read.enhanced_details
+        - utm.availability_arbitration
