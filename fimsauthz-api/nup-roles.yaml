@@ -29,7 +29,7 @@ USS_BASIC:
 
 CONSTRAINT_MANAGER:
     description: |
-        An user with this role can publish airspace constraints.
+        This role can publish airspace constraints.
         The UTM Authority assigns this role after out-of-band
         vetting, which includes some testing mechanism and liability
         assumptions TBD.
@@ -39,7 +39,7 @@ CONSTRAINT_MANAGER:
 
     authority: UTM_AUTHORITY
     examples:
-        - "A Public Safety USS, acting on behalf of the ANSP, adds an ASTM Contrating to the UTM Network."
+        - "A Public Safety USS, acting on behalf of the ANSP, adds an ASTM Contraint to the UTM Network."
     scopes:
         - utm.constraint_management
 
